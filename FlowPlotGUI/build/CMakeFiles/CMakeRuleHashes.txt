@@ -1,0 +1,6 @@
+# Hashes of file build rules.
+0759479d0531f5ea552bae21705cb006 external/FlowUi/CMakeFiles/flowui_shaders
+da1088788f4f93d981d4ec8f02faa9cb external/FlowUi/shaders/flowui_ui_msdf.frag.spv
+dd53914d2f8d8c71b2fa41087eecfc8e external/FlowUi/shaders/flowui_ui_quad.vert.spv
+24ce68e81c4ee87a5330490453d2e74a external/FlowUi/shaders/flowui_ui_solid.frag.spv
+460b7962404940d5164607ec5c01aafe external/FlowUi/shaders/flowui_ui_textured.frag.spv

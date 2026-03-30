@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/FlowPlotGUI.dir/main.cpp.o -o FlowPlotGUI  external/FlowUi/libflowui.a /usr/lib/x86_64-linux-gnu/libvulkan.so /usr/lib/x86_64-linux-gnu/libglfw.so.3.3 external/FlowUi/external/plutosvg/libplutosvg.a external/FlowUi/external/plutosvg/plutovg/libplutovg.a -lm

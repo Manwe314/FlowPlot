@@ -1,0 +1,440 @@
+[
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_DISABLE_SVG -DMSDFGEN_EXTENSIONS -DMSDFGEN_EXT_PUBLIC=\"\" -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_USE_LIBPNG -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0 -DMSDF_ATLAS_COPYRIGHT_YEAR=2026 -DMSDF_ATLAS_PUBLIC=\"\" -DMSDF_ATLAS_VERSION=1.4.0 -DMSDF_ATLAS_VERSION_MAJOR=1 -DMSDF_ATLAS_VERSION_MINOR=4 -DMSDF_ATLAS_VERSION_REVISION=0 -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen -std=c++2b -o CMakeFiles/flowui_font_baker.dir/tools/flowui_font_baker/main.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/tools/flowui_font_baker/main.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/tools/flowui_font_baker/main.cpp",
+  "output": "CMakeFiles/flowui_font_baker.dir/tools/flowui_font_baker/main.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build",
+  "command": "/usr/bin/c++ -DFLOWUI_INCLUDE_SVG_MANAGER=1 -DFLOWUI_PUBLIC_VULKAN_INTEROP=1 -DFLOWUI_SHADER_OUTPUT_DIR=\\\"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/shaders\\\" -DPLUTOSVG_BUILD_STATIC -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/source -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -std=c++2b -o CMakeFiles/flowui.dir/src/clay.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/clay.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/clay.cpp",
+  "output": "CMakeFiles/flowui.dir/src/clay.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build",
+  "command": "/usr/bin/c++ -DFLOWUI_INCLUDE_SVG_MANAGER=1 -DFLOWUI_PUBLIC_VULKAN_INTEROP=1 -DFLOWUI_SHADER_OUTPUT_DIR=\\\"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/shaders\\\" -DPLUTOSVG_BUILD_STATIC -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/source -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -std=c++2b -o CMakeFiles/flowui.dir/src/FlowUi.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/FlowUi.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/FlowUi.cpp",
+  "output": "CMakeFiles/flowui.dir/src/FlowUi.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build",
+  "command": "/usr/bin/c++ -DFLOWUI_INCLUDE_SVG_MANAGER=1 -DFLOWUI_PUBLIC_VULKAN_INTEROP=1 -DFLOWUI_SHADER_OUTPUT_DIR=\\\"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/shaders\\\" -DPLUTOSVG_BUILD_STATIC -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/source -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -std=c++2b -o CMakeFiles/flowui.dir/src/managers/FontManager.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/FontManager.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/FontManager.cpp",
+  "output": "CMakeFiles/flowui.dir/src/managers/FontManager.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build",
+  "command": "/usr/bin/c++ -DFLOWUI_INCLUDE_SVG_MANAGER=1 -DFLOWUI_PUBLIC_VULKAN_INTEROP=1 -DFLOWUI_SHADER_OUTPUT_DIR=\\\"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/shaders\\\" -DPLUTOSVG_BUILD_STATIC -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/source -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -std=c++2b -o CMakeFiles/flowui.dir/src/managers/ImageManager.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/ImageManager.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/ImageManager.cpp",
+  "output": "CMakeFiles/flowui.dir/src/managers/ImageManager.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build",
+  "command": "/usr/bin/c++ -DFLOWUI_INCLUDE_SVG_MANAGER=1 -DFLOWUI_PUBLIC_VULKAN_INTEROP=1 -DFLOWUI_SHADER_OUTPUT_DIR=\\\"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/shaders\\\" -DPLUTOSVG_BUILD_STATIC -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/source -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -std=c++2b -o CMakeFiles/flowui.dir/src/managers/ViewPortManager.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/ViewPortManager.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/ViewPortManager.cpp",
+  "output": "CMakeFiles/flowui.dir/src/managers/ViewPortManager.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build",
+  "command": "/usr/bin/c++ -DFLOWUI_INCLUDE_SVG_MANAGER=1 -DFLOWUI_PUBLIC_VULKAN_INTEROP=1 -DFLOWUI_SHADER_OUTPUT_DIR=\\\"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/shaders\\\" -DPLUTOSVG_BUILD_STATIC -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/source -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -std=c++2b -o CMakeFiles/flowui.dir/src/managers/FlowUiElementSystem.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/FlowUiElementSystem.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/FlowUiElementSystem.cpp",
+  "output": "CMakeFiles/flowui.dir/src/managers/FlowUiElementSystem.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build",
+  "command": "/usr/bin/c++ -DFLOWUI_INCLUDE_SVG_MANAGER=1 -DFLOWUI_PUBLIC_VULKAN_INTEROP=1 -DFLOWUI_SHADER_OUTPUT_DIR=\\\"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/shaders\\\" -DPLUTOSVG_BUILD_STATIC -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/source -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -std=c++2b -o CMakeFiles/flowui.dir/src/managers/UiManager.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/UiManager.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/UiManager.cpp",
+  "output": "CMakeFiles/flowui.dir/src/managers/UiManager.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build",
+  "command": "/usr/bin/c++ -DFLOWUI_INCLUDE_SVG_MANAGER=1 -DFLOWUI_PUBLIC_VULKAN_INTEROP=1 -DFLOWUI_SHADER_OUTPUT_DIR=\\\"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/shaders\\\" -DPLUTOSVG_BUILD_STATIC -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/source -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -std=c++2b -o CMakeFiles/flowui.dir/src/Ui/Vk_UiRenderer.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/Ui/Vk_UiRenderer.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/Ui/Vk_UiRenderer.cpp",
+  "output": "CMakeFiles/flowui.dir/src/Ui/Vk_UiRenderer.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build",
+  "command": "/usr/bin/c++ -DFLOWUI_INCLUDE_SVG_MANAGER=1 -DFLOWUI_PUBLIC_VULKAN_INTEROP=1 -DFLOWUI_SHADER_OUTPUT_DIR=\\\"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/shaders\\\" -DPLUTOSVG_BUILD_STATIC -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/source -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -std=c++2b -o CMakeFiles/flowui.dir/src/window/Inputs.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/window/Inputs.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/window/Inputs.cpp",
+  "output": "CMakeFiles/flowui.dir/src/window/Inputs.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build",
+  "command": "/usr/bin/c++ -DFLOWUI_INCLUDE_SVG_MANAGER=1 -DFLOWUI_PUBLIC_VULKAN_INTEROP=1 -DFLOWUI_SHADER_OUTPUT_DIR=\\\"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/shaders\\\" -DPLUTOSVG_BUILD_STATIC -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/source -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -std=c++2b -o CMakeFiles/flowui.dir/src/Vulkan/Vk_Context.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/Vulkan/Vk_Context.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/Vulkan/Vk_Context.cpp",
+  "output": "CMakeFiles/flowui.dir/src/Vulkan/Vk_Context.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build",
+  "command": "/usr/bin/c++ -DFLOWUI_INCLUDE_SVG_MANAGER=1 -DFLOWUI_PUBLIC_VULKAN_INTEROP=1 -DFLOWUI_SHADER_OUTPUT_DIR=\\\"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/shaders\\\" -DPLUTOSVG_BUILD_STATIC -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/source -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -std=c++2b -o CMakeFiles/flowui.dir/src/Vulkan/Vk_Frames.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/Vulkan/Vk_Frames.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/Vulkan/Vk_Frames.cpp",
+  "output": "CMakeFiles/flowui.dir/src/Vulkan/Vk_Frames.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build",
+  "command": "/usr/bin/c++ -DFLOWUI_INCLUDE_SVG_MANAGER=1 -DFLOWUI_PUBLIC_VULKAN_INTEROP=1 -DFLOWUI_SHADER_OUTPUT_DIR=\\\"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/shaders\\\" -DPLUTOSVG_BUILD_STATIC -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/source -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -std=c++2b -o CMakeFiles/flowui.dir/src/Vulkan/Vk_Swapchain.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/Vulkan/Vk_Swapchain.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/Vulkan/Vk_Swapchain.cpp",
+  "output": "CMakeFiles/flowui.dir/src/Vulkan/Vk_Swapchain.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build",
+  "command": "/usr/bin/c++ -DFLOWUI_INCLUDE_SVG_MANAGER=1 -DFLOWUI_PUBLIC_VULKAN_INTEROP=1 -DFLOWUI_SHADER_OUTPUT_DIR=\\\"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/shaders\\\" -DPLUTOSVG_BUILD_STATIC -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/source -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -std=c++2b -o CMakeFiles/flowui.dir/src/managers/SvgManager.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/SvgManager.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/SvgManager.cpp",
+  "output": "CMakeFiles/flowui.dir/src/managers/SvgManager.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_DISABLE_SVG -DMSDFGEN_EXTENSIONS -DMSDFGEN_EXT_PUBLIC=\"\" -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_USE_LIBPNG -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0 -DMSDF_ATLAS_COPYRIGHT_YEAR=2026 -DMSDF_ATLAS_PUBLIC=\"\" -DMSDF_ATLAS_VERSION=1.4.0 -DMSDF_ATLAS_VERSION_MAJOR=1 -DMSDF_ATLAS_VERSION_MINOR=4 -DMSDF_ATLAS_VERSION_REVISION=0 -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/Charset.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/Charset.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/Charset.cpp",
+  "output": "external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/Charset.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_DISABLE_SVG -DMSDFGEN_EXTENSIONS -DMSDFGEN_EXT_PUBLIC=\"\" -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_USE_LIBPNG -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0 -DMSDF_ATLAS_COPYRIGHT_YEAR=2026 -DMSDF_ATLAS_PUBLIC=\"\" -DMSDF_ATLAS_VERSION=1.4.0 -DMSDF_ATLAS_VERSION_MAJOR=1 -DMSDF_ATLAS_VERSION_MINOR=4 -DMSDF_ATLAS_VERSION_REVISION=0 -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/FontGeometry.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/FontGeometry.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/FontGeometry.cpp",
+  "output": "external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/FontGeometry.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_DISABLE_SVG -DMSDFGEN_EXTENSIONS -DMSDFGEN_EXT_PUBLIC=\"\" -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_USE_LIBPNG -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0 -DMSDF_ATLAS_COPYRIGHT_YEAR=2026 -DMSDF_ATLAS_PUBLIC=\"\" -DMSDF_ATLAS_VERSION=1.4.0 -DMSDF_ATLAS_VERSION_MAJOR=1 -DMSDF_ATLAS_VERSION_MINOR=4 -DMSDF_ATLAS_VERSION_REVISION=0 -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/GlyphGeometry.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/GlyphGeometry.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/GlyphGeometry.cpp",
+  "output": "external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/GlyphGeometry.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_DISABLE_SVG -DMSDFGEN_EXTENSIONS -DMSDFGEN_EXT_PUBLIC=\"\" -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_USE_LIBPNG -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0 -DMSDF_ATLAS_COPYRIGHT_YEAR=2026 -DMSDF_ATLAS_PUBLIC=\"\" -DMSDF_ATLAS_VERSION=1.4.0 -DMSDF_ATLAS_VERSION_MAJOR=1 -DMSDF_ATLAS_VERSION_MINOR=4 -DMSDF_ATLAS_VERSION_REVISION=0 -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/GridAtlasPacker.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/GridAtlasPacker.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/GridAtlasPacker.cpp",
+  "output": "external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/GridAtlasPacker.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_DISABLE_SVG -DMSDFGEN_EXTENSIONS -DMSDFGEN_EXT_PUBLIC=\"\" -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_USE_LIBPNG -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0 -DMSDF_ATLAS_COPYRIGHT_YEAR=2026 -DMSDF_ATLAS_PUBLIC=\"\" -DMSDF_ATLAS_VERSION=1.4.0 -DMSDF_ATLAS_VERSION_MAJOR=1 -DMSDF_ATLAS_VERSION_MINOR=4 -DMSDF_ATLAS_VERSION_REVISION=0 -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/Padding.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/Padding.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/Padding.cpp",
+  "output": "external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/Padding.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_DISABLE_SVG -DMSDFGEN_EXTENSIONS -DMSDFGEN_EXT_PUBLIC=\"\" -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_USE_LIBPNG -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0 -DMSDF_ATLAS_COPYRIGHT_YEAR=2026 -DMSDF_ATLAS_PUBLIC=\"\" -DMSDF_ATLAS_VERSION=1.4.0 -DMSDF_ATLAS_VERSION_MAJOR=1 -DMSDF_ATLAS_VERSION_MINOR=4 -DMSDF_ATLAS_VERSION_REVISION=0 -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/RectanglePacker.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/RectanglePacker.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/RectanglePacker.cpp",
+  "output": "external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/RectanglePacker.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_DISABLE_SVG -DMSDFGEN_EXTENSIONS -DMSDFGEN_EXT_PUBLIC=\"\" -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_USE_LIBPNG -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0 -DMSDF_ATLAS_COPYRIGHT_YEAR=2026 -DMSDF_ATLAS_PUBLIC=\"\" -DMSDF_ATLAS_VERSION=1.4.0 -DMSDF_ATLAS_VERSION_MAJOR=1 -DMSDF_ATLAS_VERSION_MINOR=4 -DMSDF_ATLAS_VERSION_REVISION=0 -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/TightAtlasPacker.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/TightAtlasPacker.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/TightAtlasPacker.cpp",
+  "output": "external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/TightAtlasPacker.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_DISABLE_SVG -DMSDFGEN_EXTENSIONS -DMSDFGEN_EXT_PUBLIC=\"\" -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_USE_LIBPNG -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0 -DMSDF_ATLAS_COPYRIGHT_YEAR=2026 -DMSDF_ATLAS_PUBLIC=\"\" -DMSDF_ATLAS_VERSION=1.4.0 -DMSDF_ATLAS_VERSION_MAJOR=1 -DMSDF_ATLAS_VERSION_MINOR=4 -DMSDF_ATLAS_VERSION_REVISION=0 -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/Workload.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/Workload.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/Workload.cpp",
+  "output": "external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/Workload.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_DISABLE_SVG -DMSDFGEN_EXTENSIONS -DMSDFGEN_EXT_PUBLIC=\"\" -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_USE_LIBPNG -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0 -DMSDF_ATLAS_COPYRIGHT_YEAR=2026 -DMSDF_ATLAS_PUBLIC=\"\" -DMSDF_ATLAS_VERSION=1.4.0 -DMSDF_ATLAS_VERSION_MAJOR=1 -DMSDF_ATLAS_VERSION_MINOR=4 -DMSDF_ATLAS_VERSION_REVISION=0 -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/artery-font-export.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/artery-font-export.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/artery-font-export.cpp",
+  "output": "external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/artery-font-export.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_DISABLE_SVG -DMSDFGEN_EXTENSIONS -DMSDFGEN_EXT_PUBLIC=\"\" -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_USE_LIBPNG -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0 -DMSDF_ATLAS_COPYRIGHT_YEAR=2026 -DMSDF_ATLAS_PUBLIC=\"\" -DMSDF_ATLAS_VERSION=1.4.0 -DMSDF_ATLAS_VERSION_MAJOR=1 -DMSDF_ATLAS_VERSION_MINOR=4 -DMSDF_ATLAS_VERSION_REVISION=0 -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/bitmap-blit.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/bitmap-blit.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/bitmap-blit.cpp",
+  "output": "external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/bitmap-blit.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_DISABLE_SVG -DMSDFGEN_EXTENSIONS -DMSDFGEN_EXT_PUBLIC=\"\" -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_USE_LIBPNG -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0 -DMSDF_ATLAS_COPYRIGHT_YEAR=2026 -DMSDF_ATLAS_PUBLIC=\"\" -DMSDF_ATLAS_VERSION=1.4.0 -DMSDF_ATLAS_VERSION_MAJOR=1 -DMSDF_ATLAS_VERSION_MINOR=4 -DMSDF_ATLAS_VERSION_REVISION=0 -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/charset-parser.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/charset-parser.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/charset-parser.cpp",
+  "output": "external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/charset-parser.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_DISABLE_SVG -DMSDFGEN_EXTENSIONS -DMSDFGEN_EXT_PUBLIC=\"\" -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_USE_LIBPNG -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0 -DMSDF_ATLAS_COPYRIGHT_YEAR=2026 -DMSDF_ATLAS_PUBLIC=\"\" -DMSDF_ATLAS_VERSION=1.4.0 -DMSDF_ATLAS_VERSION_MAJOR=1 -DMSDF_ATLAS_VERSION_MINOR=4 -DMSDF_ATLAS_VERSION_REVISION=0 -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/csv-export.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/csv-export.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/csv-export.cpp",
+  "output": "external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/csv-export.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_DISABLE_SVG -DMSDFGEN_EXTENSIONS -DMSDFGEN_EXT_PUBLIC=\"\" -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_USE_LIBPNG -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0 -DMSDF_ATLAS_COPYRIGHT_YEAR=2026 -DMSDF_ATLAS_PUBLIC=\"\" -DMSDF_ATLAS_VERSION=1.4.0 -DMSDF_ATLAS_VERSION_MAJOR=1 -DMSDF_ATLAS_VERSION_MINOR=4 -DMSDF_ATLAS_VERSION_REVISION=0 -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/glyph-generators.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/glyph-generators.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/glyph-generators.cpp",
+  "output": "external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/glyph-generators.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_DISABLE_SVG -DMSDFGEN_EXTENSIONS -DMSDFGEN_EXT_PUBLIC=\"\" -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_USE_LIBPNG -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0 -DMSDF_ATLAS_COPYRIGHT_YEAR=2026 -DMSDF_ATLAS_PUBLIC=\"\" -DMSDF_ATLAS_VERSION=1.4.0 -DMSDF_ATLAS_VERSION_MAJOR=1 -DMSDF_ATLAS_VERSION_MINOR=4 -DMSDF_ATLAS_VERSION_REVISION=0 -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/image-encode.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/image-encode.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/image-encode.cpp",
+  "output": "external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/image-encode.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_DISABLE_SVG -DMSDFGEN_EXTENSIONS -DMSDFGEN_EXT_PUBLIC=\"\" -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_USE_LIBPNG -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0 -DMSDF_ATLAS_COPYRIGHT_YEAR=2026 -DMSDF_ATLAS_PUBLIC=\"\" -DMSDF_ATLAS_VERSION=1.4.0 -DMSDF_ATLAS_VERSION_MAJOR=1 -DMSDF_ATLAS_VERSION_MINOR=4 -DMSDF_ATLAS_VERSION_REVISION=0 -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/json-export.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/json-export.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/json-export.cpp",
+  "output": "external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/json-export.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_DISABLE_SVG -DMSDFGEN_EXTENSIONS -DMSDFGEN_EXT_PUBLIC=\"\" -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_USE_LIBPNG -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0 -DMSDF_ATLAS_COPYRIGHT_YEAR=2026 -DMSDF_ATLAS_PUBLIC=\"\" -DMSDF_ATLAS_VERSION=1.4.0 -DMSDF_ATLAS_VERSION_MAJOR=1 -DMSDF_ATLAS_VERSION_MINOR=4 -DMSDF_ATLAS_VERSION_REVISION=0 -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/main.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/main.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/main.cpp",
+  "output": "external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/main.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_DISABLE_SVG -DMSDFGEN_EXTENSIONS -DMSDFGEN_EXT_PUBLIC=\"\" -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_USE_LIBPNG -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0 -DMSDF_ATLAS_COPYRIGHT_YEAR=2026 -DMSDF_ATLAS_PUBLIC=\"\" -DMSDF_ATLAS_VERSION=1.4.0 -DMSDF_ATLAS_VERSION_MAJOR=1 -DMSDF_ATLAS_VERSION_MINOR=4 -DMSDF_ATLAS_VERSION_REVISION=0 -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/shadron-preview-generator.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/shadron-preview-generator.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/shadron-preview-generator.cpp",
+  "output": "external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/shadron-preview-generator.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_DISABLE_SVG -DMSDFGEN_EXTENSIONS -DMSDFGEN_EXT_PUBLIC=\"\" -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_USE_LIBPNG -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0 -DMSDF_ATLAS_COPYRIGHT_YEAR=2026 -DMSDF_ATLAS_PUBLIC=\"\" -DMSDF_ATLAS_VERSION=1.4.0 -DMSDF_ATLAS_VERSION_MAJOR=1 -DMSDF_ATLAS_VERSION_MINOR=4 -DMSDF_ATLAS_VERSION_REVISION=0 -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/size-selectors.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/size-selectors.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/size-selectors.cpp",
+  "output": "external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/size-selectors.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_DISABLE_SVG -DMSDFGEN_EXTENSIONS -DMSDFGEN_EXT_PUBLIC=\"\" -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_USE_LIBPNG -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0 -DMSDF_ATLAS_COPYRIGHT_YEAR=2026 -DMSDF_ATLAS_PUBLIC=\"\" -DMSDF_ATLAS_VERSION=1.4.0 -DMSDF_ATLAS_VERSION_MAJOR=1 -DMSDF_ATLAS_VERSION_MINOR=4 -DMSDF_ATLAS_VERSION_REVISION=0 -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/utf8.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/utf8.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/utf8.cpp",
+  "output": "external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/msdf-atlas-gen/utf8.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0  -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-core.dir/core/Contour.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/Contour.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/Contour.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/core/Contour.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0  -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-core.dir/core/DistanceMapping.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/DistanceMapping.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/DistanceMapping.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/core/DistanceMapping.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0  -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-core.dir/core/EdgeHolder.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/EdgeHolder.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/EdgeHolder.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/core/EdgeHolder.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0  -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-core.dir/core/MSDFErrorCorrection.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/MSDFErrorCorrection.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/MSDFErrorCorrection.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/core/MSDFErrorCorrection.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0  -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-core.dir/core/Projection.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/Projection.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/Projection.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/core/Projection.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0  -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-core.dir/core/Scanline.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/Scanline.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/Scanline.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/core/Scanline.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0  -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-core.dir/core/Shape.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/Shape.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/Shape.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/core/Shape.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0  -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-core.dir/core/contour-combiners.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/contour-combiners.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/contour-combiners.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/core/contour-combiners.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0  -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-core.dir/core/convergent-curve-ordering.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/convergent-curve-ordering.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/convergent-curve-ordering.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/core/convergent-curve-ordering.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0  -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-core.dir/core/edge-coloring.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/edge-coloring.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/edge-coloring.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/core/edge-coloring.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0  -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-core.dir/core/edge-segments.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/edge-segments.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/edge-segments.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/core/edge-segments.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0  -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-core.dir/core/edge-selectors.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/edge-selectors.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/edge-selectors.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/core/edge-selectors.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0  -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-core.dir/core/equation-solver.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/equation-solver.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/equation-solver.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/core/equation-solver.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0  -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-core.dir/core/export-svg.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/export-svg.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/export-svg.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/core/export-svg.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0  -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-core.dir/core/msdf-error-correction.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/msdf-error-correction.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/msdf-error-correction.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/core/msdf-error-correction.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0  -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-core.dir/core/msdfgen.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/msdfgen.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/msdfgen.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/core/msdfgen.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0  -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-core.dir/core/rasterization.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/rasterization.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/rasterization.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/core/rasterization.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0  -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-core.dir/core/render-sdf.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/render-sdf.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/render-sdf.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/core/render-sdf.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0  -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-core.dir/core/save-bmp.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/save-bmp.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/save-bmp.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/core/save-bmp.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0  -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-core.dir/core/save-fl32.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/save-fl32.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/save-fl32.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/core/save-fl32.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0  -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-core.dir/core/save-rgba.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/save-rgba.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/save-rgba.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/core/save-rgba.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0  -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-core.dir/core/save-tiff.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/save-tiff.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/save-tiff.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/core/save-tiff.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0  -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-core.dir/core/sdf-error-estimation.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/sdf-error-estimation.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/sdf-error-estimation.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/core/sdf-error-estimation.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0  -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-core.dir/core/shape-description.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/shape-description.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/core/shape-description.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/core/shape-description.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_DISABLE_SVG -DMSDFGEN_EXT_PUBLIC=\"\" -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_USE_LIBPNG -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0 -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/include -isystem /usr/include/freetype2 -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-ext.dir/ext/import-font.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/ext/import-font.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/ext/import-font.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-ext.dir/ext/import-font.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_DISABLE_SVG -DMSDFGEN_EXT_PUBLIC=\"\" -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_USE_LIBPNG -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0 -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/include -isystem /usr/include/freetype2 -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-ext.dir/ext/import-svg.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/ext/import-svg.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/ext/import-svg.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-ext.dir/ext/import-svg.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_DISABLE_SVG -DMSDFGEN_EXT_PUBLIC=\"\" -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_USE_LIBPNG -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0 -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/include -isystem /usr/include/freetype2 -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-ext.dir/ext/resolve-shape-geometry.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/ext/resolve-shape-geometry.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/ext/resolve-shape-geometry.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-ext.dir/ext/resolve-shape-geometry.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/msdf-atlas-gen/msdfgen",
+  "command": "/usr/bin/c++ -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_DISABLE_SVG -DMSDFGEN_EXT_PUBLIC=\"\" -DMSDFGEN_PUBLIC=\"\" -DMSDFGEN_USE_CPP11 -DMSDFGEN_USE_LIBPNG -DMSDFGEN_VERSION=1.13.0 -DMSDFGEN_VERSION_MAJOR=1 -DMSDFGEN_VERSION_MINOR=13 -DMSDFGEN_VERSION_REVISION=0 -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/include -isystem /usr/include/freetype2 -O3 -DNDEBUG -std=c++2b -o CMakeFiles/msdfgen-ext.dir/ext/save-png.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/ext/save-png.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen/ext/save-png.cpp",
+  "output": "external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-ext.dir/ext/save-png.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/plutosvg",
+  "command": "/usr/bin/cc -DPLUTOSVG_BUILD -DPLUTOSVG_BUILD_STATIC -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/source -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -std=gnu99 -fvisibility=hidden -o CMakeFiles/plutosvg.dir/source/plutosvg.c.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/source/plutosvg.c",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/source/plutosvg.c",
+  "output": "external/plutosvg/CMakeFiles/plutosvg.dir/source/plutosvg.c.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/plutosvg/plutovg",
+  "command": "/usr/bin/cc -DPLUTOVG_BUILD -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source -std=gnu99 -fvisibility=hidden -o CMakeFiles/plutovg.dir/source/plutovg-blend.c.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source/plutovg-blend.c",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source/plutovg-blend.c",
+  "output": "external/plutosvg/plutovg/CMakeFiles/plutovg.dir/source/plutovg-blend.c.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/plutosvg/plutovg",
+  "command": "/usr/bin/cc -DPLUTOVG_BUILD -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source -std=gnu99 -fvisibility=hidden -o CMakeFiles/plutovg.dir/source/plutovg-canvas.c.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source/plutovg-canvas.c",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source/plutovg-canvas.c",
+  "output": "external/plutosvg/plutovg/CMakeFiles/plutovg.dir/source/plutovg-canvas.c.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/plutosvg/plutovg",
+  "command": "/usr/bin/cc -DPLUTOVG_BUILD -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source -std=gnu99 -fvisibility=hidden -o CMakeFiles/plutovg.dir/source/plutovg-font.c.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source/plutovg-font.c",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source/plutovg-font.c",
+  "output": "external/plutosvg/plutovg/CMakeFiles/plutovg.dir/source/plutovg-font.c.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/plutosvg/plutovg",
+  "command": "/usr/bin/cc -DPLUTOVG_BUILD -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source -std=gnu99 -fvisibility=hidden -o CMakeFiles/plutovg.dir/source/plutovg-matrix.c.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source/plutovg-matrix.c",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source/plutovg-matrix.c",
+  "output": "external/plutosvg/plutovg/CMakeFiles/plutovg.dir/source/plutovg-matrix.c.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/plutosvg/plutovg",
+  "command": "/usr/bin/cc -DPLUTOVG_BUILD -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source -std=gnu99 -fvisibility=hidden -o CMakeFiles/plutovg.dir/source/plutovg-paint.c.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source/plutovg-paint.c",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source/plutovg-paint.c",
+  "output": "external/plutosvg/plutovg/CMakeFiles/plutovg.dir/source/plutovg-paint.c.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/plutosvg/plutovg",
+  "command": "/usr/bin/cc -DPLUTOVG_BUILD -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source -std=gnu99 -fvisibility=hidden -o CMakeFiles/plutovg.dir/source/plutovg-path.c.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source/plutovg-path.c",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source/plutovg-path.c",
+  "output": "external/plutosvg/plutovg/CMakeFiles/plutovg.dir/source/plutovg-path.c.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/plutosvg/plutovg",
+  "command": "/usr/bin/cc -DPLUTOVG_BUILD -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source -std=gnu99 -fvisibility=hidden -o CMakeFiles/plutovg.dir/source/plutovg-rasterize.c.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source/plutovg-rasterize.c",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source/plutovg-rasterize.c",
+  "output": "external/plutosvg/plutovg/CMakeFiles/plutovg.dir/source/plutovg-rasterize.c.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/plutosvg/plutovg",
+  "command": "/usr/bin/cc -DPLUTOVG_BUILD -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source -std=gnu99 -fvisibility=hidden -o CMakeFiles/plutovg.dir/source/plutovg-surface.c.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source/plutovg-surface.c",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source/plutovg-surface.c",
+  "output": "external/plutosvg/plutovg/CMakeFiles/plutovg.dir/source/plutovg-surface.c.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/plutosvg/plutovg",
+  "command": "/usr/bin/cc -DPLUTOVG_BUILD -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source -std=gnu99 -fvisibility=hidden -o CMakeFiles/plutovg.dir/source/plutovg-ft-math.c.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source/plutovg-ft-math.c",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source/plutovg-ft-math.c",
+  "output": "external/plutosvg/plutovg/CMakeFiles/plutovg.dir/source/plutovg-ft-math.c.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/plutosvg/plutovg",
+  "command": "/usr/bin/cc -DPLUTOVG_BUILD -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source -std=gnu99 -fvisibility=hidden -o CMakeFiles/plutovg.dir/source/plutovg-ft-raster.c.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source/plutovg-ft-raster.c",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source/plutovg-ft-raster.c",
+  "output": "external/plutosvg/plutovg/CMakeFiles/plutovg.dir/source/plutovg-ft-raster.c.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/.flowui_font_baker_build/external/plutosvg/plutovg",
+  "command": "/usr/bin/cc -DPLUTOVG_BUILD -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source -std=gnu99 -fvisibility=hidden -o CMakeFiles/plutovg.dir/source/plutovg-ft-stroker.c.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source/plutovg-ft-stroker.c",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source/plutovg-ft-stroker.c",
+  "output": "external/plutosvg/plutovg/CMakeFiles/plutovg.dir/source/plutovg-ft-stroker.c.o"
+}
+]

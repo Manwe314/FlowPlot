@@ -1,0 +1,22 @@
+1. add to legend contorl:
+	- multiple icon types including lines and bars
+	- control over their size 
+	- control over gap from icon to text
+	- control over legend element layouts 
+2. add to panell control:
+	- control over axis lines making a box / or not
+3. add to layout control:
+	- ability to arbitrarily place panels
+	- dynamic gap sizes
+	- Axis Tick control
+		- Ability to have custom tick layout
+		- ability to specify values to be ticked
+		- ability to set ticking paddings (for min / max)
+		- join and end setting with type enums for all axis line segments
+4. add LayerTypes:
+	- add Line plots
+5. change layerSpec
+	- make std::variant for each type of layer and an std::variant of those as a playload for layerSpec
+6. Support more dataTypes as vector inputs
+	- time/date
+	- custom layouts???

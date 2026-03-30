@@ -1,0 +1,55 @@
+{
+	"version": "1.0",
+	"figure": {
+    	"width": 1200,
+    	"height": 800,
+    	"dpi": 96,
+    	"background": "#ffffff",
+    	"padding": {
+    	  "left": 24,
+    	  "right": 24,
+    	  "top": 24,
+    	  "bottom": 24
+    	},
+    	"title": {
+    	  "visible": true,
+    	  "text": "Scatter Plot",
+    	  "fontFamily": "Default",
+    	  "fontSize": 24,
+    	  "fontWeight": 700,
+    	  "color": "#111111",
+    	  "overflow": "clip",
+    	  "clip": true,
+    	  "box": {
+    	    "x": null,
+    	    "y": null,
+    	    "width": null,
+    	    "height": null
+    	  }
+    	},
+    	"legends": []
+	},
+	"datasets": [
+		{
+			"name": "main",
+			"schema": {
+				"x": "number",
+				"y": "number"
+			}
+		}
+	],
+	"panels": [
+	  {
+	    "layers": [
+	      {
+	        "type": "scatter",
+	        "dataset": "main",
+	        "mapping": {
+	          "x": { "field": "x" },
+	          "y": { "field": "y" }
+	        }
+	      }
+	    ]
+	  }
+	]
+}

@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FlowUi Element Property Types Cheat Sheet</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --text: #102030;
+      --muted: #5a6b7d;
+      --border: #d8e0ea;
+      --shadow: 0 6px 20px rgba(16, 32, 48, 0.08);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0e141b;
+        --card: #141d27;
+        --text: #e7edf5;
+        --muted: #a3b1c2;
+        --border: #27384c;
+        --shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 28px;
+      background: linear-gradient(135deg, var(--bg), color-mix(in srgb, var(--bg) 70%, #5bb9ff 30%));
+      color: var(--text);
+      font-family: "Segoe UI", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.35;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    header {
+      padding: 20px 24px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h1 {
+      margin: 0 0 4px;
+      font-size: 1.25rem;
+    }
+
+    .sub {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .source {
+      padding: 12px 24px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.88rem;
+    }
+
+    .source code { color: var(--text); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px 14px;
+      vertical-align: top;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.92rem;
+    }
+
+    th {
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      background: color-mix(in srgb, var(--card) 85%, var(--bg) 15%);
+    }
+
+    td code {
+      font-size: 0.92rem;
+      font-family: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+      color: var(--text);
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 0.18rem 0.48rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      border: 1px solid transparent;
+    }
+
+    .primitive { background: #e8edf3; color: #33485e; border-color: #cad7e4; }
+    .callback { background: #efe7ff; color: #4f2f84; border-color: #d7c4ff; }
+    .flowui { background: #e4f1ff; color: #124c85; border-color: #b8dbff; }
+    .clay-id { background: #e7f2ff; color: #184d87; border-color: #c5def7; }
+    .clay-geometry { background: #e4fbf4; color: #145c45; border-color: #b9ead9; }
+    .clay-layout { background: #e6f7ec; color: #155b33; border-color: #bde8cb; }
+    .clay-text { background: #fff7e6; color: #7b5600; border-color: #ffdfad; }
+    .clay-visual { background: #fff3e2; color: #875100; border-color: #ffd7a1; }
+    .clay-element { background: #e9ecff; color: #2f3f99; border-color: #cdd4ff; }
+    .clay-floating { background: #ffe9f2; color: #8f1f54; border-color: #ffc2d9; }
+    .clay-custom { background: #f0ebff; color: #4a2f93; border-color: #d7cbff; }
+    .clay-clip { background: #e4fbff; color: #00556a; border-color: #b8edf8; }
+    .clay-border { background: #fff0f0; color: #8f2525; border-color: #ffc8c8; }
+
+    @media (prefers-color-scheme: dark) {
+      .primitive { background: #1f2c3b; color: #bdd0e5; border-color: #30465f; }
+      .callback { background: #2e2344; color: #d7c7ff; border-color: #4a3b6d; }
+      .flowui { background: #1f3246; color: #bee0ff; border-color: #375876; }
+      .clay-id { background: #1f3550; color: #c5e2ff; border-color: #335575; }
+      .clay-geometry { background: #163a2f; color: #bcead9; border-color: #2d6150; }
+      .clay-layout { background: #1d3528; color: #b9ebcb; border-color: #315a44; }
+      .clay-text { background: #3a2f1a; color: #ffe3ae; border-color: #5a4929; }
+      .clay-visual { background: #3c2e1a; color: #ffe1a7; border-color: #5d4729; }
+      .clay-element { background: #252d4b; color: #c9d0ff; border-color: #3e4a79; }
+      .clay-floating { background: #432436; color: #ffcade; border-color: #6d3a58; }
+      .clay-custom { background: #30264a; color: #dccfff; border-color: #4f4175; }
+      .clay-clip { background: #153846; color: #b7eefa; border-color: #2a5f73; }
+      .clay-border { background: #3b2020; color: #ffc8c8; border-color: #633434; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <h1>FlowUi Element Parameter Value Types</h1>
+      <p class="sub">Cheat sheet for <code>ElementParameterValue</code> std::variant in FlowUi</p>
+    </header>
+
+    <div class="source">
+      Source: <code>FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementSystem.hpp</code>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Category</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><code>bool</code></td><td><span class="tag primitive">Primitive</span></td><td>Basic pass-through type.</td></tr>
+        <tr><td><code>int</code></td><td><span class="tag primitive">Primitive</span></td><td>Basic pass-through type.</td></tr>
+        <tr><td><code>float</code></td><td><span class="tag primitive">Primitive</span></td><td>Basic pass-through type.</td></tr>
+        <tr><td><code>std::string</code></td><td><span class="tag primitive">Primitive</span></td><td>Basic pass-through type.</td></tr>
+
+        <tr><td><code>ElementCustomCallback</code></td><td><span class="tag callback">Callback</span></td><td>Custom function hook for element interaction logic.</td></tr>
+        <tr><td><code>TextureRef</code></td><td><span class="tag flowui">FlowUi</span></td><td>Texture payload (id, UVs, fit/sampling mode, tint flag, source size).</td></tr>
+
+        <tr><td><code>Clay_ElementId</code></td><td><span class="tag clay-id">Clay ID</span></td><td>Hashed element identifier used to reference and query specific UI elements.</td></tr>
+        <tr><td><code>Clay_Color</code></td><td><span class="tag clay-visual">Clay Visual</span></td><td>RGBA color used for backgrounds, text, borders, and related visuals.</td></tr>
+        <tr><td><code>Clay_Dimensions</code></td><td><span class="tag clay-geometry">Clay Geometry</span></td><td>Width/height pair used for element and floating expansion sizes.</td></tr>
+        <tr><td><code>Clay_Vector2</code></td><td><span class="tag clay-geometry">Clay Geometry</span></td><td>2D vector (x/y) used for offsets and positions.</td></tr>
+
+        <tr><td><code>Clay_LayoutAlignmentX</code></td><td><span class="tag clay-layout">Clay Layout</span></td><td>Horizontal child alignment enum (left, center, right).</td></tr>
+        <tr><td><code>Clay_LayoutAlignmentY</code></td><td><span class="tag clay-layout">Clay Layout</span></td><td>Vertical child alignment enum (top, center, bottom).</td></tr>
+        <tr><td><code>Clay_SizingMinMax</code></td><td><span class="tag clay-layout">Clay Layout</span></td><td>Min/max pixel clamp values for one sizing axis.</td></tr>
+        <tr><td><code>Clay_Sizing</code></td><td><span class="tag clay-layout">Clay Layout</span></td><td>Width/height sizing behavior (FIT, GROW, PERCENT, FIXED with min/max controls).</td></tr>
+        <tr><td><code>Clay_SizingAxis</code></td><td><span class="tag clay-layout">Clay Layout</span></td><td>Single-axis sizing definition: type plus min/max or percent data.</td></tr>
+        <tr><td><code>Clay__SizingType</code></td><td><span class="tag clay-layout">Clay Layout</span></td><td>Sizing mode enum for an axis (FIT, GROW, PERCENT, FIXED).</td></tr>
+        <tr><td><code>Clay_Padding</code></td><td><span class="tag clay-layout">Clay Layout</span></td><td>Inner spacing between element bounds and child content.</td></tr>
+        <tr><td><code>Clay_LayoutDirection</code></td><td><span class="tag clay-layout">Clay Layout</span></td><td>Child layout axis direction (left-to-right or top-to-bottom).</td></tr>
+        <tr><td><code>Clay_LayoutConfig</code></td><td><span class="tag clay-layout">Clay Layout</span></td><td>Full layout bundle: sizing, padding, child gap, alignment, direction.</td></tr>
+
+        <tr><td><code>Clay_ElementDeclaration</code></td><td><span class="tag clay-element">Clay Element</span></td><td>Full element declaration object containing id + all major Clay config blocks.</td></tr>
+
+        <tr><td><code>Clay_CornerRadius</code></td><td><span class="tag clay-visual">Clay Visual</span></td><td>Per-corner rounding radii for rectangles, images, and borders.</td></tr>
+        <tr><td><code>Clay_TextElementConfigWrapMode</code></td><td><span class="tag clay-text">Clay Text</span></td><td>Text wrapping mode enum (words, newlines-only, none).</td></tr>
+        <tr><td><code>Clay_TextAlignment</code></td><td><span class="tag clay-text">Clay Text</span></td><td>Horizontal alignment enum for wrapped text lines.</td></tr>
+        <tr><td><code>Clay_TextElementConfig</code></td><td><span class="tag clay-text">Clay Text</span></td><td>Text style/config payload: color, font, spacing, wrap mode, alignment, user data.</td></tr>
+        <tr><td><code>Clay_AspectRatioElementConfig</code></td><td><span class="tag clay-visual">Clay Visual</span></td><td>Aspect ratio constraint (width / height target).</td></tr>
+        <tr><td><code>Clay_ImageElementConfig</code></td><td><span class="tag clay-visual">Clay Visual</span></td><td>Image element config carrying renderer image data pointer.</td></tr>
+
+        <tr><td><code>Clay_FloatingAttachPointType</code></td><td><span class="tag clay-floating">Clay Floating</span></td><td>Anchor point enum used by floating attachment (3x3 grid positions).</td></tr>
+        <tr><td><code>Clay_FloatingAttachPoints</code></td><td><span class="tag clay-floating">Clay Floating</span></td><td>Anchor pair describing how floating element and target are aligned.</td></tr>
+        <tr><td><code>Clay_PointerCaptureMode</code></td><td><span class="tag clay-floating">Clay Floating</span></td><td>Pointer policy for floating elements (capture or passthrough).</td></tr>
+        <tr><td><code>Clay_FloatingAttachToElement</code></td><td><span class="tag clay-floating">Clay Floating</span></td><td>Floating target mode (none, parent, specific id, root).</td></tr>
+        <tr><td><code>Clay_FloatingClipToElement</code></td><td><span class="tag clay-floating">Clay Floating</span></td><td>Whether floating inherits clipping from its attached element.</td></tr>
+        <tr><td><code>Clay_FloatingElementConfig</code></td><td><span class="tag clay-floating">Clay Floating</span></td><td>Floating behavior package: offset, expand, target id, z-index, attach/capture/clip modes.</td></tr>
+
+        <tr><td><code>Clay_CustomElementConfig</code></td><td><span class="tag clay-custom">Clay Custom</span></td><td>Custom renderer payload with an opaque <code>customData</code> pointer.</td></tr>
+        <tr><td><code>Clay_ClipElementConfig</code></td><td><span class="tag clay-clip">Clay Clipping</span></td><td>Horizontal/vertical clipping and child offset (scroll-style content offset).</td></tr>
+
+        <tr><td><code>Clay_BorderWidth</code></td><td><span class="tag clay-border">Clay Border</span></td><td>Border thickness for each side plus optional between-children separators.</td></tr>
+        <tr><td><code>Clay_BorderElementConfig</code></td><td><span class="tag clay-border">Clay Border</span></td><td>Border config bundle with shared color and widths.</td></tr>
+        <tr><td><code>Clay_ChildAlignment</code></td><td><span class="tag clay-layout">Clay Layout</span></td><td>Combined horizontal/vertical child alignment pair.</td></tr>
+      </tbody>
+    </table>
+  </main>
+</body>
+</html>

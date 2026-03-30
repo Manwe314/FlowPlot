@@ -1,0 +1,114 @@
+FlowUi Element Parameter Value Types Cheat Sheet
+================================================
+
+Source variant:
+- FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementSystem.hpp
+- `using ElementParameterValue = std::variant<...>`
+
+Types in variant
+----------------
+
+Primitive pass-through types (intentionally not described):
+- bool
+- int
+- float
+- std::string
+
+- ElementCustomCallback
+  Callback function (`std::function<void(ElementInteractionContext&)>`) for custom element interaction logic.
+
+- TextureRef
+  FlowUi texture reference payload (texture id, UV range, fit/sampling mode, tint flag, source dimensions).
+
+- Clay_ElementId
+  Hashed/stable element identifier used to reference and query specific UI elements.
+
+- Clay_Color
+  RGBA color value used by Clay for element visuals (backgrounds, text, borders, tint-style data).
+
+- Clay_Dimensions
+  Width/height pair used for geometry sizes and expansion-style values.
+
+- Clay_Vector2
+  2D vector (`x`, `y`) used for offsets/positions.
+
+- Clay_LayoutAlignmentX
+  Horizontal child alignment enum (`LEFT`, `CENTER`, `RIGHT`).
+
+- Clay_LayoutAlignmentY
+  Vertical child alignment enum (`TOP`, `CENTER`, `BOTTOM`).
+
+- Clay_SizingMinMax
+  Min/max pixel clamp for an axis, used by sizing rules.
+
+- Clay_Sizing
+  Width/height sizing rules for layout; each axis can use FIT, GROW, PERCENT, or FIXED (with min/max support).
+
+- Clay_SizingAxis
+  Sizing definition for one axis: type + either min/max limits or percent value.
+
+- Clay__SizingType
+  Sizing mode enum for an axis (`FIT`, `GROW`, `PERCENT`, `FIXED`).
+
+- Clay_Padding
+  Inner spacing (left/right/top/bottom) between an element’s bounds and its children.
+
+- Clay_LayoutDirection
+  Child flow axis direction (left-to-right or top-to-bottom).
+
+- Clay_LayoutConfig
+  Full layout settings bundle: sizing, padding, child gap, child alignment, and layout direction.
+
+- Clay_ElementDeclaration
+  Complete Clay element declaration object (id, layout, visual configs, floating/clip/border/custom data).
+
+- Clay_CornerRadius
+  Per-corner rounding radii (top-left, top-right, bottom-left, bottom-right).
+
+- Clay_TextElementConfigWrapMode
+  Text wrapping mode enum (word wrap, newlines-only, or no wrapping).
+
+- Clay_TextAlignment
+  Horizontal text alignment enum for wrapped lines (left, center, right).
+
+- Clay_TextElementConfig
+  Full text style/config payload (color, font id/size, spacing, wrap, alignment, user data).
+
+- Clay_AspectRatioElementConfig
+  Target aspect ratio configuration (width/height ratio constraint).
+
+- Clay_ImageElementConfig
+  Image element payload; carries an opaque `imageData` pointer to renderer-side image data.
+
+- Clay_FloatingAttachPointType
+  Anchor-point enum used for floating attachment origins (left/center/right x top/center/bottom grid).
+
+- Clay_FloatingAttachPoints
+  Pair of attachment anchors that define how a floating element is anchored to its target element.
+
+- Clay_PointerCaptureMode
+  Pointer-event handling enum for floating elements (capture vs passthrough).
+
+- Clay_FloatingAttachToElement
+  Floating attachment target mode (none, parent, specific element id, or root).
+
+- Clay_FloatingClipToElement
+  Floating clip inheritance enum (no inherited clip or clip to attached parent).
+
+- Clay_FloatingElementConfig
+  Full floating behavior config: offset, expansion, target id, z-index, attach points, capture mode, attach target, clip mode.
+
+- Clay_CustomElementConfig
+  Custom render payload carrying opaque `customData` pointer for renderer-specific element behavior.
+
+- Clay_ClipElementConfig
+  Overflow clipping config (horizontal/vertical clipping plus child offset for scroll-style behavior).
+
+- Clay_BorderWidth
+  Border thickness per side plus optional separators between child elements.
+
+- Clay_BorderElementConfig
+  Border config bundle: shared border color + per-side/between-children widths.
+
+- Clay_ChildAlignment
+  Pair of horizontal and vertical alignment settings for child layout.

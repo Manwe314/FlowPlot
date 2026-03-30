@@ -1,0 +1,35 @@
+
+# Consider dependencies only in project.
+set(CMAKE_DEPENDS_IN_PROJECT_ONLY OFF)
+
+# The set of languages for which implicit dependencies are needed:
+set(CMAKE_DEPENDS_LANGUAGES
+  )
+
+# The set of dependency files which are needed:
+set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/FlowUi.cpp" "CMakeFiles/flowui.dir/src/FlowUi.cpp.o" "gcc" "CMakeFiles/flowui.dir/src/FlowUi.cpp.o.d"
+  "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/Ui/Vk_UiRenderer.cpp" "CMakeFiles/flowui.dir/src/Ui/Vk_UiRenderer.cpp.o" "gcc" "CMakeFiles/flowui.dir/src/Ui/Vk_UiRenderer.cpp.o.d"
+  "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/Vulkan/Vk_Context.cpp" "CMakeFiles/flowui.dir/src/Vulkan/Vk_Context.cpp.o" "gcc" "CMakeFiles/flowui.dir/src/Vulkan/Vk_Context.cpp.o.d"
+  "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/Vulkan/Vk_Frames.cpp" "CMakeFiles/flowui.dir/src/Vulkan/Vk_Frames.cpp.o" "gcc" "CMakeFiles/flowui.dir/src/Vulkan/Vk_Frames.cpp.o.d"
+  "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/Vulkan/Vk_Swapchain.cpp" "CMakeFiles/flowui.dir/src/Vulkan/Vk_Swapchain.cpp.o" "gcc" "CMakeFiles/flowui.dir/src/Vulkan/Vk_Swapchain.cpp.o.d"
+  "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/clay.cpp" "CMakeFiles/flowui.dir/src/clay.cpp.o" "gcc" "CMakeFiles/flowui.dir/src/clay.cpp.o.d"
+  "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/FlowUiElementSystem.cpp" "CMakeFiles/flowui.dir/src/managers/FlowUiElementSystem.cpp.o" "gcc" "CMakeFiles/flowui.dir/src/managers/FlowUiElementSystem.cpp.o.d"
+  "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/FontManager.cpp" "CMakeFiles/flowui.dir/src/managers/FontManager.cpp.o" "gcc" "CMakeFiles/flowui.dir/src/managers/FontManager.cpp.o.d"
+  "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/ImageManager.cpp" "CMakeFiles/flowui.dir/src/managers/ImageManager.cpp.o" "gcc" "CMakeFiles/flowui.dir/src/managers/ImageManager.cpp.o.d"
+  "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/SvgManager.cpp" "CMakeFiles/flowui.dir/src/managers/SvgManager.cpp.o" "gcc" "CMakeFiles/flowui.dir/src/managers/SvgManager.cpp.o.d"
+  "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/UiManager.cpp" "CMakeFiles/flowui.dir/src/managers/UiManager.cpp.o" "gcc" "CMakeFiles/flowui.dir/src/managers/UiManager.cpp.o.d"
+  "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/ViewPortManager.cpp" "CMakeFiles/flowui.dir/src/managers/ViewPortManager.cpp.o" "gcc" "CMakeFiles/flowui.dir/src/managers/ViewPortManager.cpp.o.d"
+  "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/window/Inputs.cpp" "CMakeFiles/flowui.dir/src/window/Inputs.cpp.o" "gcc" "CMakeFiles/flowui.dir/src/window/Inputs.cpp.o.d"
+  )
+
+# Targets to which this target links which contain Fortran sources.
+set(CMAKE_Fortran_TARGET_LINKED_INFO_FILES
+  )
+
+# Targets to which this target links which contain Fortran sources.
+set(CMAKE_Fortran_TARGET_FORWARD_LINKED_INFO_FILES
+  )
+
+# Fortran module output directory.
+set(CMAKE_Fortran_TARGET_MODULE_DIR "")

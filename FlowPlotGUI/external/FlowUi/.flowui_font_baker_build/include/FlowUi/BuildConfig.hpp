@@ -1,0 +1,4 @@
+#pragma once
+
+#define FLOWUI_PUBLIC_VULKAN_INTEROP 1
+#define FLOWUI_INCLUDE_SVG_MANAGER 1
