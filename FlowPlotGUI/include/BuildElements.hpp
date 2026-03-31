@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include <functional>
 
 #include <FlowUi/Flow.hpp>
@@ -261,132 +262,787 @@ inline const BasicButtonDef kBasicButton = {
 	},
 };
 
-inline const FlowUi::ElementDefinition kTemplateLayer = {
-	// elementTypeName: unique element type key (used for registration/lookups).
-	"TemplateLayer",
+struct basicTitleParams {
+	enum class ContentMode : uint8_t {
+		TextOnly,
+		IconThenText,
+		TextThenIcon,
+	};
 
-	// initializeDefaultParameters: optional defaults merged with per-instance overrides.
-	[](FlowUi::ElementParameters& defaults) {
-		defaults.setValue("sizing", Clay_Sizing{.width = CLAY_SIZING_GROW(0, 10000), .height = CLAY_SIZING_FIT(0)});
-		defaults.setValue("background color", FlowUi::Flow_Color("#00000000"));
-		defaults.setValue("border color", FlowUi::Flow_Color("#00000000"));
-		defaults.setValue("border width", Clay_BorderWidth{0,0,0,0,0});
-		defaults.setValue("child alignment", Clay_ChildAlignment{.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER});
+	std::string text = "Title";
+	FlowUi::TextureRef icon = FlowUi::TextureRef{};
+	ContentMode contentMode = ContentMode::TextOnly;
 
-		defaults.setValue("indicator color", FlowUi::Flow_Color("#4ea9ffff"));
+	Clay_Padding padding = CLAY_PADDING_ALL(0);
+	Clay_Sizing sizing = Clay_Sizing{.width = CLAY_SIZING_FIT(0), .height = CLAY_SIZING_FIT(0)};
+	Clay_Color backgroundColor = FlowUi::Flow_Color("#00000000");
+	Clay_CornerRadius cornerRadius = CLAY_CORNER_RADIUS(0);
+	Clay_Color borderColor = FlowUi::Flow_Color("#00000000");
+	Clay_BorderWidth borderWidth = Clay_BorderWidth{0, 0, 0, 0, 0};
+	Clay_LayoutDirection childLayoutDirection = CLAY_LEFT_TO_RIGHT;
+	Clay_ChildAlignment childAlignment = Clay_ChildAlignment{.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER};
+	uint16_t childGap = 8;
 
-		defaults.setValue("left spacer min width", 0);
-		defaults.setValue("left spacer max width", 120);
+	Clay_TextElementConfigWrapMode textWrapMode = CLAY_TEXT_WRAP_NONE;
+	Clay_TextAlignment textAlignment = CLAY_TEXT_ALIGN_LEFT;
+	uint16_t fontId = 0;
+	uint16_t fontSize = 16;
+	Clay_Color textColor = FlowUi::Flow_Color("#f4f6f8ff");
 
-		defaults.setValue("main content min width", 180);
-		defaults.setValue("main content max width", 420);
-		defaults.setValue("main content padding", CLAY_PADDING_ALL(0));
-		defaults.setValue("main content child gap", 8);
-		defaults.setValue("main content child alignment", Clay_ChildAlignment{.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER});
-		defaults.setValue("main content background color", FlowUi::Flow_Color("#00000000"));
-		defaults.setValue("main content border color", FlowUi::Flow_Color("#00000000"));
-		defaults.setValue("main content border width", Clay_BorderWidth{0,0,0,0,0});
+	Clay_Sizing iconContainerSizing = Clay_Sizing{.width = CLAY_SIZING_FIXED(12), .height = CLAY_SIZING_FIXED(12)};
+	Clay_Padding iconContainerPadding = CLAY_PADDING_ALL(0);
+	Clay_LayoutDirection iconContainerChildLayoutDirection = CLAY_LEFT_TO_RIGHT;
+	Clay_ChildAlignment iconContainerChildAlignment = Clay_ChildAlignment{.x = CLAY_ALIGN_X_CENTER, .y = CLAY_ALIGN_Y_CENTER};
+	uint16_t iconContainerChildGap = 0;
+	Clay_Color iconContainerBackgroundColor = FlowUi::Flow_Color("#00000000");
+	Clay_Color iconContainerBorderColor = FlowUi::Flow_Color("#00000000");
+	Clay_BorderWidth iconContainerBorderWidth = Clay_BorderWidth{0, 0, 0, 0, 0};
 
-		defaults.setValue("show main leading button", false);
-		defaults.setValue("main leading button icon", FlowUi::TextureRef{});
-		defaults.setValue("main leading button slot sizing", Clay_Sizing{.width = CLAY_SIZING_FIXED(38), .height = CLAY_SIZING_FIXED(38)});
-		defaults.setValue("main leading button sizing", Clay_Sizing{.width = CLAY_SIZING_PERCENT(1.0f), .height = CLAY_SIZING_PERCENT(1.0f)});
+	Clay_Sizing iconSizing = Clay_Sizing{.width = CLAY_SIZING_PERCENT(1.0f), .height = CLAY_SIZING_PERCENT(1.0f)};
+	Clay_Color iconTintColor = FlowUi::Flow_Color("#72b6ffff");
+};
 
-		defaults.setValue("main icon", FlowUi::TextureRef{});
-		defaults.setValue("main icon container sizing", Clay_Sizing{.width = CLAY_SIZING_FIXED(18), .height = CLAY_SIZING_FIXED(18)});
-		defaults.setValue("main icon sizing", Clay_Sizing{.width = CLAY_SIZING_PERCENT(1.0f), .height = CLAY_SIZING_PERCENT(1.0f)});
-		defaults.setValue("main icon tint color", FlowUi::Flow_Color("#00000000"));
+using BasicTitleDef = FlowUi::ElementDefinition<basicTitleParams, void, void, FLOW_DEF_ID("Basic title")>;
 
-		defaults.setValue("main text", std::string("Template Layer"));
-		defaults.setValue("main text wrap mode", CLAY_TEXT_WRAP_NONE);
-		defaults.setValue("main text alignment", CLAY_TEXT_ALIGN_LEFT);
-		defaults.setValue("main text font id", 0);
-		defaults.setValue("main text font size", 16);
-		defaults.setValue("main text color", FlowUi::Flow_Color("#000000ff"));
+inline const BasicTitleDef kBasicTitle = {
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	+[](BasicTitleDef::BuildContext& context) {
+		const Clay_ElementId rootId = context.uiManager.toClayEID(context.elementID);
+		const bool needsIcon = context.params.contentMode != basicTitleParams::ContentMode::TextOnly;
 
-		defaults.setValue("show trailing button", false);
-		defaults.setValue("trailing button icon", FlowUi::TextureRef{});
+		Clay_LayoutConfig rootLayout{};
+		rootLayout.layoutDirection = context.params.childLayoutDirection;
+		rootLayout.sizing = context.params.sizing;
+		rootLayout.padding = context.params.padding;
+		rootLayout.childAlignment = context.params.childAlignment;
+		rootLayout.childGap = context.params.childGap;
+
+		Clay_ElementDeclaration root{};
+		root.id = rootId;
+		root.layout = rootLayout;
+		root.backgroundColor = context.params.backgroundColor;
+		root.cornerRadius = context.params.cornerRadius;
+		root.border = {.color = context.params.borderColor, .width = context.params.borderWidth};
+
+		const std::string textPath = context.createChildElementId("text");
+		const Clay_ElementId textId = context.uiManager.toClayEID(textPath);
+
+		Clay_TextElementConfig textConfig{};
+		textConfig.textColor = context.params.textColor;
+		textConfig.fontSize = context.params.fontSize;
+		textConfig.wrapMode = context.params.textWrapMode;
+		textConfig.textAlignment = context.params.textAlignment;
+		textConfig.fontId = context.params.fontId;
+
+		Clay_ElementDeclaration iconContainer{};
+		Clay_ElementDeclaration iconElement{};
+		if (needsIcon)
+		{
+			const std::string iconContainerPath = context.createChildElementId("icon-container");
+			const std::string iconPath = context.createChildElementId("icon");
+			const Clay_ElementId iconContainerId = context.uiManager.toClayEID(iconContainerPath);
+			const Clay_ElementId iconId = context.uiManager.toClayEID(iconPath);
+
+			Clay_LayoutConfig iconContainerLayout{};
+			iconContainerLayout.layoutDirection = context.params.iconContainerChildLayoutDirection;
+			iconContainerLayout.sizing = context.params.iconContainerSizing;
+			iconContainerLayout.padding = context.params.iconContainerPadding;
+			iconContainerLayout.childAlignment = context.params.iconContainerChildAlignment;
+			iconContainerLayout.childGap = context.params.iconContainerChildGap;
+
+			iconContainer.id = iconContainerId;
+			iconContainer.layout = iconContainerLayout;
+			iconContainer.backgroundColor = context.params.iconContainerBackgroundColor;
+			iconContainer.border = {.color = context.params.iconContainerBorderColor, .width = context.params.iconContainerBorderWidth};
+
+			Clay_LayoutConfig iconLayout{};
+			iconLayout.sizing = context.params.iconSizing;
+
+			iconElement.id = iconId;
+			iconElement.layout = iconLayout;
+			iconElement.backgroundColor = context.params.iconTintColor;
+			iconElement.image = {
+				.imageData = context.uiManager.storeTexture(context.params.icon),
+			};
+		}
+
+		auto drawTextChild = [&]() {
+			CLAY({.id = textId}){
+				CLAY_TEXT(
+					context.uiManager.toClayString(context.params.text),
+					CLAY_TEXT_CONFIG(textConfig)
+				);
+			};
+		};
+
+		auto drawIconChild = [&]() {
+			CLAY(iconContainer){
+				CLAY(iconElement){};
+			};
+		};
+
+		CLAY(root){
+			switch (context.params.contentMode)
+			{
+			case basicTitleParams::ContentMode::TextOnly:
+				drawTextChild();
+				break;
+			case basicTitleParams::ContentMode::IconThenText:
+				drawIconChild();
+				drawTextChild();
+				break;
+			case basicTitleParams::ContentMode::TextThenIcon:
+				drawTextChild();
+				drawIconChild();
+				break;
+			}
+		};
 	},
+};
 
-	// onHovered: optional callback when this element was hovered in the previous frame.
-	[](FlowUi::ElementInteractionContext& context) {
-		(void)context;
+struct panelTitleParams {
+	enum class RightContentMode : uint8_t {
+		None,
+		Button,
+		InputField,
+	};
+
+	int minHeight = 56;
+	int maxHeight = 88;
+	Clay_Padding padding = CLAY_PADDING_ALL(0);
+	Clay_Color backgroundColor = FlowUi::Flow_Color("#00000000");
+	Clay_Color borderColor = FlowUi::Flow_Color("#00000000");
+	Clay_BorderWidth borderWidth = Clay_BorderWidth{0, 0, 0, 0, 0};
+	Clay_ChildAlignment childAlignment = Clay_ChildAlignment{.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_TOP};
+	uint16_t childGap = 6;
+
+	Clay_Padding contentPadding = CLAY_PADDING_ALL(8);
+	Clay_Color contentBackgroundColor = FlowUi::Flow_Color("#00000000");
+	Clay_Color contentBorderColor = FlowUi::Flow_Color("#00000000");
+	Clay_BorderWidth contentBorderWidth = Clay_BorderWidth{0, 0, 0, 0, 0};
+	Clay_ChildAlignment contentChildAlignment = Clay_ChildAlignment{.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER};
+	uint16_t contentChildGap = 12;
+
+	Clay_ChildAlignment leftColumnChildAlignment = Clay_ChildAlignment{.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_TOP};
+	uint16_t leftColumnChildGap = 4;
+
+	std::string titleText = "Panel Title";
+	Clay_TextElementConfigWrapMode titleWrapMode = CLAY_TEXT_WRAP_NONE;
+	Clay_TextAlignment titleAlignment = CLAY_TEXT_ALIGN_LEFT;
+	uint16_t titleFontId = 0;
+	uint16_t titleFontSize = 16;
+	Clay_Color titleColor = FlowUi::Flow_Color("#f4f6f8ff");
+
+	bool showSecondaryTitle = false;
+	basicTitleParams secondaryTitleParams = basicTitleParams{};
+
+	RightContentMode rightContentMode = RightContentMode::Button;
+	basicButtonParams rightButtonParams = basicButtonParams{};
+	basicInputFieldParams rightInputFieldParams = basicInputFieldParams{};
+
+	Clay_Color separatorColor = FlowUi::Flow_Color("#5e646eff");
+};
+
+using PanelTitleDef = FlowUi::ElementDefinition<panelTitleParams, void, void, FLOW_DEF_ID("PanelTitle")>;
+
+inline const PanelTitleDef kPanelTitle = {
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	+[](PanelTitleDef::BuildContext& context) {
+		int minHeight = context.params.minHeight;
+		int maxHeight = context.params.maxHeight;
+		if (maxHeight < minHeight)
+		{
+			maxHeight = minHeight;
+		}
+
+		const Clay_ElementId rootId = context.uiManager.toClayEID(context.elementID);
+		const Clay_ElementId contentId = context.uiManager.toClayEID(context.createChildElementId("content"));
+		const Clay_ElementId leftColumnId = context.uiManager.toClayEID(context.createChildElementId("content/left-column"));
+		const Clay_ElementId rightContentId = context.uiManager.toClayEID(context.createChildElementId("content/right-content"));
+		const Clay_ElementId titleTextId = context.uiManager.toClayEID(context.createChildElementId("content/left-column/title"));
+		const Clay_ElementId separatorId = context.uiManager.toClayEID(context.createChildElementId("separator"));
+
+		const std::string secondaryTitlePath = context.createChildElementId("content/left-column/secondary-title");
+		const std::string rightButtonPath = context.createChildElementId("content/right-content/button");
+		const std::string rightInputPath = context.createChildElementId("content/right-content/input");
+
+		Clay_LayoutConfig rootLayout{};
+		rootLayout.layoutDirection = CLAY_TOP_TO_BOTTOM;
+		rootLayout.sizing = {
+			.width = CLAY_SIZING_GROW(0),
+			.height = CLAY_SIZING_FIT(static_cast<float>(minHeight), static_cast<float>(maxHeight)),
+		};
+		rootLayout.padding = context.params.padding;
+		rootLayout.childAlignment = context.params.childAlignment;
+		rootLayout.childGap = context.params.childGap;
+
+		Clay_ElementDeclaration root{};
+		root.id = rootId;
+		root.layout = rootLayout;
+		root.backgroundColor = context.params.backgroundColor;
+		root.cornerRadius = CLAY_CORNER_RADIUS(0);
+		root.border = {.color = context.params.borderColor, .width = context.params.borderWidth};
+
+		Clay_LayoutConfig contentLayout{};
+		contentLayout.layoutDirection = CLAY_LEFT_TO_RIGHT;
+		contentLayout.sizing = {
+			.width = CLAY_SIZING_GROW(0),
+			.height = CLAY_SIZING_GROW(0),
+		};
+		contentLayout.padding = context.params.contentPadding;
+		contentLayout.childAlignment = context.params.contentChildAlignment;
+		contentLayout.childGap = context.params.contentChildGap;
+
+		Clay_ElementDeclaration content{};
+		content.id = contentId;
+		content.layout = contentLayout;
+		content.backgroundColor = context.params.contentBackgroundColor;
+		content.border = {.color = context.params.contentBorderColor, .width = context.params.contentBorderWidth};
+
+		Clay_LayoutConfig leftColumnLayout{};
+		leftColumnLayout.layoutDirection = CLAY_TOP_TO_BOTTOM;
+		leftColumnLayout.sizing = {
+			.width = CLAY_SIZING_GROW(0),
+			.height = CLAY_SIZING_GROW(0),
+		};
+		leftColumnLayout.padding = CLAY_PADDING_ALL(0);
+		leftColumnLayout.childAlignment = context.params.leftColumnChildAlignment;
+		leftColumnLayout.childGap = context.params.leftColumnChildGap;
+
+		Clay_ElementDeclaration leftColumn{};
+		leftColumn.id = leftColumnId;
+		leftColumn.layout = leftColumnLayout;
+		leftColumn.backgroundColor = FlowUi::Flow_Color("#00000000");
+		leftColumn.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
+
+		Clay_LayoutConfig rightContentLayout{};
+		rightContentLayout.layoutDirection = CLAY_LEFT_TO_RIGHT;
+		rightContentLayout.sizing = {
+			.width = CLAY_SIZING_FIT(0),
+			.height = CLAY_SIZING_FIT(0),
+		};
+		rightContentLayout.padding = CLAY_PADDING_ALL(0);
+		rightContentLayout.childAlignment = {.x = CLAY_ALIGN_X_RIGHT, .y = CLAY_ALIGN_Y_CENTER};
+		rightContentLayout.childGap = 0;
+
+		Clay_ElementDeclaration rightContent{};
+		rightContent.id = rightContentId;
+		rightContent.layout = rightContentLayout;
+		rightContent.backgroundColor = FlowUi::Flow_Color("#00000000");
+		rightContent.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
+
+		Clay_LayoutConfig separatorLayout{};
+		separatorLayout.sizing = {
+			.width = CLAY_SIZING_GROW(0),
+			.height = CLAY_SIZING_FIXED(2),
+		};
+
+		Clay_ElementDeclaration separator{};
+		separator.id = separatorId;
+		separator.layout = separatorLayout;
+		separator.backgroundColor = context.params.separatorColor;
+		separator.cornerRadius = CLAY_CORNER_RADIUS(0);
+
+		Clay_TextElementConfig titleTextConfig{};
+		titleTextConfig.textColor = context.params.titleColor;
+		titleTextConfig.fontSize = context.params.titleFontSize;
+		titleTextConfig.wrapMode = context.params.titleWrapMode;
+		titleTextConfig.textAlignment = context.params.titleAlignment;
+		titleTextConfig.fontId = context.params.titleFontId;
+
+		CLAY(root){
+			CLAY(content){
+				CLAY(leftColumn){
+					CLAY({.id = titleTextId}){
+						CLAY_TEXT(
+							context.uiManager.toClayString(context.params.titleText),
+							CLAY_TEXT_CONFIG(titleTextConfig)
+						);
+					};
+
+					if (context.params.showSecondaryTitle)
+					{
+						context.uiManager.createElement(kBasicTitle, secondaryTitlePath)
+							.setParameters(context.params.secondaryTitleParams)
+							.draw();
+					}
+				};
+
+				CLAY(rightContent){
+					switch (context.params.rightContentMode)
+					{
+					case panelTitleParams::RightContentMode::None:
+						break;
+					case panelTitleParams::RightContentMode::Button:
+						context.uiManager.createElement(kBasicButton, rightButtonPath)
+							.setParameters(context.params.rightButtonParams)
+							.draw();
+						break;
+					case panelTitleParams::RightContentMode::InputField:
+						context.uiManager.createElement(kBasicInputField, rightInputPath)
+							.setParameters(context.params.rightInputFieldParams)
+							.draw();
+						break;
+					}
+				};
+			};
+
+			CLAY(separator){};
+		};
 	},
+};
 
-	// onPressed: optional callback when this element was pressed in the previous frame.
-	[](FlowUi::ElementInteractionContext& context) {
-		(void)context;
-	},
+using PanelTitleBuilder = FlowUi::ElementBuilder<panelTitleParams, void, void, FLOW_DEF_ID("PanelTitle")>;
 
-	// onHeld: optional callback when this element was held in the previous frame.
-	[](FlowUi::ElementInteractionContext& context) {
-		(void)context;
-	},
+struct plotviewPortParams {
+	Clay_Sizing sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_GROW(0)};
+	Clay_Padding padding = CLAY_PADDING_ALL(0);
+	Clay_Color backgroundColor = FlowUi::Flow_Color("#00000000");
+	Clay_Color viewportColor = FlowUi::Flow_Color("#7a7a7aff");
+};
 
-	// onReleased: optional callback when this element was released in the previous frame.
-	[](FlowUi::ElementInteractionContext& context) {
-		(void)context;
-	},
+struct plotviewPortResources {
+	PanelTitleBuilder titleBuilder;
 
-	// runLogic: optional per-frame logic callback before buildElement executes.
-	[](FlowUi::ElementInteractionContext& context) {
-		(void)context;
-	},
+	explicit plotviewPortResources(FlowUi::UiManager& uiManager) :
+		titleBuilder(makeTitleBuilder(uiManager)) {}
 
-	[](FlowUi::ElementBuildContext& context) -> Clay_ElementDeclaration {
+private:
+	static PanelTitleBuilder makeTitleBuilder(FlowUi::UiManager& uiManager)
+	{
+		panelTitleParams params{};
+		params.titleText = "Visual Preview";
+		params.rightContentMode = panelTitleParams::RightContentMode::Button;
+		params.rightButtonParams.text = "Reset";
+		params.rightButtonParams.contentMode = basicButtonParams::ContentMode::TextOnly;
+		params.rightButtonParams.sizing = {.width = CLAY_SIZING_FIT(0), .height = CLAY_SIZING_FIT(0)};
+
+		PanelTitleBuilder builder = uiManager.createElement(kPanelTitle, "PlotviewPort/shared/title");
+		builder.setParameters(std::move(params));
+		return builder;
+	}
+};
+
+using PlotviewPortDef = FlowUi::ElementDefinition<
+	plotviewPortParams,
+	void,
+	plotviewPortResources,
+	FLOW_DEF_ID("PlotviewPort")>;
+
+inline const PlotviewPortDef kPlotviewPort = {
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	+[](PlotviewPortDef::BuildContext& context) -> Clay_ElementDeclaration {
 		(void)context;
 		return Clay_ElementDeclaration{};
 	},
-
-	// buildElement: required callback where the element's Clay UI is built.
-	[](FlowUi::ElementBuildContext& context) {
-		const Clay_ElementId rootId = context.elementId;
-		const Clay_ElementId indicatorId = context.createChildElementId("indicator");
-		const Clay_ElementId leftSpacerId = context.createChildElementId("left-spacer");
-		const Clay_ElementId mainContentId = context.createChildElementId("main-content");
-		const Clay_ElementId mainLeadingButtonSlotId = context.createChildElementId("main-content/leading-button-slot");
-		const Clay_ElementId mainIconContainerId = context.createChildElementId("main-content/icon-container");
-		const Clay_ElementId mainIconId = context.createChildElementId("main-content/icon");
-		const Clay_ElementId mainTextId = context.createChildElementId("main-content/text");
-		const Clay_ElementId rightSpacerId = context.createChildElementId("right-spacer");
-
-		int leftSpacerMinWidth = context.parameters.getValue<int>("left spacer min width", 0);
-		int leftSpacerMaxWidth = context.parameters.getValue<int>("left spacer max width", leftSpacerMinWidth);
-		if (leftSpacerMaxWidth < leftSpacerMinWidth)
+	+[](PlotviewPortDef::BuildContext& context) {
+		if (!PlotviewPortDef::resources.has_value())
 		{
-			leftSpacerMaxWidth = leftSpacerMinWidth;
+			PlotviewPortDef::resources.emplace(context.uiManager);
 		}
+		plotviewPortResources& resources = *PlotviewPortDef::resources;
 
-		int mainContentMinWidth = context.parameters.getValue<int>("main content min width", 0);
-		int mainContentMaxWidth = context.parameters.getValue<int>("main content max width", mainContentMinWidth);
-		if (mainContentMaxWidth < mainContentMinWidth)
-		{
-			mainContentMaxWidth = mainContentMinWidth;
-		}
-
-		const bool showMainLeadingButton = context.parameters.getValue<bool>("show main leading button", false);
-		const bool showTrailingButton = context.parameters.getValue<bool>("show trailing button", false);
-
-		const FlowUi::TextureRef mainLeadingButtonIcon = context.parameters.getValue<FlowUi::TextureRef>("main leading button icon");
-		const FlowUi::TextureRef mainIconTexture = context.parameters.getValue<FlowUi::TextureRef>("main icon");
-		const FlowUi::TextureRef trailingButtonIcon = context.parameters.getValue<FlowUi::TextureRef>("trailing button icon");
-		const bool hasMainIcon = mainIconTexture.id != 0;
+		const Clay_ElementId rootId = context.uiManager.toClayEID(context.elementID);
+		const Clay_ElementId viewportId = context.uiManager.toClayEID(context.createChildElementId("viewport"));
+		const std::string titlePath = context.createChildElementId("title");
 
 		Clay_LayoutConfig rootLayout{};
-		rootLayout.layoutDirection = CLAY_LEFT_TO_RIGHT;
-		rootLayout.sizing = context.parameters.getValue<Clay_Sizing>("sizing");
-		rootLayout.padding = CLAY_PADDING_ALL(0);
-		rootLayout.childAlignment = context.parameters.getValue<Clay_ChildAlignment>("child alignment");
+		rootLayout.layoutDirection = CLAY_TOP_TO_BOTTOM;
+		rootLayout.sizing = context.params.sizing;
+		rootLayout.padding = context.params.padding;
+		rootLayout.childAlignment = {.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_TOP};
 		rootLayout.childGap = 0;
 
 		Clay_ElementDeclaration root{};
 		root.id = rootId;
 		root.layout = rootLayout;
-		root.backgroundColor = context.parameters.getValue<Clay_Color>("background color");
-		root.cornerRadius = CLAY_CORNER_RADIUS(0); // Constant: template layer stays as a sharp-corner rectangle.
+		root.backgroundColor = context.params.backgroundColor;
+		root.cornerRadius = CLAY_CORNER_RADIUS(0);
+		root.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
+
+		Clay_LayoutConfig viewportLayout{};
+		viewportLayout.sizing = {
+			.width = CLAY_SIZING_GROW(0),
+			.height = CLAY_SIZING_GROW(0),
+		};
+
+		Clay_ElementDeclaration viewport{};
+		viewport.id = viewportId;
+		viewport.layout = viewportLayout;
+		viewport.backgroundColor = context.params.viewportColor;
+		viewport.cornerRadius = CLAY_CORNER_RADIUS(0);
+		viewport.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
+
+		CLAY(root){
+			resources.titleBuilder
+				.withElementID(titlePath)
+				.draw();
+
+			CLAY(viewport){};
+		};
+	},
+};
+
+struct dataInputParams {
+	Clay_Sizing sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_GROW(0)};
+	Clay_Color backgroundColor = FlowUi::Flow_Color("#7a7a7aff");
+};
+
+using DataInputDef = FlowUi::ElementDefinition<dataInputParams, void, void, FLOW_DEF_ID("DataInput")>;
+
+inline const DataInputDef kDataInput = {
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	+[](DataInputDef::BuildContext& context) {
+		const Clay_ElementId rootId = context.uiManager.toClayEID(context.elementID);
+
+		Clay_LayoutConfig rootLayout{};
+		rootLayout.sizing = context.params.sizing;
+
+		Clay_ElementDeclaration root{};
+		root.id = rootId;
+		root.layout = rootLayout;
+		root.backgroundColor = context.params.backgroundColor;
+		root.cornerRadius = CLAY_CORNER_RADIUS(0);
+		root.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
+
+		CLAY(root){};
+	},
+};
+
+struct dynamicSeparatorParams {
+	enum class Orientation : uint8_t {
+		Vertical,
+		Horizontal,
+	};
+
+	Orientation orientation = Orientation::Vertical;
+	int width = 4;
+	int height = 4;
+	Clay_Color color = FlowUi::Flow_Color("#5e646eff");
+	Clay_Color hoverColor = FlowUi::Flow_Color("#7a828fff");
+	Clay_Color activeColor = FlowUi::Flow_Color("#9aa2aeff");
+
+	int minValue = 0;
+	int maxValue = 100000;
+	std::function<int()> getValue = nullptr;
+	std::function<void(int)> setValue = nullptr;
+};
+
+struct dynamicSeparatorState {
+	bool isPressed = false;
+	bool isDragging = false;
+	float pressMouseAxis = 0.0f;
+	int pressValue = 0;
+	int localValue = 0;
+};
+
+using DynamicSeparatorDef = FlowUi::ElementDefinition<
+	dynamicSeparatorParams,
+	dynamicSeparatorState,
+	void,
+	FLOW_DEF_ID("DynamicSeparator")>;
+
+inline const DynamicSeparatorDef kDynamicSeparator = {
+	+[](DynamicSeparatorDef::InteractionContext& context) {
+		dynamicSeparatorState& state = DynamicSeparatorDef::getOrCreateState(FlowUi::toFlowId(context.elementID));
+		state.isPressed = true;
+		state.isDragging = true;
+		const FrameInput& previousInput = context.uiManager.getPreviousFrameInput();
+		state.pressMouseAxis =
+			(context.params.orientation == dynamicSeparatorParams::Orientation::Horizontal)
+			? previousInput.mouseY
+			: previousInput.mouseX;
+
+		int minValue = context.params.minValue;
+		int maxValue = context.params.maxValue;
+		if (maxValue < minValue)
+		{
+			maxValue = minValue;
+		}
+
+		int baseValue = state.localValue;
+		if (context.params.getValue != nullptr)
+		{
+			baseValue = context.params.getValue();
+		}
+		if (baseValue < minValue)
+		{
+			baseValue = minValue;
+		}
+		else if (baseValue > maxValue)
+		{
+			baseValue = maxValue;
+		}
+		state.pressValue = baseValue;
+	},
+	nullptr,
+	nullptr,
+	+[](DynamicSeparatorDef::InteractionContext& context) {
+		dynamicSeparatorState& state = DynamicSeparatorDef::getOrCreateState(FlowUi::toFlowId(context.elementID));
+		state.isPressed = false;
+		state.isDragging = false;
+	},
+	+[](DynamicSeparatorDef::InteractionContext& context) {
+		dynamicSeparatorState& state = DynamicSeparatorDef::getOrCreateState(FlowUi::toFlowId(context.elementID));
+		const FrameInput& input = context.uiManager.getCurrentFrameInput();
+		if (!input.mouseDown[0])
+		{
+			state.isPressed = false;
+			state.isDragging = false;
+			return;
+		}
+		if (!state.isDragging)
+		{
+			return;
+		}
+
+		int minValue = context.params.minValue;
+		int maxValue = context.params.maxValue;
+		if (maxValue < minValue)
+		{
+			maxValue = minValue;
+		}
+
+		const float currentAxis =
+			(context.params.orientation == dynamicSeparatorParams::Orientation::Horizontal)
+			? input.mouseY
+			: input.mouseX;
+		const float deltaAxis = currentAxis - state.pressMouseAxis;
+		const int deltaPixels = static_cast<int>(std::lround(deltaAxis));
+		int nextValue = state.pressValue + deltaPixels;
+		if (nextValue < minValue)
+		{
+			nextValue = minValue;
+		}
+		else if (nextValue > maxValue)
+		{
+			nextValue = maxValue;
+		}
+
+		state.localValue = nextValue;
+		if (context.params.setValue != nullptr)
+		{
+			context.params.setValue(nextValue);
+		}
+	},
+	nullptr,
+	+[](DynamicSeparatorDef::BuildContext& context) {
+		const Clay_ElementId rootId = context.uiManager.toClayEID(context.elementID);
+		const dynamicSeparatorState* state = DynamicSeparatorDef::tryGetStateConst(FlowUi::toFlowId(context.elementID));
+		const FlowUi::InteractionSnapshot& previousInteraction = context.uiManager.getPreviousFramesInteraction();
+
+		int width = context.params.width;
+		int height = context.params.height;
+		if (width < 1)
+		{
+			width = 1;
+		}
+		if (height < 1)
+		{
+			height = 1;
+		}
+
+		Clay_Color separatorColor = context.params.color;
+		if (state && state->isPressed)
+		{
+			separatorColor = context.params.activeColor;
+		}
+		else if (previousInteraction.isHovered(rootId))
+		{
+			separatorColor = context.params.hoverColor;
+		}
+
+		Clay_LayoutConfig rootLayout{};
+		if (context.params.orientation == dynamicSeparatorParams::Orientation::Horizontal)
+		{
+			rootLayout.sizing = {
+				.width = CLAY_SIZING_GROW(0),
+				.height = CLAY_SIZING_FIXED(static_cast<float>(height)),
+			};
+		}
+		else
+		{
+			rootLayout.sizing = {
+				.width = CLAY_SIZING_FIXED(static_cast<float>(width)),
+				.height = CLAY_SIZING_GROW(0),
+			};
+		}
+
+		Clay_ElementDeclaration root{};
+		root.id = rootId;
+		root.layout = rootLayout;
+		root.backgroundColor = separatorColor;
+		root.cornerRadius = CLAY_CORNER_RADIUS(0);
+		root.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
+
+		CLAY(root){};
+	},
+};
+
+struct templateLayerParams {
+	Clay_Sizing sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0, 10000), .height = CLAY_SIZING_FIT(0)};
+	Clay_Color backgroundColor = FlowUi::Flow_Color("#00000000");
+	Clay_Color borderColor = FlowUi::Flow_Color("#00000000");
+	Clay_BorderWidth borderWidth = Clay_BorderWidth{0, 0, 0, 0, 0};
+	Clay_ChildAlignment childAlignment = Clay_ChildAlignment{.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER};
+
+	Clay_Color indicatorColor = FlowUi::Flow_Color("#4ea9ffff");
+	bool focused = false;
+
+	int leftSpacerMinWidth = 0;
+	int leftSpacerMaxWidth = 120;
+
+	int mainContentMinWidth = 180;
+	int mainContentMaxWidth = 420;
+	Clay_Padding mainContentPadding = CLAY_PADDING_ALL(0);
+	int mainContentChildGap = 8;
+	Clay_ChildAlignment mainContentChildAlignment = Clay_ChildAlignment{.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER};
+	Clay_Color mainContentBackgroundColor = FlowUi::Flow_Color("#00000000");
+	Clay_Color mainContentBorderColor = FlowUi::Flow_Color("#00000000");
+	Clay_BorderWidth mainContentBorderWidth = Clay_BorderWidth{0, 0, 0, 0, 0};
+
+	bool showExpanderButton = false;
+	bool showAdderButton = false;
+
+	FlowUi::TextureRef mainIcon = FlowUi::TextureRef{};
+	Clay_Sizing mainIconContainerSizing = Clay_Sizing{.width = CLAY_SIZING_FIXED(18), .height = CLAY_SIZING_FIXED(18)};
+	Clay_Sizing mainIconSizing = Clay_Sizing{.width = CLAY_SIZING_PERCENT(1.0f), .height = CLAY_SIZING_PERCENT(1.0f)};
+	Clay_Color mainIconTintColor = FlowUi::Flow_Color("#00000000");
+
+	std::string mainText = "Template Layer";
+	Clay_TextElementConfigWrapMode mainTextWrapMode = CLAY_TEXT_WRAP_NONE;
+	Clay_TextAlignment mainTextAlignment = CLAY_TEXT_ALIGN_LEFT;
+	uint16_t mainTextFontId = 0;
+	uint16_t mainTextFontSize = 16;
+	Clay_Color mainTextColor = FlowUi::Flow_Color("#000000ff");
+};
+
+struct templateLayerState {
+	bool isExpanded = false;
+};
+
+using BasicButtonBuilder = FlowUi::ElementBuilder<basicButtonParams, void, void, FLOW_DEF_ID("Basic button")>;
+
+struct templateLayerResources {
+	BasicButtonBuilder expanderBuilder;
+	BasicButtonBuilder adderBuilder;
+
+	explicit templateLayerResources(FlowUi::UiManager& uiManager) :
+		expanderBuilder(makeBuilder(uiManager, "TemplateLayer/shared/expander")),
+		adderBuilder(makeBuilder(uiManager, "TemplateLayer/shared/adder")) {}
+
+private:
+	static BasicButtonBuilder makeBuilder(FlowUi::UiManager& uiManager, std::string_view path)
+	{
+		basicButtonParams params{};
+		params.text = "";
+		params.contentMode = basicButtonParams::ContentMode::IconOnly;
+		params.sizing = Clay_Sizing{.width = CLAY_SIZING_FIXED(38), .height = CLAY_SIZING_FIXED(38)};
+		params.padding = CLAY_PADDING_ALL(0);
+		params.backgroundColor = FlowUi::Flow_Color("#00000000");
+		params.borderColor = FlowUi::Flow_Color("#00000000");
+		params.borderWidth = Clay_BorderWidth{0, 0, 0, 0, 0};
+
+		BasicButtonBuilder builder = uiManager.createElement(kBasicButton, path);
+		builder.setParameters(std::move(params));
+		return builder;
+	}
+};
+
+using TemplateLayerDef = FlowUi::ElementDefinition<
+	templateLayerParams,
+	templateLayerState,
+	templateLayerResources,
+	FLOW_DEF_ID("TemplateLayer")>;
+
+inline const TemplateLayerDef kTemplateLayer = {
+	+[](TemplateLayerDef::InteractionContext& context) {
+		(void)context;
+	},
+	+[](TemplateLayerDef::InteractionContext& context) {
+		(void)context;
+	},
+	+[](TemplateLayerDef::InteractionContext& context) {
+		(void)context;
+	},
+	+[](TemplateLayerDef::InteractionContext& context) {
+		(void)context;
+	},
+	+[](TemplateLayerDef::InteractionContext& context) {
+		(void)TemplateLayerDef::getOrCreateState(FlowUi::toFlowId(context.elementID));
+	},
+	+[](TemplateLayerDef::BuildContext& context) -> Clay_ElementDeclaration {
+		(void)context;
+		return Clay_ElementDeclaration{};
+	},
+	+[](TemplateLayerDef::BuildContext& context) {
+		(void)TemplateLayerDef::getOrCreateState(FlowUi::toFlowId(context.elementID));
+		if (!TemplateLayerDef::resources.has_value())
+		{
+			TemplateLayerDef::resources.emplace(context.uiManager);
+		}
+		templateLayerResources& resources = *TemplateLayerDef::resources;
+
+		const Clay_ElementId rootId = context.uiManager.toClayEID(context.elementID);
+		const Clay_ElementId indicatorId = context.uiManager.toClayEID(context.createChildElementId("indicator"));
+		const Clay_ElementId leftSpacerId = context.uiManager.toClayEID(context.createChildElementId("left-spacer"));
+		const Clay_ElementId mainContentId = context.uiManager.toClayEID(context.createChildElementId("main-content"));
+		const Clay_ElementId mainLeadingButtonSlotId = context.uiManager.toClayEID(context.createChildElementId("main-content/leading-button-slot"));
+		const Clay_ElementId mainIconContainerId = context.uiManager.toClayEID(context.createChildElementId("main-content/icon-container"));
+		const Clay_ElementId mainIconId = context.uiManager.toClayEID(context.createChildElementId("main-content/icon"));
+		const Clay_ElementId mainTextId = context.uiManager.toClayEID(context.createChildElementId("main-content/text"));
+		const Clay_ElementId rightSpacerId = context.uiManager.toClayEID(context.createChildElementId("right-spacer"));
+
+		int leftSpacerMinWidth = context.params.leftSpacerMinWidth;
+		int leftSpacerMaxWidth = context.params.leftSpacerMaxWidth;
+		if (leftSpacerMaxWidth < leftSpacerMinWidth)
+		{
+			leftSpacerMaxWidth = leftSpacerMinWidth;
+		}
+
+		int mainContentMinWidth = context.params.mainContentMinWidth;
+		int mainContentMaxWidth = context.params.mainContentMaxWidth;
+		if (mainContentMaxWidth < mainContentMinWidth)
+		{
+			mainContentMaxWidth = mainContentMinWidth;
+		}
+
+		const bool hasMainIcon = context.params.mainIcon.id != 0;
+
+		Clay_LayoutConfig rootLayout{};
+		rootLayout.layoutDirection = CLAY_LEFT_TO_RIGHT;
+		rootLayout.sizing = context.params.sizing;
+		rootLayout.padding = CLAY_PADDING_ALL(0);
+		rootLayout.childAlignment = context.params.childAlignment;
+		rootLayout.childGap = 0;
+
+		Clay_ElementDeclaration root{};
+		root.id = rootId;
+		root.layout = rootLayout;
+		root.backgroundColor = context.params.backgroundColor;
+		root.cornerRadius = CLAY_CORNER_RADIUS(0);
 		root.border = {
-			.color = context.parameters.getValue<Clay_Color>("border color"),
-			.width = context.parameters.getValue<Clay_BorderWidth>("border width"),
+			.color = context.params.borderColor,
+			.width = context.params.borderWidth,
 		};
 
 		Clay_LayoutConfig indicatorLayout{};
@@ -398,7 +1054,7 @@ inline const FlowUi::ElementDefinition kTemplateLayer = {
 		Clay_ElementDeclaration indicator{};
 		indicator.id = indicatorId;
 		indicator.layout = indicatorLayout;
-		indicator.backgroundColor = context.parameters.getValue<Clay_Color>("indicator color");
+		indicator.backgroundColor = context.params.indicatorColor;
 		indicator.cornerRadius = CLAY_CORNER_RADIUS(0);
 
 		Clay_LayoutConfig leftSpacerLayout{};
@@ -417,23 +1073,23 @@ inline const FlowUi::ElementDefinition kTemplateLayer = {
 			.width = CLAY_SIZING_FIT(static_cast<float>(mainContentMinWidth), static_cast<float>(mainContentMaxWidth)),
 			.height = CLAY_SIZING_FIT(0),
 		};
-		mainContentLayout.padding = context.parameters.getValue<Clay_Padding>("main content padding");
-		mainContentLayout.childAlignment = context.parameters.getValue<Clay_ChildAlignment>("main content child alignment");
-		mainContentLayout.childGap = static_cast<uint16_t>(context.parameters.getValue<int>("main content child gap", 0));
+		mainContentLayout.padding = context.params.mainContentPadding;
+		mainContentLayout.childAlignment = context.params.mainContentChildAlignment;
+		mainContentLayout.childGap = static_cast<uint16_t>(context.params.mainContentChildGap);
 
 		Clay_ElementDeclaration mainContent{};
 		mainContent.id = mainContentId;
 		mainContent.layout = mainContentLayout;
-		mainContent.backgroundColor = context.parameters.getValue<Clay_Color>("main content background color");
+		mainContent.backgroundColor = context.params.mainContentBackgroundColor;
 		mainContent.cornerRadius = CLAY_CORNER_RADIUS(0);
 		mainContent.border = {
-			.color = context.parameters.getValue<Clay_Color>("main content border color"),
-			.width = context.parameters.getValue<Clay_BorderWidth>("main content border width"),
+			.color = context.params.mainContentBorderColor,
+			.width = context.params.mainContentBorderWidth,
 		};
 
 		Clay_LayoutConfig mainLeadingButtonSlotLayout{};
 		mainLeadingButtonSlotLayout.layoutDirection = CLAY_LEFT_TO_RIGHT;
-		mainLeadingButtonSlotLayout.sizing = context.parameters.getValue<Clay_Sizing>("main leading button slot sizing");
+		mainLeadingButtonSlotLayout.sizing = Clay_Sizing{.width = CLAY_SIZING_FIXED(38), .height = CLAY_SIZING_FIXED(38)};
 		mainLeadingButtonSlotLayout.padding = CLAY_PADDING_ALL(0);
 		mainLeadingButtonSlotLayout.childAlignment = {.x = CLAY_ALIGN_X_CENTER, .y = CLAY_ALIGN_Y_CENTER};
 		mainLeadingButtonSlotLayout.childGap = 0;
@@ -442,11 +1098,11 @@ inline const FlowUi::ElementDefinition kTemplateLayer = {
 		mainLeadingButtonSlot.id = mainLeadingButtonSlotId;
 		mainLeadingButtonSlot.layout = mainLeadingButtonSlotLayout;
 		mainLeadingButtonSlot.backgroundColor = FlowUi::Flow_Color("#00000000");
-		mainLeadingButtonSlot.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0,0,0,0,0}};
+		mainLeadingButtonSlot.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
 
 		Clay_LayoutConfig mainIconContainerLayout{};
 		mainIconContainerLayout.layoutDirection = CLAY_LEFT_TO_RIGHT;
-		mainIconContainerLayout.sizing = context.parameters.getValue<Clay_Sizing>("main icon container sizing");
+		mainIconContainerLayout.sizing = context.params.mainIconContainerSizing;
 		mainIconContainerLayout.padding = CLAY_PADDING_ALL(0);
 		mainIconContainerLayout.childAlignment = {.x = CLAY_ALIGN_X_CENTER, .y = CLAY_ALIGN_Y_CENTER};
 		mainIconContainerLayout.childGap = 0;
@@ -455,25 +1111,25 @@ inline const FlowUi::ElementDefinition kTemplateLayer = {
 		mainIconContainer.id = mainIconContainerId;
 		mainIconContainer.layout = mainIconContainerLayout;
 		mainIconContainer.backgroundColor = FlowUi::Flow_Color("#00000000");
-		mainIconContainer.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0,0,0,0,0}};
+		mainIconContainer.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
 
 		Clay_LayoutConfig mainIconLayout{};
-		mainIconLayout.sizing = context.parameters.getValue<Clay_Sizing>("main icon sizing");
+		mainIconLayout.sizing = context.params.mainIconSizing;
 
 		Clay_ElementDeclaration mainIcon{};
 		mainIcon.id = mainIconId;
 		mainIcon.layout = mainIconLayout;
-		mainIcon.backgroundColor = context.parameters.getValue<Clay_Color>("main icon tint color");
+		mainIcon.backgroundColor = context.params.mainIconTintColor;
 		mainIcon.image = {
-			.imageData = context.userInterface.storeTexture(mainIconTexture),
+			.imageData = context.uiManager.storeTexture(context.params.mainIcon),
 		};
 
 		Clay_TextElementConfig mainTextConfig{};
-		mainTextConfig.textColor = context.parameters.getValue<Clay_Color>("main text color");
-		mainTextConfig.fontSize = static_cast<uint16_t>(context.parameters.getValue<int>("main text font size"));
-		mainTextConfig.wrapMode = context.parameters.getValue<Clay_TextElementConfigWrapMode>("main text wrap mode");
-		mainTextConfig.textAlignment = context.parameters.getValue<Clay_TextAlignment>("main text alignment");
-		mainTextConfig.fontId = static_cast<uint16_t>(context.parameters.getValue<int>("main text font id"));
+		mainTextConfig.textColor = context.params.mainTextColor;
+		mainTextConfig.fontSize = context.params.mainTextFontSize;
+		mainTextConfig.wrapMode = context.params.mainTextWrapMode;
+		mainTextConfig.textAlignment = context.params.mainTextAlignment;
+		mainTextConfig.fontId = context.params.mainTextFontId;
 
 		Clay_LayoutConfig rightSpacerLayout{};
 		rightSpacerLayout.sizing = {
@@ -485,22 +1141,22 @@ inline const FlowUi::ElementDefinition kTemplateLayer = {
 		rightSpacer.id = rightSpacerId;
 		rightSpacer.layout = rightSpacerLayout;
 
-		const std::string mainLeadingButtonPath = std::string(context.instanceIdPath) + "/main-content/leading-button";
-		const std::string trailingButtonPath = std::string(context.instanceIdPath) + "/trailing-button";
-		const std::string_view mainText = context.parameters.getString("main text");
+		const std::string expanderPath = context.createChildElementId("main-content/expander");
+		const std::string adderPath = context.createChildElementId("adder");
 
 		CLAY(root){
-			CLAY(indicator){};
+			if (context.params.focused)
+			{
+				CLAY(indicator){};
+			}
 			CLAY(leftSpacer){};
 
 			CLAY(mainContent){
 				CLAY(mainLeadingButtonSlot){
-					if (showMainLeadingButton)
+					if (context.params.showExpanderButton)
 					{
-						context.userInterface.createElement(kBasicButton, mainLeadingButtonPath)
-							.set("text", "")
-							.set("icon", mainLeadingButtonIcon)
-							.set("sizing", context.parameters.getValue<Clay_Sizing>("main leading button sizing"))
+						resources.expanderBuilder
+							.withElementID(expanderPath)
 							.draw();
 					}
 				};
@@ -514,7 +1170,7 @@ inline const FlowUi::ElementDefinition kTemplateLayer = {
 
 				CLAY({.id = mainTextId}){
 					CLAY_TEXT(
-						context.userInterface.toClayString(mainText),
+						context.uiManager.toClayString(context.params.mainText),
 						CLAY_TEXT_CONFIG(mainTextConfig)
 					);
 				};
@@ -522,101 +1178,121 @@ inline const FlowUi::ElementDefinition kTemplateLayer = {
 
 			CLAY(rightSpacer){};
 
-			if (showTrailingButton)
+			if (context.params.showAdderButton)
 			{
-				context.userInterface.createElement(kBasicButton, trailingButtonPath)
-					.set("text", "")
-					.set("icon", trailingButtonIcon)
+				resources.adderBuilder
+					.withElementID(adderPath)
 					.draw();
 			}
 		};
 	},
 };
 
-inline const FlowUi::ElementDefinition kNavBar = {
-	// elementTypeName: unique element type key (used for registration/lookups).
-	"NavBar",
+struct navBarParams {
+	Clay_Color backgroundColor = FlowUi::Flow_Color("#20232aff");
+	int heightMin = 52;
+	int heightMax = 72;
+	int spacer1MinWidth = 22;
+	int spacer1MaxWidth = 68;
+	int spacer2MinWidth = 22;
+	int spacer2MaxWidth = 68;
+};
 
-	// initializeDefaultParameters: optional defaults merged with per-instance overrides.
-	[](FlowUi::ElementParameters& defaults) {
-		defaults.setValue("background color", FlowUi::Flow_Color("#20232aff"));
-		defaults.setValue("height min", 52);
-		defaults.setValue("height max", 72);
-		defaults.setValue("spacer 1 min width", 22);
-		defaults.setValue("spacer 1 max width", 68);
-		defaults.setValue("spacer 2 min width", 22);
-		defaults.setValue("spacer 2 max width", 68);
-	},
+using BasicTitleBuilder = FlowUi::ElementBuilder<basicTitleParams, void, void, FLOW_DEF_ID("Basic title")>;
 
-	// onHovered: optional callback when this element was hovered in the previous frame.
-	[](FlowUi::ElementInteractionContext& context) {
+struct navBarResources {
+	BasicTitleBuilder child1Builder;
+
+	explicit navBarResources(FlowUi::UiManager& uiManager) :
+		child1Builder(makeChild1Builder(uiManager)) {}
+
+private:
+	static BasicTitleBuilder makeChild1Builder(FlowUi::UiManager& uiManager)
+	{
+		basicTitleParams params{};
+		params.text = "FlowPlot";
+		params.contentMode = basicTitleParams::ContentMode::IconThenText;
+		params.iconTintColor = FlowUi::Flow_Color("#72b6ffff");
+		params.textColor = FlowUi::Flow_Color("#f4f6f8ff");
+		params.fontSize = 16;
+		params.fontId = 0;
+		params.sizing = {.width = CLAY_SIZING_FIT(0), .height = CLAY_SIZING_FIT(0)};
+
+		BasicTitleBuilder builder = uiManager.createElement(kBasicTitle, "NavBar/shared/child-1/title");
+		builder.setParameters(std::move(params));
+		return builder;
+	}
+};
+
+using NavBarDef = FlowUi::ElementDefinition<
+	navBarParams,
+	void,
+	navBarResources,
+	FLOW_DEF_ID("NavBar")>;
+
+inline const NavBarDef kNavBar = {
+	+[](NavBarDef::InteractionContext& context) {
 		(void)context;
 	},
-
-	// onPressed: optional callback when this element was pressed in the previous frame.
-	[](FlowUi::ElementInteractionContext& context) {
+	+[](NavBarDef::InteractionContext& context) {
 		(void)context;
 	},
-
-	// onHeld: optional callback when this element was held in the previous frame.
-	[](FlowUi::ElementInteractionContext& context) {
+	+[](NavBarDef::InteractionContext& context) {
 		(void)context;
 	},
-
-	// onReleased: optional callback when this element was released in the previous frame.
-	[](FlowUi::ElementInteractionContext& context) {
+	+[](NavBarDef::InteractionContext& context) {
 		(void)context;
 	},
-
-	// runLogic: optional per-frame logic callback before buildElement executes.
-	[](FlowUi::ElementInteractionContext& context) {
+	+[](NavBarDef::InteractionContext& context) {
 		(void)context;
 	},
-
-	[](FlowUi::ElementBuildContext& context) -> Clay_ElementDeclaration {
+	+[](NavBarDef::BuildContext& context) -> Clay_ElementDeclaration {
 		(void)context;
 		return Clay_ElementDeclaration{};
 	},
+	+[](NavBarDef::BuildContext& context) {
+		if (!NavBarDef::resources.has_value())
+		{
+			NavBarDef::resources.emplace(context.uiManager);
+		}
+		navBarResources& resources = *NavBarDef::resources;
 
-	// buildElement: required callback where the element's Clay UI is built.
-	[](FlowUi::ElementBuildContext& context) {
-		int navHeightMin = context.parameters.getValue<int>("height min", 0);
-		int navHeightMax = context.parameters.getValue<int>("height max", navHeightMin);
+		int navHeightMin = context.params.heightMin;
+		int navHeightMax = context.params.heightMax;
 		if (navHeightMax < navHeightMin)
 		{
 			navHeightMax = navHeightMin;
 		}
 
-		int spacer1MinWidth = context.parameters.getValue<int>("spacer 1 min width", 0);
-		int spacer1MaxWidth = context.parameters.getValue<int>("spacer 1 max width", spacer1MinWidth);
+		int spacer1MinWidth = context.params.spacer1MinWidth;
+		int spacer1MaxWidth = context.params.spacer1MaxWidth;
 		if (spacer1MaxWidth < spacer1MinWidth)
 		{
 			spacer1MaxWidth = spacer1MinWidth;
 		}
 
-		int spacer2MinWidth = context.parameters.getValue<int>("spacer 2 min width", 0);
-		int spacer2MaxWidth = context.parameters.getValue<int>("spacer 2 max width", spacer2MinWidth);
+		int spacer2MinWidth = context.params.spacer2MinWidth;
+		int spacer2MaxWidth = context.params.spacer2MaxWidth;
 		if (spacer2MaxWidth < spacer2MinWidth)
 		{
 			spacer2MaxWidth = spacer2MinWidth;
 		}
 
-		const Clay_ElementId rootId = context.elementId;
-		const Clay_ElementId child1Id = context.createChildElementId("child-1");
-		const Clay_ElementId child1IconId = context.createChildElementId("child-1/icon");
-		const Clay_ElementId child1TextId = context.createChildElementId("child-1/text");
-		const Clay_ElementId spacer1Id = context.createChildElementId("spacer-1");
-		const Clay_ElementId spacer1LineId = context.createChildElementId("spacer-1/line");
-		const Clay_ElementId child2Id = context.createChildElementId("child-2");
-		const Clay_ElementId child2GrowSpacerId = context.createChildElementId("child-2/grow-spacer");
-		const Clay_ElementId spacer2Id = context.createChildElementId("spacer-2");
-		const Clay_ElementId spacer2LineId = context.createChildElementId("spacer-2/line");
-		const Clay_ElementId child3Id = context.createChildElementId("child-3");
+		const Clay_ElementId rootId = context.uiManager.toClayEID(context.elementID);
+		const Clay_ElementId child1Id = context.uiManager.toClayEID(context.createChildElementId("child-1"));
+		const Clay_ElementId spacer1Id = context.uiManager.toClayEID(context.createChildElementId("spacer-1"));
+		const Clay_ElementId spacer1LineId = context.uiManager.toClayEID(context.createChildElementId("spacer-1/line"));
+		const Clay_ElementId child2Id = context.uiManager.toClayEID(context.createChildElementId("child-2"));
+		const Clay_ElementId child2GrowSpacerId = context.uiManager.toClayEID(context.createChildElementId("child-2/grow-spacer"));
+		const Clay_ElementId spacer2Id = context.uiManager.toClayEID(context.createChildElementId("spacer-2"));
+		const Clay_ElementId spacer2LineId = context.uiManager.toClayEID(context.createChildElementId("spacer-2/line"));
+		const Clay_ElementId child3Id = context.uiManager.toClayEID(context.createChildElementId("child-3"));
 
-		const std::string button21Path = std::string(context.instanceIdPath) + "/child-2/button-1";
-		const std::string button22Path = std::string(context.instanceIdPath) + "/child-2/button-2";
-		const std::string button31Path = std::string(context.instanceIdPath) + "/child-3/button-1";
-		const std::string button32Path = std::string(context.instanceIdPath) + "/child-3/button-2";
+		const std::string button21Path = context.createChildElementId("child-2/button-1");
+		const std::string button22Path = context.createChildElementId("child-2/button-2");
+		const std::string button31Path = context.createChildElementId("child-3/button-1");
+		const std::string button32Path = context.createChildElementId("child-3/button-2");
+		const std::string child1TitlePath = context.createChildElementId("child-1/title");
 
 		Clay_LayoutConfig rootLayout{};
 		rootLayout.layoutDirection = CLAY_LEFT_TO_RIGHT;
@@ -631,9 +1307,9 @@ inline const FlowUi::ElementDefinition kNavBar = {
 		Clay_ElementDeclaration root{};
 		root.id = rootId;
 		root.layout = rootLayout;
-		root.backgroundColor = context.parameters.getValue<Clay_Color>("background color");
+		root.backgroundColor = context.params.backgroundColor;
 		root.cornerRadius = CLAY_CORNER_RADIUS(0);
-		root.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0,0,0,0,0}};
+		root.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
 
 		Clay_LayoutConfig child1Layout{};
 		child1Layout.layoutDirection = CLAY_LEFT_TO_RIGHT;
@@ -646,23 +1322,7 @@ inline const FlowUi::ElementDefinition kNavBar = {
 		child1.id = child1Id;
 		child1.layout = child1Layout;
 		child1.backgroundColor = FlowUi::Flow_Color("#00000000");
-		child1.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0,0,0,0,0}};
-
-		Clay_LayoutConfig child1IconLayout{};
-		child1IconLayout.sizing = {.width = CLAY_SIZING_FIXED(12), .height = CLAY_SIZING_FIXED(12)};
-
-		Clay_ElementDeclaration child1Icon{};
-		child1Icon.id = child1IconId;
-		child1Icon.layout = child1IconLayout;
-		child1Icon.backgroundColor = FlowUi::Flow_Color("#72b6ffff");
-		child1Icon.cornerRadius = CLAY_CORNER_RADIUS(0);
-
-		Clay_TextElementConfig child1TextConfig{};
-		child1TextConfig.textColor = FlowUi::Flow_Color("#f4f6f8ff");
-		child1TextConfig.fontSize = 16;
-		child1TextConfig.wrapMode = CLAY_TEXT_WRAP_NONE;
-		child1TextConfig.textAlignment = CLAY_TEXT_ALIGN_LEFT;
-		child1TextConfig.fontId = 0;
+		child1.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
 
 		Clay_LayoutConfig spacer1Layout{};
 		spacer1Layout.layoutDirection = CLAY_LEFT_TO_RIGHT;
@@ -678,7 +1338,7 @@ inline const FlowUi::ElementDefinition kNavBar = {
 		spacer1.id = spacer1Id;
 		spacer1.layout = spacer1Layout;
 		spacer1.backgroundColor = FlowUi::Flow_Color("#00000000");
-		spacer1.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0,0,0,0,0}};
+		spacer1.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
 
 		Clay_LayoutConfig spacerLineLayout{};
 		spacerLineLayout.sizing = {.width = CLAY_SIZING_FIXED(2), .height = CLAY_SIZING_FIXED(20)};
@@ -700,7 +1360,7 @@ inline const FlowUi::ElementDefinition kNavBar = {
 		child2.id = child2Id;
 		child2.layout = child2Layout;
 		child2.backgroundColor = FlowUi::Flow_Color("#00000000");
-		child2.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0,0,0,0,0}};
+		child2.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
 
 		Clay_LayoutConfig child2GrowSpacerLayout{};
 		child2GrowSpacerLayout.sizing = {.width = CLAY_SIZING_GROW(0, 100000), .height = CLAY_SIZING_PERCENT(1.0f)};
@@ -723,7 +1383,7 @@ inline const FlowUi::ElementDefinition kNavBar = {
 		spacer2.id = spacer2Id;
 		spacer2.layout = spacer2Layout;
 		spacer2.backgroundColor = FlowUi::Flow_Color("#00000000");
-		spacer2.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0,0,0,0,0}};
+		spacer2.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
 
 		Clay_ElementDeclaration spacer2Line{};
 		spacer2Line.id = spacer2LineId;
@@ -742,17 +1402,23 @@ inline const FlowUi::ElementDefinition kNavBar = {
 		child3.id = child3Id;
 		child3.layout = child3Layout;
 		child3.backgroundColor = FlowUi::Flow_Color("#00000000");
-		child3.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0,0,0,0,0}};
+		child3.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
+
+		basicButtonParams button21{};
+		button21.text = "Templates";
+		button21.contentMode = basicButtonParams::ContentMode::TextOnly;
+		basicButtonParams button22 = button21;
+		button22.text = "Layers";
+		basicButtonParams button31 = button21;
+		button31.text = "Export";
+		basicButtonParams button32 = button21;
+		button32.text = "Settings";
 
 		CLAY(root){
 			CLAY(child1){
-				CLAY(child1Icon){};
-				CLAY({.id = child1TextId}){
-					CLAY_TEXT(
-						context.userInterface.toClayString("FlowPlot"),
-						CLAY_TEXT_CONFIG(child1TextConfig)
-					);
-				};
+				resources.child1Builder
+					.withElementID(child1TitlePath)
+					.draw();
 			};
 
 			CLAY(spacer1){
@@ -760,12 +1426,12 @@ inline const FlowUi::ElementDefinition kNavBar = {
 			};
 
 			CLAY(child2){
-				context.userInterface.createElement(kBasicButton, button21Path)
-					.set("text", "Templates")
+				context.uiManager.createElement(kBasicButton, button21Path)
+					.setParameters(button21)
 					.draw();
 
-				context.userInterface.createElement(kBasicButton, button22Path)
-					.set("text", "Layers")
+				context.uiManager.createElement(kBasicButton, button22Path)
+					.setParameters(button22)
 					.draw();
 
 				CLAY(child2GrowSpacer){};
@@ -776,12 +1442,12 @@ inline const FlowUi::ElementDefinition kNavBar = {
 			};
 
 			CLAY(child3){
-				context.userInterface.createElement(kBasicButton, button31Path)
-					.set("text", "Export")
+				context.uiManager.createElement(kBasicButton, button31Path)
+					.setParameters(button31)
 					.draw();
 
-				context.userInterface.createElement(kBasicButton, button32Path)
-					.set("text", "Settings")
+				context.uiManager.createElement(kBasicButton, button32Path)
+					.setParameters(button32)
 					.draw();
 			};
 		};

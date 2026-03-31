@@ -66,7 +66,9 @@ include external/FlowUi/CMakeFiles/flowui_shaders.dir/compiler_depend.make
 # Include the progress variables for this target.
 include external/FlowUi/CMakeFiles/flowui_shaders.dir/progress.make
 
-external/FlowUi/CMakeFiles/flowui_shaders: external/FlowUi/shaders/flowui_ui_quad.vert.spv
+external/FlowUi/CMakeFiles/flowui_shaders: external/FlowUi/shaders/flowui_ui_solid.vert.spv
+external/FlowUi/CMakeFiles/flowui_shaders: external/FlowUi/shaders/flowui_ui_msdf.vert.spv
+external/FlowUi/CMakeFiles/flowui_shaders: external/FlowUi/shaders/flowui_ui_textured.vert.spv
 external/FlowUi/CMakeFiles/flowui_shaders: external/FlowUi/shaders/flowui_ui_solid.frag.spv
 external/FlowUi/CMakeFiles/flowui_shaders: external/FlowUi/shaders/flowui_ui_msdf.frag.spv
 external/FlowUi/CMakeFiles/flowui_shaders: external/FlowUi/shaders/flowui_ui_textured.frag.spv
@@ -74,28 +76,40 @@ external/FlowUi/CMakeFiles/flowui_shaders: external/FlowUi/shaders/flowui_ui_tex
 external/FlowUi/shaders/flowui_ui_msdf.frag.spv: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/shaders/flowui_ui_msdf.frag
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Compiling FlowUi shader flowui_ui_msdf.frag"
 	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi && /home/lkukhale/cmake-3.30.5-linux-x86_64/bin/cmake -E make_directory /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/shaders
-	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi && /bin/glslangValidator -V /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/shaders/flowui_ui_msdf.frag -o /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/shaders/flowui_ui_msdf.frag.spv
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi && /home/lkukhale/vulkan/1.4.321.1/x86_64/bin/glslc -O /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/shaders/flowui_ui_msdf.frag -o /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/shaders/flowui_ui_msdf.frag.spv
 
-external/FlowUi/shaders/flowui_ui_quad.vert.spv: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/shaders/flowui_ui_quad.vert
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Compiling FlowUi shader flowui_ui_quad.vert"
+external/FlowUi/shaders/flowui_ui_msdf.vert.spv: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/shaders/flowui_ui_msdf.vert
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Compiling FlowUi shader flowui_ui_msdf.vert"
 	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi && /home/lkukhale/cmake-3.30.5-linux-x86_64/bin/cmake -E make_directory /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/shaders
-	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi && /bin/glslangValidator -V /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/shaders/flowui_ui_quad.vert -o /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/shaders/flowui_ui_quad.vert.spv
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi && /home/lkukhale/vulkan/1.4.321.1/x86_64/bin/glslc -O /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/shaders/flowui_ui_msdf.vert -o /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/shaders/flowui_ui_msdf.vert.spv
 
 external/FlowUi/shaders/flowui_ui_solid.frag.spv: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/shaders/flowui_ui_solid.frag
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Compiling FlowUi shader flowui_ui_solid.frag"
 	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi && /home/lkukhale/cmake-3.30.5-linux-x86_64/bin/cmake -E make_directory /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/shaders
-	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi && /bin/glslangValidator -V /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/shaders/flowui_ui_solid.frag -o /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/shaders/flowui_ui_solid.frag.spv
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi && /home/lkukhale/vulkan/1.4.321.1/x86_64/bin/glslc -O /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/shaders/flowui_ui_solid.frag -o /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/shaders/flowui_ui_solid.frag.spv
+
+external/FlowUi/shaders/flowui_ui_solid.vert.spv: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/shaders/flowui_ui_solid.vert
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Compiling FlowUi shader flowui_ui_solid.vert"
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi && /home/lkukhale/cmake-3.30.5-linux-x86_64/bin/cmake -E make_directory /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/shaders
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi && /home/lkukhale/vulkan/1.4.321.1/x86_64/bin/glslc -O /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/shaders/flowui_ui_solid.vert -o /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/shaders/flowui_ui_solid.vert.spv
 
 external/FlowUi/shaders/flowui_ui_textured.frag.spv: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/shaders/flowui_ui_textured.frag
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Compiling FlowUi shader flowui_ui_textured.frag"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Compiling FlowUi shader flowui_ui_textured.frag"
 	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi && /home/lkukhale/cmake-3.30.5-linux-x86_64/bin/cmake -E make_directory /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/shaders
-	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi && /bin/glslangValidator -V /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/shaders/flowui_ui_textured.frag -o /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/shaders/flowui_ui_textured.frag.spv
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi && /home/lkukhale/vulkan/1.4.321.1/x86_64/bin/glslc -O /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/shaders/flowui_ui_textured.frag -o /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/shaders/flowui_ui_textured.frag.spv
+
+external/FlowUi/shaders/flowui_ui_textured.vert.spv: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/shaders/flowui_ui_textured.vert
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Compiling FlowUi shader flowui_ui_textured.vert"
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi && /home/lkukhale/cmake-3.30.5-linux-x86_64/bin/cmake -E make_directory /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/shaders
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi && /home/lkukhale/vulkan/1.4.321.1/x86_64/bin/glslc -O /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/shaders/flowui_ui_textured.vert -o /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/shaders/flowui_ui_textured.vert.spv
 
 flowui_shaders: external/FlowUi/CMakeFiles/flowui_shaders
 flowui_shaders: external/FlowUi/shaders/flowui_ui_msdf.frag.spv
-flowui_shaders: external/FlowUi/shaders/flowui_ui_quad.vert.spv
+flowui_shaders: external/FlowUi/shaders/flowui_ui_msdf.vert.spv
 flowui_shaders: external/FlowUi/shaders/flowui_ui_solid.frag.spv
+flowui_shaders: external/FlowUi/shaders/flowui_ui_solid.vert.spv
 flowui_shaders: external/FlowUi/shaders/flowui_ui_textured.frag.spv
+flowui_shaders: external/FlowUi/shaders/flowui_ui_textured.vert.spv
 flowui_shaders: external/FlowUi/CMakeFiles/flowui_shaders.dir/build.make
 .PHONY : flowui_shaders
 

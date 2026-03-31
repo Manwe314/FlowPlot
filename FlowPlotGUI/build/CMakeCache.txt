@@ -384,16 +384,16 @@ PNG_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libpng.so
 PNG_PNG_INCLUDE_DIR:PATH=/usr/include
 
 //Path to a program.
-Vulkan_GLSLANG_VALIDATOR_EXECUTABLE:FILEPATH=/bin/glslangValidator
+Vulkan_GLSLANG_VALIDATOR_EXECUTABLE:FILEPATH=/home/lkukhale/vulkan/1.4.321.1/x86_64/bin/glslangValidator
 
 //Path to a program.
-Vulkan_GLSLC_EXECUTABLE:FILEPATH=Vulkan_GLSLC_EXECUTABLE-NOTFOUND
+Vulkan_GLSLC_EXECUTABLE:FILEPATH=/home/lkukhale/vulkan/1.4.321.1/x86_64/bin/glslc
 
 //Path to a file.
-Vulkan_INCLUDE_DIR:PATH=/usr/include
+Vulkan_INCLUDE_DIR:PATH=/home/lkukhale/vulkan/1.4.321.1/x86_64/include
 
 //Path to a library.
-Vulkan_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libvulkan.so
+Vulkan_LIBRARY:FILEPATH=/home/lkukhale/vulkan/1.4.321.1/x86_64/lib/libvulkan.so
 
 //Path to a file.
 ZLIB_INCLUDE_DIR:PATH=/usr/include
@@ -643,7 +643,7 @@ FIND_PACKAGE_MESSAGE_DETAILS_PNG:INTERNAL=[/usr/lib/x86_64-linux-gnu/libpng.so][
 //Details about finding Threads
 FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 //Details about finding Vulkan
-FIND_PACKAGE_MESSAGE_DETAILS_Vulkan:INTERNAL=[/usr/lib/x86_64-linux-gnu/libvulkan.so][/usr/include][cfound components: glslangValidator missing components: glslc][v1.3.204()]
+FIND_PACKAGE_MESSAGE_DETAILS_Vulkan:INTERNAL=[/home/lkukhale/vulkan/1.4.321.1/x86_64/lib/libvulkan.so][/home/lkukhale/vulkan/1.4.321.1/x86_64/include][cfound components: glslc glslangValidator ][v1.4.321()]
 //Details about finding ZLIB
 FIND_PACKAGE_MESSAGE_DETAILS_ZLIB:INTERNAL=[/usr/lib/x86_64-linux-gnu/libz.so][/usr/include][c ][v1.2.11()]
 //STRINGS property for variable: FLOWUI_GLFW_PROVIDER

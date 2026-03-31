@@ -444,6 +444,30 @@ src/managers/InputFieldManager.cpp.s:
 	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/src/managers/InputFieldManager.cpp.s
 .PHONY : src/managers/InputFieldManager.cpp.s
 
+src/managers/ShortcutManager.o: src/managers/ShortcutManager.cpp.o
+.PHONY : src/managers/ShortcutManager.o
+
+# target to build an object file
+src/managers/ShortcutManager.cpp.o:
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/src/managers/ShortcutManager.cpp.o
+.PHONY : src/managers/ShortcutManager.cpp.o
+
+src/managers/ShortcutManager.i: src/managers/ShortcutManager.cpp.i
+.PHONY : src/managers/ShortcutManager.i
+
+# target to preprocess a source file
+src/managers/ShortcutManager.cpp.i:
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/src/managers/ShortcutManager.cpp.i
+.PHONY : src/managers/ShortcutManager.cpp.i
+
+src/managers/ShortcutManager.s: src/managers/ShortcutManager.cpp.s
+.PHONY : src/managers/ShortcutManager.s
+
+# target to generate assembly for a file
+src/managers/ShortcutManager.cpp.s:
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/src/managers/ShortcutManager.cpp.s
+.PHONY : src/managers/ShortcutManager.cpp.s
+
 src/managers/SvgManager.o: src/managers/SvgManager.cpp.o
 .PHONY : src/managers/SvgManager.o
 
@@ -609,6 +633,9 @@ help:
 	@echo "... src/managers/InputFieldManager.o"
 	@echo "... src/managers/InputFieldManager.i"
 	@echo "... src/managers/InputFieldManager.s"
+	@echo "... src/managers/ShortcutManager.o"
+	@echo "... src/managers/ShortcutManager.i"
+	@echo "... src/managers/ShortcutManager.s"
 	@echo "... src/managers/SvgManager.o"
 	@echo "... src/managers/SvgManager.i"
 	@echo "... src/managers/SvgManager.s"

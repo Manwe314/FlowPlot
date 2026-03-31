@@ -220,6 +220,12 @@ public:
         return *this;
     }
 
+    ElementBuilder& withElementID(std::string_view elementID)
+    {
+        elementID_.assign(elementID.data(), elementID.size());
+        return *this;
+    }
+
     void construct(ElementDrawOptions options = ElementDrawOptions::Default);
     void draw(ElementDrawOptions options = ElementDrawOptions::Default);
 

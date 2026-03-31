@@ -19,6 +19,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/flowui.dir/src/managers/ImageManager.cpp.o.d"
   "CMakeFiles/flowui.dir/src/managers/InputFieldManager.cpp.o"
   "CMakeFiles/flowui.dir/src/managers/InputFieldManager.cpp.o.d"
+  "CMakeFiles/flowui.dir/src/managers/ShortcutManager.cpp.o"
+  "CMakeFiles/flowui.dir/src/managers/ShortcutManager.cpp.o.d"
   "CMakeFiles/flowui.dir/src/managers/SvgManager.cpp.o"
   "CMakeFiles/flowui.dir/src/managers/SvgManager.cpp.o.d"
   "CMakeFiles/flowui.dir/src/managers/UiManager.cpp.o"

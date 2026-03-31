@@ -93,7 +93,7 @@ FlowPlotGUI_EXTERNAL_OBJECTS =
 FlowPlotGUI: CMakeFiles/FlowPlotGUI.dir/main.cpp.o
 FlowPlotGUI: CMakeFiles/FlowPlotGUI.dir/build.make
 FlowPlotGUI: external/FlowUi/libflowui.a
-FlowPlotGUI: /usr/lib/x86_64-linux-gnu/libvulkan.so
+FlowPlotGUI: /home/lkukhale/vulkan/1.4.321.1/x86_64/lib/libvulkan.so
 FlowPlotGUI: /usr/lib/x86_64-linux-gnu/libglfw.so.3.3
 FlowPlotGUI: external/FlowUi/external/plutosvg/libplutosvg.a
 FlowPlotGUI: external/FlowUi/external/plutosvg/plutovg/libplutovg.a

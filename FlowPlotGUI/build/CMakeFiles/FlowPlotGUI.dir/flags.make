@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = -DFLOWUI_INCLUDE_SVG_MANAGER=1 -DFLOWUI_PUBLIC_VULKAN_INTEROP=1
 
-CXX_INCLUDES = -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format
+CXX_INCLUDES = -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/../FlowPlot -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -isystem /home/lkukhale/vulkan/1.4.321.1/x86_64/include
 
 CXX_FLAGS = -std=c++2b
 
