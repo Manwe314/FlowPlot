@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <optional>
 #include <string>
+#include <string_view>
 #include <unordered_map>
 #include <vector>
 
@@ -377,13 +378,11 @@ namespace FlowPlot
 
 #ifdef FLOW_PLOT_COMPLETE_JSON
 
-#include "json.hpp"
-
 namespace FlowInternal
 {
 	namespace JsonDefaults
 	{
-		inline const nlohmann::json kLegendElementDefaultsJson = nlohmann::json::parse(R"flowplot(
+		inline constexpr std::string_view kLegendElementDefaultsJson = R"flowplot(
 {
   "text": "Untitled Plot",
   "fontFamily": "Default",
@@ -401,9 +400,9 @@ namespace FlowInternal
   "iconShape": "square",
   "iconColor": "#0d37f0ff"
 }
-)flowplot");
+)flowplot";
 
-		inline const nlohmann::json kLegendDefaultsJson = nlohmann::json::parse(R"flowplot(
+		inline constexpr std::string_view kLegendDefaultsJson = R"flowplot(
 {
   "visible": false,
   "background": "#ffffff",
@@ -424,9 +423,9 @@ namespace FlowInternal
   },
   "legendElements": []
 }
-)flowplot");
+)flowplot";
 
-		inline const nlohmann::json kScatterMappingDefaultsJson = nlohmann::json::parse(R"flowplot(
+		inline constexpr std::string_view kScatterMappingDefaultsJson = R"flowplot(
 {
   "x": {
     "field": ""
@@ -462,9 +461,9 @@ namespace FlowInternal
     }
   }
 }
-)flowplot");
+)flowplot";
 
-		inline const nlohmann::json kScatterStyleDefaultsJson = nlohmann::json::parse(R"flowplot(
+		inline constexpr std::string_view kScatterStyleDefaultsJson = R"flowplot(
 {
   "markerShape": "circle",
   "fillColor": "#3366cc",
@@ -472,9 +471,9 @@ namespace FlowInternal
   "strokeWidth": 1.0,
   "markerSize": 6.0
 }
-)flowplot");
+)flowplot";
 
-		inline const nlohmann::json kScatterStatsDefaultsJson = nlohmann::json::parse(R"flowplot(
+		inline constexpr std::string_view kScatterStatsDefaultsJson = R"flowplot(
 {
   "showMeanPoint": false,
   "meanPointShape": "diamond",
@@ -483,17 +482,17 @@ namespace FlowInternal
   "meanPointStrokeWidth": 1.0,
   "meanPointSize": 10.0
 }
-)flowplot");
+)flowplot";
 
-		inline const nlohmann::json kScatterConfigDefaultsJson = nlohmann::json::parse(R"flowplot(
+		inline constexpr std::string_view kScatterConfigDefaultsJson = R"flowplot(
 {
   "jitterX": 0.0,
   "jitterY": 0.0,
   "domainPadding": 0.05
 }
-)flowplot");
+)flowplot";
 
-		inline const nlohmann::json kHistogramMappingDefaultsJson = nlohmann::json::parse(R"flowplot(
+		inline constexpr std::string_view kHistogramMappingDefaultsJson = R"flowplot(
 {
   "data": {
     "field": "",
@@ -510,17 +509,17 @@ namespace FlowInternal
     }
   }
 }
-)flowplot");
+)flowplot";
 
-		inline const nlohmann::json kHistogramStyleDefaultsJson = nlohmann::json::parse(R"flowplot(
+		inline constexpr std::string_view kHistogramStyleDefaultsJson = R"flowplot(
 {
   "fillColor": "#88aaff",
   "strokeColor": "#3355aa",
   "strokeWidth": 1.0
 }
-)flowplot");
+)flowplot";
 
-		inline const nlohmann::json kHistogramStatsDefaultsJson = nlohmann::json::parse(R"flowplot(
+		inline constexpr std::string_view kHistogramStatsDefaultsJson = R"flowplot(
 {
   "showMeanLine": false,
   "meanLineColor": "#ff6633",
@@ -529,9 +528,9 @@ namespace FlowInternal
   "medianLineColor": "#33aa66",
   "medianLineWidth": 2.0
 }
-)flowplot");
+)flowplot";
 
-		inline const nlohmann::json kHistogramConfigDefaultsJson = nlohmann::json::parse(R"flowplot(
+		inline constexpr std::string_view kHistogramConfigDefaultsJson = R"flowplot(
 {
   "binCount": 20,
   "normalize": false,
@@ -539,9 +538,9 @@ namespace FlowInternal
   "showEmptyBins": false,
   "domainPadding": 0.05
 }
-)flowplot");
+)flowplot";
 
-		inline const nlohmann::json kLayerDefaultsJson = nlohmann::json::parse(R"flowplot(
+		inline constexpr std::string_view kLayerDefaultsJson = R"flowplot(
 {
   "id": "layer_1",
   "type": "scatter",
@@ -558,9 +557,9 @@ namespace FlowInternal
   "stats": {},
   "config": {}
 }
-)flowplot");
+)flowplot";
 
-		inline const nlohmann::json kPanelDefaultsJson = nlohmann::json::parse(R"flowplot(
+		inline constexpr std::string_view kPanelDefaultsJson = R"flowplot(
 {
   "id": "panel_1",
   "visible": true,
@@ -757,9 +756,9 @@ namespace FlowInternal
   },
   "layers": []
 }
-)flowplot");
+)flowplot";
 
-		inline const nlohmann::json kMasterTemplateJson = nlohmann::json::parse(R"flowplot(
+		inline constexpr std::string_view kMasterTemplateJson = R"flowplot(
 {
   "version": "1.0",
   "figure": {
@@ -799,7 +798,7 @@ namespace FlowInternal
   },
   "panels": []
 }
-)flowplot");
+)flowplot";
 	} // namespace JsonDefaults
 } // namespace FlowInternal
 

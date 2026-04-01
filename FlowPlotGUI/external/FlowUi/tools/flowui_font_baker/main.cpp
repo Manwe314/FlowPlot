@@ -14,7 +14,7 @@
 namespace {
 
 constexpr double kDefaultPixelSize = 32.0;
-constexpr double kDefaultPxRange = 2.0;
+constexpr double kDefaultPxRange = 4.0;
 constexpr double kDefaultAngleThreshold = 3.0;
 constexpr double kDefaultMiterLimit = 1.0;
 constexpr unsigned long long kLcgMultiplier = 6364136223846793005ull;
@@ -64,7 +64,7 @@ void printUsage(const char *argv0) {
         << "Optional:\n"
         << "  --charset, -c      Inline charset specification (msdf-atlas syntax)\n"
         << "  --charset-file     Charset file path (msdf-atlas syntax)\n"
-        << "  --px-range         Distance field pixel range (default: 2)\n"
+        << "  --px-range         Distance field pixel range (default: 4)\n"
         << "  --threads, -t      Worker threads (0 = auto)\n"
         << "  --help, -h         Show this help\n\n"
         << "If charset is omitted, printable ASCII is used.\n";

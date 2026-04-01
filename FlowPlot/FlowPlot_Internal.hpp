@@ -1,7 +1,11 @@
 #pragma once
 
 #include "FlowPlot_Defaults.hpp"
-#include "json.hpp"
+#include "rapidjson/document.h"
+#include "rapidjson/error/en.h"
+#include "rapidjson/prettywriter.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/writer.h"
 
 #include <cctype>
 #include <cstddef>
@@ -29,6 +33,65 @@
 
 namespace FlowInternal
 {
+	inline std::string jsonStringToStdString(const rapidjson::Value& value)
+	{
+		return std::string(value.GetString(), value.GetStringLength());
+	}
+
+	inline const rapidjson::Value* findJsonMember(const rapidjson::Value& objectJson, const char* key)
+	{
+		if (!objectJson.IsObject())
+			return nullptr;
+
+		const auto memberIt = objectJson.FindMember(key);
+		if (memberIt == objectJson.MemberEnd())
+			return nullptr;
+		return &memberIt->value;
+	}
+
+	inline rapidjson::Value* findJsonMember(rapidjson::Value& objectJson, const char* key)
+	{
+		if (!objectJson.IsObject())
+			return nullptr;
+
+		auto memberIt = objectJson.FindMember(key);
+		if (memberIt == objectJson.MemberEnd())
+			return nullptr;
+		return &memberIt->value;
+	}
+
+	inline rapidjson::Document parseJsonDocument(std::string_view jsonText, const char* context)
+	{
+		rapidjson::Document document;
+		document.Parse(jsonText.data(), jsonText.size());
+		if (document.HasParseError())
+		{
+			throw std::runtime_error(
+				std::string(context)
+				+ ": failed to parse JSON at offset "
+				+ std::to_string(document.GetErrorOffset())
+				+ ": "
+				+ rapidjson::GetParseError_En(document.GetParseError()));
+		}
+		return document;
+	}
+
+	inline std::string serializeJson(const rapidjson::Value& jsonValue, bool pretty)
+	{
+		rapidjson::StringBuffer buffer;
+		if (pretty)
+		{
+			rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
+			jsonValue.Accept(writer);
+		}
+		else
+		{
+			rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+			jsonValue.Accept(writer);
+		}
+		return std::string(buffer.GetString(), buffer.GetSize());
+	}
+
 	struct DataView
 	{
 		enum class ValueType : std::uint8_t
@@ -320,7 +383,7 @@ namespace FlowInternal
 
 	namespace SpecCompiler
 	{
-		using json = nlohmann::json;
+		using json = rapidjson::Value;
 
 		inline std::string childPath(const std::string& path, const std::string& key)
 		{
@@ -329,10 +392,7 @@ namespace FlowInternal
 
 		inline const json* findKey(const json& objectJson, const char* key)
 		{
-			auto it = objectJson.find(key);
-			if (it == objectJson.end())
-				return nullptr;
-			return &(*it);
+			return findJsonMember(objectJson, key);
 		}
 
 		inline const json* findObject(const json& objectJson, const char* key, const std::string& path)
@@ -340,7 +400,7 @@ namespace FlowInternal
 			const json* value = findKey(objectJson, key);
 			if (value == nullptr)
 				return nullptr;
-			if (!value->is_object())
+			if (!value->IsObject())
 				throw std::runtime_error("compileTemplateToSpec: '" + childPath(path, key) + "' must be an object");
 			return value;
 		}
@@ -350,7 +410,7 @@ namespace FlowInternal
 			const json* value = findKey(objectJson, key);
 			if (value == nullptr)
 				return nullptr;
-			if (!value->is_array())
+			if (!value->IsArray())
 				throw std::runtime_error("compileTemplateToSpec: '" + childPath(path, key) + "' must be an array");
 			return value;
 		}
@@ -360,9 +420,9 @@ namespace FlowInternal
 			const json* value = findKey(objectJson, key);
 			if (value == nullptr)
 				return;
-			if (!value->is_boolean())
+			if (!value->IsBool())
 				throw std::runtime_error("compileTemplateToSpec: '" + childPath(path, key) + "' must be a boolean");
-			out = value->get<bool>();
+			out = value->GetBool();
 		}
 
 		inline void readString(const json& objectJson, const char* key, std::string& out, const std::string& path)
@@ -370,9 +430,9 @@ namespace FlowInternal
 			const json* value = findKey(objectJson, key);
 			if (value == nullptr)
 				return;
-			if (!value->is_string())
+			if (!value->IsString())
 				throw std::runtime_error("compileTemplateToSpec: '" + childPath(path, key) + "' must be a string");
-			out = value->get<std::string>();
+			out = jsonStringToStdString(*value);
 		}
 
 		inline std::string normalizeDatasetFieldTypeToken(std::string_view rawType)
@@ -410,9 +470,9 @@ namespace FlowInternal
 			const json* value = findKey(objectJson, key);
 			if (value == nullptr)
 				return;
-			if (!value->is_number())
+			if (!value->IsNumber())
 				throw std::runtime_error("compileTemplateToSpec: '" + childPath(path, key) + "' must be a number");
-			out = value->get<float>();
+			out = static_cast<float>(value->GetDouble());
 		}
 
 		inline void readInt32(const json& objectJson, const char* key, std::int32_t& out, const std::string& path)
@@ -420,10 +480,10 @@ namespace FlowInternal
 			const json* value = findKey(objectJson, key);
 			if (value == nullptr)
 				return;
-			if (!value->is_number_integer())
+			if (!value->IsInt64())
 				throw std::runtime_error("compileTemplateToSpec: '" + childPath(path, key) + "' must be an integer");
 
-			const long long parsed = value->get<long long>();
+			const long long parsed = value->GetInt64();
 			if (parsed < static_cast<long long>(std::numeric_limits<std::int32_t>::min())
 				|| parsed > static_cast<long long>(std::numeric_limits<std::int32_t>::max()))
 			{
@@ -437,17 +497,17 @@ namespace FlowInternal
 			const json* value = findKey(objectJson, key);
 			if (value == nullptr)
 				return;
-			if (!value->is_number_integer() && !value->is_number_unsigned())
+			if (!value->IsInt64() && !value->IsUint64())
 				throw std::runtime_error("compileTemplateToSpec: '" + childPath(path, key) + "' must be an integer");
 
 			unsigned long long parsed = 0ULL;
-			if (value->is_number_unsigned())
+			if (value->IsUint64())
 			{
-				parsed = value->get<unsigned long long>();
+				parsed = value->GetUint64();
 			}
 			else
 			{
-				const long long signedValue = value->get<long long>();
+				const long long signedValue = value->GetInt64();
 				if (signedValue < 0)
 					throw std::runtime_error("compileTemplateToSpec: '" + childPath(path, key) + "' must be non-negative");
 				parsed = static_cast<unsigned long long>(signedValue);
@@ -463,17 +523,17 @@ namespace FlowInternal
 			const json* value = findKey(objectJson, key);
 			if (value == nullptr)
 				return;
-			if (!value->is_number_integer() && !value->is_number_unsigned())
+			if (!value->IsInt64() && !value->IsUint64())
 				throw std::runtime_error("compileTemplateToSpec: '" + childPath(path, key) + "' must be an integer");
 
 			unsigned long long parsed = 0ULL;
-			if (value->is_number_unsigned())
+			if (value->IsUint64())
 			{
-				parsed = value->get<unsigned long long>();
+				parsed = value->GetUint64();
 			}
 			else
 			{
-				const long long signedValue = value->get<long long>();
+				const long long signedValue = value->GetInt64();
 				if (signedValue < 0)
 					throw std::runtime_error("compileTemplateToSpec: '" + childPath(path, key) + "' must be non-negative");
 				parsed = static_cast<unsigned long long>(signedValue);
@@ -489,14 +549,14 @@ namespace FlowInternal
 			const json* value = findKey(objectJson, key);
 			if (value == nullptr)
 				return;
-			if (value->is_null())
+			if (value->IsNull())
 			{
 				out = std::nullopt;
 				return;
 			}
-			if (!value->is_number())
+			if (!value->IsNumber())
 				throw std::runtime_error("compileTemplateToSpec: '" + childPath(path, key) + "' must be null or a number");
-			out = value->get<float>();
+			out = static_cast<float>(value->GetDouble());
 		}
 
 		inline void readStringArray(const json& objectJson, const char* key, std::vector<std::string>& out, const std::string& path)
@@ -504,17 +564,17 @@ namespace FlowInternal
 			const json* value = findKey(objectJson, key);
 			if (value == nullptr)
 				return;
-			if (!value->is_array())
+			if (!value->IsArray())
 				throw std::runtime_error("compileTemplateToSpec: '" + childPath(path, key) + "' must be an array");
 
 			std::vector<std::string> parsed;
-			parsed.reserve(value->size());
-			for (std::size_t i = 0; i < value->size(); ++i)
+			parsed.reserve(value->Size());
+			for (rapidjson::SizeType i = 0; i < value->Size(); ++i)
 			{
 				const json& element = (*value)[i];
-				if (!element.is_string())
+				if (!element.IsString())
 					throw std::runtime_error("compileTemplateToSpec: '" + childPath(path, key) + "[" + std::to_string(i) + "]' must be a string");
-				parsed.push_back(element.get<std::string>());
+				parsed.push_back(jsonStringToStdString(element));
 			}
 			out = std::move(parsed);
 		}
@@ -524,17 +584,17 @@ namespace FlowInternal
 			const json* value = findKey(objectJson, key);
 			if (value == nullptr)
 				return;
-			if (!value->is_array())
+			if (!value->IsArray())
 				throw std::runtime_error("compileTemplateToSpec: '" + childPath(path, key) + "' must be an array");
 
 			std::vector<float> parsed;
-			parsed.reserve(value->size());
-			for (std::size_t i = 0; i < value->size(); ++i)
+			parsed.reserve(value->Size());
+			for (rapidjson::SizeType i = 0; i < value->Size(); ++i)
 			{
 				const json& element = (*value)[i];
-				if (!element.is_number())
+				if (!element.IsNumber())
 					throw std::runtime_error("compileTemplateToSpec: '" + childPath(path, key) + "[" + std::to_string(i) + "]' must be a number");
-				parsed.push_back(element.get<float>());
+				parsed.push_back(static_cast<float>(element.GetDouble()));
 			}
 			out = std::move(parsed);
 		}
@@ -544,17 +604,17 @@ namespace FlowInternal
 			const json* value = findKey(objectJson, key);
 			if (value == nullptr)
 				return;
-			if (!value->is_array())
+			if (!value->IsArray())
 				throw std::runtime_error("compileTemplateToSpec: '" + childPath(path, key) + "' must be an array");
 
 			std::vector<double> parsed;
-			parsed.reserve(value->size());
-			for (std::size_t i = 0; i < value->size(); ++i)
+			parsed.reserve(value->Size());
+			for (rapidjson::SizeType i = 0; i < value->Size(); ++i)
 			{
 				const json& element = (*value)[i];
-				if (!element.is_number())
+				if (!element.IsNumber())
 					throw std::runtime_error("compileTemplateToSpec: '" + childPath(path, key) + "[" + std::to_string(i) + "]' must be a number");
-				parsed.push_back(element.get<double>());
+				parsed.push_back(element.GetDouble());
 			}
 			out = std::move(parsed);
 		}
@@ -624,17 +684,17 @@ namespace FlowInternal
 			if (const json* elementsArray = findArray(objectJson, "legendElements", path))
 			{
 				legend.legendElements.clear();
-				if (elementsArray->empty())
+				if (elementsArray->Empty())
 				{
 					legend.legendElements.emplace_back(FlowPlot::Spec::LegendElementSpec{});
 				}
 				else
 				{
-					legend.legendElements.reserve(elementsArray->size());
-					for (std::size_t i = 0; i < elementsArray->size(); ++i)
+					legend.legendElements.reserve(elementsArray->Size());
+					for (rapidjson::SizeType i = 0; i < elementsArray->Size(); ++i)
 					{
 						const json& elementObject = (*elementsArray)[i];
-						if (!elementObject.is_object())
+						if (!elementObject.IsObject())
 							throw std::runtime_error("compileTemplateToSpec: '" + childPath(path, "legendElements") + "[" + std::to_string(i) + "]' must be an object");
 
 						FlowPlot::Spec::LegendElementSpec elementSpec{};
@@ -858,7 +918,7 @@ namespace FlowInternal
 
 		inline FlowPlot::Spec::LayerSpec compileLayerSpec(const json& layerJson, const std::string& path)
 		{
-			if (!layerJson.is_object())
+			if (!layerJson.IsObject())
 				throw std::runtime_error("compileTemplateToSpec: '" + path + "' must be an object");
 
 			FlowPlot::Spec::LayerSpec layer{};
@@ -903,7 +963,7 @@ namespace FlowInternal
 
 		inline FlowPlot::Spec::PanelSpec compilePanelSpec(const json& panelJson, const std::string& path)
 		{
-			if (!panelJson.is_object())
+			if (!panelJson.IsObject())
 				throw std::runtime_error("compileTemplateToSpec: '" + path + "' must be an object");
 
 			FlowPlot::Spec::PanelSpec panel{};
@@ -930,14 +990,14 @@ namespace FlowInternal
 			if (const json* layersArray = findArray(panelJson, "layers", path))
 			{
 				panel.layers.clear();
-				if (layersArray->empty())
+				if (layersArray->Empty())
 				{
 					panel.layers.emplace_back(FlowPlot::Spec::LayerSpec{});
 				}
 				else
 				{
-					panel.layers.reserve(layersArray->size());
-					for (std::size_t i = 0; i < layersArray->size(); ++i)
+					panel.layers.reserve(layersArray->Size());
+					for (rapidjson::SizeType i = 0; i < layersArray->Size(); ++i)
 					{
 						const json& layerObject = (*layersArray)[i];
 						panel.layers.push_back(compileLayerSpec(layerObject, childPath(path, "layers") + "[" + std::to_string(i) + "]"));
@@ -968,17 +1028,17 @@ namespace FlowInternal
 			if (const json* legendsArray = findArray(figureJson, "legends", "figure"))
 			{
 				figure.legends.clear();
-				if (legendsArray->empty())
+				if (legendsArray->Empty())
 				{
 					figure.legends.emplace_back(FlowPlot::Spec::LegendSpec{});
 				}
 				else
 				{
-					figure.legends.reserve(legendsArray->size());
-					for (std::size_t i = 0; i < legendsArray->size(); ++i)
+					figure.legends.reserve(legendsArray->Size());
+					for (rapidjson::SizeType i = 0; i < legendsArray->Size(); ++i)
 					{
 						const json& legendObject = (*legendsArray)[i];
-						if (!legendObject.is_object())
+						if (!legendObject.IsObject())
 							throw std::runtime_error("compileTemplateToSpec: 'figure.legends[" + std::to_string(i) + "]' must be an object");
 
 						FlowPlot::Spec::LegendSpec legendSpec{};
@@ -997,72 +1057,73 @@ namespace FlowInternal
 		}
 	} // namespace SpecCompiler
 
-	inline FlowPlot::Spec::MasterTemplateSpec compileTemplateToSpec(const nlohmann::json& templateJson)
+	inline FlowPlot::Spec::MasterTemplateSpec compileTemplateToSpec(const rapidjson::Value& templateJson)
 	{
-		if (!templateJson.is_object())
+		if (!templateJson.IsObject())
 			throw std::runtime_error("compileTemplateToSpec: template root must be a JSON object");
 
 		FlowPlot::Spec::MasterTemplateSpec spec{};
 
-		if (const nlohmann::json* versionValue = SpecCompiler::findKey(templateJson, "version"))
+		if (const rapidjson::Value* versionValue = SpecCompiler::findKey(templateJson, "version"))
 		{
-			if (!versionValue->is_string())
+			if (!versionValue->IsString())
 				throw std::runtime_error("compileTemplateToSpec: 'version' must be a string");
 
-			spec.version = versionValue->get<std::string>();
+			spec.version = jsonStringToStdString(*versionValue);
 			if (spec.version != "1.0")
 				throw std::runtime_error("compileTemplateToSpec: unsupported version '" + spec.version + "'");
 		}
 
-		if (const nlohmann::json* figureObject = SpecCompiler::findObject(templateJson, "figure", ""))
+		if (const rapidjson::Value* figureObject = SpecCompiler::findObject(templateJson, "figure", ""))
 			SpecCompiler::applyFigureSpec(spec.figure, *figureObject);
 
-		if (const nlohmann::json* layoutObject = SpecCompiler::findObject(templateJson, "layout", ""))
+		if (const rapidjson::Value* layoutObject = SpecCompiler::findObject(templateJson, "layout", ""))
 		{
 			SpecCompiler::readUint32(*layoutObject, "rows", spec.layout.rows, "layout");
 			SpecCompiler::readUint32(*layoutObject, "cols", spec.layout.cols, "layout");
 			SpecCompiler::readFloat(*layoutObject, "gap", spec.layout.gap, "layout");
 		}
 
-		if (const nlohmann::json* datasetsArray = SpecCompiler::findArray(templateJson, "datasets", ""))
+		if (const rapidjson::Value* datasetsArray = SpecCompiler::findArray(templateJson, "datasets", ""))
 		{
 			spec.datasets.clear();
-			spec.datasets.reserve(datasetsArray->size());
+			spec.datasets.reserve(datasetsArray->Size());
 			std::unordered_set<std::string> seenDatasetNames;
-			seenDatasetNames.reserve(datasetsArray->size());
-			for (std::size_t i = 0; i < datasetsArray->size(); ++i)
+			seenDatasetNames.reserve(datasetsArray->Size());
+			for (rapidjson::SizeType i = 0; i < datasetsArray->Size(); ++i)
 			{
-				const nlohmann::json& datasetObject = (*datasetsArray)[i];
+				const rapidjson::Value& datasetObject = (*datasetsArray)[i];
 				const std::string datasetPath = "datasets[" + std::to_string(i) + "]";
-				if (!datasetObject.is_object())
+				if (!datasetObject.IsObject())
 					throw std::runtime_error("compileTemplateToSpec: '" + datasetPath + "' must be an object");
 
 				FlowPlot::Spec::DatasetSpec datasetSpec{};
-				const nlohmann::json* datasetNameValue = SpecCompiler::findKey(datasetObject, "name");
+				const rapidjson::Value* datasetNameValue = SpecCompiler::findKey(datasetObject, "name");
 				if (datasetNameValue == nullptr)
 					throw std::runtime_error("compileTemplateToSpec: '" + SpecCompiler::childPath(datasetPath, "name") + "' is required");
-				if (!datasetNameValue->is_string())
+				if (!datasetNameValue->IsString())
 					throw std::runtime_error("compileTemplateToSpec: '" + SpecCompiler::childPath(datasetPath, "name") + "' must be a string");
 
-				datasetSpec.name = datasetNameValue->get<std::string>();
+				datasetSpec.name = jsonStringToStdString(*datasetNameValue);
 				if (datasetSpec.name.empty())
 					throw std::runtime_error("compileTemplateToSpec: '" + SpecCompiler::childPath(datasetPath, "name") + "' must not be empty");
 				if (!seenDatasetNames.insert(datasetSpec.name).second)
 					throw std::runtime_error("compileTemplateToSpec: duplicate dataset name '" + datasetSpec.name + "'");
 
-				const nlohmann::json* schemaObject = SpecCompiler::findObject(datasetObject, "schema", datasetPath);
+				const rapidjson::Value* schemaObject = SpecCompiler::findObject(datasetObject, "schema", datasetPath);
 				if (schemaObject == nullptr)
 					throw std::runtime_error("compileTemplateToSpec: '" + SpecCompiler::childPath(datasetPath, "schema") + "' is required");
 
-				for (auto schemaIt = schemaObject->begin(); schemaIt != schemaObject->end(); ++schemaIt)
+				for (auto schemaIt = schemaObject->MemberBegin(); schemaIt != schemaObject->MemberEnd(); ++schemaIt)
 				{
+					const std::string fieldName = std::string(schemaIt->name.GetString(), schemaIt->name.GetStringLength());
 					const std::string fieldPath = SpecCompiler::childPath(
 						SpecCompiler::childPath(datasetPath, "schema"),
-						schemaIt.key());
-					if (schemaIt.key().empty())
+						fieldName);
+					if (fieldName.empty())
 						throw std::runtime_error("compileTemplateToSpec: '" + fieldPath + "' must not be empty");
 
-					if (!schemaIt.value().is_string())
+					if (!schemaIt->value.IsString())
 					{
 						throw std::runtime_error(
 							"compileTemplateToSpec: '"
@@ -1070,8 +1131,8 @@ namespace FlowInternal
 							+ "' must be a string");
 					}
 
-					const std::string fieldTypeToken = schemaIt.value().get<std::string>();
-					datasetSpec.schema[schemaIt.key()] = SpecCompiler::parseDatasetFieldType(
+					const std::string fieldTypeToken = jsonStringToStdString(schemaIt->value);
+					datasetSpec.schema[fieldName] = SpecCompiler::parseDatasetFieldType(
 						fieldTypeToken,
 						fieldPath);
 				}
@@ -1079,19 +1140,19 @@ namespace FlowInternal
 			}
 		}
 
-		if (const nlohmann::json* panelsArray = SpecCompiler::findArray(templateJson, "panels", ""))
+		if (const rapidjson::Value* panelsArray = SpecCompiler::findArray(templateJson, "panels", ""))
 		{
 			spec.panels.clear();
-			if (panelsArray->empty())
+			if (panelsArray->Empty())
 			{
 				spec.panels.emplace_back(FlowPlot::Spec::PanelSpec{});
 			}
 			else
 			{
-				spec.panels.reserve(panelsArray->size());
-				for (std::size_t i = 0; i < panelsArray->size(); ++i)
+				spec.panels.reserve(panelsArray->Size());
+				for (rapidjson::SizeType i = 0; i < panelsArray->Size(); ++i)
 				{
-					const nlohmann::json& panelObject = (*panelsArray)[i];
+					const rapidjson::Value& panelObject = (*panelsArray)[i];
 					spec.panels.push_back(SpecCompiler::compilePanelSpec(panelObject, "panels[" + std::to_string(i) + "]"));
 				}
 			}
@@ -4196,94 +4257,151 @@ namespace FlowInternal
 #ifdef FLOW_PLOT_COMPLETE_JSON
 	namespace TemplateNormalization
 	{
-		inline nlohmann::json mergeDefaults(nlohmann::json defaultsJson, nlohmann::json overridesJson)
-		{
-			if (!defaultsJson.is_object() || !overridesJson.is_object())
-				return std::move(overridesJson);
+		using JsonAllocator = rapidjson::Document::AllocatorType;
 
-			for (auto it = overridesJson.begin(); it != overridesJson.end(); ++it)
+		struct NormalizationDefaults
+		{
+			const rapidjson::Value& legendElement;
+			const rapidjson::Value& legend;
+			const rapidjson::Value& scatterMapping;
+			const rapidjson::Value& scatterStyle;
+			const rapidjson::Value& scatterStats;
+			const rapidjson::Value& scatterConfig;
+			const rapidjson::Value& histogramMapping;
+			const rapidjson::Value& histogramStyle;
+			const rapidjson::Value& histogramStats;
+			const rapidjson::Value& histogramConfig;
+			const rapidjson::Value& layer;
+			const rapidjson::Value& panel;
+			const rapidjson::Value& master;
+		};
+
+		inline void mergeDefaultsInto(rapidjson::Value& target, const rapidjson::Value& overrides, JsonAllocator& allocator)
+		{
+			if (!target.IsObject() || !overrides.IsObject())
 			{
-				nlohmann::json& targetValue = defaultsJson[it.key()];
-				if (targetValue.is_object() && it->is_object())
-					targetValue = mergeDefaults(std::move(targetValue), std::move(*it));
-				else
-					targetValue = std::move(*it);
+				target.CopyFrom(overrides, allocator);
+				return;
 			}
 
-			return defaultsJson;
+			for (auto it = overrides.MemberBegin(); it != overrides.MemberEnd(); ++it)
+			{
+				auto targetIt = target.FindMember(it->name.GetString());
+				if (targetIt == target.MemberEnd())
+				{
+					rapidjson::Value key;
+					key.SetString(it->name.GetString(), it->name.GetStringLength(), allocator);
+					rapidjson::Value value;
+					value.CopyFrom(it->value, allocator);
+					target.AddMember(key, value, allocator);
+					continue;
+				}
+
+				if (targetIt->value.IsObject() && it->value.IsObject())
+					mergeDefaultsInto(targetIt->value, it->value, allocator);
+				else
+					targetIt->value.CopyFrom(it->value, allocator);
+			}
+		}
+
+		inline rapidjson::Value mergeDefaults(const rapidjson::Value& defaultsJson, const rapidjson::Value& overridesJson, JsonAllocator& allocator)
+		{
+			rapidjson::Value merged;
+			if (!defaultsJson.IsObject() || !overridesJson.IsObject())
+			{
+				merged.CopyFrom(overridesJson, allocator);
+				return merged;
+			}
+
+			merged.CopyFrom(defaultsJson, allocator);
+			mergeDefaultsInto(merged, overridesJson, allocator);
+			return merged;
 		}
 
 		inline void mergeArrayElementsWithDefaults(
-			nlohmann::json& arrayJson,
-			const nlohmann::json& elementDefaults,
-			const std::string& path)
+			rapidjson::Value& arrayJson,
+			const rapidjson::Value& elementDefaults,
+			const std::string& path,
+			JsonAllocator& allocator)
 		{
-			if (!arrayJson.is_array())
+			if (!arrayJson.IsArray())
 				throw std::runtime_error("normalizeTemplate: '" + path + "' must be an array");
 
-			if (arrayJson.empty())
-				arrayJson.push_back(elementDefaults);
-
-			for (std::size_t i = 0; i < arrayJson.size(); ++i)
+			if (arrayJson.Empty())
 			{
-				nlohmann::json& element = arrayJson[i];
-				if (!element.is_object())
+				rapidjson::Value defaultElement;
+				defaultElement.CopyFrom(elementDefaults, allocator);
+				arrayJson.PushBack(defaultElement, allocator);
+			}
+
+			for (rapidjson::SizeType i = 0; i < arrayJson.Size(); ++i)
+			{
+				rapidjson::Value& element = arrayJson[i];
+				if (!element.IsObject())
 					throw std::runtime_error("normalizeTemplate: '" + path + "[" + std::to_string(i) + "]' must be an object");
 
-				element = mergeDefaults(elementDefaults, std::move(element));
+				rapidjson::Value mergedElement = mergeDefaults(elementDefaults, element, allocator);
+				element.Swap(mergedElement);
 			}
 		}
 
-		inline void mergeLayerTypeDefaults(nlohmann::json& layerJson, std::size_t panelIndex, std::size_t layerIndex)
+		inline void mergeLayerTypeDefaults(
+			rapidjson::Value& layerJson,
+			std::size_t panelIndex,
+			std::size_t layerIndex,
+			const NormalizationDefaults& defaults,
+			JsonAllocator& allocator)
 		{
 			const std::string layerPath =
 				"panels[" + std::to_string(panelIndex) + "].layers[" + std::to_string(layerIndex) + "]";
 
-			if (!layerJson.is_object())
+			if (!layerJson.IsObject())
 				throw std::runtime_error("normalizeTemplate: '" + layerPath + "' must be an object");
 
-			layerJson = mergeDefaults(JsonDefaults::kLayerDefaultsJson, std::move(layerJson));
+			rapidjson::Value mergedLayer = mergeDefaults(defaults.layer, layerJson, allocator);
+			layerJson.Swap(mergedLayer);
 
-			auto typeIt = layerJson.find("type");
-			if (typeIt == layerJson.end() || !typeIt->is_string() || typeIt->get_ref<const std::string&>().empty())
+			const rapidjson::Value* typeValue = findJsonMember(layerJson, "type");
+			if (typeValue == nullptr || !typeValue->IsString() || typeValue->GetStringLength() == 0)
 				throw std::runtime_error("normalizeTemplate: '" + layerPath + ".type' must be a non-empty string");
 
-			const std::string& layerType = typeIt->get_ref<const std::string&>();
+			const std::string layerType = jsonStringToStdString(*typeValue);
 
-			const nlohmann::json* mappingDefaults = nullptr;
-			const nlohmann::json* styleDefaults = nullptr;
-			const nlohmann::json* statsDefaults = nullptr;
-			const nlohmann::json* configDefaults = nullptr;
+			const rapidjson::Value* mappingDefaults = nullptr;
+			const rapidjson::Value* styleDefaults = nullptr;
+			const rapidjson::Value* statsDefaults = nullptr;
+			const rapidjson::Value* configDefaults = nullptr;
 
 			if (layerType == "scatter")
 			{
-				mappingDefaults = &JsonDefaults::kScatterMappingDefaultsJson;
-				styleDefaults = &JsonDefaults::kScatterStyleDefaultsJson;
-				statsDefaults = &JsonDefaults::kScatterStatsDefaultsJson;
-				configDefaults = &JsonDefaults::kScatterConfigDefaultsJson;
+				mappingDefaults = &defaults.scatterMapping;
+				styleDefaults = &defaults.scatterStyle;
+				statsDefaults = &defaults.scatterStats;
+				configDefaults = &defaults.scatterConfig;
 			}
 			else if (layerType == "histogram")
 			{
-				mappingDefaults = &JsonDefaults::kHistogramMappingDefaultsJson;
-				styleDefaults = &JsonDefaults::kHistogramStyleDefaultsJson;
-				statsDefaults = &JsonDefaults::kHistogramStatsDefaultsJson;
-				configDefaults = &JsonDefaults::kHistogramConfigDefaultsJson;
+				mappingDefaults = &defaults.histogramMapping;
+				styleDefaults = &defaults.histogramStyle;
+				statsDefaults = &defaults.histogramStats;
+				configDefaults = &defaults.histogramConfig;
 			}
 			else
 			{
 				throw std::runtime_error("normalizeTemplate: unsupported layer type '" + layerType + "' at '" + layerPath + ".type'");
 			}
 
-			auto mergeSection = [&](const char* sectionName, const nlohmann::json& defaultsJson)
+			auto mergeSection = [&](const char* sectionName, const rapidjson::Value& defaultsJson)
 			{
-				auto sectionIt = layerJson.find(sectionName);
-				if (sectionIt == layerJson.end())
+				rapidjson::Value* sectionValue = findJsonMember(layerJson, sectionName);
+				if (sectionValue == nullptr)
 					throw std::runtime_error("normalizeTemplate: missing required key '" + layerPath + "." + sectionName + "'");
 
-				if (!sectionIt->is_object())
+				if (!sectionValue->IsObject())
 					throw std::runtime_error("normalizeTemplate: '" + layerPath + "." + sectionName + "' must be an object");
 
-				*sectionIt = mergeDefaults(defaultsJson, std::move(*sectionIt));
+				rapidjson::Value mergedSection = mergeDefaults(defaultsJson, *sectionValue, allocator);
+				sectionValue->Swap(mergedSection);
 			};
 
 			mergeSection("mapping", *mappingDefaults);
@@ -4293,59 +4411,104 @@ namespace FlowInternal
 		}
 	} // namespace TemplateNormalization
 
-	inline nlohmann::json normalizeTemplateWithDefaults(nlohmann::json templateJson)
+	inline rapidjson::Document normalizeTemplateWithDefaults(const rapidjson::Value& templateJson)
 	{
-		if (templateJson.is_null())
-			templateJson = nlohmann::json::object();
+		rapidjson::Document legendElementDefaults = parseJsonDocument(JsonDefaults::kLegendElementDefaultsJson, "normalizeTemplate: legend element defaults");
+		rapidjson::Document legendDefaults = parseJsonDocument(JsonDefaults::kLegendDefaultsJson, "normalizeTemplate: legend defaults");
+		rapidjson::Document scatterMappingDefaults = parseJsonDocument(JsonDefaults::kScatterMappingDefaultsJson, "normalizeTemplate: scatter mapping defaults");
+		rapidjson::Document scatterStyleDefaults = parseJsonDocument(JsonDefaults::kScatterStyleDefaultsJson, "normalizeTemplate: scatter style defaults");
+		rapidjson::Document scatterStatsDefaults = parseJsonDocument(JsonDefaults::kScatterStatsDefaultsJson, "normalizeTemplate: scatter stats defaults");
+		rapidjson::Document scatterConfigDefaults = parseJsonDocument(JsonDefaults::kScatterConfigDefaultsJson, "normalizeTemplate: scatter config defaults");
+		rapidjson::Document histogramMappingDefaults = parseJsonDocument(JsonDefaults::kHistogramMappingDefaultsJson, "normalizeTemplate: histogram mapping defaults");
+		rapidjson::Document histogramStyleDefaults = parseJsonDocument(JsonDefaults::kHistogramStyleDefaultsJson, "normalizeTemplate: histogram style defaults");
+		rapidjson::Document histogramStatsDefaults = parseJsonDocument(JsonDefaults::kHistogramStatsDefaultsJson, "normalizeTemplate: histogram stats defaults");
+		rapidjson::Document histogramConfigDefaults = parseJsonDocument(JsonDefaults::kHistogramConfigDefaultsJson, "normalizeTemplate: histogram config defaults");
+		rapidjson::Document layerDefaults = parseJsonDocument(JsonDefaults::kLayerDefaultsJson, "normalizeTemplate: layer defaults");
+		rapidjson::Document panelDefaults = parseJsonDocument(JsonDefaults::kPanelDefaultsJson, "normalizeTemplate: panel defaults");
+		rapidjson::Document masterDefaults = parseJsonDocument(JsonDefaults::kMasterTemplateJson, "normalizeTemplate: master defaults");
 
-		if (!templateJson.is_object())
+		const TemplateNormalization::NormalizationDefaults defaults{
+			legendElementDefaults,
+			legendDefaults,
+			scatterMappingDefaults,
+			scatterStyleDefaults,
+			scatterStatsDefaults,
+			scatterConfigDefaults,
+			histogramMappingDefaults,
+			histogramStyleDefaults,
+			histogramStatsDefaults,
+			histogramConfigDefaults,
+			layerDefaults,
+			panelDefaults,
+			masterDefaults};
+
+		rapidjson::Document resolvedJson;
+		resolvedJson.SetObject();
+		TemplateNormalization::JsonAllocator& allocator = resolvedJson.GetAllocator();
+
+		rapidjson::Value templateRoot;
+		if (templateJson.IsNull())
+		{
+			templateRoot.SetObject();
+		}
+		else if (templateJson.IsObject())
+		{
+			templateRoot.CopyFrom(templateJson, allocator);
+		}
+		else
+		{
 			throw std::runtime_error("normalizeTemplate: template root must be a JSON object");
+		}
 
-		nlohmann::json resolvedJson = TemplateNormalization::mergeDefaults(JsonDefaults::kMasterTemplateJson, std::move(templateJson));
+		rapidjson::Value mergedRoot = TemplateNormalization::mergeDefaults(defaults.master, templateRoot, allocator);
+		resolvedJson.Swap(mergedRoot);
 
-		if (!resolvedJson.is_object())
-			throw std::runtime_error("normalizeTemplate: resolved template root must be a JSON object");
-
-		auto figureIt = resolvedJson.find("figure");
-		if (figureIt == resolvedJson.end() || !figureIt->is_object())
+		rapidjson::Value* figureJson = findJsonMember(resolvedJson, "figure");
+		if (figureJson == nullptr || !figureJson->IsObject())
 			throw std::runtime_error("normalizeTemplate: 'figure' must be an object");
 
-		nlohmann::json& figureJson = *figureIt;
-		auto legendsIt = figureJson.find("legends");
-		if (legendsIt == figureJson.end())
+		rapidjson::Value* legendsJson = findJsonMember(*figureJson, "legends");
+		if (legendsJson == nullptr)
 			throw std::runtime_error("normalizeTemplate: missing required key 'figure.legends'");
 
-		TemplateNormalization::mergeArrayElementsWithDefaults(*legendsIt, JsonDefaults::kLegendDefaultsJson, "figure.legends");
+		TemplateNormalization::mergeArrayElementsWithDefaults(*legendsJson, defaults.legend, "figure.legends", allocator);
 
-		for (std::size_t legendIndex = 0; legendIndex < legendsIt->size(); ++legendIndex)
+		for (rapidjson::SizeType legendIndex = 0; legendIndex < legendsJson->Size(); ++legendIndex)
 		{
-			nlohmann::json& legendJson = (*legendsIt)[legendIndex];
-			auto legendElementsIt = legendJson.find("legendElements");
-			if (legendElementsIt == legendJson.end())
+			rapidjson::Value& legendJson = (*legendsJson)[legendIndex];
+			rapidjson::Value* legendElementsJson = findJsonMember(legendJson, "legendElements");
+			if (legendElementsJson == nullptr)
 				throw std::runtime_error("normalizeTemplate: missing required key 'figure.legends[" + std::to_string(legendIndex) + "].legendElements'");
 
 			const std::string legendElementsPath = "figure.legends[" + std::to_string(legendIndex) + "].legendElements";
-			TemplateNormalization::mergeArrayElementsWithDefaults(*legendElementsIt, JsonDefaults::kLegendElementDefaultsJson, legendElementsPath);
+			TemplateNormalization::mergeArrayElementsWithDefaults(*legendElementsJson, defaults.legendElement, legendElementsPath, allocator);
 		}
 
-		auto panelsIt = resolvedJson.find("panels");
-		if (panelsIt == resolvedJson.end())
+		rapidjson::Value* panelsJson = findJsonMember(resolvedJson, "panels");
+		if (panelsJson == nullptr)
 			throw std::runtime_error("normalizeTemplate: missing required key 'panels'");
 
-		TemplateNormalization::mergeArrayElementsWithDefaults(*panelsIt, JsonDefaults::kPanelDefaultsJson, "panels");
+		TemplateNormalization::mergeArrayElementsWithDefaults(*panelsJson, defaults.panel, "panels", allocator);
 
-		for (std::size_t panelIndex = 0; panelIndex < panelsIt->size(); ++panelIndex)
+		for (rapidjson::SizeType panelIndex = 0; panelIndex < panelsJson->Size(); ++panelIndex)
 		{
-			nlohmann::json& panelJson = (*panelsIt)[panelIndex];
-			auto layersIt = panelJson.find("layers");
-			if (layersIt == panelJson.end())
+			rapidjson::Value& panelJson = (*panelsJson)[panelIndex];
+			rapidjson::Value* layersJson = findJsonMember(panelJson, "layers");
+			if (layersJson == nullptr)
 				throw std::runtime_error("normalizeTemplate: missing required key 'panels[" + std::to_string(panelIndex) + "].layers'");
 
 			const std::string layersPath = "panels[" + std::to_string(panelIndex) + "].layers";
-			TemplateNormalization::mergeArrayElementsWithDefaults(*layersIt, JsonDefaults::kLayerDefaultsJson, layersPath);
+			TemplateNormalization::mergeArrayElementsWithDefaults(*layersJson, defaults.layer, layersPath, allocator);
 
-			for (std::size_t layerIndex = 0; layerIndex < layersIt->size(); ++layerIndex)
-				TemplateNormalization::mergeLayerTypeDefaults((*layersIt)[layerIndex], panelIndex, layerIndex);
+			for (rapidjson::SizeType layerIndex = 0; layerIndex < layersJson->Size(); ++layerIndex)
+			{
+				TemplateNormalization::mergeLayerTypeDefaults(
+					(*layersJson)[layerIndex],
+					panelIndex,
+					layerIndex,
+					defaults,
+					allocator);
+			}
 		}
 
 		return resolvedJson;

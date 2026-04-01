@@ -79,12 +79,14 @@ g++ -std=c++20 -I. -IFlowPlot main.cpp -o plot
 
 - `FlowPlot::plot(path)` loads template JSON (`.json` extension optional).
 - `PlotBuilder::set("path.to.prop", value)` mutates template JSON before compile.
+  - `value` supports: `int`, `float`, `double`, `bool`, `const char*`, `std::string`, `std::string_view`.
+- `PlotBuilder::setJsonRaw("path.to.prop", jsonText)` sets a property from raw JSON text (object/array/primitive).
 - `PlotBuilder::withData("dataset.field", std::span<const T>)`
 - `PlotBuilder::withData("dataset.field", const std::vector<T>&)`
 - `PlotBuilder::useTextEngine(engine)` injects a custom text engine.
 - `PlotBuilder::getCommands()` returns `RenderPlot` (resolved command stream).
 - `PlotBuilder::writePng(path)` (only when `FLOW_PLOT_RENDERER` is enabled).
-- `FlowPlot::getCompleteJson(templateJson)` (only when `FLOW_PLOT_COMPLETE_JSON` is enabled).
+- `FlowPlot::getCompleteJson(templateJsonText, pretty = true)` (only when `FLOW_PLOT_COMPLETE_JSON` is enabled).
 
 ## Defines
 
@@ -105,7 +107,7 @@ g++ -std=c++20 -I. -IFlowPlot main.cpp -o plot
   - `PlotBuilder::writePng` now auto-creates a fallback `StbTextEngine` if none is set; this default font path makes that work out of the box.
 
 - `FLOW_PLOT_COMPLETE_JSON`
-  - Enables full-template normalization helper: `getCompleteJson(...)`.
+  - Enables full-template normalization helper: `getCompleteJson(templateJsonText, pretty)`.
 
 - `FLOW_PLOT_STB_EXTERNAL_IMPLEMENTATION`
   - Use when you provide stb implementations externally.
@@ -212,9 +214,31 @@ Important current behavior:
 
 ## Header Options
 
-You can use either:
+You can use modular headers (`FlowPlot/FlowPlot.hpp`) or one of four generated amalgamated headers.
 
-- modular includes (`FlowPlot/FlowPlot.hpp`, optional renderer via define), or
-- single amalgamated header: `FlowPlot_Mega.hpp`
+Regenerate all amalgamated variants with:
 
-Both support the same feature macros and runtime API.
+```bash
+python3 tools/generate_flowplot_mega.py
+```
+
+Generated outputs:
+
+- `FlowPlot_Mega_Core.hpp`
+  - Inlines FlowPlot headers only.
+  - Leaves RapidJSON and stb external (`-IFlowPlot` needed for bundled deps).
+- `FlowPlot_Mega_Stb.hpp`
+  - Inlines FlowPlot + stb headers.
+  - Leaves RapidJSON external (`-IFlowPlot` needed for bundled deps).
+- `FlowPlot_Mega_Json.hpp`
+  - Inlines FlowPlot + used RapidJSON subset.
+  - Leaves stb external (`-IFlowPlot` needed only if renderer/stb paths are used).
+- `FlowPlot_Mega.hpp`
+  - Inlines FlowPlot + used RapidJSON subset + stb.
+  - Fully self-contained single header (copy one file and include it).
+
+All variants support the same feature macros and runtime API.
+
+## JSON Backend
+
+FlowPlot uses RapidJSON. The JSON-inlined mega variants include only the RapidJSON subset reachable from FlowPlot's actual include usage.

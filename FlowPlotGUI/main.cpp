@@ -3,8 +3,7 @@
 #include <cstdio>
 #include <exception>
 
-#include "BuildElements.hpp"
-#include "ConstructElements.hpp"
+#include "elements.hpp"
 
 int main()
 {
@@ -68,6 +67,7 @@ int main()
 					const std::string rightId = "PropsPanel";
 					ui.createElement(kDynamicSeparator, "separator2")
 					.setParameters({
+						.reverseDrag = true,
 						.color = FlowUi::Flow_Color("#3f3f41ff"),
 						.hoverColor = FlowUi::Flow_Color("#707074ff"),
 						.activeColor = FlowUi::Flow_Color("#409d97ff"),

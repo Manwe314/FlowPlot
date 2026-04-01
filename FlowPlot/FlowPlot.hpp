@@ -3,8 +3,10 @@
 #ifndef FLOW_PLOT_HPP_INCLUDED
 #define FLOW_PLOT_HPP_INCLUDED
 
-#include "json.hpp"
 #include "FlowPlot_Defaults.hpp"
+#include "rapidjson/document.h"
+#include "rapidjson/error/en.h"
+#include "rapidjson/istreamwrapper.h"
 
 #include <cstddef>
 #include <cstdint>
@@ -16,6 +18,7 @@
 #include <string>
 #include <string_view>
 #include <typeindex>
+#include <type_traits>
 #include <unordered_map>
 #include <utility>
 #include <variant>
@@ -23,8 +26,7 @@
 
 namespace FlowPlot
 {
-	using json = nlohmann::json;
-	using value = std::variant<int, float, double, json, const char*, std::string, std::string_view>;
+	using value = std::variant<int, float, double, bool, const char*, std::string, std::string_view>;
 
 	struct Color
 	{
@@ -211,19 +213,73 @@ namespace FlowPlot
 			if (property.empty())
 				throw std::invalid_argument("set: property cannot be empty");
 
-			json normalizedValue = std::visit(
-				[](auto&& candidate) -> json
+			rapidjson::Value normalizedValue;
+			rapidjson::Document::AllocatorType& allocator = template_.GetAllocator();
+			std::visit(
+				[&](auto&& candidate)
 				{
 					using T = std::decay_t<decltype(candidate)>;
 					if constexpr (std::is_same_v<T, std::string_view>)
-						return json(std::string(candidate));
+					{
+						normalizedValue.SetString(
+							candidate.data(),
+							static_cast<rapidjson::SizeType>(candidate.size()),
+							allocator);
+					}
 					else if constexpr (std::is_same_v<T, const char*>)
-						return json(candidate == nullptr ? std::string() : std::string(candidate));
+					{
+						const char* cstr = candidate == nullptr ? "" : candidate;
+						normalizedValue.SetString(cstr, allocator);
+					}
+					else if constexpr (std::is_same_v<T, std::string>)
+					{
+						normalizedValue.SetString(
+							candidate.c_str(),
+							static_cast<rapidjson::SizeType>(candidate.size()),
+							allocator);
+					}
+					else if constexpr (std::is_same_v<T, bool>)
+					{
+						normalizedValue.SetBool(candidate);
+					}
+					else if constexpr (std::is_floating_point_v<T>)
+					{
+						normalizedValue.SetDouble(static_cast<double>(candidate));
+					}
 					else
-						return json(candidate);
+					{
+						normalizedValue.SetInt64(static_cast<std::int64_t>(candidate));
+					}
 				},
 				valueArg);
 
+			return setJsonValue(property, std::move(normalizedValue));
+		}
+
+		PlotBuilder& setJsonRaw(std::string_view property, std::string_view jsonText)
+		{
+			if (property.empty())
+				throw std::invalid_argument("setJsonRaw: property cannot be empty");
+
+			rapidjson::Document parsedValue;
+			parsedValue.Parse(jsonText.data(), jsonText.size());
+			if (parsedValue.HasParseError())
+			{
+				throw std::runtime_error(
+					"setJsonRaw: failed to parse JSON value at offset "
+					+ std::to_string(parsedValue.GetErrorOffset())
+					+ ": "
+					+ rapidjson::GetParseError_En(parsedValue.GetParseError()));
+			}
+
+			rapidjson::Value normalizedValue;
+			normalizedValue.CopyFrom(parsedValue, template_.GetAllocator());
+			return setJsonValue(property, std::move(normalizedValue));
+		}
+
+	private:
+		PlotBuilder& setJsonValue(std::string_view property, rapidjson::Value&& normalizedValue)
+		{
 			struct PathToken
 			{
 				std::string key;
@@ -266,10 +322,11 @@ namespace FlowPlot
 				return parsed;
 			};
 
-			if (!template_.is_object())
-				template_ = json::object();
+			if (!template_.IsObject())
+				template_.SetObject();
 
-			json* current = &template_;
+			rapidjson::Document::AllocatorType& allocator = template_.GetAllocator();
+			rapidjson::Value* current = &template_;
 			std::size_t start = 0;
 
 			while (start < property.size())
@@ -280,50 +337,75 @@ namespace FlowPlot
 				const std::string_view tokenView = property.substr(start, tokenEnd - start);
 				const PathToken token = parseToken(tokenView);
 
-				if (!current->is_object())
-					*current = json::object();
+				if (!current->IsObject())
+					current->SetObject();
 
 				if (token.hasIndex)
 				{
-					json& arrayNode = (*current)[token.key];
-					if (!arrayNode.is_array())
-						arrayNode = json::array();
+					auto memberIt = current->FindMember(token.key.c_str());
+					if (memberIt == current->MemberEnd())
+					{
+						rapidjson::Value keyJson;
+						keyJson.SetString(token.key.c_str(), static_cast<rapidjson::SizeType>(token.key.size()), allocator);
+						rapidjson::Value arrayJson(rapidjson::kArrayType);
+						current->AddMember(keyJson, arrayJson, allocator);
+						memberIt = current->FindMember(token.key.c_str());
+					}
+
+					rapidjson::Value& arrayNode = memberIt->value;
+					if (!arrayNode.IsArray())
+						arrayNode.SetArray();
 
 					std::size_t targetIndex = token.index;
-					if (targetIndex >= arrayNode.size())
+					if (targetIndex >= arrayNode.Size())
 					{
-						targetIndex = arrayNode.size();
+						targetIndex = arrayNode.Size();
 						if (isLast)
 						{
-							arrayNode.push_back(std::move(normalizedValue));
+							arrayNode.PushBack(normalizedValue, allocator);
 							return *this;
 						}
 
-						arrayNode.push_back(json::object());
+						rapidjson::Value objectNode(rapidjson::kObjectType);
+						arrayNode.PushBack(objectNode, allocator);
 					}
 
 					if (isLast)
 					{
-						arrayNode[targetIndex] = std::move(normalizedValue);
+						arrayNode[static_cast<rapidjson::SizeType>(targetIndex)].Swap(normalizedValue);
 						return *this;
 					}
 
-					json& nextNode = arrayNode[targetIndex];
-					if (!nextNode.is_object())
-						nextNode = json::object();
+					rapidjson::Value& nextNode = arrayNode[static_cast<rapidjson::SizeType>(targetIndex)];
+					if (!nextNode.IsObject())
+						nextNode.SetObject();
 					current = &nextNode;
 				}
 				else
 				{
+					auto memberIt = current->FindMember(token.key.c_str());
+					if (memberIt == current->MemberEnd())
+					{
+						rapidjson::Value keyJson;
+						keyJson.SetString(token.key.c_str(), static_cast<rapidjson::SizeType>(token.key.size()), allocator);
+						rapidjson::Value initialNode;
+						if (isLast)
+							initialNode.SetNull();
+						else
+							initialNode.SetObject();
+						current->AddMember(keyJson, initialNode, allocator);
+						memberIt = current->FindMember(token.key.c_str());
+					}
+
 					if (isLast)
 					{
-						(*current)[token.key] = std::move(normalizedValue);
+						memberIt->value.Swap(normalizedValue);
 						return *this;
 					}
 
-					json& nextNode = (*current)[token.key];
-					if (!nextNode.is_object())
-						nextNode = json::object();
+					rapidjson::Value& nextNode = memberIt->value;
+					if (!nextNode.IsObject())
+						nextNode.SetObject();
 					current = &nextNode;
 				}
 
@@ -334,6 +416,8 @@ namespace FlowPlot
 
 			throw std::invalid_argument("set: invalid property path '" + std::string(property) + "'");
 		}
+
+	public:
 
 		template<typename T>
 		PlotBuilder& withData(std::string_view datasetField, std::span<const T> data)
@@ -391,7 +475,7 @@ namespace FlowPlot
 #endif
 
 	private:
-		json template_{};
+		rapidjson::Document template_{};
 		std::unordered_map<FlowInternal::DataKey, FlowInternal::DataView, FlowInternal::DataKeyHash> data_{};
 		const ITextEngine* textEngine_ = nullptr;
 	};
@@ -406,30 +490,46 @@ namespace FlowPlot
 		if (!input.is_open())
 			throw std::runtime_error("plot: unable to open template file '" + jsonPath.string() + "'");
 
-		json parsedTemplate;
-		try
+		rapidjson::IStreamWrapper streamWrapper(input);
+		rapidjson::Document parsedTemplate;
+		parsedTemplate.ParseStream(streamWrapper);
+		if (parsedTemplate.HasParseError())
 		{
-			input >> parsedTemplate;
-		}
-		catch (const std::exception& e)
-		{
-			throw std::runtime_error("plot: failed to parse JSON template '" + jsonPath.string() + "': " + e.what());
+			throw std::runtime_error(
+				"plot: failed to parse JSON template '"
+				+ jsonPath.string()
+				+ "' at offset "
+				+ std::to_string(parsedTemplate.GetErrorOffset())
+				+ ": "
+				+ rapidjson::GetParseError_En(parsedTemplate.GetParseError()));
 		}
 
-		if (!parsedTemplate.is_object())
+		if (!parsedTemplate.IsObject())
 			throw std::runtime_error("plot: template root must be a JSON object");
 
 		static thread_local PlotBuilder builder;
-		builder.template_ = std::move(parsedTemplate);
+		builder.template_.Swap(parsedTemplate);
 		builder.data_.clear();
 		builder.textEngine_ = nullptr;
 		return builder;
 	}
 
 #ifdef FLOW_PLOT_COMPLETE_JSON
-	inline json getCompleteJson(const json& templateJson)
+	inline std::string getCompleteJson(std::string_view templateJsonText, bool pretty = true)
 	{
-		return FlowInternal::normalizeTemplateWithDefaults(json(templateJson));
+		rapidjson::Document templateJson;
+		templateJson.Parse(templateJsonText.data(), templateJsonText.size());
+		if (templateJson.HasParseError())
+		{
+			throw std::runtime_error(
+				"getCompleteJson: failed to parse template JSON at offset "
+				+ std::to_string(templateJson.GetErrorOffset())
+				+ ": "
+				+ rapidjson::GetParseError_En(templateJson.GetParseError()));
+		}
+
+		rapidjson::Document resolvedJson = FlowInternal::normalizeTemplateWithDefaults(templateJson);
+		return FlowInternal::serializeJson(resolvedJson, pretty);
 	}
 #endif
 } // namespace FlowPlot
