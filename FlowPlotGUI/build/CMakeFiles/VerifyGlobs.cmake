@@ -5,6 +5,7 @@ cmake_policy(SET CMP0009 NEW)
 # FLOWPLOTGUI_SOURCES at CMakeLists.txt:36 (file)
 file(GLOB_RECURSE NEW_GLOB LIST_DIRECTORIES false "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/src/*.cpp")
 set(OLD_GLOB
+  "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/src/iconRegistry.cpp"
   )
 if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
   message("-- GLOB mismatch!")

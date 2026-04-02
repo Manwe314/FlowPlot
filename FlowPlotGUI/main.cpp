@@ -4,6 +4,7 @@
 #include <exception>
 
 #include "elements.hpp"
+#include "iconRegistry.hpp"
 
 int main()
 {
@@ -15,6 +16,8 @@ int main()
 		config.window.width = 1920;
 		config.window.height = 1080;
 		FlowUi::App app = FlowUi::makeApplication(config);
+		FlowPlotGui::registerIcons(app);
+		(void)NavBarDef::getResources(app);
 
 		FlowUi::UiManager& ui = app.ui();
 
@@ -27,7 +30,6 @@ int main()
 			ui.createElement(kRootBackground, "rootBackground")
 			.setParameters({.backgroundColor = FlowUi::Flow_Color("#18181aff")})
 			.construct(FlowUi::ElementDrawOptions::SkipEventCallbacks);
-				
 				ui.createElement(kNavBar, "NavBar").draw();
 				ui.createElement(kMainContent, "MainContent").construct();
 					const std::string leftId = "TemplatePanel";

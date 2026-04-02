@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string_view>
 #include <utility>
 
 #include <FlowUi/Flow.hpp>
@@ -9,7 +10,7 @@
 #include "BuildElements/BasicTitle.hpp"
 
 struct navBarParams {
-	Clay_Color backgroundColor = FlowUi::Flow_Color("#20232aff");
+	Clay_Color backgroundColor = FlowUi::Flow_Color("#18181aff");
 	int heightMin = 52;
 	int heightMax = 72;
 	int spacer1MinWidth = 22;
@@ -19,28 +20,74 @@ struct navBarParams {
 };
 
 using BasicTitleBuilder = FlowUi::ElementBuilder<basicTitleParams, void, void, FLOW_DEF_ID("Basic title")>;
+using NavBarButtonBuilder = FlowUi::ElementBuilder<basicButtonParams, void, void, FLOW_DEF_ID("Basic button")>;
 
 struct navBarResources {
 	BasicTitleBuilder child1Builder;
+	NavBarButtonBuilder templatesButtonBuilder;
+	NavBarButtonBuilder layersButtonBuilder;
+	NavBarButtonBuilder exportButtonBuilder;
+	NavBarButtonBuilder settingsButtonBuilder;
 
-	explicit navBarResources(FlowUi::UiManager& uiManager) :
-		child1Builder(makeChild1Builder(uiManager)) {}
+	explicit navBarResources(FlowUi::App& app) :
+		child1Builder(makeChild1Builder(app)),
+		templatesButtonBuilder(makeTemplatesButtonBuilder(app)),
+		layersButtonBuilder(makeLayersButtonBuilder(app)),
+		exportButtonBuilder(makeExportButtonBuilder(app)),
+		settingsButtonBuilder(makeSettingsButtonBuilder(app)) {}
 
 private:
-	static BasicTitleBuilder makeChild1Builder(FlowUi::UiManager& uiManager)
+	static BasicTitleBuilder makeChild1Builder(FlowUi::App& app)
 	{
 		basicTitleParams params{};
 		params.text = "FlowPlot";
 		params.contentMode = basicTitleParams::ContentMode::IconThenText;
-		params.iconTintColor = FlowUi::Flow_Color("#72b6ffff");
-		params.textColor = FlowUi::Flow_Color("#f4f6f8ff");
+		params.iconTintColor = FlowUi::Flow_Color("#72b6ff00");
+		params.textColor = FlowUi::Flow_Color("#f4f4f6ff");
 		params.fontSize = 16;
 		params.fontId = 0;
 		params.sizing = {.width = CLAY_SIZING_FIT(0), .height = CLAY_SIZING_FIT(0)};
+		params.icon = app.icons().textureRef("FlowPlotIcon");
 
-		BasicTitleBuilder builder = uiManager.createElement(kBasicTitle, "NavBar/shared/child-1/title");
+		BasicTitleBuilder builder = app.ui().createElement(kBasicTitle, "NavBar/shared/child-1/title");
 		builder.setParameters(std::move(params));
 		return builder;
+	}
+
+	static NavBarButtonBuilder makeButtonBuilder(
+		FlowUi::App& app,
+		std::string_view sharedPath,
+		std::string_view text)
+	{
+		basicButtonParams params{};
+		params.text = text;
+		params.contentMode = basicButtonParams::ContentMode::TextOnly;
+
+		NavBarButtonBuilder builder = app.ui().createElement(kBasicButton, sharedPath);
+		builder.setParameters(std::move(params));
+		return builder;
+	}
+
+	// Placeholder factories: keep per-button entry points so each one can be
+	// customized independently later without touching constructor wiring.
+	static NavBarButtonBuilder makeTemplatesButtonBuilder(FlowUi::App& app)
+	{
+		return makeButtonBuilder(app, "NavBar/shared/child-2/button-1", "Templates");
+	}
+
+	static NavBarButtonBuilder makeLayersButtonBuilder(FlowUi::App& app)
+	{
+		return makeButtonBuilder(app, "NavBar/shared/child-2/button-2", "Layers");
+	}
+
+	static NavBarButtonBuilder makeExportButtonBuilder(FlowUi::App& app)
+	{
+		return makeButtonBuilder(app, "NavBar/shared/child-3/button-1", "Export");
+	}
+
+	static NavBarButtonBuilder makeSettingsButtonBuilder(FlowUi::App& app)
+	{
+		return makeButtonBuilder(app, "NavBar/shared/child-3/button-2", "Settings");
 	}
 };
 
@@ -71,11 +118,6 @@ inline const NavBarDef kNavBar = {
 		return Clay_ElementDeclaration{};
 	},
 	+[](NavBarDef::BuildContext& context) {
-		if (!NavBarDef::resources.has_value())
-		{
-			NavBarDef::resources.emplace(context.uiManager);
-		}
-		navBarResources& resources = *NavBarDef::resources;
 
 		int navHeightMin = context.params.heightMin;
 		int navHeightMax = context.params.heightMax;
@@ -224,21 +266,15 @@ inline const NavBarDef kNavBar = {
 		child3.backgroundColor = FlowUi::Flow_Color("#00000000");
 		child3.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
 
-		basicButtonParams button21{};
-		button21.text = "Templates";
-		button21.contentMode = basicButtonParams::ContentMode::TextOnly;
-		basicButtonParams button22 = button21;
-		button22.text = "Layers";
-		basicButtonParams button31 = button21;
-		button31.text = "Export";
-		basicButtonParams button32 = button21;
-		button32.text = "Settings";
-
 		CLAY(root){
 			CLAY(child1){
-				resources.child1Builder
+				if (NavBarDef::resources.has_value())
+				{
+					navBarResources& resources = *NavBarDef::resources;
+					resources.child1Builder
 					.withElementID(child1TitlePath)
 					.draw();
+				}
 			};
 
 			CLAY(spacer1){
@@ -246,13 +282,16 @@ inline const NavBarDef kNavBar = {
 			};
 
 			CLAY(child2){
-				context.uiManager.createElement(kBasicButton, button21Path)
-					.setParameters(button21)
-					.draw();
-
-				context.uiManager.createElement(kBasicButton, button22Path)
-					.setParameters(button22)
-					.draw();
+				if (NavBarDef::resources.has_value())
+				{
+					navBarResources& resources = *NavBarDef::resources;
+					resources.templatesButtonBuilder
+						.withElementID(button21Path)
+						.draw();
+					resources.layersButtonBuilder
+						.withElementID(button22Path)
+						.draw();
+				}
 
 				CLAY(child2GrowSpacer){};
 			};
@@ -262,13 +301,16 @@ inline const NavBarDef kNavBar = {
 			};
 
 			CLAY(child3){
-				context.uiManager.createElement(kBasicButton, button31Path)
-					.setParameters(button31)
-					.draw();
-
-				context.uiManager.createElement(kBasicButton, button32Path)
-					.setParameters(button32)
-					.draw();
+				if (NavBarDef::resources.has_value())
+				{
+					navBarResources& resources = *NavBarDef::resources;
+					resources.exportButtonBuilder
+						.withElementID(button31Path)
+						.draw();
+					resources.settingsButtonBuilder
+						.withElementID(button32Path)
+						.draw();
+				}
 			};
 		};
 	},

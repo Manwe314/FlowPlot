@@ -31,7 +31,7 @@ struct basicTitleParams {
 	uint16_t fontSize = 16;
 	Clay_Color textColor = FlowUi::Flow_Color("#f4f6f8ff");
 
-	Clay_Sizing iconContainerSizing = Clay_Sizing{.width = CLAY_SIZING_FIXED(12), .height = CLAY_SIZING_FIXED(12)};
+	Clay_Sizing iconContainerSizing = Clay_Sizing{.width = CLAY_SIZING_FIXED(64), .height = CLAY_SIZING_FIXED(64)};
 	Clay_Padding iconContainerPadding = CLAY_PADDING_ALL(0);
 	Clay_LayoutDirection iconContainerChildLayoutDirection = CLAY_LEFT_TO_RIGHT;
 	Clay_ChildAlignment iconContainerChildAlignment = Clay_ChildAlignment{.x = CLAY_ALIGN_X_CENTER, .y = CLAY_ALIGN_Y_CENTER};

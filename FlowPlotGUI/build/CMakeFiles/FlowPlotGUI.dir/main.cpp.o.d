@@ -347,4 +347,5 @@ CMakeFiles/FlowPlotGUI.dir/main.cpp.o: \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/ConstructElements/MainContent.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/ConstructElements/MainContentPanel.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/ConstructElements/TemplatePanel.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/ConstructElements/PropsPanel.hpp
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/ConstructElements/PropsPanel.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/iconRegistry.hpp

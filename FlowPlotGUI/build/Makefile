@@ -303,6 +303,30 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+src/iconRegistry.o: src/iconRegistry.cpp.o
+.PHONY : src/iconRegistry.o
+
+# target to build an object file
+src/iconRegistry.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/src/iconRegistry.cpp.o
+.PHONY : src/iconRegistry.cpp.o
+
+src/iconRegistry.i: src/iconRegistry.cpp.i
+.PHONY : src/iconRegistry.i
+
+# target to preprocess a source file
+src/iconRegistry.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/src/iconRegistry.cpp.i
+.PHONY : src/iconRegistry.cpp.i
+
+src/iconRegistry.s: src/iconRegistry.cpp.s
+.PHONY : src/iconRegistry.s
+
+# target to generate assembly for a file
+src/iconRegistry.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/src/iconRegistry.cpp.s
+.PHONY : src/iconRegistry.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -327,6 +351,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... src/iconRegistry.o"
+	@echo "... src/iconRegistry.i"
+	@echo "... src/iconRegistry.s"
 .PHONY : help
 
 
