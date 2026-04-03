@@ -10,6 +10,8 @@
 
 namespace FlowUi {
 
+// application configuration stuff
+
 enum class PresentMode { Fifo, Mailbox, Immediate };
 enum class MSAA { x1 = 1, x2 = 2, x4 = 4, x8 = 8 };
 enum class CursorMode : uint8_t { Normal = 0, Hidden = 1, Disabled = 2 };
@@ -60,7 +62,7 @@ struct UiConfig {
 	// 0 means "use Clay_MinMemorySize()".
 	size_t clayArenaCapacityBytes = 0;
 
-	std::filesystem::path defaultFontPath = "assets/Fonts/Inter.arfont";
+	std::filesystem::path defaultFontPath = "assets/fonts/FacultyGlyphic-Regular.arfont";
 	float defaultFontPx = 18.0f;
 
 	uint32_t fontAtlasSize = 2048;
@@ -74,6 +76,43 @@ struct SvgManagerConfig {
 	uint32_t sizeBucketStep = 8;
 	uint32_t atlasPadding = 1;
 };
+
+enum class DevShortcutTrigger : uint8_t {
+	Press = 0,
+	Release = 1,
+	Down = 2,
+};
+
+struct DevShortcutChord {
+	// Uses platform key codes consumed by FlowUi's ShortcutManager backend.
+	int key = 68; // Default: 'D'
+	bool ctrl = true;
+	bool shift = true;
+	bool alt = false;
+	bool super = false;
+	DevShortcutTrigger trigger = DevShortcutTrigger::Press;
+};
+
+struct DevToolsConfig {
+	bool enabled = false;
+	bool panelOpenByDefault = false;
+	float panelWidthPx = 420.0f;
+	bool useShortcutManagerForPanelToggle = true;
+	DevShortcutChord panelToggleChord{};
+	bool excludeInternalDevElementsFromCapture = true;
+	std::filesystem::path overridesPath = ".flowui/overrides.v1.json";
+	bool autoSave = true;
+};
+
+struct AppConfig {
+	WindowConfig window{};
+	VulkanConfig vk{};
+	UiConfig ui{};
+	SvgManagerConfig svgManager{};
+	DevToolsConfig dev{};
+};
+
+// texture handling things
 
 enum class TextureFitMode : uint8_t {
 	Stretch = 0,
@@ -104,11 +143,5 @@ struct TextureRef {
 	int32_t sourceHeight = 0;
 };
 
-struct AppConfig {
-	WindowConfig window{};
-	VulkanConfig vk{};
-	UiConfig ui{};
-	SvgManagerConfig svgManager{};
-};
 
 } // namespace FlowUi

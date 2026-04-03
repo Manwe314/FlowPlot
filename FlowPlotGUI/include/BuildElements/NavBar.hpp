@@ -24,14 +24,14 @@ using NavBarButtonBuilder = FlowUi::ElementBuilder<basicButtonParams, void, void
 
 struct navBarResources {
 	BasicTitleBuilder child1Builder;
-	NavBarButtonBuilder templatesButtonBuilder;
+	NavBarButtonBuilder importButtonBuilder;
 	NavBarButtonBuilder layersButtonBuilder;
 	NavBarButtonBuilder exportButtonBuilder;
 	NavBarButtonBuilder settingsButtonBuilder;
 
 	explicit navBarResources(FlowUi::App& app) :
 		child1Builder(makeChild1Builder(app)),
-		templatesButtonBuilder(makeTemplatesButtonBuilder(app)),
+		importButtonBuilder(makeimportButtonBuilder(app)),
 		layersButtonBuilder(makeLayersButtonBuilder(app)),
 		exportButtonBuilder(makeExportButtonBuilder(app)),
 		settingsButtonBuilder(makeSettingsButtonBuilder(app)) {}
@@ -57,37 +57,43 @@ private:
 	static NavBarButtonBuilder makeButtonBuilder(
 		FlowUi::App& app,
 		std::string_view sharedPath,
-		std::string_view text)
+		basicButtonParams& parameters)
 	{
-		basicButtonParams params{};
-		params.text = text;
-		params.contentMode = basicButtonParams::ContentMode::TextOnly;
-
 		NavBarButtonBuilder builder = app.ui().createElement(kBasicButton, sharedPath);
-		builder.setParameters(std::move(params));
+		builder.setParameters(std::move(parameters));
 		return builder;
 	}
 
 	// Placeholder factories: keep per-button entry points so each one can be
 	// customized independently later without touching constructor wiring.
-	static NavBarButtonBuilder makeTemplatesButtonBuilder(FlowUi::App& app)
+	static NavBarButtonBuilder makeimportButtonBuilder(FlowUi::App& app)
 	{
-		return makeButtonBuilder(app, "NavBar/shared/child-2/button-1", "Templates");
+		basicButtonParams params{};
+		params.text = "Import";
+		params.icon = app.icons().textureRef("Import");
+		params.contentMode = basicButtonParams::ContentMode::IconThenText;
+		return makeButtonBuilder(app, "NavBar/shared/child-2/button-1", params);
 	}
 
 	static NavBarButtonBuilder makeLayersButtonBuilder(FlowUi::App& app)
 	{
-		return makeButtonBuilder(app, "NavBar/shared/child-2/button-2", "Layers");
+		basicButtonParams params{};
+		params.text = "Import";
+		return makeButtonBuilder(app, "NavBar/shared/child-2/button-2",params);
 	}
 
 	static NavBarButtonBuilder makeExportButtonBuilder(FlowUi::App& app)
 	{
-		return makeButtonBuilder(app, "NavBar/shared/child-3/button-1", "Export");
+		basicButtonParams params{};
+		params.text = "Import";
+		return makeButtonBuilder(app, "NavBar/shared/child-3/button-1", params);
 	}
 
 	static NavBarButtonBuilder makeSettingsButtonBuilder(FlowUi::App& app)
 	{
-		return makeButtonBuilder(app, "NavBar/shared/child-3/button-2", "Settings");
+		basicButtonParams params{};
+		params.text = "Import";
+		return makeButtonBuilder(app, "NavBar/shared/child-3/button-2", params);
 	}
 };
 
@@ -285,7 +291,7 @@ inline const NavBarDef kNavBar = {
 				if (NavBarDef::resources.has_value())
 				{
 					navBarResources& resources = *NavBarDef::resources;
-					resources.templatesButtonBuilder
+					resources.importButtonBuilder
 						.withElementID(button21Path)
 						.draw();
 					resources.layersButtonBuilder

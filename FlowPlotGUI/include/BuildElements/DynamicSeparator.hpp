@@ -4,6 +4,7 @@
 #include <functional>
 
 #include <FlowUi/Flow.hpp>
+#include <devMode/devApi.hpp>
 
 #include "FlowPlotGui.hpp"
 
@@ -178,3 +179,22 @@ inline const DynamicSeparatorDef kDynamicSeparator = {
 		CLAY(root){};
 	},
 };
+
+FLOWUI_DEV_REGISTER_STRUCT(
+	dynamicSeparatorParams,
+	FLOWUI_DEV_REFLECT_FIELD(dynamicSeparatorParams, orientation),
+	FLOWUI_DEV_REFLECT_FIELD(dynamicSeparatorParams, reverseDrag),
+	FLOWUI_DEV_REFLECT_FIELD(dynamicSeparatorParams, width),
+	FLOWUI_DEV_REFLECT_FIELD(dynamicSeparatorParams, height),
+	FLOWUI_DEV_REFLECT_FIELD(dynamicSeparatorParams, minValue),
+	FLOWUI_DEV_REFLECT_FIELD(dynamicSeparatorParams, maxValue));
+
+FLOWUI_DEV_REGISTER_STRUCT(
+	dynamicSeparatorState,
+	FLOWUI_DEV_REFLECT_FIELD(dynamicSeparatorState, isPressed),
+	FLOWUI_DEV_REFLECT_FIELD(dynamicSeparatorState, isDragging),
+	FLOWUI_DEV_REFLECT_FIELD(dynamicSeparatorState, pressMouseAxis),
+	FLOWUI_DEV_REFLECT_FIELD(dynamicSeparatorState, pressValue),
+	FLOWUI_DEV_REFLECT_FIELD(dynamicSeparatorState, localValue));
+
+FLOWUI_DEV_REGISTER_ELEMENT(DynamicSeparatorDef, "DynamicSeparator");

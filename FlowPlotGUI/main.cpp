@@ -15,6 +15,9 @@ int main()
 		config.window.maximized = true;
 		config.window.width = 1920;
 		config.window.height = 1080;
+		config.dev.enabled = true;
+		config.dev.panelOpenByDefault = true;
+		config.dev.useShortcutManagerForPanelToggle = true;
 		FlowUi::App app = FlowUi::makeApplication(config);
 		FlowPlotGui::registerIcons(app);
 		(void)NavBarDef::getResources(app);

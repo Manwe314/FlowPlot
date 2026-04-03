@@ -348,6 +348,54 @@ src/clay.cpp.s:
 	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/src/clay.cpp.s
 .PHONY : src/clay.cpp.s
 
+src/devMode/debugView.o: src/devMode/debugView.cpp.o
+.PHONY : src/devMode/debugView.o
+
+# target to build an object file
+src/devMode/debugView.cpp.o:
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/src/devMode/debugView.cpp.o
+.PHONY : src/devMode/debugView.cpp.o
+
+src/devMode/debugView.i: src/devMode/debugView.cpp.i
+.PHONY : src/devMode/debugView.i
+
+# target to preprocess a source file
+src/devMode/debugView.cpp.i:
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/src/devMode/debugView.cpp.i
+.PHONY : src/devMode/debugView.cpp.i
+
+src/devMode/debugView.s: src/devMode/debugView.cpp.s
+.PHONY : src/devMode/debugView.s
+
+# target to generate assembly for a file
+src/devMode/debugView.cpp.s:
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/src/devMode/debugView.cpp.s
+.PHONY : src/devMode/debugView.cpp.s
+
+src/devMode/devRuntime.o: src/devMode/devRuntime.cpp.o
+.PHONY : src/devMode/devRuntime.o
+
+# target to build an object file
+src/devMode/devRuntime.cpp.o:
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/src/devMode/devRuntime.cpp.o
+.PHONY : src/devMode/devRuntime.cpp.o
+
+src/devMode/devRuntime.i: src/devMode/devRuntime.cpp.i
+.PHONY : src/devMode/devRuntime.i
+
+# target to preprocess a source file
+src/devMode/devRuntime.cpp.i:
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/src/devMode/devRuntime.cpp.i
+.PHONY : src/devMode/devRuntime.cpp.i
+
+src/devMode/devRuntime.s: src/devMode/devRuntime.cpp.s
+.PHONY : src/devMode/devRuntime.s
+
+# target to generate assembly for a file
+src/devMode/devRuntime.cpp.s:
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/src/devMode/devRuntime.cpp.s
+.PHONY : src/devMode/devRuntime.cpp.s
+
 src/managers/FlowUiElementSystem.o: src/managers/FlowUiElementSystem.cpp.o
 .PHONY : src/managers/FlowUiElementSystem.o
 
@@ -621,6 +669,12 @@ help:
 	@echo "... src/clay.o"
 	@echo "... src/clay.i"
 	@echo "... src/clay.s"
+	@echo "... src/devMode/debugView.o"
+	@echo "... src/devMode/debugView.i"
+	@echo "... src/devMode/debugView.s"
+	@echo "... src/devMode/devRuntime.o"
+	@echo "... src/devMode/devRuntime.i"
+	@echo "... src/devMode/devRuntime.s"
 	@echo "... src/managers/FlowUiElementSystem.o"
 	@echo "... src/managers/FlowUiElementSystem.i"
 	@echo "... src/managers/FlowUiElementSystem.s"

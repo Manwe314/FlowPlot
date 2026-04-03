@@ -301,6 +301,9 @@ FLOWUI_INSTALL:BOOL=ON
 //Expose viewport Vulkan interop API in public headers
 FLOWUI_PUBLIC_VULKAN_INTEROP:BOOL=ON
 
+//Enable FlowUi developer mode scaffolding and APIs.
+FLOW_UI_DEV_MODE:BOOL=ON
+
 //Path to a file.
 FREETYPE_INCLUDE_DIR_freetype2:PATH=/usr/include/freetype2
 
