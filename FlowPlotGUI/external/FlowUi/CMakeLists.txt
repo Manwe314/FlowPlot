@@ -186,6 +186,7 @@ target_sources(flowui
         src/managers/FlowUiElementSystem.cpp
         src/managers/UiManager.cpp
         src/devMode/debugView.cpp
+        src/devMode/devJson.cpp
         src/devMode/devRuntime.cpp
         src/Ui/Vk_UiRenderer.cpp
         src/window/Inputs.cpp
@@ -199,6 +200,7 @@ target_sources(flowui
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/FlowUi/PublicStructs.hpp>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/devMode/devApi.hpp>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/devMode/debugView.hpp>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/devMode/devJson.hpp>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/devMode/devRuntime.hpp>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/devMode/registry.hpp>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/window/Window.hpp>

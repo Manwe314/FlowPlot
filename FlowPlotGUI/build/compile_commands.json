@@ -73,6 +73,12 @@
 },
 {
   "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi",
+  "command": "/usr/bin/c++ -DFLOWUI_INCLUDE_SVG_MANAGER=1 -DFLOWUI_PUBLIC_VULKAN_INTEROP=1 -DFLOWUI_SHADER_OUTPUT_DIR=\\\"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/shaders\\\" -DFLOWUI_SOURCE_DIR=\\\"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi\\\" -DPLUTOSVG_BUILD_STATIC -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/source -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -isystem /home/lkukhale/vulkan/1.4.321.1/x86_64/include -std=c++2b -o CMakeFiles/flowui.dir/src/devMode/devJson.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/devMode/devJson.cpp",
+  "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/devMode/devJson.cpp",
+  "output": "external/FlowUi/CMakeFiles/flowui.dir/src/devMode/devJson.cpp.o"
+},
+{
+  "directory": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi",
   "command": "/usr/bin/c++ -DFLOWUI_INCLUDE_SVG_MANAGER=1 -DFLOWUI_PUBLIC_VULKAN_INTEROP=1 -DFLOWUI_SHADER_OUTPUT_DIR=\\\"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/shaders\\\" -DFLOWUI_SOURCE_DIR=\\\"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi\\\" -DPLUTOSVG_BUILD_STATIC -DPLUTOVG_BUILD_STATIC -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/source -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -isystem /home/lkukhale/vulkan/1.4.321.1/x86_64/include -std=c++2b -o CMakeFiles/flowui.dir/src/devMode/devRuntime.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/devMode/devRuntime.cpp",
   "file": "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/devMode/devRuntime.cpp",
   "output": "external/FlowUi/CMakeFiles/flowui.dir/src/devMode/devRuntime.cpp.o"

@@ -1,5 +1,6 @@
 #include <FlowUi/Flow.hpp>
 
+#include <cstddef>
 #include <cstdio>
 #include <exception>
 
@@ -8,6 +9,9 @@
 
 int main()
 {
+	constexpr size_t kUiStringArenaSizeBytes = 2 * 1024 * 1024;
+	constexpr size_t kUiStringArenaSizeBytesDevTools = 16 * 1024 * 1024;
+
 	try
 	{
 		FlowUi::AppConfig config{};
@@ -18,6 +22,9 @@ int main()
 		config.dev.enabled = true;
 		config.dev.panelOpenByDefault = true;
 		config.dev.useShortcutManagerForPanelToggle = true;
+		config.ui.stringArenaSize = config.dev.enabled
+			? kUiStringArenaSizeBytesDevTools
+			: kUiStringArenaSizeBytes;
 		FlowUi::App app = FlowUi::makeApplication(config);
 		FlowPlotGui::registerIcons(app);
 		(void)NavBarDef::getResources(app);

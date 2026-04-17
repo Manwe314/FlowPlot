@@ -5,12 +5,52 @@ external/FlowUi/CMakeFiles/flowui.dir/src/FlowUi.cpp.o: /home/lkukhale/kodi/Flow
   external/FlowUi/include/FlowUi/BuildConfig.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/clay.h \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/App.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/Flow.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/PublicStructs.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/Ui/Vk_UiRenderer.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/Vulkan/Vk_Context.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/Vulkan/Vk_Frames.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/Vulkan/Vk_Swapchain.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/debugView.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devCompositeStruct.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEdgeU16.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEnum1.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEnum2.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat1.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat2.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat4.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/common.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devBasicButton.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devBasicInputField.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devBasicToggle.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devCompositeStructInput.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devDynamicSeparator.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devEdgeU16Input.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devEnum1Input.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devEnum2Input.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devFloat2Input.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devFloat4Input.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devFooter.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devHeader.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devHierarchy.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devHierarchyContent.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devHierarchyHead.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devMainView.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPanelContent.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPanelContentShared.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devProperties.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPropertiesContent.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPropertiesContentBase.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPropertiesEditableHelpers.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPropertiesHead.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPropertiesSelection.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devResources.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devTaggedUnionInput.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devIcons.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devJson.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devRuntime.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTaggedUnion.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/registry.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/internal/UiTextureRegistry.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementSystem.hpp \
@@ -194,6 +234,7 @@ external/FlowUi/CMakeFiles/flowui.dir/src/FlowUi.cpp.o: /home/lkukhale/kodi/Flow
   /usr/include/c++/12/pstl/glue_memory_defs.h \
   /usr/include/c++/12/pstl/pstl_config.h \
   /usr/include/c++/12/ratio \
+  /usr/include/c++/12/source_location \
   /usr/include/c++/12/sstream \
   /usr/include/c++/12/stdexcept \
   /usr/include/c++/12/stdlib.h \
@@ -1597,7 +1638,45 @@ external/FlowUi/CMakeFiles/flowui.dir/src/devMode/debugView.cpp.o: /home/lkukhal
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/PublicStructs.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/Vulkan/Vk_Context.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/debugView.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devCompositeStruct.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEdgeU16.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEnum1.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEnum2.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat1.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat2.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat4.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/common.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devBasicButton.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devBasicInputField.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devBasicToggle.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devCompositeStructInput.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devDynamicSeparator.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devEdgeU16Input.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devEnum1Input.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devEnum2Input.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devFloat2Input.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devFloat4Input.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devFooter.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devHeader.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devHierarchy.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devHierarchyContent.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devHierarchyHead.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devMainView.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPanelContent.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPanelContentShared.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devProperties.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPropertiesContent.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPropertiesContentBase.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPropertiesEditableHelpers.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPropertiesHead.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPropertiesSelection.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devResources.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devTaggedUnionInput.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devIcons.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devJson.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devRuntime.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTaggedUnion.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/registry.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementSystem.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FontManager.hpp \
@@ -1735,7 +1814,6 @@ external/FlowUi/CMakeFiles/flowui.dir/src/devMode/debugView.cpp.o: /home/lkukhal
   /usr/include/c++/12/bits/vector.tcc \
   /usr/include/c++/12/cctype \
   /usr/include/c++/12/cerrno \
-  /usr/include/c++/12/charconv \
   /usr/include/c++/12/climits \
   /usr/include/c++/12/clocale \
   /usr/include/c++/12/cmath \
@@ -1779,6 +1857,7 @@ external/FlowUi/CMakeFiles/flowui.dir/src/devMode/debugView.cpp.o: /home/lkukhal
   /usr/include/c++/12/pstl/glue_memory_defs.h \
   /usr/include/c++/12/pstl/pstl_config.h \
   /usr/include/c++/12/ratio \
+  /usr/include/c++/12/source_location \
   /usr/include/c++/12/sstream \
   /usr/include/c++/12/stdexcept \
   /usr/include/c++/12/stdlib.h \
@@ -1809,6 +1888,355 @@ external/FlowUi/CMakeFiles/flowui.dir/src/devMode/debugView.cpp.o: /home/lkukhal
   /usr/include/x86_64-linux-gnu/c++/12/bits/atomic_word.h \
   /usr/include/x86_64-linux-gnu/c++/12/bits/c++allocator.h \
   /usr/include/x86_64-linux-gnu/c++/12/bits/c++config.h \
+  /usr/include/x86_64-linux-gnu/c++/12/bits/c++locale.h \
+  /usr/include/x86_64-linux-gnu/c++/12/bits/cpu_defines.h \
+  /usr/include/x86_64-linux-gnu/c++/12/bits/ctype_base.h \
+  /usr/include/x86_64-linux-gnu/c++/12/bits/ctype_inline.h \
+  /usr/include/x86_64-linux-gnu/c++/12/bits/error_constants.h \
+  /usr/include/x86_64-linux-gnu/c++/12/bits/gthr-default.h \
+  /usr/include/x86_64-linux-gnu/c++/12/bits/gthr.h \
+  /usr/include/x86_64-linux-gnu/c++/12/bits/messages_members.h \
+  /usr/include/x86_64-linux-gnu/c++/12/bits/os_defines.h \
+  /usr/include/x86_64-linux-gnu/c++/12/bits/time_members.h \
+  /usr/include/alloca.h \
+  /usr/include/asm-generic/errno-base.h \
+  /usr/include/asm-generic/errno.h \
+  /usr/include/ctype.h \
+  /usr/include/endian.h \
+  /usr/include/errno.h \
+  /usr/include/features-time64.h \
+  /usr/include/features.h \
+  /usr/include/libintl.h \
+  /usr/include/limits.h \
+  /usr/include/linux/close_range.h \
+  /usr/include/linux/errno.h \
+  /usr/include/linux/limits.h \
+  /usr/include/locale.h \
+  /usr/include/math.h \
+  /usr/include/pthread.h \
+  /usr/include/sched.h \
+  /usr/include/stdc-predef.h \
+  /usr/include/stdint.h \
+  /usr/include/stdio.h \
+  /usr/include/stdlib.h \
+  /usr/include/string.h \
+  /usr/include/strings.h \
+  /usr/include/syscall.h \
+  /usr/include/time.h \
+  /usr/include/unistd.h \
+  /usr/include/wchar.h \
+  /usr/include/wctype.h \
+  /usr/include/x86_64-linux-gnu/asm/errno.h \
+  /usr/include/x86_64-linux-gnu/asm/unistd.h \
+  /usr/include/x86_64-linux-gnu/asm/unistd_64.h \
+  /usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h \
+  /usr/include/x86_64-linux-gnu/bits/byteswap.h \
+  /usr/include/x86_64-linux-gnu/bits/confname.h \
+  /usr/include/x86_64-linux-gnu/bits/cpu-set.h \
+  /usr/include/x86_64-linux-gnu/bits/endian.h \
+  /usr/include/x86_64-linux-gnu/bits/endianness.h \
+  /usr/include/x86_64-linux-gnu/bits/environments.h \
+  /usr/include/x86_64-linux-gnu/bits/errno.h \
+  /usr/include/x86_64-linux-gnu/bits/floatn-common.h \
+  /usr/include/x86_64-linux-gnu/bits/floatn.h \
+  /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
+  /usr/include/x86_64-linux-gnu/bits/fp-fast.h \
+  /usr/include/x86_64-linux-gnu/bits/fp-logb.h \
+  /usr/include/x86_64-linux-gnu/bits/getopt_core.h \
+  /usr/include/x86_64-linux-gnu/bits/getopt_posix.h \
+  /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
+  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
+  /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
+  /usr/include/x86_64-linux-gnu/bits/local_lim.h \
+  /usr/include/x86_64-linux-gnu/bits/locale.h \
+  /usr/include/x86_64-linux-gnu/bits/long-double.h \
+  /usr/include/x86_64-linux-gnu/bits/math-vector.h \
+  /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h \
+  /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
+  /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
+  /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
+  /usr/include/x86_64-linux-gnu/bits/posix2_lim.h \
+  /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+  /usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h \
+  /usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h \
+  /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
+  /usr/include/x86_64-linux-gnu/bits/sched.h \
+  /usr/include/x86_64-linux-gnu/bits/select.h \
+  /usr/include/x86_64-linux-gnu/bits/setjmp.h \
+  /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
+  /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
+  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
+  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
+  /usr/include/x86_64-linux-gnu/bits/struct_mutex.h \
+  /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h \
+  /usr/include/x86_64-linux-gnu/bits/syscall.h \
+  /usr/include/x86_64-linux-gnu/bits/thread-shared-types.h \
+  /usr/include/x86_64-linux-gnu/bits/time.h \
+  /usr/include/x86_64-linux-gnu/bits/time64.h \
+  /usr/include/x86_64-linux-gnu/bits/timesize.h \
+  /usr/include/x86_64-linux-gnu/bits/timex.h \
+  /usr/include/x86_64-linux-gnu/bits/types.h \
+  /usr/include/x86_64-linux-gnu/bits/types/FILE.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__FILE.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/clock_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/cookie_io_functions_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/error_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/mbstate_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h \
+  /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h \
+  /usr/include/x86_64-linux-gnu/bits/types/time_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/timer_t.h \
+  /usr/include/x86_64-linux-gnu/bits/types/wint_t.h \
+  /usr/include/x86_64-linux-gnu/bits/typesizes.h \
+  /usr/include/x86_64-linux-gnu/bits/uintn-identity.h \
+  /usr/include/x86_64-linux-gnu/bits/uio_lim.h \
+  /usr/include/x86_64-linux-gnu/bits/unistd_ext.h \
+  /usr/include/x86_64-linux-gnu/bits/waitflags.h \
+  /usr/include/x86_64-linux-gnu/bits/waitstatus.h \
+  /usr/include/x86_64-linux-gnu/bits/wchar.h \
+  /usr/include/x86_64-linux-gnu/bits/wctype-wchar.h \
+  /usr/include/x86_64-linux-gnu/bits/wordsize.h \
+  /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
+  /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
+  /usr/include/x86_64-linux-gnu/gnu/stubs.h \
+  /usr/include/x86_64-linux-gnu/sys/cdefs.h \
+  /usr/include/x86_64-linux-gnu/sys/select.h \
+  /usr/include/x86_64-linux-gnu/sys/single_threaded.h \
+  /usr/include/x86_64-linux-gnu/sys/syscall.h \
+  /usr/include/x86_64-linux-gnu/sys/types.h \
+  /usr/lib/llvm-12/lib/clang/12.0.1/include/__stddef_max_align_t.h \
+  /usr/lib/llvm-12/lib/clang/12.0.1/include/emmintrin.h \
+  /usr/lib/llvm-12/lib/clang/12.0.1/include/limits.h \
+  /usr/lib/llvm-12/lib/clang/12.0.1/include/mm_malloc.h \
+  /usr/lib/llvm-12/lib/clang/12.0.1/include/mmintrin.h \
+  /usr/lib/llvm-12/lib/clang/12.0.1/include/sanitizer/tsan_interface.h \
+  /usr/lib/llvm-12/lib/clang/12.0.1/include/stdarg.h \
+  /usr/lib/llvm-12/lib/clang/12.0.1/include/stdbool.h \
+  /usr/lib/llvm-12/lib/clang/12.0.1/include/stddef.h \
+  /usr/lib/llvm-12/lib/clang/12.0.1/include/stdint.h \
+  /usr/lib/llvm-12/lib/clang/12.0.1/include/xmmintrin.h
+
+external/FlowUi/CMakeFiles/flowui.dir/src/devMode/devJson.cpp.o: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/devMode/devJson.cpp \
+  external/FlowUi/include/FlowUi/BuildConfig.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/clay.h \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/App.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/PublicStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devCompositeStruct.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEdgeU16.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEnum1.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEnum2.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat1.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat2.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat4.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devJson.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devRuntime.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTaggedUnion.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/registry.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementSystem.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/InputFieldManager.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ShortcutManager.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/UiManager.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/Inputs.hpp \
+  /usr/include/c++/12/algorithm \
+  /usr/include/c++/12/array \
+  /usr/include/c++/12/backward/auto_ptr.h \
+  /usr/include/c++/12/backward/binders.h \
+  /usr/include/c++/12/bit \
+  /usr/include/c++/12/bits/algorithmfwd.h \
+  /usr/include/c++/12/bits/align.h \
+  /usr/include/c++/12/bits/alloc_traits.h \
+  /usr/include/c++/12/bits/allocated_ptr.h \
+  /usr/include/c++/12/bits/allocator.h \
+  /usr/include/c++/12/bits/atomic_base.h \
+  /usr/include/c++/12/bits/atomic_lockfree_defines.h \
+  /usr/include/c++/12/bits/atomic_wait.h \
+  /usr/include/c++/12/bits/basic_ios.h \
+  /usr/include/c++/12/bits/basic_ios.tcc \
+  /usr/include/c++/12/bits/basic_string.h \
+  /usr/include/c++/12/bits/basic_string.tcc \
+  /usr/include/c++/12/bits/char_traits.h \
+  /usr/include/c++/12/bits/charconv.h \
+  /usr/include/c++/12/bits/chrono.h \
+  /usr/include/c++/12/bits/codecvt.h \
+  /usr/include/c++/12/bits/concept_check.h \
+  /usr/include/c++/12/bits/cpp_type_traits.h \
+  /usr/include/c++/12/bits/cxxabi_forced.h \
+  /usr/include/c++/12/bits/cxxabi_init_exception.h \
+  /usr/include/c++/12/bits/enable_special_members.h \
+  /usr/include/c++/12/bits/erase_if.h \
+  /usr/include/c++/12/bits/exception.h \
+  /usr/include/c++/12/bits/exception_defines.h \
+  /usr/include/c++/12/bits/exception_ptr.h \
+  /usr/include/c++/12/bits/fs_dir.h \
+  /usr/include/c++/12/bits/fs_fwd.h \
+  /usr/include/c++/12/bits/fs_ops.h \
+  /usr/include/c++/12/bits/fs_path.h \
+  /usr/include/c++/12/bits/fstream.tcc \
+  /usr/include/c++/12/bits/functexcept.h \
+  /usr/include/c++/12/bits/functional_hash.h \
+  /usr/include/c++/12/bits/hash_bytes.h \
+  /usr/include/c++/12/bits/hashtable.h \
+  /usr/include/c++/12/bits/hashtable_policy.h \
+  /usr/include/c++/12/bits/invoke.h \
+  /usr/include/c++/12/bits/ios_base.h \
+  /usr/include/c++/12/bits/istream.tcc \
+  /usr/include/c++/12/bits/iterator_concepts.h \
+  /usr/include/c++/12/bits/locale_classes.h \
+  /usr/include/c++/12/bits/locale_classes.tcc \
+  /usr/include/c++/12/bits/locale_conv.h \
+  /usr/include/c++/12/bits/locale_facets.h \
+  /usr/include/c++/12/bits/locale_facets.tcc \
+  /usr/include/c++/12/bits/locale_facets_nonio.h \
+  /usr/include/c++/12/bits/locale_facets_nonio.tcc \
+  /usr/include/c++/12/bits/localefwd.h \
+  /usr/include/c++/12/bits/max_size_type.h \
+  /usr/include/c++/12/bits/memoryfwd.h \
+  /usr/include/c++/12/bits/mofunc_impl.h \
+  /usr/include/c++/12/bits/move.h \
+  /usr/include/c++/12/bits/move_only_function.h \
+  /usr/include/c++/12/bits/nested_exception.h \
+  /usr/include/c++/12/bits/new_allocator.h \
+  /usr/include/c++/12/bits/node_handle.h \
+  /usr/include/c++/12/bits/ostream.tcc \
+  /usr/include/c++/12/bits/ostream_insert.h \
+  /usr/include/c++/12/bits/parse_numbers.h \
+  /usr/include/c++/12/bits/postypes.h \
+  /usr/include/c++/12/bits/predefined_ops.h \
+  /usr/include/c++/12/bits/ptr_traits.h \
+  /usr/include/c++/12/bits/quoted_string.h \
+  /usr/include/c++/12/bits/range_access.h \
+  /usr/include/c++/12/bits/ranges_algo.h \
+  /usr/include/c++/12/bits/ranges_algobase.h \
+  /usr/include/c++/12/bits/ranges_base.h \
+  /usr/include/c++/12/bits/ranges_cmp.h \
+  /usr/include/c++/12/bits/ranges_uninitialized.h \
+  /usr/include/c++/12/bits/ranges_util.h \
+  /usr/include/c++/12/bits/refwrap.h \
+  /usr/include/c++/12/bits/shared_ptr.h \
+  /usr/include/c++/12/bits/shared_ptr_atomic.h \
+  /usr/include/c++/12/bits/shared_ptr_base.h \
+  /usr/include/c++/12/bits/specfun.h \
+  /usr/include/c++/12/bits/sstream.tcc \
+  /usr/include/c++/12/bits/std_abs.h \
+  /usr/include/c++/12/bits/std_function.h \
+  /usr/include/c++/12/bits/std_mutex.h \
+  /usr/include/c++/12/bits/stl_algo.h \
+  /usr/include/c++/12/bits/stl_algobase.h \
+  /usr/include/c++/12/bits/stl_bvector.h \
+  /usr/include/c++/12/bits/stl_construct.h \
+  /usr/include/c++/12/bits/stl_function.h \
+  /usr/include/c++/12/bits/stl_heap.h \
+  /usr/include/c++/12/bits/stl_iterator.h \
+  /usr/include/c++/12/bits/stl_iterator_base_funcs.h \
+  /usr/include/c++/12/bits/stl_iterator_base_types.h \
+  /usr/include/c++/12/bits/stl_pair.h \
+  /usr/include/c++/12/bits/stl_raw_storage_iter.h \
+  /usr/include/c++/12/bits/stl_relops.h \
+  /usr/include/c++/12/bits/stl_tempbuf.h \
+  /usr/include/c++/12/bits/stl_uninitialized.h \
+  /usr/include/c++/12/bits/stl_vector.h \
+  /usr/include/c++/12/bits/streambuf.tcc \
+  /usr/include/c++/12/bits/streambuf_iterator.h \
+  /usr/include/c++/12/bits/string_view.tcc \
+  /usr/include/c++/12/bits/stringfwd.h \
+  /usr/include/c++/12/bits/uniform_int_dist.h \
+  /usr/include/c++/12/bits/unique_ptr.h \
+  /usr/include/c++/12/bits/unordered_map.h \
+  /usr/include/c++/12/bits/uses_allocator.h \
+  /usr/include/c++/12/bits/uses_allocator_args.h \
+  /usr/include/c++/12/bits/utility.h \
+  /usr/include/c++/12/bits/vector.tcc \
+  /usr/include/c++/12/cctype \
+  /usr/include/c++/12/cerrno \
+  /usr/include/c++/12/climits \
+  /usr/include/c++/12/clocale \
+  /usr/include/c++/12/cmath \
+  /usr/include/c++/12/codecvt \
+  /usr/include/c++/12/compare \
+  /usr/include/c++/12/concepts \
+  /usr/include/c++/12/cstddef \
+  /usr/include/c++/12/cstdint \
+  /usr/include/c++/12/cstdio \
+  /usr/include/c++/12/cstdlib \
+  /usr/include/c++/12/cstring \
+  /usr/include/c++/12/ctime \
+  /usr/include/c++/12/cwchar \
+  /usr/include/c++/12/cwctype \
+  /usr/include/c++/12/debug/assertions.h \
+  /usr/include/c++/12/debug/debug.h \
+  /usr/include/c++/12/exception \
+  /usr/include/c++/12/ext/aligned_buffer.h \
+  /usr/include/c++/12/ext/alloc_traits.h \
+  /usr/include/c++/12/ext/atomicity.h \
+  /usr/include/c++/12/ext/concurrence.h \
+  /usr/include/c++/12/ext/numeric_traits.h \
+  /usr/include/c++/12/ext/string_conversions.h \
+  /usr/include/c++/12/ext/type_traits.h \
+  /usr/include/c++/12/filesystem \
+  /usr/include/c++/12/fstream \
+  /usr/include/c++/12/functional \
+  /usr/include/c++/12/initializer_list \
+  /usr/include/c++/12/iomanip \
+  /usr/include/c++/12/ios \
+  /usr/include/c++/12/iosfwd \
+  /usr/include/c++/12/istream \
+  /usr/include/c++/12/limits \
+  /usr/include/c++/12/locale \
+  /usr/include/c++/12/memory \
+  /usr/include/c++/12/new \
+  /usr/include/c++/12/numbers \
+  /usr/include/c++/12/optional \
+  /usr/include/c++/12/ostream \
+  /usr/include/c++/12/pstl/execution_defs.h \
+  /usr/include/c++/12/pstl/glue_algorithm_defs.h \
+  /usr/include/c++/12/pstl/glue_memory_defs.h \
+  /usr/include/c++/12/pstl/pstl_config.h \
+  /usr/include/c++/12/ratio \
+  /usr/include/c++/12/source_location \
+  /usr/include/c++/12/sstream \
+  /usr/include/c++/12/stdexcept \
+  /usr/include/c++/12/stdlib.h \
+  /usr/include/c++/12/streambuf \
+  /usr/include/c++/12/string \
+  /usr/include/c++/12/string_view \
+  /usr/include/c++/12/system_error \
+  /usr/include/c++/12/tr1/bessel_function.tcc \
+  /usr/include/c++/12/tr1/beta_function.tcc \
+  /usr/include/c++/12/tr1/ell_integral.tcc \
+  /usr/include/c++/12/tr1/exp_integral.tcc \
+  /usr/include/c++/12/tr1/gamma.tcc \
+  /usr/include/c++/12/tr1/hypergeometric.tcc \
+  /usr/include/c++/12/tr1/legendre_function.tcc \
+  /usr/include/c++/12/tr1/modified_bessel_func.tcc \
+  /usr/include/c++/12/tr1/poly_hermite.tcc \
+  /usr/include/c++/12/tr1/poly_laguerre.tcc \
+  /usr/include/c++/12/tr1/riemann_zeta.tcc \
+  /usr/include/c++/12/tr1/special_function_util.h \
+  /usr/include/c++/12/tuple \
+  /usr/include/c++/12/type_traits \
+  /usr/include/c++/12/typeinfo \
+  /usr/include/c++/12/unordered_map \
+  /usr/include/c++/12/utility \
+  /usr/include/c++/12/variant \
+  /usr/include/c++/12/vector \
+  /usr/include/x86_64-linux-gnu/c++/12/bits/atomic_word.h \
+  /usr/include/x86_64-linux-gnu/c++/12/bits/basic_file.h \
+  /usr/include/x86_64-linux-gnu/c++/12/bits/c++allocator.h \
+  /usr/include/x86_64-linux-gnu/c++/12/bits/c++config.h \
+  /usr/include/x86_64-linux-gnu/c++/12/bits/c++io.h \
   /usr/include/x86_64-linux-gnu/c++/12/bits/c++locale.h \
   /usr/include/x86_64-linux-gnu/c++/12/bits/cpu_defines.h \
   /usr/include/x86_64-linux-gnu/c++/12/bits/ctype_base.h \
@@ -2036,6 +2464,7 @@ external/FlowUi/CMakeFiles/flowui.dir/src/devMode/devRuntime.cpp.o: /home/lkukha
   /usr/include/c++/12/functional \
   /usr/include/c++/12/initializer_list \
   /usr/include/c++/12/iosfwd \
+  /usr/include/c++/12/limits \
   /usr/include/c++/12/new \
   /usr/include/c++/12/numbers \
   /usr/include/c++/12/pstl/pstl_config.h \
@@ -2133,7 +2562,15 @@ external/FlowUi/CMakeFiles/flowui.dir/src/managers/FlowUiElementSystem.cpp.o: /h
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/clay.h \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/App.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/PublicStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devCompositeStruct.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEdgeU16.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEnum1.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEnum2.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat1.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat2.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat4.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devRuntime.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTaggedUnion.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/registry.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementSystem.hpp \
   /usr/include/c++/12/backward/auto_ptr.h \
@@ -3367,7 +3804,15 @@ external/FlowUi/CMakeFiles/flowui.dir/src/managers/ShortcutManager.cpp.o: /home/
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/clay.h \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/App.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/PublicStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devCompositeStruct.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEdgeU16.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEnum1.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEnum2.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat1.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat2.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat4.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devRuntime.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTaggedUnion.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/registry.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementSystem.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/InputFieldManager.hpp \
@@ -3527,6 +3972,7 @@ external/FlowUi/CMakeFiles/flowui.dir/src/managers/ShortcutManager.cpp.o: /home/
   /usr/include/c++/12/pstl/glue_memory_defs.h \
   /usr/include/c++/12/pstl/pstl_config.h \
   /usr/include/c++/12/ratio \
+  /usr/include/c++/12/source_location \
   /usr/include/c++/12/sstream \
   /usr/include/c++/12/stdexcept \
   /usr/include/c++/12/stdlib.h \
@@ -4012,16 +4458,60 @@ external/FlowUi/CMakeFiles/flowui.dir/src/managers/UiManager.cpp.o: /home/lkukha
   external/FlowUi/include/FlowUi/BuildConfig.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/clay.h \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/App.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/Flow.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/PublicStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/Vulkan/Vk_Context.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/debugView.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devCompositeStruct.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEdgeU16.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEnum1.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEnum2.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat1.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat2.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat4.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/common.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devBasicButton.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devBasicInputField.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devBasicToggle.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devCompositeStructInput.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devDynamicSeparator.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devEdgeU16Input.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devEnum1Input.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devEnum2Input.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devFloat2Input.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devFloat4Input.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devFooter.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devHeader.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devHierarchy.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devHierarchyContent.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devHierarchyHead.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devMainView.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPanelContent.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPanelContentShared.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devProperties.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPropertiesContent.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPropertiesContentBase.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPropertiesEditableHelpers.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPropertiesHead.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPropertiesSelection.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devResources.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devTaggedUnionInput.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devIcons.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devJson.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devRuntime.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTaggedUnion.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/registry.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/internal/TextLayoutEngine.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementSystem.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FontManager.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ImageManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/InputFieldManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ShortcutManager.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/SvgManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/UiManager.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ViewPortManager.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/IWindow.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/Inputs.hpp \
   /home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_av1std.h \
   /home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_av1std_decode.h \
@@ -4142,6 +4632,7 @@ external/FlowUi/CMakeFiles/flowui.dir/src/managers/UiManager.cpp.o: /home/lkukha
   /usr/include/c++/12/bits/uniform_int_dist.h \
   /usr/include/c++/12/bits/unique_ptr.h \
   /usr/include/c++/12/bits/unordered_map.h \
+  /usr/include/c++/12/bits/unordered_set.h \
   /usr/include/c++/12/bits/uses_allocator.h \
   /usr/include/c++/12/bits/uses_allocator_args.h \
   /usr/include/c++/12/bits/utility.h \
@@ -4191,6 +4682,7 @@ external/FlowUi/CMakeFiles/flowui.dir/src/managers/UiManager.cpp.o: /home/lkukha
   /usr/include/c++/12/pstl/glue_memory_defs.h \
   /usr/include/c++/12/pstl/pstl_config.h \
   /usr/include/c++/12/ratio \
+  /usr/include/c++/12/source_location \
   /usr/include/c++/12/sstream \
   /usr/include/c++/12/stdexcept \
   /usr/include/c++/12/stdlib.h \
@@ -4214,6 +4706,7 @@ external/FlowUi/CMakeFiles/flowui.dir/src/managers/UiManager.cpp.o: /home/lkukha
   /usr/include/c++/12/type_traits \
   /usr/include/c++/12/typeinfo \
   /usr/include/c++/12/unordered_map \
+  /usr/include/c++/12/unordered_set \
   /usr/include/c++/12/utility \
   /usr/include/c++/12/variant \
   /usr/include/c++/12/vector \
@@ -4935,8 +5428,6 @@ external/FlowUi/CMakeFiles/flowui.dir/src/window/Inputs.cpp.o: /home/lkukhale/ko
 
 /usr/include/c++/11/streambuf:
 
-/usr/include/c++/11/stdexcept:
-
 /usr/include/c++/11/iterator:
 
 /usr/include/c++/11/iosfwd:
@@ -4970,12 +5461,6 @@ external/FlowUi/CMakeFiles/flowui.dir/src/window/Inputs.cpp.o: /home/lkukhale/ko
 /usr/include/c++/11/system_error:
 
 /usr/include/c++/11/bits/streambuf_iterator.h:
-
-/usr/include/c++/11/bits/stl_uninitialized.h:
-
-/usr/include/c++/11/compare:
-
-/usr/include/c++/11/bits/stl_relops.h:
 
 /usr/include/c++/11/bits/stl_iterator_base_types.h:
 
@@ -5041,8 +5526,6 @@ external/FlowUi/CMakeFiles/flowui.dir/src/window/Inputs.cpp.o: /home/lkukhale/ko
 
 /usr/include/c++/11/bits/cxxabi_forced.h:
 
-/usr/include/c++/11/bits/concept_check.h:
-
 /usr/include/c++/11/bits/charconv.h:
 
 /usr/include/c++/11/array:
@@ -5085,7 +5568,7 @@ external/FlowUi/CMakeFiles/flowui.dir/src/window/Inputs.cpp.o: /home/lkukhale/ko
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/FlowUiElementSystem.cpp:
 
-/usr/include/c++/12/charconv:
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/devMode/devJson.cpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/devMode/debugView.cpp:
 
@@ -5122,8 +5605,6 @@ external/FlowUi/CMakeFiles/flowui.dir/src/window/Inputs.cpp.o: /home/lkukhale/ko
 /usr/include/c++/11/bits/streambuf.tcc:
 
 /usr/include/c++/12/bits/fstream.tcc:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/vk_mem_alloc.h:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/Ui/Vk_UiRenderer.cpp:
 
@@ -5171,89 +5652,67 @@ external/FlowUi/CMakeFiles/flowui.dir/src/window/Inputs.cpp.o: /home/lkukhale/ko
 
 /usr/include/x86_64-linux-gnu/bits/uio_lim.h:
 
-/usr/include/x86_64-linux-gnu/bits/uintn-identity.h:
-
 /usr/include/x86_64-linux-gnu/bits/typesizes.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/time_t.h:
 
-/usr/include/c++/11/concepts:
+/usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h:
 
-/usr/include/c++/12/debug/debug.h:
-
-/usr/include/c++/12/functional:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/internal/UiTextureRegistry.hpp:
+/usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h:
 
-/usr/include/c++/12/bits/vector.tcc:
+/usr/include/x86_64-linux-gnu/bits/types/mbstate_t.h:
 
-/usr/include/c++/11/bits/basic_string.h:
+/usr/include/c++/11/pstl/execution_defs.h:
 
-/usr/include/c++/12/bits/max_size_type.h:
+/usr/include/x86_64-linux-gnu/bits/types/locale_t.h:
 
-/usr/include/linux/close_range.h:
+/usr/include/c++/11/ext/new_allocator.h:
 
-/usr/include/c++/12/bits/utility.h:
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format/artery-font/stdio-serialization.hpp:
 
-/usr/include/c++/11/bits/stl_pair.h:
+/usr/include/x86_64-linux-gnu/bits/types/error_t.h:
 
-/usr/include/c++/12/bits/node_handle.h:
+/usr/include/x86_64-linux-gnu/bits/types/cookie_io_functions_t.h:
 
-/usr/include/c++/12/bits/basic_ios.h:
+/usr/include/x86_64-linux-gnu/bits/types/clockid_t.h:
 
-/usr/include/c++/12/bits/unordered_set.h:
+/usr/include/x86_64-linux-gnu/bits/types/clock_t.h:
 
-/usr/include/x86_64-linux-gnu/bits/fp-logb.h:
+/usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:
 
-/usr/include/c++/11/bits/string_view.tcc:
+/usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h:
 
-/usr/include/c++/11/bits/basic_string.tcc:
+/usr/include/c++/11/string:
 
-/usr/include/c++/12/codecvt:
+/usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:
 
-/usr/include/c++/12/bits/uniform_int_dist.h:
+/usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
 
-/usr/include/c++/12/bits/codecvt.h:
+/usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h:
 
-/usr/include/c++/12/bits/stringfwd.h:
+/usr/include/x86_64-linux-gnu/bits/types/__FILE.h:
 
-/usr/include/c++/12/bits/atomic_wait.h:
+/usr/include/x86_64-linux-gnu/bits/timex.h:
 
-/usr/include/c++/12/bits/streambuf_iterator.h:
+/usr/include/x86_64-linux-gnu/bits/timesize.h:
 
-/usr/include/c++/11/bits/localefwd.h:
+/usr/include/x86_64-linux-gnu/bits/syscall.h:
 
-/usr/include/c++/12/climits:
+/usr/include/x86_64-linux-gnu/bits/struct_rwlock.h:
 
-/usr/include/c++/12/bits/stl_vector.h:
+/usr/include/x86_64-linux-gnu/bits/struct_mutex.h:
 
-/usr/include/c++/11/tuple:
+/usr/include/x86_64-linux-gnu/bits/stdlib-float.h:
 
-/usr/include/c++/11/ext/string_conversions.h:
+/usr/include/x86_64-linux-gnu/bits/stdio_lim.h:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/Vulkan/Vk_Frames.hpp:
+/usr/include/x86_64-linux-gnu/bits/pthreadtypes.h:
 
-/usr/include/c++/12/bits/stl_uninitialized.h:
-
-/usr/include/c++/12/bits/stl_pair.h:
-
-external/FlowUi/include/FlowUi/BuildConfig.hpp:
-
-/usr/include/c++/12/bits/stl_iterator_base_types.h:
-
-/usr/include/c++/12/bits/stl_iterator.h:
-
-/usr/include/c++/12/bits/streambuf.tcc:
-
-/usr/include/c++/12/bits/sstream.tcc:
+/usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h:
 
 /usr/include/c++/12/numbers:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/Flow.hpp:
-
-/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h:
 
 /usr/include/c++/12/bits/refwrap.h:
 
@@ -5262,8 +5721,6 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /usr/include/alloca.h:
 
 /usr/include/c++/12/bits/quoted_string.h:
-
-/usr/include/x86_64-linux-gnu/c++/12/bits/cpu_defines.h:
 
 /usr/include/c++/12/bits/predefined_ops.h:
 
@@ -5279,39 +5736,29 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/streambuf:
 
+/usr/include/c++/11/bits/stl_pair.h:
+
+/usr/include/c++/12/bits/node_handle.h:
+
+/usr/include/c++/12/bits/utility.h:
+
 /usr/include/c++/12/bits/new_allocator.h:
 
-/usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
-
-/usr/include/c++/12/bits/ranges_base.h:
-
-/usr/lib/llvm-12/lib/clang/12.0.1/include/stdarg.h:
-
-/usr/include/c++/12/bits/range_access.h:
-
-/usr/include/c++/11/cctype:
-
-/usr/include/c++/12/debug/assertions.h:
-
-/usr/include/c++/12/bits/memoryfwd.h:
-
 /usr/include/c++/12/bits/basic_ios.tcc:
-
-/usr/include/c++/12/bits/localefwd.h:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format/artery-font/serialization.h:
 
 /usr/include/c++/12/bits/enable_special_members.h:
 
-/usr/include/c++/12/cctype:
-
-/usr/include/c++/12/bits/uses_allocator_args.h:
-
 /usr/include/c++/12/bits/locale_facets_nonio.tcc:
 
 /usr/include/strings.h:
 
-/usr/include/c++/12/ctime:
+/usr/include/c++/12/bits/streambuf_iterator.h:
+
+/usr/include/c++/11/bits/localefwd.h:
+
+/usr/include/c++/12/climits:
 
 /usr/include/c++/12/bits/ranges_algo.h:
 
@@ -5325,8 +5772,6 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/bits/cxxabi_forced.h:
 
-/usr/include/c++/12/bits/string_view.tcc:
-
 /usr/include/c++/12/bits/ranges_algobase.h:
 
 /usr/lib/llvm-12/lib/clang/12.0.1/include/__stddef_max_align_t.h:
@@ -5335,79 +5780,113 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/bits/iterator_concepts.h:
 
-/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codecs_common.h:
-
 /usr/include/c++/12/bits/fs_path.h:
 
-/usr/include/c++/12/tuple:
+/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codecs_common.h:
 
-/usr/include/c++/12/bits/stl_algo.h:
+/usr/include/x86_64-linux-gnu/bits/types/__locale_t.h:
+
+/usr/include/c++/12/bits/locale_facets_nonio.h:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/InputFieldManager.hpp:
 
-/usr/include/c++/11/bits/exception.h:
-
-/usr/include/c++/12/bits/unordered_map.h:
-
-/usr/include/c++/12/filesystem:
-
 /usr/include/c++/12/bits/ios_base.h:
 
-/usr/include/c++/12/bits/stl_construct.h:
+/usr/include/c++/12/bits/ostream.tcc:
 
-/usr/include/c++/12/iosfwd:
+/usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h:
 
-/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vulkan/vk_platform.h:
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devIcons.hpp:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/debugView.hpp:
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/SvgManager.hpp:
 
-/usr/include/c++/12/bits/specfun.h:
+/usr/include/c++/11/bits/ranges_util.h:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ImageManager.hpp:
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/clay.cpp:
 
-/usr/include/c++/12/cstdlib:
+/usr/include/linux/errno.h:
 
-/usr/include/c++/11/typeinfo:
+/usr/include/c++/12/bits/invoke.h:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FontManager.hpp:
+/usr/include/x86_64-linux-gnu/c++/12/bits/messages_members.h:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/internal/TextLayoutEngine.hpp:
+/usr/include/c++/12/bits/locale_facets.tcc:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/Ui/Vk_UiRenderer.hpp:
+/usr/include/c++/12/bits/hashtable_policy.h:
 
-/usr/include/c++/12/bits/shared_ptr.h:
+/usr/include/x86_64-linux-gnu/bits/uintn-identity.h:
 
-/usr/include/x86_64-linux-gnu/bits/endian.h:
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devCompositeStructInput.hpp:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format/artery-font/crc32.h:
+/usr/include/c++/12/bits/stl_function.h:
 
-/usr/include/c++/12/bits/unique_ptr.h:
+/usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h:
 
-/usr/include/stdlib.h:
+/usr/include/c++/12/bits/hash_bytes.h:
 
-/usr/include/c++/12/algorithm:
+/usr/include/x86_64-linux-gnu/c++/11/bits/error_constants.h:
 
-/usr/include/x86_64-linux-gnu/bits/long-double.h:
+/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_h265std_encode.h:
 
-/usr/include/x86_64-linux-gnu/bits/stdio_lim.h:
+/usr/include/c++/12/bits/basic_ios.h:
 
-/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_h264std_decode.h:
+/usr/include/c++/12/bits/fs_ops.h:
 
-/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_h265std.h:
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/ShortcutManager.cpp:
 
-/usr/include/c++/12/bits/charconv.h:
+/usr/include/c++/12/bits/exception_defines.h:
 
-/usr/include/c++/12/backward/auto_ptr.h:
+/usr/include/c++/12/bits/functexcept.h:
 
-/usr/lib/llvm-12/lib/clang/12.0.1/include/mmintrin.h:
+/usr/include/x86_64-linux-gnu/bits/sched.h:
 
-/usr/include/c++/12/new:
+/usr/include/c++/12/bits/cpp_type_traits.h:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/Window.hpp:
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/devMode/devRuntime.cpp:
 
-/usr/include/x86_64-linux-gnu/c++/12/bits/os_defines.h:
+/usr/include/c++/12/bits/exception_ptr.h:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/IWindow.hpp:
+/usr/include/c++/12/math.h:
+
+/usr/include/c++/11/stdlib.h:
+
+/usr/include/c++/12/bits/locale_classes.tcc:
+
+/usr/include/c++/12/bits/erase_if.h:
+
+/usr/include/c++/11/bits/basic_string.h:
+
+/usr/include/c++/12/bits/max_size_type.h:
+
+/usr/include/c++/12/bits/vector.tcc:
+
+/usr/include/linux/close_range.h:
+
+/usr/include/c++/11/cstddef:
+
+/usr/include/c++/12/bits/cxxabi_init_exception.h:
+
+/usr/include/c++/12/bits/chrono.h:
+
+/usr/include/x86_64-linux-gnu/sys/select.h:
+
+/usr/include/x86_64-linux-gnu/bits/getopt_core.h:
+
+/usr/include/c++/12/bits/stl_uninitialized.h:
+
+/usr/include/c++/12/bits/shared_ptr_base.h:
+
+/usr/include/c++/11/bits/hashtable_policy.h:
+
+/usr/include/x86_64-linux-gnu/c++/12/bits/c++locale.h:
+
+/usr/include/c++/12/bits/functional_hash.h:
+
+/usr/include/c++/11/new:
+
+/usr/include/x86_64-linux-gnu/bits/stdint-intn.h:
+
+/usr/include/c++/12/bits/basic_string.tcc:
 
 /usr/include/c++/12/bits/std_mutex.h:
 
@@ -5419,97 +5898,25 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/iomanip:
 
-/usr/include/c++/12/bits/move_only_function.h:
-
 /usr/include/c++/12/bits/basic_string.h:
 
-/usr/include/c++/11/bits/cpp_type_traits.h:
+/usr/include/c++/11/bits/algorithmfwd.h:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ViewPortManager.hpp:
+/usr/include/c++/12/bits/shared_ptr_atomic.h:
 
-/usr/include/c++/12/bits/chrono.h:
+/usr/include/c++/12/bits/atomic_wait.h:
 
-/usr/include/x86_64-linux-gnu/sys/select.h:
+/usr/include/c++/12/bits/stringfwd.h:
 
-/usr/include/x86_64-linux-gnu/bits/getopt_core.h:
+/usr/include/c++/12/bits/fs_fwd.h:
 
-/usr/include/c++/12/bits/fs_ops.h:
+/usr/include/c++/12/bits/atomic_base.h:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/SvgManager.hpp:
+/usr/lib/llvm-12/lib/clang/12.0.1/include/stdarg.h:
 
-/usr/include/c++/12/bits/ostream.tcc:
+/usr/include/c++/12/bits/range_access.h:
 
-/usr/include/c++/11/bits/ranges_util.h:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/clay.cpp:
-
-/usr/include/linux/errno.h:
-
-/usr/include/x86_64-linux-gnu/bits/errno.h:
-
-/usr/include/c++/12/bits/locale_classes.h:
-
-/usr/include/c++/11/bits/move.h:
-
-/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_h265std_decode.h:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementSystem.hpp:
-
-/usr/include/x86_64-linux-gnu/c++/12/bits/ctype_inline.h:
-
-/usr/include/c++/12/bits/invoke.h:
-
-/usr/include/x86_64-linux-gnu/c++/12/bits/messages_members.h:
-
-/usr/include/c++/12/cerrno:
-
-/usr/include/x86_64-linux-gnu/bits/setjmp.h:
-
-/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_av1std.h:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/PublicStructs.hpp:
-
-/usr/include/x86_64-linux-gnu/c++/11/bits/error_constants.h:
-
-/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_h265std_encode.h:
-
-/usr/include/c++/12/bits/hash_bytes.h:
-
-/usr/include/c++/12/bits/ranges_uninitialized.h:
-
-/usr/include/c++/12/cwctype:
-
-/usr/include/pthread.h:
-
-/usr/include/c++/11/cstddef:
-
-/usr/include/c++/12/bits/cxxabi_init_exception.h:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/Inputs.hpp:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ShortcutManager.hpp:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/clay.h:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/Vulkan/Vk_Swapchain.hpp:
-
-/usr/include/c++/12/variant:
-
-/usr/include/c++/12/bits/shared_ptr_base.h:
-
-/usr/include/c++/11/bits/hashtable_policy.h:
-
-/usr/include/x86_64-linux-gnu/c++/12/bits/c++locale.h:
-
-/usr/include/c++/12/bits/functional_hash.h:
-
-/usr/include/c++/12/tr1/exp_integral.tcc:
-
-/usr/include/c++/12/chrono:
-
-/usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h:
-
-/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_h264std.h:
+/usr/include/c++/12/bits/ranges_base.h:
 
 /usr/include/c++/11/bits/stl_iterator_base_funcs.h:
 
@@ -5517,19 +5924,115 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/bits/allocated_ptr.h:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/Vulkan/Vk_Frames.cpp:
+/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_h264std.h:
 
-/usr/lib/llvm-12/lib/clang/12.0.1/include/stdint.h:
+/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_h264std_decode.h:
 
-/usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h:
+/usr/include/c++/12/bits/align.h:
 
-/usr/include/c++/12/cstring:
+/usr/include/c++/12/limits:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/Vulkan/Vk_Context.hpp:
+/usr/include/c++/12/bits/nested_exception.h:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/ShortcutManager.cpp:
+/usr/include/c++/12/bits/fs_dir.h:
 
-/usr/include/c++/12/bits/exception_defines.h:
+/usr/include/c++/11/bits/stl_vector.h:
+
+/usr/include/c++/12/bits/algorithmfwd.h:
+
+/usr/include/c++/11/bits/ranges_algo.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h:
+
+/usr/include/c++/12/bit:
+
+/usr/include/c++/12/variant:
+
+/usr/lib/llvm-12/lib/clang/12.0.1/include/mmintrin.h:
+
+/usr/include/c++/12/new:
+
+/usr/include/c++/12/array:
+
+/usr/include/c++/11/compare:
+
+/usr/include/c++/11/bits/stl_relops.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEdgeU16.hpp:
+
+/usr/include/c++/12/fstream:
+
+/usr/include/c++/12/bits/std_abs.h:
+
+/usr/include/c++/12/algorithm:
+
+/usr/include/x86_64-linux-gnu/bits/long-double.h:
+
+/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_av1std_decode.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devFloat4Input.hpp:
+
+/usr/include/c++/11/bits/cpp_type_traits.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ViewPortManager.hpp:
+
+/usr/include/c++/12/tr1/exp_integral.tcc:
+
+/usr/include/c++/11/bits/stl_uninitialized.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devFooter.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devEnum2Input.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devBasicInputField.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/posix2_lim.h:
+
+/usr/include/c++/11/typeinfo:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FontManager.hpp:
+
+/usr/include/c++/12/bits/shared_ptr.h:
+
+/usr/include/x86_64-linux-gnu/bits/endian.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devDynamicSeparator.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/common.hpp:
+
+/usr/include/c++/12/bits/charconv.h:
+
+/usr/include/c++/12/backward/auto_ptr.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPropertiesHead.hpp:
+
+/usr/include/c++/12/backward/binders.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/PublicStructs.hpp:
+
+/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_av1std.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devHierarchyHead.hpp:
+
+/usr/include/c++/11/string_view:
+
+/usr/include/c++/12/bits/postypes.h:
+
+/usr/include/c++/12/bits/parse_numbers.h:
+
+/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/Flow.hpp:
+
+/usr/include/c++/11/bits/iterator_concepts.h:
+
+/usr/include/x86_64-linux-gnu/bits/select.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devHierarchyContent.hpp:
+
+/usr/include/c++/11/pstl/glue_algorithm_defs.h:
+
+/usr/include/c++/12/unordered_set:
 
 /usr/include/c++/12/bits/ranges_cmp.h:
 
@@ -5539,23 +6042,211 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_vp9std.h:
 
+/usr/include/c++/12/bits/localefwd.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPropertiesEditableHelpers.hpp:
+
+external/FlowUi/include/FlowUi/BuildConfig.hpp:
+
+/usr/include/c++/12/bits/stl_pair.h:
+
+/usr/include/c++/11/bits/exception.h:
+
+/usr/include/c++/12/filesystem:
+
+/usr/include/c++/12/bits/unordered_map.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devFloat2Input.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/stdint-uintn.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/registry.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEnum2.hpp:
+
+/usr/include/c++/11/cwchar:
+
+/usr/include/x86_64-linux-gnu/bits/types/wint_t.h:
+
+/usr/include/c++/12/istream:
+
+/usr/include/c++/11/bits/ranges_base.h:
+
+/usr/include/GLFW/glfw3.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/Vulkan/Vk_Context.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPropertiesSelection.hpp:
+
+/usr/include/c++/12/initializer_list:
+
+/usr/include/x86_64-linux-gnu/bits/errno.h:
+
+/usr/include/c++/12/bits/locale_classes.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/internal/UiTextureRegistry.hpp:
+
+/usr/include/c++/11/cctype:
+
+/usr/include/c++/12/bits/memoryfwd.h:
+
+/usr/include/c++/12/debug/assertions.h:
+
+/usr/include/c++/12/source_location:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ImageManager.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/debugView.hpp:
+
+/usr/include/c++/12/bits/specfun.h:
+
+/usr/include/c++/12/cstdlib:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/vk_mem_alloc.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devJson.hpp:
+
+/usr/include/c++/12/unordered_map:
+
+/usr/include/c++/11/bits/move.h:
+
+/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_h265std_decode.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementSystem.hpp:
+
+/usr/include/x86_64-linux-gnu/c++/12/bits/ctype_inline.h:
+
+/usr/include/c++/12/bits/move_only_function.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devTaggedUnionInput.hpp:
+
+/usr/include/c++/11/bits/string_view.tcc:
+
+/usr/include/c++/11/bits/basic_string.tcc:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat2.hpp:
+
+/usr/include/c++/12/codecvt:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devBasicButton.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/Vulkan/Vk_Swapchain.hpp:
+
+/usr/include/c++/11/stdexcept:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat1.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/types.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devHeader.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devResources.hpp:
+
+/usr/include/c++/12/tr1/bessel_function.tcc:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devEnum1Input.hpp:
+
+/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_h264std_encode.h:
+
+/usr/include/c++/12/bits/alloc_traits.h:
+
+/usr/include/locale.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat4.hpp:
+
+/usr/include/c++/12/bits/stl_iterator.h:
+
+/usr/include/c++/12/bits/stl_iterator_base_types.h:
+
+/usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h:
+
+/usr/include/string.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/clay.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ShortcutManager.hpp:
+
+/usr/include/c++/12/bits/ranges_uninitialized.h:
+
+/usr/include/c++/12/cwctype:
+
+/usr/include/pthread.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devCompositeStruct.hpp:
+
+/usr/include/c++/12/memory:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPropertiesContent.hpp:
+
+/usr/include/c++/11/tuple:
+
+/usr/include/c++/11/ext/string_conversions.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/Vulkan/Vk_Frames.hpp:
+
+/usr/include/c++/12/bits/stl_vector.h:
+
+/usr/include/x86_64-linux-gnu/bits/time.h:
+
+/usr/include/c++/12/bits/ptr_traits.h:
+
+/usr/include/c++/12/bits/stl_algo.h:
+
+/usr/include/c++/12/tuple:
+
+/usr/include/x86_64-linux-gnu/c++/12/bits/cpu_defines.h:
+
 /usr/include/c++/12/bits/uses_allocator.h:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devRuntime.hpp:
 
-/usr/include/c++/12/array:
+/usr/include/c++/12/bits/ranges_util.h:
 
-/usr/include/c++/12/fstream:
+/usr/include/c++/12/tr1/gamma.tcc:
 
-/usr/include/c++/12/bits/std_abs.h:
+/usr/include/c++/12/bits/atomic_lockfree_defines.h:
 
-/usr/include/c++/12/math.h:
+/usr/include/c++/11/bits/concept_check.h:
 
-/usr/include/c++/11/stdlib.h:
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTaggedUnion.hpp:
 
-/usr/include/c++/12/bits/locale_classes.tcc:
+/usr/include/c++/12/bits/codecvt.h:
 
-/usr/include/c++/12/bits/erase_if.h:
+/usr/include/c++/12/bits/uniform_int_dist.h:
+
+/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_h265std.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/internal/TextLayoutEngine.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/Ui/Vk_UiRenderer.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEnum1.hpp:
+
+/usr/include/c++/12/bits/stl_construct.h:
+
+/usr/include/c++/12/iosfwd:
+
+/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vulkan/vk_platform.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/IWindow.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/Inputs.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/Window.hpp:
+
+/usr/include/x86_64-linux-gnu/c++/12/bits/os_defines.h:
+
+/usr/include/c++/11/cstdlib:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/UiManager.hpp:
+
+/usr/include/syscall.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_tm.h:
+
+/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vulkan/vulkan_core.h:
 
 /usr/include/c++/12/pstl/pstl_config.h:
 
@@ -5565,89 +6256,73 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/cpu-set.h:
 
-/usr/include/c++/12/bits/stl_function.h:
+/usr/include/c++/12/bits/istream.tcc:
 
-/usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h:
+/usr/include/c++/12/bits/stl_raw_storage_iter.h:
 
-/usr/include/c++/11/bits/iterator_concepts.h:
+/usr/include/c++/12/bits/sstream.tcc:
 
-/usr/include/x86_64-linux-gnu/bits/select.h:
+/usr/include/c++/12/bits/streambuf.tcc:
 
-/usr/include/c++/12/backward/binders.h:
+/usr/include/c++/11/concepts:
 
-/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vulkan/vulkan.h:
+/usr/include/c++/12/debug/debug.h:
 
-/usr/include/c++/12/cstdint:
+/usr/include/c++/12/functional:
 
-/usr/include/c++/12/bits/align.h:
+/usr/include/c++/12/bits/string_view.tcc:
 
-/usr/include/c++/12/limits:
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format/artery-font/crc32.h:
 
-/usr/include/c++/12/compare:
+/usr/include/c++/12/bits/unique_ptr.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPropertiesContentBase.hpp:
+
+/usr/include/stdlib.h:
+
+/usr/include/c++/12/bits/unordered_set.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devBasicToggle.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/fp-logb.h:
+
+/usr/include/c++/12/bits/uses_allocator_args.h:
+
+/usr/include/c++/12/cctype:
+
+/usr/include/x86_64-linux-gnu/bits/setjmp.h:
+
+/usr/include/c++/12/cerrno:
+
+/usr/include/c++/12/chrono:
+
+/usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h:
 
 /usr/include/c++/12/bits/locale_facets.h:
 
 /usr/include/x86_64-linux-gnu/bits/environments.h:
 
-/usr/include/c++/12/bits/fs_fwd.h:
+/usr/include/c++/12/compare:
 
-/usr/include/c++/12/bits/atomic_base.h:
+/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vulkan/vulkan.h:
 
-/usr/include/c++/12/bits/ranges_util.h:
+/usr/include/c++/12/cstdint:
 
-/usr/include/c++/12/tr1/gamma.tcc:
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/Vulkan/Vk_Swapchain.cpp:
 
-/usr/include/c++/12/bits/atomic_lockfree_defines.h:
+/usr/include/x86_64-linux-gnu/bits/posix_opt.h:
 
-/usr/include/c++/12/bits/istream.tcc:
+/usr/include/c++/12/cstdio:
 
-/usr/include/c++/12/bits/stl_raw_storage_iter.h:
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/Vulkan/Vk_Frames.cpp:
 
-/usr/include/c++/12/bits/locale_facets.tcc:
+/usr/lib/llvm-12/lib/clang/12.0.1/include/stdint.h:
 
-/usr/include/c++/12/bits/hashtable_policy.h:
+/usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h:
 
-/usr/include/c++/11/bits/algorithmfwd.h:
+/usr/include/c++/12/cstring:
 
-/usr/include/c++/12/bits/shared_ptr_atomic.h:
-
-/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_av1std_decode.h:
-
-/usr/include/c++/11/string_view:
-
-/usr/include/c++/12/bits/postypes.h:
-
-/usr/include/c++/12/bits/parse_numbers.h:
-
-/usr/include/x86_64-linux-gnu/bits/sched.h:
-
-/usr/include/c++/12/bits/cpp_type_traits.h:
-
-/usr/include/c++/12/bits/functexcept.h:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/devMode/devRuntime.cpp:
-
-/usr/include/c++/12/bits/exception_ptr.h:
-
-/usr/include/c++/12/bits/nested_exception.h:
-
-/usr/include/c++/11/bits/stl_vector.h:
-
-/usr/include/c++/12/bits/algorithmfwd.h:
-
-/usr/include/c++/12/bits/fs_dir.h:
-
-/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_h264std_encode.h:
-
-/usr/include/c++/12/bits/alloc_traits.h:
-
-/usr/include/locale.h:
-
-/usr/include/c++/11/cstdlib:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/UiManager.hpp:
-
-/usr/include/syscall.h:
+/usr/include/c++/12/ctime:
 
 /usr/include/c++/12/ext/aligned_buffer.h:
 
@@ -5661,8 +6336,6 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/ext/atomicity.h:
 
-/usr/include/x86_64-linux-gnu/bits/types/clockid_t.h:
-
 /usr/include/c++/12/ext/concurrence.h:
 
 /usr/include/linux/limits.h:
@@ -5671,33 +6344,19 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/sched.h:
 
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devEdgeU16Input.hpp:
+
 /usr/include/libintl.h:
 
 /usr/include/x86_64-linux-gnu/bits/waitflags.h:
 
 /usr/include/c++/12/ext/type_traits.h:
 
-/usr/include/x86_64-linux-gnu/bits/types/clock_t.h:
-
-/usr/include/c++/12/initializer_list:
-
 /usr/include/c++/12/ios:
-
-/usr/include/c++/11/cwchar:
-
-/usr/include/x86_64-linux-gnu/bits/types/wint_t.h:
-
-/usr/include/c++/12/istream:
-
-/usr/include/c++/11/bits/ranges_base.h:
-
-/usr/include/GLFW/glfw3.h:
 
 /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h:
 
 /usr/include/c++/12/locale:
-
-/usr/include/c++/12/memory:
 
 /usr/include/c++/12/optional:
 
@@ -5733,21 +6392,23 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/FontManager.cpp:
 
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devMainView.hpp:
+
 /usr/include/stdc-predef.h:
+
+/usr/include/x86_64-linux-gnu/bits/time64.h:
+
+/usr/include/c++/12/cwchar:
+
+/usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h:
 
 /usr/include/x86_64-linux-gnu/bits/floatn-common.h:
 
-/usr/include/c++/12/tr1/bessel_function.tcc:
-
 /usr/include/c++/12/tr1/beta_function.tcc:
 
-/usr/include/c++/12/bits/ptr_traits.h:
-
-/usr/include/x86_64-linux-gnu/bits/time.h:
+/usr/include/c++/12/bits/exception.h:
 
 /usr/include/c++/12/bits/std_function.h:
-
-/usr/include/c++/12/bits/exception.h:
 
 /usr/include/c++/12/tr1/ell_integral.tcc:
 
@@ -5755,23 +6416,11 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/mathcalls.h:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/registry.hpp:
-
-/usr/include/x86_64-linux-gnu/bits/stdint-uintn.h:
-
 /usr/include/c++/12/tr1/legendre_function.tcc:
 
-/usr/include/c++/12/bits/locale_facets_nonio.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/__locale_t.h:
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devProperties.hpp:
 
 /usr/include/c++/12/tr1/poly_hermite.tcc:
-
-/usr/include/c++/11/new:
-
-/usr/include/c++/12/bits/basic_string.tcc:
-
-/usr/include/x86_64-linux-gnu/bits/stdint-intn.h:
 
 /usr/include/c++/12/tr1/poly_laguerre.tcc:
 
@@ -5785,11 +6434,7 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/locale.h:
 
-/usr/include/c++/12/unordered_map:
-
-/usr/include/c++/11/pstl/glue_algorithm_defs.h:
-
-/usr/include/c++/12/unordered_set:
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPanelContentShared.hpp:
 
 /usr/include/c++/12/vector:
 
@@ -5817,6 +6462,8 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/x86_64-linux-gnu/c++/12/bits/gthr-default.h:
 
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPanelContent.hpp:
+
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/FlowUi.cpp:
 
 /usr/include/x86_64-linux-gnu/bits/confname.h:
@@ -5831,15 +6478,17 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/GL/glext.h:
 
-/usr/include/x86_64-linux-gnu/c++/12/bits/atomic_word.h:
-
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/App.hpp:
+
+/usr/include/x86_64-linux-gnu/c++/12/bits/atomic_word.h:
 
 /usr/include/KHR/khrplatform.h:
 
 /usr/include/x86_64-linux-gnu/bits/local_lim.h:
 
 /usr/include/c++/11/debug/assertions.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devHierarchy.hpp:
 
 /usr/include/c++/12/concepts:
 
@@ -5859,17 +6508,15 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/11/bits/stl_function.h:
 
-/usr/include/c++/12/exception:
-
 /usr/include/c++/12/typeinfo:
+
+/usr/include/c++/12/exception:
 
 /usr/include/x86_64-linux-gnu/bits/math-vector.h:
 
 /usr/include/features-time64.h:
 
 /usr/include/features.h:
-
-/usr/include/x86_64-linux-gnu/bits/struct_mutex.h:
 
 /usr/include/c++/12/bits/mofunc_impl.h:
 
@@ -5881,10 +6528,6 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/fp-fast.h:
 
-/usr/include/x86_64-linux-gnu/bits/pthreadtypes-arch.h:
-
-/usr/include/string.h:
-
 /usr/include/time.h:
 
 /usr/include/unistd.h:
@@ -5893,9 +6536,9 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/wchar.h:
 
-/usr/include/c++/12/bits/stl_tempbuf.h:
-
 /usr/include/c++/12/bits/stl_bvector.h:
+
+/usr/include/c++/12/bits/stl_tempbuf.h:
 
 /usr/include/c++/12/pstl/execution_defs.h:
 
@@ -5911,8 +6554,6 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/floatn.h:
 
-/usr/include/x86_64-linux-gnu/bits/pthread_stack_min-dynamic.h:
-
 /usr/include/c++/12/bits/allocator.h:
 
 /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h:
@@ -5924,73 +6565,3 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /usr/include/x86_64-linux-gnu/bits/libc-header-start.h:
 
 /usr/include/x86_64-linux-gnu/bits/posix1_lim.h:
-
-/usr/include/x86_64-linux-gnu/bits/posix2_lim.h:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/Vulkan/Vk_Swapchain.cpp:
-
-/usr/include/c++/12/cstdio:
-
-/usr/include/x86_64-linux-gnu/bits/posix_opt.h:
-
-/usr/include/x86_64-linux-gnu/bits/pthreadtypes.h:
-
-/usr/include/c++/11/pstl/execution_defs.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/locale_t.h:
-
-/usr/include/x86_64-linux-gnu/bits/stdlib-float.h:
-
-/usr/include/x86_64-linux-gnu/bits/struct_rwlock.h:
-
-/usr/include/x86_64-linux-gnu/bits/syscall.h:
-
-/usr/include/c++/12/cwchar:
-
-/usr/include/x86_64-linux-gnu/bits/atomic_wide_counter.h:
-
-/usr/include/x86_64-linux-gnu/bits/time64.h:
-
-/usr/include/x86_64-linux-gnu/bits/timesize.h:
-
-/usr/include/x86_64-linux-gnu/bits/timex.h:
-
-/usr/include/x86_64-linux-gnu/bits/types.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/__FILE.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h:
-
-/usr/include/c++/11/string:
-
-/usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/cookie_io_functions_t.h:
-
-/usr/include/c++/11/ext/new_allocator.h:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/artery-font-format/artery-font/stdio-serialization.hpp:
-
-/usr/include/x86_64-linux-gnu/bits/types/error_t.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/mbstate_t.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/struct___jmp_buf_tag.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/struct_itimerspec.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h:
-
-/usr/include/c++/11/bits/ranges_algo.h:
-
-/usr/include/c++/12/bit:
-
-/usr/include/x86_64-linux-gnu/bits/types/struct_timeval.h:
-
-/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vulkan/vulkan_core.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/struct_tm.h:

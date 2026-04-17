@@ -372,6 +372,30 @@ src/devMode/debugView.cpp.s:
 	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/src/devMode/debugView.cpp.s
 .PHONY : src/devMode/debugView.cpp.s
 
+src/devMode/devJson.o: src/devMode/devJson.cpp.o
+.PHONY : src/devMode/devJson.o
+
+# target to build an object file
+src/devMode/devJson.cpp.o:
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/src/devMode/devJson.cpp.o
+.PHONY : src/devMode/devJson.cpp.o
+
+src/devMode/devJson.i: src/devMode/devJson.cpp.i
+.PHONY : src/devMode/devJson.i
+
+# target to preprocess a source file
+src/devMode/devJson.cpp.i:
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/src/devMode/devJson.cpp.i
+.PHONY : src/devMode/devJson.cpp.i
+
+src/devMode/devJson.s: src/devMode/devJson.cpp.s
+.PHONY : src/devMode/devJson.s
+
+# target to generate assembly for a file
+src/devMode/devJson.cpp.s:
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/src/devMode/devJson.cpp.s
+.PHONY : src/devMode/devJson.cpp.s
+
 src/devMode/devRuntime.o: src/devMode/devRuntime.cpp.o
 .PHONY : src/devMode/devRuntime.o
 
@@ -672,6 +696,9 @@ help:
 	@echo "... src/devMode/debugView.o"
 	@echo "... src/devMode/debugView.i"
 	@echo "... src/devMode/debugView.s"
+	@echo "... src/devMode/devJson.o"
+	@echo "... src/devMode/devJson.i"
+	@echo "... src/devMode/devJson.s"
 	@echo "... src/devMode/devRuntime.o"
 	@echo "... src/devMode/devRuntime.i"
 	@echo "... src/devMode/devRuntime.s"

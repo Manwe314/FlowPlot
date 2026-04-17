@@ -13,6 +13,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/flowui.dir/src/clay.cpp.o.d"
   "CMakeFiles/flowui.dir/src/devMode/debugView.cpp.o"
   "CMakeFiles/flowui.dir/src/devMode/debugView.cpp.o.d"
+  "CMakeFiles/flowui.dir/src/devMode/devJson.cpp.o"
+  "CMakeFiles/flowui.dir/src/devMode/devJson.cpp.o.d"
   "CMakeFiles/flowui.dir/src/devMode/devRuntime.cpp.o"
   "CMakeFiles/flowui.dir/src/devMode/devRuntime.cpp.o.d"
   "CMakeFiles/flowui.dir/src/managers/FlowUiElementSystem.cpp.o"

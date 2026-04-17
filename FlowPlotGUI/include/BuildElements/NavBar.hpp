@@ -59,8 +59,11 @@ private:
 		std::string_view sharedPath,
 		basicButtonParams& parameters)
 	{
-		NavBarButtonBuilder builder = app.ui().createElement(kBasicButton, sharedPath);
-		builder.setParameters(std::move(parameters));
+		NavBarButtonBuilder builder = app.ui().createElement(kBasicButton, sharedPath).setParameters(std::move(parameters))
+		/* V1 cant Update parameters made with variables */
+		.mergeParams([](auto& params) {
+		    params.text = "Export";
+		});
 		return builder;
 	}
 

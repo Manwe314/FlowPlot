@@ -1,0 +1,25 @@
+{
+  "schema":"flowui.dev.export.v1",
+  "kind":"params",
+  "definitions": [
+  ],
+  "instances": [
+    {
+      "definitionId":7772706737753820503,
+      "definitionName":"BasicButton",
+      "definitionTypeToken":"std::string_view FlowUi::devMode::typeToken() [T = FlowUi::ElementDefinition<basicButtonParams, void, void, 7772706737753820503, false>]",
+      "flowId":3975994179362475136,
+      "elementId":"NavBar/child-2/button-1",
+      "authoredInstanceKey":"NavBar/child-2/button-1",
+      "authoredDefinitionKey":"BasicButton",
+      "sourceFile":"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/NavBar.hpp",
+      "sourceLine":62,
+      "sourceColumn":0,
+      "sourceFunction":"makeButtonBuilder",
+      "sourceLocationHash":8943749627979714357,
+      "changes": [
+        {"fieldHash":18015793717152399486,"fieldName":"text","fieldTypeHash":487520060158922527,"value":{"kind":"string","value":"Export"}}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "schema":"flowui.dev.export.v1",
+  "kind":"params",
+  "stats": {
+    "patchedInstanceTargets":1,
+    "patchedFiles":1,
+    "unresolvedCount":0
+  },
+  "definitions": [
+  ],
+  "instances": [
+    {
+      "definitionId":7772706737753820503,
+      "definitionName":"BasicButton",
+      "flowId":3975994179362475136,
+      "elementId":"NavBar/child-2/button-1",
+      "sourceFile":"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/NavBar.hpp",
+      "sourceLine":62,
+      "changes": [
+        {"fieldHash":18015793717152399486,"fieldName":"text","fieldTypeHash":487520060158922527,"valueKind":"string","value":"Export"}
+      ]
+    }
+  ],
+  "unresolved": [
+  ]
+}
