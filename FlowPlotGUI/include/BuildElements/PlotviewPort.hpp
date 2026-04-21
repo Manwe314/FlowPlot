@@ -3,6 +3,7 @@
 #include <utility>
 
 #include <FlowUi/Flow.hpp>
+#include <devMode/devApi.hpp>
 
 #include "FlowPlotGui.hpp"
 #include "BuildElements/PanelTitle.hpp"
@@ -13,6 +14,13 @@ struct plotviewPortParams {
 	Clay_Color backgroundColor = FlowUi::Flow_Color("#00000000");
 	Clay_Color viewportColor = FlowUi::Flow_Color("#7a7a7aff");
 };
+
+FLOWUI_DEV_REGISTER_STRUCT(
+	plotviewPortParams,
+	FLOWUI_DEV_REFLECT_FIELD(plotviewPortParams, sizing),
+	FLOWUI_DEV_REFLECT_FIELD(plotviewPortParams, padding),
+	FLOWUI_DEV_REFLECT_FIELD(plotviewPortParams, backgroundColor),
+	FLOWUI_DEV_REFLECT_FIELD(plotviewPortParams, viewportColor));
 
 struct plotviewPortResources {
 	PanelTitleBuilder titleBuilder;

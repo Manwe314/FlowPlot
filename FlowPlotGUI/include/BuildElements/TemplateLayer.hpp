@@ -4,6 +4,7 @@
 #include <utility>
 
 #include <FlowUi/Flow.hpp>
+#include <devMode/devApi.hpp>
 
 #include "FlowPlotGui.hpp"
 #include "BuildElements/BasicButton.hpp"
@@ -49,6 +50,41 @@ struct templateLayerParams {
 struct templateLayerState {
 	bool isExpanded = false;
 };
+
+FLOWUI_DEV_REGISTER_STRUCT(
+	templateLayerParams,
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, sizing),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, backgroundColor),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, borderColor),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, borderWidth),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, childAlignment),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, indicatorColor),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, focused),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, leftSpacerMinWidth),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, leftSpacerMaxWidth),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, mainContentMinWidth),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, mainContentMaxWidth),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, mainContentPadding),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, mainContentChildGap),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, mainContentChildAlignment),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, mainContentBackgroundColor),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, mainContentBorderColor),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, mainContentBorderWidth),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, showExpanderButton),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, showAdderButton),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, mainIconContainerSizing),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, mainIconSizing),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, mainIconTintColor),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, mainText),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, mainTextWrapMode),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, mainTextAlignment),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, mainTextFontId),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, mainTextFontSize),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, mainTextColor));
+
+FLOWUI_DEV_REGISTER_STRUCT(
+	templateLayerState,
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerState, isExpanded));
 
 using BasicButtonBuilder = FlowUi::ElementBuilder<basicButtonParams, void, void, FLOW_DEF_ID("Basic button")>;
 

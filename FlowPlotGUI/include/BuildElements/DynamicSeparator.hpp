@@ -36,6 +36,11 @@ struct dynamicSeparatorState {
 	int localValue = 0;
 };
 
+FLOWUI_DEV_REGISTER_ENUM(
+	dynamicSeparatorParams::Orientation,
+	FLOWUI_DEV_ENUM_VALUE(dynamicSeparatorParams::Orientation::Vertical),
+	FLOWUI_DEV_ENUM_VALUE(dynamicSeparatorParams::Orientation::Horizontal));
+
 using DynamicSeparatorDef = FlowUi::ElementDefinition<
 	dynamicSeparatorParams,
 	dynamicSeparatorState,
@@ -186,6 +191,9 @@ FLOWUI_DEV_REGISTER_STRUCT(
 	FLOWUI_DEV_REFLECT_FIELD(dynamicSeparatorParams, reverseDrag),
 	FLOWUI_DEV_REFLECT_FIELD(dynamicSeparatorParams, width),
 	FLOWUI_DEV_REFLECT_FIELD(dynamicSeparatorParams, height),
+	FLOWUI_DEV_REFLECT_FIELD(dynamicSeparatorParams, color),
+	FLOWUI_DEV_REFLECT_FIELD(dynamicSeparatorParams, hoverColor),
+	FLOWUI_DEV_REFLECT_FIELD(dynamicSeparatorParams, activeColor),
 	FLOWUI_DEV_REFLECT_FIELD(dynamicSeparatorParams, minValue),
 	FLOWUI_DEV_REFLECT_FIELD(dynamicSeparatorParams, maxValue));
 
@@ -196,5 +204,3 @@ FLOWUI_DEV_REGISTER_STRUCT(
 	FLOWUI_DEV_REFLECT_FIELD(dynamicSeparatorState, pressMouseAxis),
 	FLOWUI_DEV_REFLECT_FIELD(dynamicSeparatorState, pressValue),
 	FLOWUI_DEV_REFLECT_FIELD(dynamicSeparatorState, localValue));
-
-FLOWUI_DEV_REGISTER_ELEMENT(DynamicSeparatorDef, "DynamicSeparator");

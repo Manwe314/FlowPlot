@@ -3,6 +3,7 @@
 #include <functional>
 
 #include <FlowUi/Flow.hpp>
+#include <devMode/devApi.hpp>
 
 #include "FlowPlotGui.hpp"
 
@@ -53,6 +54,43 @@ struct basicButtonParams {
 	Clay_Sizing iconSizing = Clay_Sizing{.width = CLAY_SIZING_PERCENT(1.0f), .height = CLAY_SIZING_PERCENT(1.0f)};
 	Clay_Color iconTintColor = FlowUi::Flow_Color("#00000000");
 };
+
+FLOWUI_DEV_REGISTER_ENUM(
+	basicButtonParams::ContentMode,
+	FLOWUI_DEV_ENUM_VALUE(basicButtonParams::ContentMode::None),
+	FLOWUI_DEV_ENUM_VALUE(basicButtonParams::ContentMode::TextOnly),
+	FLOWUI_DEV_ENUM_VALUE(basicButtonParams::ContentMode::IconOnly),
+	FLOWUI_DEV_ENUM_VALUE(basicButtonParams::ContentMode::IconThenText),
+	FLOWUI_DEV_ENUM_VALUE(basicButtonParams::ContentMode::TextThenIcon));
+
+FLOWUI_DEV_REGISTER_STRUCT(
+	basicButtonParams,
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, text),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, contentMode),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, padding),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, sizing),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, backgroundColor),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, cornerRadius),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, borderColor),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, borderWidth),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, childLayoutDirection),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, childAlignment),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, childGap),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, textWrapMode),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, textAlignment),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, fontId),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, fontSize),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, textColor),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, iconContainerSizing),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, iconContainerPadding),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, iconContainerChildLayoutDirection),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, iconContainerChildAlignment),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, iconContainerChildGap),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, iconContainerBackgroundColor),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, iconContainerBorderColor),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, iconContainerBorderWidth),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, iconSizing),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, iconTintColor));
 
 inline const BasicButtonDef kBasicButton = {
 	+[](BasicButtonDef::InteractionContext& context) {

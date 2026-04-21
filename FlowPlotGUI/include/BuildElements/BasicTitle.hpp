@@ -1,6 +1,7 @@
 #pragma once
 
 #include <FlowUi/Flow.hpp>
+#include <devMode/devApi.hpp>
 
 #include "FlowPlotGui.hpp"
 
@@ -43,6 +44,41 @@ struct basicTitleParams {
 	Clay_Sizing iconSizing = Clay_Sizing{.width = CLAY_SIZING_PERCENT(1.0f), .height = CLAY_SIZING_PERCENT(1.0f)};
 	Clay_Color iconTintColor = FlowUi::Flow_Color("#72b6ffff");
 };
+
+FLOWUI_DEV_REGISTER_ENUM(
+	basicTitleParams::ContentMode,
+	FLOWUI_DEV_ENUM_VALUE(basicTitleParams::ContentMode::TextOnly),
+	FLOWUI_DEV_ENUM_VALUE(basicTitleParams::ContentMode::IconThenText),
+	FLOWUI_DEV_ENUM_VALUE(basicTitleParams::ContentMode::TextThenIcon));
+
+FLOWUI_DEV_REGISTER_STRUCT(
+	basicTitleParams,
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, text),
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, contentMode),
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, padding),
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, sizing),
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, backgroundColor),
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, cornerRadius),
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, borderColor),
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, borderWidth),
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, childLayoutDirection),
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, childAlignment),
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, childGap),
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, textWrapMode),
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, textAlignment),
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, fontId),
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, fontSize),
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, textColor),
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, iconContainerSizing),
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, iconContainerPadding),
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, iconContainerChildLayoutDirection),
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, iconContainerChildAlignment),
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, iconContainerChildGap),
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, iconContainerBackgroundColor),
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, iconContainerBorderColor),
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, iconContainerBorderWidth),
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, iconSizing),
+	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, iconTintColor));
 
 using BasicTitleDef = FlowUi::ElementDefinition<basicTitleParams, void, void, FLOW_DEF_ID("Basic title")>;
 

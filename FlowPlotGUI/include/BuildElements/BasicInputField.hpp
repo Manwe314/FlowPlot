@@ -1,6 +1,7 @@
 #pragma once
 
 #include <FlowUi/Flow.hpp>
+#include <devMode/devApi.hpp>
 
 #include "FlowPlotGui.hpp"
 
@@ -19,6 +20,22 @@ struct basicInputFieldParams {
 	uint16_t fontSize = 16;
 	Clay_Color textColor = FlowUi::Flow_Color("#000000ff");
 };
+
+FLOWUI_DEV_REGISTER_STRUCT(
+	basicInputFieldParams,
+	FLOWUI_DEV_REFLECT_FIELD(basicInputFieldParams, defaultText),
+	FLOWUI_DEV_REFLECT_FIELD(basicInputFieldParams, padding),
+	FLOWUI_DEV_REFLECT_FIELD(basicInputFieldParams, sizing),
+	FLOWUI_DEV_REFLECT_FIELD(basicInputFieldParams, borderColor),
+	FLOWUI_DEV_REFLECT_FIELD(basicInputFieldParams, borderWidth),
+	FLOWUI_DEV_REFLECT_FIELD(basicInputFieldParams, backgroundColor),
+	FLOWUI_DEV_REFLECT_FIELD(basicInputFieldParams, cornerRadius),
+	FLOWUI_DEV_REFLECT_FIELD(basicInputFieldParams, childTextAlignment),
+	FLOWUI_DEV_REFLECT_FIELD(basicInputFieldParams, textWrapMode),
+	FLOWUI_DEV_REFLECT_FIELD(basicInputFieldParams, textAlignment),
+	FLOWUI_DEV_REFLECT_FIELD(basicInputFieldParams, fontId),
+	FLOWUI_DEV_REFLECT_FIELD(basicInputFieldParams, fontSize),
+	FLOWUI_DEV_REFLECT_FIELD(basicInputFieldParams, textColor));
 
 using BasicInputFieldDef = FlowUi::ElementDefinition<basicInputFieldParams, void, void, FLOW_DEF_ID("Basic input field")>;
 

@@ -4,6 +4,7 @@
 #include <utility>
 
 #include <FlowUi/Flow.hpp>
+#include <devMode/devApi.hpp>
 
 #include "FlowPlotGui.hpp"
 #include "BuildElements/BasicButton.hpp"
@@ -18,6 +19,16 @@ struct navBarParams {
 	int spacer2MinWidth = 22;
 	int spacer2MaxWidth = 68;
 };
+
+FLOWUI_DEV_REGISTER_STRUCT(
+	navBarParams,
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, backgroundColor),
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, heightMin),
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, heightMax),
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, spacer1MinWidth),
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, spacer1MaxWidth),
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, spacer2MinWidth),
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, spacer2MaxWidth));
 
 using BasicTitleBuilder = FlowUi::ElementBuilder<basicTitleParams, void, void, FLOW_DEF_ID("Basic title")>;
 using NavBarButtonBuilder = FlowUi::ElementBuilder<basicButtonParams, void, void, FLOW_DEF_ID("Basic button")>;

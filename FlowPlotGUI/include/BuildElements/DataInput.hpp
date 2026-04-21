@@ -1,6 +1,7 @@
 #pragma once
 
 #include <FlowUi/Flow.hpp>
+#include <devMode/devApi.hpp>
 
 #include "FlowPlotGui.hpp"
 
@@ -8,6 +9,11 @@ struct dataInputParams {
 	Clay_Sizing sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_GROW(0)};
 	Clay_Color backgroundColor = FlowUi::Flow_Color("#7a7a7aff");
 };
+
+FLOWUI_DEV_REGISTER_STRUCT(
+	dataInputParams,
+	FLOWUI_DEV_REFLECT_FIELD(dataInputParams, sizing),
+	FLOWUI_DEV_REFLECT_FIELD(dataInputParams, backgroundColor));
 
 using DataInputDef = FlowUi::ElementDefinition<dataInputParams, void, void, FLOW_DEF_ID("DataInput")>;
 

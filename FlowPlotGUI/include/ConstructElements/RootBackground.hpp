@@ -1,12 +1,17 @@
 #pragma once
 
 #include <FlowUi/Flow.hpp>
+#include <devMode/devApi.hpp>
 
 #include "FlowPlotGui.hpp"
 
 struct rootBackgroundParams {
 	Clay_Color backgroundColor = FlowUi::Flow_Color("#1a1a1aff");
 };
+
+FLOWUI_DEV_REGISTER_STRUCT(
+	rootBackgroundParams,
+	FLOWUI_DEV_REFLECT_FIELD(rootBackgroundParams, backgroundColor));
 
 using RootBackgroundDef = FlowUi::ElementDefinition<rootBackgroundParams, void, void, FLOW_DEF_ID("RootBackground")>;
 

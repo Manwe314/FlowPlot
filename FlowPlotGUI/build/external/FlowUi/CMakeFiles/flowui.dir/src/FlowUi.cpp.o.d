@@ -332,15 +332,15 @@ external/FlowUi/CMakeFiles/flowui.dir/src/FlowUi.cpp.o: \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/source_location \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devRuntime.hpp \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/variant \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEnum1.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devEnum1.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/registry.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEnum2.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat1.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat2.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat4.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEdgeU16.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTaggedUnion.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devCompositeStruct.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devEnum2.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devFloat1.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devFloat2.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devFloat4.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devEdgeU16.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devTaggedUnion.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devCompositeStruct.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/InputFieldManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/Inputs.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ShortcutManager.hpp \
@@ -357,6 +357,7 @@ external/FlowUi/CMakeFiles/flowui.dir/src/FlowUi.cpp.o: \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devJson.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devBasicButton.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devBasicInputField.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devNumericInput.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devBasicToggle.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devEnum1Input.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devEnum2Input.hpp \
@@ -376,6 +377,7 @@ external/FlowUi/CMakeFiles/flowui.dir/src/FlowUi.cpp.o: \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPropertiesEditableHelpers.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPropertiesHead.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPropertiesContent.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPropertiesCard.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devProperties.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devPanelContent.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFlowElements/devFooter.hpp \

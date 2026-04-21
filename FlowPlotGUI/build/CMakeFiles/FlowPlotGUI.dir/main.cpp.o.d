@@ -314,17 +314,17 @@ CMakeFiles/FlowPlotGUI.dir/main.cpp.o: \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/source_location \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devRuntime.hpp \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/variant \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEnum1.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devEnum1.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/registry.hpp \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/cstring \
   /usr/include/string.h /usr/include/strings.h \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEnum2.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat1.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat2.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devFloat4.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devEdgeU16.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTaggedUnion.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devCompositeStruct.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devEnum2.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devFloat1.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devFloat2.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devFloat4.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devEdgeU16.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devTaggedUnion.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devCompositeStruct.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ImageManager.hpp \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/unordered_set \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/unordered_set.h \

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <FlowUi/Flow.hpp>
+#include <devMode/devApi.hpp>
 
 #include "FlowPlotGui.hpp"
 #include "BuildElements/BasicButton.hpp"
@@ -49,6 +50,40 @@ struct panelTitleParams {
 
 	Clay_Color separatorColor = FlowUi::Flow_Color("#5e646eff");
 };
+
+FLOWUI_DEV_REGISTER_ENUM(
+	panelTitleParams::RightContentMode,
+	FLOWUI_DEV_ENUM_VALUE(panelTitleParams::RightContentMode::None),
+	FLOWUI_DEV_ENUM_VALUE(panelTitleParams::RightContentMode::Button),
+	FLOWUI_DEV_ENUM_VALUE(panelTitleParams::RightContentMode::InputField));
+
+FLOWUI_DEV_REGISTER_STRUCT(
+	panelTitleParams,
+	FLOWUI_DEV_REFLECT_FIELD(panelTitleParams, minHeight),
+	FLOWUI_DEV_REFLECT_FIELD(panelTitleParams, maxHeight),
+	FLOWUI_DEV_REFLECT_FIELD(panelTitleParams, padding),
+	FLOWUI_DEV_REFLECT_FIELD(panelTitleParams, backgroundColor),
+	FLOWUI_DEV_REFLECT_FIELD(panelTitleParams, borderColor),
+	FLOWUI_DEV_REFLECT_FIELD(panelTitleParams, borderWidth),
+	FLOWUI_DEV_REFLECT_FIELD(panelTitleParams, childAlignment),
+	FLOWUI_DEV_REFLECT_FIELD(panelTitleParams, childGap),
+	FLOWUI_DEV_REFLECT_FIELD(panelTitleParams, contentPadding),
+	FLOWUI_DEV_REFLECT_FIELD(panelTitleParams, contentBackgroundColor),
+	FLOWUI_DEV_REFLECT_FIELD(panelTitleParams, contentBorderColor),
+	FLOWUI_DEV_REFLECT_FIELD(panelTitleParams, contentBorderWidth),
+	FLOWUI_DEV_REFLECT_FIELD(panelTitleParams, contentChildAlignment),
+	FLOWUI_DEV_REFLECT_FIELD(panelTitleParams, contentChildGap),
+	FLOWUI_DEV_REFLECT_FIELD(panelTitleParams, leftColumnChildAlignment),
+	FLOWUI_DEV_REFLECT_FIELD(panelTitleParams, leftColumnChildGap),
+	FLOWUI_DEV_REFLECT_FIELD(panelTitleParams, titleText),
+	FLOWUI_DEV_REFLECT_FIELD(panelTitleParams, titleWrapMode),
+	FLOWUI_DEV_REFLECT_FIELD(panelTitleParams, titleAlignment),
+	FLOWUI_DEV_REFLECT_FIELD(panelTitleParams, titleFontId),
+	FLOWUI_DEV_REFLECT_FIELD(panelTitleParams, titleFontSize),
+	FLOWUI_DEV_REFLECT_FIELD(panelTitleParams, titleColor),
+	FLOWUI_DEV_REFLECT_FIELD(panelTitleParams, showSecondaryTitle),
+	FLOWUI_DEV_REFLECT_FIELD(panelTitleParams, rightContentMode),
+	FLOWUI_DEV_REFLECT_FIELD(panelTitleParams, separatorColor));
 
 using PanelTitleDef = FlowUi::ElementDefinition<panelTitleParams, void, void, FLOW_DEF_ID("PanelTitle")>;
 

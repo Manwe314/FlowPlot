@@ -1,6 +1,7 @@
 #pragma once
 
 #include <FlowUi/Flow.hpp>
+#include <devMode/devApi.hpp>
 
 #include "FlowPlotGui.hpp"
 
@@ -12,6 +13,15 @@ struct propsPanelParams {
 struct propsPanelState {
 	int minWidth = 220;
 };
+
+FLOWUI_DEV_REGISTER_STRUCT(
+	propsPanelParams,
+	FLOWUI_DEV_REFLECT_FIELD(propsPanelParams, maxWidth),
+	FLOWUI_DEV_REFLECT_FIELD(propsPanelParams, backgroundColor));
+
+FLOWUI_DEV_REGISTER_STRUCT(
+	propsPanelState,
+	FLOWUI_DEV_REFLECT_FIELD(propsPanelState, minWidth));
 
 using PropsPanelDef = FlowUi::ElementDefinition<
 	propsPanelParams,
