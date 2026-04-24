@@ -6,9 +6,13 @@ struct devPanelContentParams {
 	float defaultHierarchySplitRatio = 0.60f;
 	int defaultHierarchyWidthPx = 280;
 	int minHierarchyWidthPx = 180;
+	int hardMinHierarchyWidthPx = 90;
 	int maxHierarchyWidthPx = 640;
 	int minPropertiesWidthPx = 220;
+	int hardMinPropertiesWidthPx = 120;
 	int separatorThicknessPx = 6;
+	int panelWidthHintPx = 0;
+	int panelHeightHintPx = 0;
 	Clay_Color backgroundColor = FlowUi::Flow_Color("#00000000");
 	Clay_Color hierarchyBackgroundColor = FlowUi::Flow_Color("#00000000");
 	Clay_Color propertiesBackgroundColor = FlowUi::Flow_Color("#00000000");
@@ -19,6 +23,7 @@ struct devPanelContentState {
 	float hierarchySplitRatio = 0.60f;
 	bool hierarchySplitInitialized = false;
 	int lastPanelWidthPx = 0;
+	int lastPanelHeightPx = 0;
 	std::string selectedElementId = "";
 };
 

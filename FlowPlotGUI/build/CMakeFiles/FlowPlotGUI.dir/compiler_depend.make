@@ -22,10 +22,10 @@ CMakeFiles/FlowPlotGUI.dir/main.cpp.o: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/registry.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementSystem.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FontManager.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/IconManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ImageManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/InputFieldManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ShortcutManager.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/SvgManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/UiManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ViewPortManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/IWindow.hpp \
@@ -320,7 +320,9 @@ CMakeFiles/FlowPlotGUI.dir/main.cpp.o: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/
   /usr/include/x86_64-linux-gnu/bits/setjmp.h \
   /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
   /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
+  /usr/include/x86_64-linux-gnu/bits/stdio.h \
   /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
+  /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
   /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
   /usr/include/x86_64-linux-gnu/bits/struct_mutex.h \
   /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h \
@@ -403,10 +405,10 @@ CMakeFiles/FlowPlotGUI.dir/src/iconRegistry.cpp.o: /home/lkukhale/kodi/FlowPlot/
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/registry.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementSystem.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FontManager.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/IconManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ImageManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/InputFieldManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ShortcutManager.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/SvgManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/UiManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ViewPortManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/IWindow.hpp \
@@ -686,7 +688,9 @@ CMakeFiles/FlowPlotGUI.dir/src/iconRegistry.cpp.o: /home/lkukhale/kodi/FlowPlot/
   /usr/include/x86_64-linux-gnu/bits/setjmp.h \
   /usr/include/x86_64-linux-gnu/bits/stdint-intn.h \
   /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
+  /usr/include/x86_64-linux-gnu/bits/stdio.h \
   /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
+  /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
   /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
   /usr/include/x86_64-linux-gnu/bits/struct_mutex.h \
   /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h \
@@ -817,6 +821,8 @@ CMakeFiles/FlowPlotGUI.dir/src/iconRegistry.cpp.o: /home/lkukhale/kodi/FlowPlot/
 
 /usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h:
 
+/usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:
+
 /usr/include/c++/12/bits/utility.h:
 
 /usr/include/c++/12/bits/node_handle.h:
@@ -854,6 +860,8 @@ CMakeFiles/FlowPlotGUI.dir/src/iconRegistry.cpp.o: /home/lkukhale/kodi/FlowPlot/
 external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/bits/stl_iterator_base_types.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/IconManager.hpp:
 
 /usr/include/c++/12/bits/stl_iterator.h:
 
@@ -929,6 +937,10 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/bits/stl_algo.h:
 
+/usr/include/x86_64-linux-gnu/bits/types/__locale_t.h:
+
+/usr/include/c++/12/bits/locale_facets_nonio.h:
+
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/InputFieldManager.hpp:
 
 /usr/include/c++/12/bits/unordered_map.h:
@@ -938,8 +950,6 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /usr/include/c++/12/bits/ios_base.h:
 
 /usr/include/c++/12/bits/ostream.tcc:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/SvgManager.hpp:
 
 /usr/include/linux/errno.h:
 
@@ -1101,6 +1111,12 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/bits/shared_ptr_atomic.h:
 
+/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_h264std_encode.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/UiManager.hpp:
+
+/usr/include/syscall.h:
+
 /usr/include/c++/12/bits/locale_facets.tcc:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlot/FlowPlot_Defaults.hpp:
@@ -1147,6 +1163,10 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_h264std_decode.h:
 
+/usr/include/locale.h:
+
+/usr/include/c++/12/bits/alloc_traits.h:
+
 /home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_h264std.h:
 
 /usr/include/c++/12/bits/concept_check.h:
@@ -1170,16 +1190,6 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /usr/include/c++/12/bits/unique_ptr.h:
 
 /usr/include/stdlib.h:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/UiManager.hpp:
-
-/usr/include/syscall.h:
-
-/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_h264std_encode.h:
-
-/usr/include/c++/12/bits/alloc_traits.h:
-
-/usr/include/locale.h:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/DynamicSeparator.hpp:
 
@@ -1349,10 +1359,6 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/tr1/legendre_function.tcc:
 
-/usr/include/c++/12/bits/locale_facets_nonio.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/__locale_t.h:
-
 /usr/include/c++/12/tr1/poly_hermite.tcc:
 
 /usr/include/c++/12/bits/basic_string.tcc:
@@ -1495,6 +1501,10 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h:
 
+/usr/include/x86_64-linux-gnu/bits/stdio.h:
+
+/usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h:
+
 /usr/include/x86_64-linux-gnu/bits/stdlib-float.h:
 
 /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h:
@@ -1516,5 +1526,3 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /usr/include/x86_64-linux-gnu/bits/types/__FILE.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:

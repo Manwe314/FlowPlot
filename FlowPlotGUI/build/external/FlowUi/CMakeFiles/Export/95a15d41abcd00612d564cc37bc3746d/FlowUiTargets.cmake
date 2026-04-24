@@ -59,10 +59,11 @@ endif()
 add_library(FlowUi::FlowUi STATIC IMPORTED)
 
 set_target_properties(FlowUi::FlowUi PROPERTIES
-  INTERFACE_COMPILE_DEFINITIONS "FLOWUI_PUBLIC_VULKAN_INTEROP=1;FLOWUI_INCLUDE_SVG_MANAGER=1"
+  INTERFACE_COMPILE_DEFINITIONS "FLOWUI_PUBLIC_VULKAN_INTEROP=1;FLOWUI_INCLUDE_ICON_MANAGER=1"
   INTERFACE_COMPILE_FEATURES "cxx_std_23"
   INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include;${_IMPORT_PREFIX}/include/external;${_IMPORT_PREFIX}/include"
   INTERFACE_LINK_LIBRARIES "Vulkan::Vulkan;glfw;FlowUi::artery;\$<LINK_ONLY:plutosvg::plutosvg>"
+  INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "include/external"
 )
 
 # Create imported target FlowUi::artery
@@ -70,6 +71,7 @@ add_library(FlowUi::artery INTERFACE IMPORTED)
 
 set_target_properties(FlowUi::artery PROPERTIES
   INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include/external/artery-font-format;${_IMPORT_PREFIX}/include"
+  INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "include/external/artery-font-format"
 )
 
 # Load information for each installed configuration.

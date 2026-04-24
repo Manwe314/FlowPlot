@@ -468,6 +468,30 @@ src/managers/FontManager.cpp.s:
 	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/src/managers/FontManager.cpp.s
 .PHONY : src/managers/FontManager.cpp.s
 
+src/managers/IconManager.o: src/managers/IconManager.cpp.o
+.PHONY : src/managers/IconManager.o
+
+# target to build an object file
+src/managers/IconManager.cpp.o:
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/src/managers/IconManager.cpp.o
+.PHONY : src/managers/IconManager.cpp.o
+
+src/managers/IconManager.i: src/managers/IconManager.cpp.i
+.PHONY : src/managers/IconManager.i
+
+# target to preprocess a source file
+src/managers/IconManager.cpp.i:
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/src/managers/IconManager.cpp.i
+.PHONY : src/managers/IconManager.cpp.i
+
+src/managers/IconManager.s: src/managers/IconManager.cpp.s
+.PHONY : src/managers/IconManager.s
+
+# target to generate assembly for a file
+src/managers/IconManager.cpp.s:
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/src/managers/IconManager.cpp.s
+.PHONY : src/managers/IconManager.cpp.s
+
 src/managers/ImageManager.o: src/managers/ImageManager.cpp.o
 .PHONY : src/managers/ImageManager.o
 
@@ -539,30 +563,6 @@ src/managers/ShortcutManager.s: src/managers/ShortcutManager.cpp.s
 src/managers/ShortcutManager.cpp.s:
 	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/src/managers/ShortcutManager.cpp.s
 .PHONY : src/managers/ShortcutManager.cpp.s
-
-src/managers/SvgManager.o: src/managers/SvgManager.cpp.o
-.PHONY : src/managers/SvgManager.o
-
-# target to build an object file
-src/managers/SvgManager.cpp.o:
-	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/src/managers/SvgManager.cpp.o
-.PHONY : src/managers/SvgManager.cpp.o
-
-src/managers/SvgManager.i: src/managers/SvgManager.cpp.i
-.PHONY : src/managers/SvgManager.i
-
-# target to preprocess a source file
-src/managers/SvgManager.cpp.i:
-	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/src/managers/SvgManager.cpp.i
-.PHONY : src/managers/SvgManager.cpp.i
-
-src/managers/SvgManager.s: src/managers/SvgManager.cpp.s
-.PHONY : src/managers/SvgManager.s
-
-# target to generate assembly for a file
-src/managers/SvgManager.cpp.s:
-	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/src/managers/SvgManager.cpp.s
-.PHONY : src/managers/SvgManager.cpp.s
 
 src/managers/UiManager.o: src/managers/UiManager.cpp.o
 .PHONY : src/managers/UiManager.o
@@ -708,6 +708,9 @@ help:
 	@echo "... src/managers/FontManager.o"
 	@echo "... src/managers/FontManager.i"
 	@echo "... src/managers/FontManager.s"
+	@echo "... src/managers/IconManager.o"
+	@echo "... src/managers/IconManager.i"
+	@echo "... src/managers/IconManager.s"
 	@echo "... src/managers/ImageManager.o"
 	@echo "... src/managers/ImageManager.i"
 	@echo "... src/managers/ImageManager.s"
@@ -717,9 +720,6 @@ help:
 	@echo "... src/managers/ShortcutManager.o"
 	@echo "... src/managers/ShortcutManager.i"
 	@echo "... src/managers/ShortcutManager.s"
-	@echo "... src/managers/SvgManager.o"
-	@echo "... src/managers/SvgManager.i"
-	@echo "... src/managers/SvgManager.s"
 	@echo "... src/managers/UiManager.o"
 	@echo "... src/managers/UiManager.i"
 	@echo "... src/managers/UiManager.s"

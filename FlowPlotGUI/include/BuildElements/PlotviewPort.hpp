@@ -79,7 +79,6 @@ inline const PlotviewPortDef kPlotviewPort = {
 		rootLayout.childGap = 0;
 
 		Clay_ElementDeclaration root{};
-		root.id = rootId;
 		root.layout = rootLayout;
 		root.backgroundColor = context.params.backgroundColor;
 		root.cornerRadius = CLAY_CORNER_RADIUS(0);
@@ -92,18 +91,17 @@ inline const PlotviewPortDef kPlotviewPort = {
 		};
 
 		Clay_ElementDeclaration viewport{};
-		viewport.id = viewportId;
 		viewport.layout = viewportLayout;
 		viewport.backgroundColor = context.params.viewportColor;
 		viewport.cornerRadius = CLAY_CORNER_RADIUS(0);
 		viewport.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
 
-		CLAY(root){
+		CLAY(rootId, root){
 			resources.titleBuilder
 				.withElementID(titlePath)
 				.draw();
 
-			CLAY(viewport){};
+			CLAY(viewportId, viewport){};
 		};
 	},
 };

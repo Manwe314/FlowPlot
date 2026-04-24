@@ -477,8 +477,16 @@ inline const DevPropertiesCardDef kDevPropertiesCard = {
 			runtime,
 			context.params.selection,
 			context.params.fieldHash);
-		const devPropertiesCardInputType inputType =
-			devPropertiesCardInputTypeFromFieldTypeHash(context.params.fieldTypeHash);
+			const devPropertiesCardInputType inputType =
+				devPropertiesCardInputTypeFromFieldTypeHash(context.params.fieldTypeHash);
+			const bool isColorField =
+				context.params.fieldTypeHash == FlowUi::devMode::typeHash<Clay_Color>();
+			const bool isCornerRadiusField =
+				context.params.fieldTypeHash == FlowUi::devMode::typeHash<Clay_CornerRadius>();
+			const bool isPaddingField =
+				context.params.fieldTypeHash == FlowUi::devMode::typeHash<Clay_Padding>();
+			const bool isBorderWidthField =
+				context.params.fieldTypeHash == FlowUi::devMode::typeHash<Clay_BorderWidth>();
 
 		bool toggleDefaultEnabled = false;
 		if (fieldValue.has_value())
@@ -657,6 +665,14 @@ inline const DevPropertiesCardDef kDevPropertiesCard = {
 					float4ThirdValue = float4Value.third;
 					float4FourthValue = float4Value.fourth;
 				}
+
+				if (isColorField)
+				{
+					float4FirstHintText = "Red";
+					float4SecondHintText = "Green";
+					float4ThirdHintText = "Blue";
+					float4FourthHintText = "Alpha";
+				}
 			}
 
 			std::string edgeFirstHintText = "first";
@@ -695,12 +711,126 @@ inline const DevPropertiesCardDef kDevPropertiesCard = {
 				}
 			}
 
-		Clay_ElementDeclaration root{};
-		root.id = context.uiManager.toClayEID(context.elementID);
-		root.layout.sizing = {
-			.width = CLAY_SIZING_GROW(0),
-			.height = CLAY_SIZING_FIT(0),
-		};
+			uint64_t taggedUnionTagEnumTypeHash = 0u;
+			std::string taggedUnionTypeHintText = "type";
+			std::string taggedUnionMinHintText = "min";
+			std::string taggedUnionMaxHintText = "max";
+			std::string taggedUnionPercentHintText = "precentage";
+			std::vector<devEnum1InputOption> taggedUnionTypeOptions{};
+			uint8_t taggedUnionInitialTagNumeric = static_cast<uint8_t>(CLAY__SIZING_TYPE_FIT);
+			double taggedUnionInitialMinValue = 0.0;
+			double taggedUnionInitialMaxValue = 0.0;
+			double taggedUnionInitialPercentValue = 0.0;
+			std::string taggedUnionSelectedTypeValue{};
+			std::string taggedUnionSelectedTypeLabel{};
+			bool taggedUnionUsesPercentEditor = false;
+			if (inputType == devPropertiesCardInputType::TaggedUnion)
+			{
+				const FlowUi::devMode::DevTaggedUnionTypeInfo* info =
+					FlowUi::devMode::findDevTaggedUnionTypeInfo(context.params.fieldTypeHash);
+				if (info != nullptr)
+				{
+					taggedUnionTagEnumTypeHash = info->tagEnumTypeHash;
+					if (!info->tagFieldName.empty())
+					{
+						taggedUnionTypeHintText = std::string(info->tagFieldName);
+					}
+					if (!info->minFieldName.empty())
+					{
+						taggedUnionMinHintText = std::string(info->minFieldName);
+					}
+					if (!info->maxFieldName.empty())
+					{
+						taggedUnionMaxHintText = std::string(info->maxFieldName);
+					}
+					taggedUnionTypeOptions = devEnum1OptionsForFieldType(taggedUnionTagEnumTypeHash);
+				}
+
+				FlowUi::devMode::DevTaggedUnionValue taggedValue{};
+				if (
+					fieldValue.has_value() &&
+					tryCoerceDevValueToTaggedUnionValue(
+						context.params.fieldTypeHash,
+						*fieldValue,
+						taggedValue))
+				{
+					taggedUnionInitialTagNumeric = taggedValue.tag.numeric;
+					taggedUnionInitialMinValue = taggedValue.minMax.first;
+					taggedUnionInitialMaxValue = taggedValue.minMax.second;
+					taggedUnionInitialPercentValue = taggedValue.percent;
+				}
+				else if (taggedUnionTagEnumTypeHash != 0u)
+				{
+					uint8_t fitNumeric = 0u;
+					if (FlowUi::devMode::tryDevEnum1NameToValue(
+						taggedUnionTagEnumTypeHash,
+						"CLAY__SIZING_TYPE_FIT",
+						fitNumeric))
+					{
+						taggedUnionInitialTagNumeric = fitNumeric;
+					}
+				}
+
+				if (taggedUnionTagEnumTypeHash != 0u)
+				{
+					std::string_view tagName{};
+					if (FlowUi::devMode::tryDevEnum1ValueToName(
+						taggedUnionTagEnumTypeHash,
+						taggedUnionInitialTagNumeric,
+						tagName))
+					{
+						taggedUnionSelectedTypeValue = std::string(tagName);
+					}
+				}
+				if (taggedUnionSelectedTypeValue.empty() && !taggedUnionTypeOptions.empty())
+				{
+					taggedUnionSelectedTypeValue = taggedUnionTypeOptions.front().value;
+					uint8_t normalizedTag = 0u;
+					if (
+						taggedUnionTagEnumTypeHash != 0u &&
+						FlowUi::devMode::tryDevEnum1NameToValue(
+							taggedUnionTagEnumTypeHash,
+							taggedUnionSelectedTypeValue,
+							normalizedTag))
+					{
+						taggedUnionInitialTagNumeric = normalizedTag;
+					}
+				}
+
+				taggedUnionSelectedTypeLabel = devEnum1OptionLabelForValue(
+					taggedUnionTagEnumTypeHash,
+					taggedUnionSelectedTypeValue);
+				taggedUnionUsesPercentEditor =
+					FlowUi::devMode::devSizingAxisTagUsesPercent(taggedUnionInitialTagNumeric);
+			}
+
+			FlowUi::devMode::DevCompositeStructValue compositeInitialValue{};
+			if (inputType == devPropertiesCardInputType::CompositeStruct)
+			{
+				compositeInitialValue.typeHash = context.params.fieldTypeHash;
+				if (fieldValue.has_value())
+				{
+					(void)tryCoerceDevValueToCompositeStructValue(
+						context.params.fieldTypeHash,
+						*fieldValue,
+						compositeInitialValue);
+				}
+				FlowUi::devMode::DevCompositeStructValue normalizedComposite{};
+				if (FlowUi::devMode::tryMakeDevCompositeStructValue(
+					context.params.fieldTypeHash,
+					compositeInitialValue,
+					normalizedComposite))
+				{
+					compositeInitialValue = normalizedComposite;
+				}
+			}
+
+			Clay_ElementDeclaration root{};
+			const Clay_ElementId rootId = context.uiManager.toClayEID(context.elementID);
+			root.layout.sizing = {
+				.width = CLAY_SIZING_GROW(0),
+				.height = CLAY_SIZING_FIT(0),
+			};
 		root.layout.layoutDirection = CLAY_TOP_TO_BOTTOM;
 		root.layout.padding = context.params.padding;
 		root.layout.childGap = context.params.rowGap;
@@ -732,9 +862,9 @@ inline const DevPropertiesCardDef kDevPropertiesCard = {
 		valueTextConfig.wrapMode = CLAY_TEXT_WRAP_WORDS;
 		valueTextConfig.textAlignment = CLAY_TEXT_ALIGN_LEFT;
 
-		CLAY(root){
+		CLAY(rootId, root){
 			Clay_ElementDeclaration infoRow{};
-			infoRow.id = context.uiManager.toClayEID(context.createChildElementId("row/info"));
+			const Clay_ElementId infoRowId = context.uiManager.toClayEID(context.createChildElementId("row/info"));
 			infoRow.layout.sizing = {
 				.width = CLAY_SIZING_GROW(0),
 				.height = CLAY_SIZING_FIT(0),
@@ -747,12 +877,11 @@ inline const DevPropertiesCardDef kDevPropertiesCard = {
 			};
 			infoRow.backgroundColor = FlowUi::Flow_Color("#00000000");
 
-			CLAY(infoRow){
-				CLAY({
-					.id = context.uiManager.toClayEID(context.createChildElementId("row/info/name")),
-					.layout = {
-						.sizing = {
-							.width = CLAY_SIZING_GROW(0),
+				CLAY(infoRowId, infoRow){
+					CLAY(context.uiManager.toClayEID(context.createChildElementId("row/info/name")), {
+						.layout = {
+							.sizing = {
+								.width = CLAY_SIZING_GROW(0),
 							.height = CLAY_SIZING_FIT(0),
 						},
 					},
@@ -762,21 +891,19 @@ inline const DevPropertiesCardDef kDevPropertiesCard = {
 						CLAY_TEXT_CONFIG(nameTextConfig));
 				};
 
-				CLAY({
-					.id = context.uiManager.toClayEID(context.createChildElementId("row/info/spacer")),
-					.layout = {
-						.sizing = {
-							.width = CLAY_SIZING_GROW(0),
+					CLAY(context.uiManager.toClayEID(context.createChildElementId("row/info/spacer")), {
+						.layout = {
+							.sizing = {
+								.width = CLAY_SIZING_GROW(0),
 							.height = CLAY_SIZING_FIT(0),
 						},
 					},
 				}){};
 
-				CLAY({
-					.id = context.uiManager.toClayEID(context.createChildElementId("row/info/type")),
-					.layout = {
-						.sizing = {
-							.width = CLAY_SIZING_FIT(0),
+					CLAY(context.uiManager.toClayEID(context.createChildElementId("row/info/type")), {
+						.layout = {
+							.sizing = {
+								.width = CLAY_SIZING_FIT(0),
 							.height = CLAY_SIZING_FIT(0),
 						},
 					},
@@ -792,7 +919,7 @@ inline const DevPropertiesCardDef kDevPropertiesCard = {
 			};
 
 			Clay_ElementDeclaration valueRow{};
-			valueRow.id = context.uiManager.toClayEID(context.createChildElementId("row/value"));
+			const Clay_ElementId valueRowId = context.uiManager.toClayEID(context.createChildElementId("row/value"));
 			valueRow.layout.sizing = {
 				.width = CLAY_SIZING_GROW(0),
 				.height = CLAY_SIZING_FIT(0),
@@ -804,7 +931,7 @@ inline const DevPropertiesCardDef kDevPropertiesCard = {
 			};
 			valueRow.backgroundColor = FlowUi::Flow_Color("#00000000");
 
-				CLAY(valueRow){
+				CLAY(valueRowId, valueRow){
 					switch (inputType)
 					{
 				case devPropertiesCardInputType::Toggle:
@@ -1147,12 +1274,12 @@ inline const DevPropertiesCardDef kDevPropertiesCard = {
 							})
 							.draw();
 						break;
-					case devPropertiesCardInputType::Float4:
-						context.uiManager
-							.createElement(
-								kDevFloat4Input,
-								context.createChildElementId("value/float4/" + context.params.fieldIdentity))
-							.setParameters(devFloat4InputParams{
+						case devPropertiesCardInputType::Float4:
+							context.uiManager
+								.createElement(
+									kDevFloat4Input,
+									context.createChildElementId("value/float4/" + context.params.fieldIdentity))
+								.setParameters(devFloat4InputParams{
 								.fieldIdPrefix = "flowui/dev/input/" + context.params.fieldIdentity + "/float4",
 								.firstHintText = float4FirstHintText,
 								.secondHintText = float4SecondHintText,
@@ -1162,7 +1289,7 @@ inline const DevPropertiesCardDef kDevPropertiesCard = {
 								.secondValue = float4SecondValue,
 								.thirdValue = float4ThirdValue,
 								.fourthValue = float4FourthValue,
-								.onValueQuadChangedCallback = [
+									.onValueQuadChangedCallback = [
 									uiManager = &context.uiManager,
 									selection = context.params.selection,
 									fieldHash = context.params.fieldHash,
@@ -1224,21 +1351,25 @@ inline const DevPropertiesCardDef kDevPropertiesCard = {
 										selection,
 										fieldHash,
 										parsedValue);
-								},
-								.sizing = context.params.valueEditorSizing,
-								.fontId = context.params.fontId,
-								.fontSize = context.params.fontSize,
-								.hintTextColor = context.params.typeTextColor,
-								.valueTextColor = context.params.valueTextColor,
-							})
+									},
+									.useColorEditor = isColorField,
+									.colorHexHintText = std::string("Hex code"),
+									.useNineSplitCorners = isCornerRadiusField,
+									.nineSplitHintText = std::string("Corner radii:"),
+									.sizing = context.params.valueEditorSizing,
+									.fontId = context.params.fontId,
+									.fontSize = context.params.fontSize,
+									.hintTextColor = context.params.typeTextColor,
+									.valueTextColor = context.params.valueTextColor,
+								})
 							.draw();
 						break;
-					case devPropertiesCardInputType::EdgeU16:
-						context.uiManager
-							.createElement(
-								kDevEdgeU16Input,
-								context.createChildElementId("value/edge_u16/" + context.params.fieldIdentity))
-							.setParameters(devEdgeU16InputParams{
+						case devPropertiesCardInputType::EdgeU16:
+							context.uiManager
+								.createElement(
+									kDevEdgeU16Input,
+									context.createChildElementId("value/edge_u16/" + context.params.fieldIdentity))
+								.setParameters(devEdgeU16InputParams{
 								.fieldIdPrefix = "flowui/dev/input/" + context.params.fieldIdentity + "/edge",
 								.firstHintText = edgeFirstHintText,
 								.secondHintText = edgeSecondHintText,
@@ -1251,7 +1382,7 @@ inline const DevPropertiesCardDef kDevPropertiesCard = {
 								.thirdValue = edgeThirdValue,
 								.fourthValue = edgeFourthValue,
 								.fifthValue = edgeFifthValue,
-								.onValueChangedCallback = [
+									.onValueChangedCallback = [
 									uiManager = &context.uiManager,
 									selection = context.params.selection,
 									fieldHash = context.params.fieldHash,
@@ -1305,10 +1436,16 @@ inline const DevPropertiesCardDef kDevPropertiesCard = {
 										fieldHash,
 										parsedValue);
 								},
-								.sizing = context.params.valueEditorSizing,
-								.fontId = context.params.fontId,
-								.fontSize = context.params.fontSize,
-								.hintTextColor = context.params.typeTextColor,
+									.useNineSplitEdges = isPaddingField || isBorderWidthField,
+									.showFifthAfterNineSplit = isBorderWidthField,
+									.nineSplitHintText =
+										isPaddingField
+										? std::string("Padding:")
+										: std::string("Border widths:"),
+									.sizing = context.params.valueEditorSizing,
+									.fontId = context.params.fontId,
+									.fontSize = context.params.fontSize,
+									.hintTextColor = context.params.typeTextColor,
 								.valueTextColor = context.params.valueTextColor,
 							})
 							.draw();
@@ -1318,13 +1455,276 @@ inline const DevPropertiesCardDef kDevPropertiesCard = {
 						.createElement(
 							kDevTaggedUnionInput,
 							context.createChildElementId("value/tagged_union/" + context.params.fieldIdentity))
-						.setParameters(devTaggedUnionInputParams{
-							.text = fieldDisplayText.empty() ? std::string("<tagged union>") : fieldDisplayText,
+							.setParameters(devTaggedUnionInputParams{
+								.fieldIdPrefix = "flowui/dev/input/" + context.params.fieldIdentity + "/tagged",
+								.tagHintText = taggedUnionTypeHintText,
+								.selectedTagValue = taggedUnionSelectedTypeValue,
+								.selectedTagLabel = taggedUnionSelectedTypeLabel,
+								.tagOptions = taggedUnionTypeOptions,
+								.onTagChangedCallback = [
+								uiManager = &context.uiManager,
+								selection = context.params.selection,
+								fieldHash = context.params.fieldHash,
+								fieldTypeHash = context.params.fieldTypeHash,
+								tagEnumTypeHash = taggedUnionTagEnumTypeHash,
+								initialTagNumeric = static_cast<int64_t>(taggedUnionInitialTagNumeric),
+								initialMinValue = taggedUnionInitialMinValue,
+								initialMaxValue = taggedUnionInitialMaxValue,
+								initialPercentValue = taggedUnionInitialPercentValue
+							](std::string_view typeName) {
+								if (tagEnumTypeHash == 0u)
+								{
+									return;
+								}
+
+								uint8_t nextTagNumeric = 0u;
+								if (!FlowUi::devMode::tryDevEnum1NameToValue(tagEnumTypeHash, typeName, nextTagNumeric))
+								{
+									return;
+								}
+
+								FlowUi::devMode::DevRuntime& runtime = uiManager->devRuntime();
+								const std::optional<FlowUi::devMode::DevValue> currentValue =
+									findCurrentEditableFieldValue(runtime, selection, fieldHash);
+
+								FlowUi::devMode::DevTaggedUnionValue baseValue{};
+								bool hasBaseValue = false;
+								if (currentValue.has_value())
+								{
+									hasBaseValue = tryCoerceDevValueToTaggedUnionValue(
+										fieldTypeHash,
+										*currentValue,
+										baseValue);
+								}
+								if (!hasBaseValue)
+								{
+									hasBaseValue = FlowUi::devMode::tryMakeDevTaggedUnionValue(
+										fieldTypeHash,
+										initialTagNumeric,
+										initialMinValue,
+										initialMaxValue,
+										initialPercentValue,
+										baseValue);
+								}
+								if (!hasBaseValue)
+								{
+									return;
+								}
+
+								FlowUi::devMode::DevTaggedUnionValue parsed{};
+								if (!FlowUi::devMode::tryMakeDevTaggedUnionValue(
+									fieldTypeHash,
+									static_cast<int64_t>(nextTagNumeric),
+									baseValue.minMax.first,
+									baseValue.minMax.second,
+									baseValue.percent,
+									parsed))
+								{
+									return;
+								}
+								const FlowUi::devMode::DevValue parsedValue = parsed;
+
+								if (currentValue.has_value())
+								{
+									if (devValuesEquivalentForEditableField(
+										fieldTypeHash,
+										*currentValue,
+										parsedValue))
+									{
+										return;
+									}
+								}
+								else
+								{
+									const FlowUi::devMode::DevValue initialValue = baseValue;
+									if (devValuesEquivalentForEditableField(
+										fieldTypeHash,
+										initialValue,
+										parsedValue))
+									{
+										return;
+									}
+								}
+
+								setEditableFieldOverride(
+									runtime,
+									selection,
+									fieldHash,
+									parsedValue);
+							},
+							.usePercentEditor = taggedUnionUsesPercentEditor,
+							.minHintText = taggedUnionMinHintText,
+							.maxHintText = taggedUnionMaxHintText,
+							.minValue = taggedUnionInitialMinValue,
+							.maxValue = taggedUnionInitialMaxValue,
+							.onMinMaxChangedCallback = [
+								uiManager = &context.uiManager,
+								selection = context.params.selection,
+								fieldHash = context.params.fieldHash,
+								fieldTypeHash = context.params.fieldTypeHash,
+								initialTagNumeric = static_cast<int64_t>(taggedUnionInitialTagNumeric),
+								initialMinValue = taggedUnionInitialMinValue,
+								initialMaxValue = taggedUnionInitialMaxValue,
+								initialPercentValue = taggedUnionInitialPercentValue
+							](double minValue, double maxValue) {
+								FlowUi::devMode::DevRuntime& runtime = uiManager->devRuntime();
+								const std::optional<FlowUi::devMode::DevValue> currentValue =
+									findCurrentEditableFieldValue(runtime, selection, fieldHash);
+
+								FlowUi::devMode::DevTaggedUnionValue baseValue{};
+								bool hasBaseValue = false;
+								if (currentValue.has_value())
+								{
+									hasBaseValue = tryCoerceDevValueToTaggedUnionValue(
+										fieldTypeHash,
+										*currentValue,
+										baseValue);
+								}
+								if (!hasBaseValue)
+								{
+									hasBaseValue = FlowUi::devMode::tryMakeDevTaggedUnionValue(
+										fieldTypeHash,
+										initialTagNumeric,
+										initialMinValue,
+										initialMaxValue,
+										initialPercentValue,
+										baseValue);
+								}
+								if (!hasBaseValue)
+								{
+									return;
+								}
+
+								FlowUi::devMode::DevTaggedUnionValue parsed{};
+								if (!FlowUi::devMode::tryMakeDevTaggedUnionValue(
+									fieldTypeHash,
+									static_cast<int64_t>(baseValue.tag.numeric),
+									minValue,
+									maxValue,
+									baseValue.percent,
+									parsed))
+								{
+									return;
+								}
+								const FlowUi::devMode::DevValue parsedValue = parsed;
+
+								if (currentValue.has_value())
+								{
+									if (devValuesEquivalentForEditableField(
+										fieldTypeHash,
+										*currentValue,
+										parsedValue))
+									{
+										return;
+									}
+								}
+								else
+								{
+									const FlowUi::devMode::DevValue initialValue = baseValue;
+									if (devValuesEquivalentForEditableField(
+										fieldTypeHash,
+										initialValue,
+										parsedValue))
+									{
+										return;
+									}
+								}
+
+								setEditableFieldOverride(
+									runtime,
+									selection,
+									fieldHash,
+									parsedValue);
+							},
+							.percentHintText = taggedUnionPercentHintText,
+							.percentValue = taggedUnionInitialPercentValue,
+							.onPercentChangedCallback = [
+								uiManager = &context.uiManager,
+								selection = context.params.selection,
+								fieldHash = context.params.fieldHash,
+								fieldTypeHash = context.params.fieldTypeHash,
+								initialTagNumeric = static_cast<int64_t>(taggedUnionInitialTagNumeric),
+								initialMinValue = taggedUnionInitialMinValue,
+								initialMaxValue = taggedUnionInitialMaxValue,
+								initialPercentValue = taggedUnionInitialPercentValue
+							](double percentValue) {
+								FlowUi::devMode::DevRuntime& runtime = uiManager->devRuntime();
+								const std::optional<FlowUi::devMode::DevValue> currentValue =
+									findCurrentEditableFieldValue(runtime, selection, fieldHash);
+
+								FlowUi::devMode::DevTaggedUnionValue baseValue{};
+								bool hasBaseValue = false;
+								if (currentValue.has_value())
+								{
+									hasBaseValue = tryCoerceDevValueToTaggedUnionValue(
+										fieldTypeHash,
+										*currentValue,
+										baseValue);
+								}
+								if (!hasBaseValue)
+								{
+									hasBaseValue = FlowUi::devMode::tryMakeDevTaggedUnionValue(
+										fieldTypeHash,
+										initialTagNumeric,
+										initialMinValue,
+										initialMaxValue,
+										initialPercentValue,
+										baseValue);
+								}
+								if (!hasBaseValue)
+								{
+									return;
+								}
+
+								FlowUi::devMode::DevTaggedUnionValue parsed{};
+								if (!FlowUi::devMode::tryMakeDevTaggedUnionValue(
+									fieldTypeHash,
+									static_cast<int64_t>(baseValue.tag.numeric),
+									baseValue.minMax.first,
+									baseValue.minMax.second,
+									percentValue,
+									parsed))
+								{
+									return;
+								}
+								const FlowUi::devMode::DevValue parsedValue = parsed;
+
+								if (currentValue.has_value())
+								{
+									if (devValuesEquivalentForEditableField(
+										fieldTypeHash,
+										*currentValue,
+										parsedValue))
+									{
+										return;
+									}
+								}
+								else
+								{
+									const FlowUi::devMode::DevValue initialValue = baseValue;
+									if (devValuesEquivalentForEditableField(
+										fieldTypeHash,
+										initialValue,
+										parsedValue))
+									{
+										return;
+									}
+								}
+
+								setEditableFieldOverride(
+									runtime,
+									selection,
+									fieldHash,
+									parsedValue);
+							},
 							.sizing = context.params.valueEditorSizing,
-							.textWrapMode = CLAY_TEXT_WRAP_WORDS,
+							.tagInputSizing = context.params.valueEditorSizing,
+							.minMaxInputSizing = context.params.valueEditorSizing,
+							.percentInputSizing = context.params.valueEditorSizing,
 							.fontId = context.params.fontId,
 							.fontSize = context.params.fontSize,
-							.textColor = context.params.valueTextColor,
+							.hintTextColor = context.params.typeTextColor,
+							.valueTextColor = context.params.valueTextColor,
 						})
 						.draw();
 					break;
@@ -1334,19 +1734,69 @@ inline const DevPropertiesCardDef kDevPropertiesCard = {
 							kDevCompositeStructInput,
 							context.createChildElementId("value/composite/" + context.params.fieldIdentity))
 						.setParameters(devCompositeStructInputParams{
-							.text = fieldDisplayText.empty() ? std::string("<composite struct>") : fieldDisplayText,
+							.fieldIdPrefix = "flowui/dev/input/" + context.params.fieldIdentity + "/composite",
+							.fieldTypeHash = context.params.fieldTypeHash,
+							.value = compositeInitialValue,
+							.onValueChangedCallback = [
+								uiManager = &context.uiManager,
+								selection = context.params.selection,
+								fieldHash = context.params.fieldHash,
+								fieldTypeHash = context.params.fieldTypeHash,
+								baseValue = compositeInitialValue
+							](const FlowUi::devMode::DevCompositeStructValue& changedValue) {
+								FlowUi::devMode::DevCompositeStructValue parsedValue{};
+								if (!FlowUi::devMode::tryMakeDevCompositeStructValue(
+									fieldTypeHash,
+									changedValue,
+									parsedValue))
+								{
+									return;
+								}
+								const FlowUi::devMode::DevValue wrappedParsedValue = parsedValue;
+
+								FlowUi::devMode::DevRuntime& runtime = uiManager->devRuntime();
+								const std::optional<FlowUi::devMode::DevValue> currentValue =
+									findCurrentEditableFieldValue(runtime, selection, fieldHash);
+								if (currentValue.has_value())
+								{
+									if (devValuesEquivalentForEditableField(
+										fieldTypeHash,
+										*currentValue,
+										wrappedParsedValue))
+									{
+										return;
+									}
+								}
+								else
+								{
+									const FlowUi::devMode::DevValue initialValue = baseValue;
+									if (devValuesEquivalentForEditableField(
+										fieldTypeHash,
+										initialValue,
+										wrappedParsedValue))
+									{
+										return;
+									}
+								}
+
+								setEditableFieldOverride(
+									runtime,
+									selection,
+									fieldHash,
+									wrappedParsedValue);
+							},
 							.sizing = context.params.valueEditorSizing,
-							.textWrapMode = CLAY_TEXT_WRAP_WORDS,
 							.fontId = context.params.fontId,
 							.fontSize = context.params.fontSize,
-							.textColor = context.params.valueTextColor,
+							.hintTextColor = context.params.typeTextColor,
+							.valueTextColor = context.params.valueTextColor,
 						})
 						.draw();
 					break;
 				case devPropertiesCardInputType::Unsupported:
-					CLAY({
-						.id = context.uiManager.toClayEID(
+					CLAY(context.uiManager.toClayEID(
 							context.createChildElementId("value/unsupported/" + context.params.fieldIdentity)),
+						{
 						.layout = {
 							.sizing = {
 								.width = context.params.valueEditorSizing.width,

@@ -55,11 +55,11 @@ set_target_properties(plutosvg::plutosvg PROPERTIES
   INTERFACE_LINK_LIBRARIES "plutovg::plutovg;\$<LINK_ONLY:m>"
 )
 
-# Import target "plutosvg::plutosvg" for configuration ""
-set_property(TARGET plutosvg::plutosvg APPEND PROPERTY IMPORTED_CONFIGURATIONS NOCONFIG)
+# Import target "plutosvg::plutosvg" for configuration "Release"
+set_property(TARGET plutosvg::plutosvg APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
 set_target_properties(plutosvg::plutosvg PROPERTIES
-  IMPORTED_LINK_INTERFACE_LANGUAGES_NOCONFIG "C"
-  IMPORTED_LOCATION_NOCONFIG "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/external/plutosvg/libplutosvg.a"
+  IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "C"
+  IMPORTED_LOCATION_RELEASE "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/external/plutosvg/libplutosvg.a"
   )
 
 # Make sure the targets which have been exported in some other

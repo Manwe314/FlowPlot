@@ -57,7 +57,6 @@ inline const PropsPanelDef kPropsPanel = {
 		layout.childAlignment = {.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_TOP};
 
 		Clay_ElementDeclaration root{};
-		root.id = context.uiManager.toClayEID(context.elementID);
 		root.layout = layout;
 		root.backgroundColor = context.params.backgroundColor;
 		root.cornerRadius = CLAY_CORNER_RADIUS(0);

@@ -67,6 +67,7 @@
 *.swp
 *.swo
 *~
+.codex
 
 # -----------------------------
 # OS-generated files

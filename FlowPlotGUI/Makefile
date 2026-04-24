@@ -8,9 +8,11 @@ BUILD_BIN := $(BUILD_DIR)/$(TARGET)
 APP_BIN := ./$(TARGET)
 VULKAN_ENV_SCRIPT := ./external/FlowUi/tools/scripts/vulkan_env.sh
 VULKAN_SOURCE_CMD := source $(VULKAN_ENV_SCRIPT)
+FLOWUI_DEV_CHANGE_UPDATER := ./external/FlowUi/flowui_devChange_updater
+FLOWUI_OVERRIDES := ./.flowui/overrides.v1.json
 JOBS ?= $(shell nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)
 
-.PHONY: all precheck configure build clean fclean re run rerun
+.PHONY: all precheck configure build clean fclean re run rerun update
 
 all: build
 
@@ -63,3 +65,6 @@ fclean: clean
 re: fclean all
 
 rerun: fclean run
+
+update:
+> $(FLOWUI_DEV_CHANGE_UPDATER) $(FLOWUI_OVERRIDES)

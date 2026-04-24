@@ -3,8 +3,8 @@
 #include "FlowUi/BuildConfig.hpp"
 #include "managers/FontManager.hpp"
 #include "managers/ImageManager.hpp"
-#if FLOWUI_INCLUDE_SVG_MANAGER
-#include "managers/SvgManager.hpp"
+#if FLOWUI_INCLUDE_ICON_MANAGER
+#include "managers/IconManager.hpp"
 #endif
 #include "managers/ViewPortManager.hpp"
 #include "managers/UiManager.hpp"
@@ -353,7 +353,7 @@ struct App::Impl {
 	FontManager fonts;
 	ImageManager imageManager;
 	ViewPortManager viewPortManager;
-#if FLOWUI_INCLUDE_SVG_MANAGER
+#if FLOWUI_INCLUDE_ICON_MANAGER
 	IconManager icons;
 #endif
 	FrameInput frameInputForCurrentFrame{};
@@ -390,6 +390,12 @@ struct App::Impl {
 					}
 					return window->getClipboardText();
 				});
+			ui.setCursorAccessor(
+				[this](CursorType cursorType) {
+					if (window) {
+						window->setCursorType(cursorType);
+					}
+				});
 
 		// 2) instance/surface/device
 		vk.createInstance(config, window->requiredInstanceExtensions());
@@ -413,9 +419,9 @@ struct App::Impl {
 		fonts.init(vk, config.ui.fontAtlasSize);
 		ui.setFontManager(&fonts);
 		renderer.setFontManager(&fonts);
-#if FLOWUI_INCLUDE_SVG_MANAGER
+#if FLOWUI_INCLUDE_ICON_MANAGER
 		icons.setRegistry(&textureRegistry);
-		icons.init(vk, config.svgManager);
+		icons.init(vk, config.iconManager);
 #endif
 
 		bool defaultFontLoaded = false;
@@ -504,6 +510,7 @@ struct App::Impl {
 		frameInputForCurrentFrame = inputQueue.drain(deltaTimeSeconds);
 
 		const float inverseClampedUiScale = 1 / std::max(1.0e-6f, config.ui.uiScale);
+		constexpr float kBaseScrollSensitivity = 20.0f;
 		const VkExtent2D windowExtent = window->windowExtent();
 		const VkExtent2D framebufferExtent = window->framebufferExtent();
 		if (framebufferExtent.width != observedFramebufferExtent.width ||
@@ -523,8 +530,8 @@ struct App::Impl {
 		FrameInput frameInputForLayout = frameInputForCurrentFrame;
 		frameInputForLayout.mouseX *= inverseClampedUiScale;
 		frameInputForLayout.mouseY *= inverseClampedUiScale;
-		frameInputForLayout.scrollX *= inverseClampedUiScale;
-		frameInputForLayout.scrollY *= inverseClampedUiScale;
+		frameInputForLayout.scrollX *= inverseClampedUiScale * kBaseScrollSensitivity;
+		frameInputForLayout.scrollY *= inverseClampedUiScale * kBaseScrollSensitivity;
 		ui.beginFrame(frameSlot, frameInputForLayout, layoutWidth, layoutHeight);
 	}
 
@@ -534,7 +541,7 @@ struct App::Impl {
 			renderCommandsForCurrentFrame,
 			uiToFramebufferScaleX,
 			uiToFramebufferScaleY);
-#if FLOWUI_INCLUDE_SVG_MANAGER
+#if FLOWUI_INCLUDE_ICON_MANAGER
 		icons.prepareFrameTextures(
 			renderCommandsForCurrentFrame,
 			uiToFramebufferScaleX,
@@ -558,7 +565,7 @@ struct App::Impl {
 			}
 		}
 
-		FrameVk::Frame& frame = frames.getCurrantFrame();
+		FrameVk::Frame& frame = frames.getCurrentFrame();
 		vkCheck(
 			vkWaitForFences(vk.device, 1, &frame.inFlight, VK_TRUE, UINT64_MAX),
 			"Failed to wait for in-flight fence.");
@@ -696,7 +703,7 @@ struct App::Impl {
 
 		viewPortManager.destroy(vk);
 		imageManager.destroy(vk);
-#if FLOWUI_INCLUDE_SVG_MANAGER
+#if FLOWUI_INCLUDE_ICON_MANAGER
 		icons.destroy(vk);
 #endif
 		textureRegistry.destroy(vk);
@@ -777,7 +784,7 @@ const ImageManager& App::images() const {
 	return impl_->imageManager;
 }
 
-#if FLOWUI_INCLUDE_SVG_MANAGER
+#if FLOWUI_INCLUDE_ICON_MANAGER
 IconManager& App::icons() {
 	if (!impl_) {
 		throw std::runtime_error("FlowUi::App not initialized.");

@@ -175,13 +175,12 @@ inline const DynamicSeparatorDef kDynamicSeparator = {
 		}
 
 		Clay_ElementDeclaration root{};
-		root.id = rootId;
 		root.layout = rootLayout;
 		root.backgroundColor = separatorColor;
 		root.cornerRadius = CLAY_CORNER_RADIUS(0);
 		root.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
 
-		CLAY(root){};
+		CLAY(rootId, root){};
 	},
 };
 

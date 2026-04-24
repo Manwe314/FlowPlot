@@ -29,6 +29,7 @@ struct basicButtonParams {
 	Clay_Padding padding = CLAY_PADDING_ALL(10);
 	Clay_Sizing sizing = Clay_Sizing{.width = CLAY_SIZING_FIT(0), .height = CLAY_SIZING_FIT(0)};
 	Clay_Color backgroundColor = FlowUi::Flow_Color("#cfcfcfff");
+	Clay_Color hoverBackgroundColor = FlowUi::Flow_Color("#969696ff");
 	Clay_CornerRadius cornerRadius = CLAY_CORNER_RADIUS(6);
 	Clay_Color borderColor = FlowUi::Flow_Color("#8f8d8dff");
 	Clay_BorderWidth borderWidth = Clay_BorderWidth{1, 1, 1, 1, 0};
@@ -43,15 +44,6 @@ struct basicButtonParams {
 	Clay_Color textColor = FlowUi::Flow_Color("#000000ff");
 
 	Clay_Sizing iconContainerSizing = Clay_Sizing{.width = CLAY_SIZING_FIXED(18), .height = CLAY_SIZING_FIXED(18)};
-	Clay_Padding iconContainerPadding = CLAY_PADDING_ALL(0);
-	Clay_LayoutDirection iconContainerChildLayoutDirection = CLAY_LEFT_TO_RIGHT;
-	Clay_ChildAlignment iconContainerChildAlignment = Clay_ChildAlignment{.x = CLAY_ALIGN_X_CENTER, .y = CLAY_ALIGN_Y_CENTER};
-	uint16_t iconContainerChildGap = 0;
-	Clay_Color iconContainerBackgroundColor = FlowUi::Flow_Color("#00000000");
-	Clay_Color iconContainerBorderColor = FlowUi::Flow_Color("#00000000");
-	Clay_BorderWidth iconContainerBorderWidth = Clay_BorderWidth{0, 0, 0, 0, 0};
-
-	Clay_Sizing iconSizing = Clay_Sizing{.width = CLAY_SIZING_PERCENT(1.0f), .height = CLAY_SIZING_PERCENT(1.0f)};
 	Clay_Color iconTintColor = FlowUi::Flow_Color("#00000000");
 };
 
@@ -70,6 +62,7 @@ FLOWUI_DEV_REGISTER_STRUCT(
 	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, padding),
 	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, sizing),
 	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, backgroundColor),
+	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, hoverBackgroundColor),
 	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, cornerRadius),
 	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, borderColor),
 	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, borderWidth),
@@ -82,14 +75,6 @@ FLOWUI_DEV_REGISTER_STRUCT(
 	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, fontSize),
 	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, textColor),
 	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, iconContainerSizing),
-	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, iconContainerPadding),
-	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, iconContainerChildLayoutDirection),
-	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, iconContainerChildAlignment),
-	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, iconContainerChildGap),
-	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, iconContainerBackgroundColor),
-	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, iconContainerBorderColor),
-	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, iconContainerBorderWidth),
-	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, iconSizing),
 	FLOWUI_DEV_REFLECT_FIELD(basicButtonParams, iconTintColor));
 
 inline const BasicButtonDef kBasicButton = {
@@ -98,6 +83,7 @@ inline const BasicButtonDef kBasicButton = {
 		{
 			context.params.onHoveredCallback(context);
 		}
+		context.params.backgroundColor = context.params.hoverBackgroundColor;
 	},
 	+[](BasicButtonDef::InteractionContext& context) {
 		if (context.params.onPressedCallback != nullptr)
@@ -130,7 +116,6 @@ inline const BasicButtonDef kBasicButton = {
 		rootLayout.childGap = context.params.childGap;
 
 		Clay_ElementDeclaration root{};
-		root.id = rootId;
 		root.layout = rootLayout;
 		root.backgroundColor = context.params.backgroundColor;
 		root.cornerRadius = context.params.cornerRadius;
@@ -151,29 +136,27 @@ inline const BasicButtonDef kBasicButton = {
 
 		Clay_ElementDeclaration iconContainer{};
 		Clay_ElementDeclaration iconElement{};
+		const std::string iconContainerPath = context.createChildElementId("icon-container");
+		const std::string iconPath = context.createChildElementId("icon");
+		const Clay_ElementId iconContainerId = context.uiManager.toClayEID(iconContainerPath);
+		const Clay_ElementId iconId = context.uiManager.toClayEID(iconPath);
 		if (needsIcon)
 		{
-			const std::string iconContainerPath = context.createChildElementId("icon-container");
-			const std::string iconPath = context.createChildElementId("icon");
-			const Clay_ElementId iconContainerId = context.uiManager.toClayEID(iconContainerPath);
-			const Clay_ElementId iconId = context.uiManager.toClayEID(iconPath);
 
 			Clay_LayoutConfig iconContainerLayout{};
-			iconContainerLayout.layoutDirection = context.params.iconContainerChildLayoutDirection;
+			iconContainerLayout.layoutDirection = CLAY_LEFT_TO_RIGHT;
 			iconContainerLayout.sizing = context.params.iconContainerSizing;
-			iconContainerLayout.padding = context.params.iconContainerPadding;
-			iconContainerLayout.childAlignment = context.params.iconContainerChildAlignment;
-			iconContainerLayout.childGap = context.params.iconContainerChildGap;
+			iconContainerLayout.padding = CLAY_PADDING_ALL(0);
+			iconContainerLayout.childAlignment = Clay_ChildAlignment{.x = CLAY_ALIGN_X_CENTER, .y = CLAY_ALIGN_Y_CENTER};
+			iconContainerLayout.childGap = 0;
 
-			iconContainer.id = iconContainerId;
 			iconContainer.layout = iconContainerLayout;
-			iconContainer.backgroundColor = context.params.iconContainerBackgroundColor;
-			iconContainer.border = {.color = context.params.iconContainerBorderColor, .width = context.params.iconContainerBorderWidth};
+			iconContainer.backgroundColor = Clay_Color{0.0f, 0.0f, 0.0f, 0.0f};
+			iconContainer.border = {.color = Clay_Color{0.0f, 0.0f, 0.0f, 0.0f}, .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
 
 			Clay_LayoutConfig iconLayout{};
-			iconLayout.sizing = context.params.iconSizing;
+			iconLayout.sizing = Clay_Sizing{.width = CLAY_SIZING_PERCENT(1.0f), .height = CLAY_SIZING_PERCENT(1.0f)};
 
-			iconElement.id = iconId;
 			iconElement.layout = iconLayout;
 			iconElement.backgroundColor = context.params.iconTintColor;
 			iconElement.image = {
@@ -182,7 +165,7 @@ inline const BasicButtonDef kBasicButton = {
 		}
 
 		auto drawTextChild = [&]() {
-			CLAY({.id = textId}){
+			CLAY(textId,{}){
 				CLAY_TEXT(
 					context.uiManager.toClayString(context.params.text),
 					CLAY_TEXT_CONFIG(textConfig)
@@ -191,12 +174,12 @@ inline const BasicButtonDef kBasicButton = {
 		};
 
 		auto drawIconChild = [&]() {
-			CLAY(iconContainer){
-				CLAY(iconElement){};
+			CLAY(iconContainerId, iconContainer){
+				CLAY(iconId, iconElement){};
 			};
 		};
 
-		CLAY(root){
+		CLAY(rootId,root){
 			switch (contentMode)
 			{
 			case basicButtonParams::ContentMode::None:

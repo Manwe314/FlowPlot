@@ -138,8 +138,7 @@ void buildDebugView(DebugViewDefinition::BuildContext& context) {
 	}
 	const MainViewSizing sizing = computeMainViewSizing(state, context.params, availableWidthPx);
 
-	CLAY({
-		.id = context.uiManager.toClaySID(context.elementID),
+	CLAY(context.uiManager.toClaySID(context.elementID), {
 		.layout = {
 			.sizing = {CLAY_SIZING_FIT(0), CLAY_SIZING_GROW(0)},
 			.childGap = 0,
@@ -205,9 +204,11 @@ inline const DebugViewDefinition kDebugViewElement = {
 } // namespace
 
 void drawDebugView(UiManager& uiManager) {
+	DebugViewParams params{};
+	params.defaultMainViewWidthPx = std::max(1, static_cast<int>(std::lround(uiManager.devToolsConfig().panelWidthPx)));
 	uiManager
 		.createElement(kDebugViewElement, "flowui/dev/debug-view")
-		.setParameters(DebugViewParams{})
+		.setParameters(params)
 		.draw();
 }
 

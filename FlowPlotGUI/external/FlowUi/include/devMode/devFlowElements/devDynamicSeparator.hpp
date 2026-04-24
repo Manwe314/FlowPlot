@@ -38,7 +38,9 @@ using DevDynamicSeparatorDef = FlowUi::ElementDefinition<
 	true>;
 
 inline const DevDynamicSeparatorDef kDevDynamicSeparator = {
-	nullptr,
+	+[](DevDynamicSeparatorDef::InteractionContext& context) {
+		context.uiManager.requestCursor(FlowUi::CursorType::ResizeHorizontal);
+	},
 	+[](DevDynamicSeparatorDef::InteractionContext& context) {
 		devDynamicSeparatorState& state = DevDynamicSeparatorDef::getOrCreateState(FlowUi::toFlowId(context.elementID));
 		state.isPressed = true;
@@ -165,12 +167,11 @@ inline const DevDynamicSeparatorDef kDevDynamicSeparator = {
 		}
 
 		Clay_ElementDeclaration root{};
-		root.id = rootId;
 		root.layout = rootLayout;
 		root.backgroundColor = separatorColor;
 		root.cornerRadius = CLAY_CORNER_RADIUS(0);
 		root.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
 
-		CLAY(root){};
+		CLAY(rootId, root){};
 	},
 };

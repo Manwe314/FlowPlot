@@ -101,7 +101,6 @@ inline const BasicTitleDef kBasicTitle = {
 		rootLayout.childGap = context.params.childGap;
 
 		Clay_ElementDeclaration root{};
-		root.id = rootId;
 		root.layout = rootLayout;
 		root.backgroundColor = context.params.backgroundColor;
 		root.cornerRadius = context.params.cornerRadius;
@@ -119,12 +118,12 @@ inline const BasicTitleDef kBasicTitle = {
 
 		Clay_ElementDeclaration iconContainer{};
 		Clay_ElementDeclaration iconElement{};
+		const std::string iconContainerPath = context.createChildElementId("icon-container");
+		const std::string iconPath = context.createChildElementId("icon");
+		const Clay_ElementId iconContainerId = context.uiManager.toClayEID(iconContainerPath);
+		const Clay_ElementId iconId = context.uiManager.toClayEID(iconPath);
 		if (needsIcon)
 		{
-			const std::string iconContainerPath = context.createChildElementId("icon-container");
-			const std::string iconPath = context.createChildElementId("icon");
-			const Clay_ElementId iconContainerId = context.uiManager.toClayEID(iconContainerPath);
-			const Clay_ElementId iconId = context.uiManager.toClayEID(iconPath);
 
 			Clay_LayoutConfig iconContainerLayout{};
 			iconContainerLayout.layoutDirection = context.params.iconContainerChildLayoutDirection;
@@ -133,7 +132,6 @@ inline const BasicTitleDef kBasicTitle = {
 			iconContainerLayout.childAlignment = context.params.iconContainerChildAlignment;
 			iconContainerLayout.childGap = context.params.iconContainerChildGap;
 
-			iconContainer.id = iconContainerId;
 			iconContainer.layout = iconContainerLayout;
 			iconContainer.backgroundColor = context.params.iconContainerBackgroundColor;
 			iconContainer.border = {.color = context.params.iconContainerBorderColor, .width = context.params.iconContainerBorderWidth};
@@ -141,7 +139,6 @@ inline const BasicTitleDef kBasicTitle = {
 			Clay_LayoutConfig iconLayout{};
 			iconLayout.sizing = context.params.iconSizing;
 
-			iconElement.id = iconId;
 			iconElement.layout = iconLayout;
 			iconElement.backgroundColor = context.params.iconTintColor;
 			iconElement.image = {
@@ -150,7 +147,7 @@ inline const BasicTitleDef kBasicTitle = {
 		}
 
 		auto drawTextChild = [&]() {
-			CLAY({.id = textId}){
+			CLAY(textId, {}){
 				CLAY_TEXT(
 					context.uiManager.toClayString(context.params.text),
 					CLAY_TEXT_CONFIG(textConfig)
@@ -159,12 +156,12 @@ inline const BasicTitleDef kBasicTitle = {
 		};
 
 		auto drawIconChild = [&]() {
-			CLAY(iconContainer){
-				CLAY(iconElement){};
+			CLAY(iconContainerId, iconContainer){
+				CLAY(iconId, iconElement){};
 			};
 		};
 
-		CLAY(root){
+		CLAY(rootId, root){
 			switch (context.params.contentMode)
 			{
 			case basicTitleParams::ContentMode::TextOnly:

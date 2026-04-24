@@ -31,12 +31,11 @@ inline const DataInputDef kDataInput = {
 		rootLayout.sizing = context.params.sizing;
 
 		Clay_ElementDeclaration root{};
-		root.id = rootId;
 		root.layout = rootLayout;
 		root.backgroundColor = context.params.backgroundColor;
 		root.cornerRadius = CLAY_CORNER_RADIUS(0);
 		root.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
 
-		CLAY(root){};
+		CLAY(rootId, root){};
 	},
 };

@@ -216,9 +216,26 @@ inline const DevHierarchyContentDef kDevHierarchyContent = {
 		textConfigBase.fontSize = context.params.fontSize;
 		textConfigBase.wrapMode = CLAY_TEXT_WRAP_NONE;
 		textConfigBase.textAlignment = CLAY_TEXT_ALIGN_LEFT;
+		const int arrowSlotWidthPx = std::max(1, context.params.arrowSlotWidthPx);
+		const int rowChildGapPx = 4;
+		const int hierarchyInnerWidthPx = std::max(
+			1,
+			context.params.panelWidthPx -
+			static_cast<int>(context.params.padding.left) -
+			static_cast<int>(context.params.padding.right));
+		auto rowTextButtonWidthPx = [&](int occupiedWidthPx, int gapCount) -> int {
+			int available = hierarchyInnerWidthPx - occupiedWidthPx - (gapCount * rowChildGapPx);
+			if (available < 1)
+			{
+				available = 1;
+			}
+			return available;
+		};
 
 		Clay_ElementDeclaration root{};
-		root.id = context.uiManager.toClayEID(context.elementID);
+		const Clay_ElementId rootId = context.uiManager.toClayEID(context.elementID);
+		const Clay_Vector2 scrollOffset =
+			devScrollOffsetForElementId(context.uiManager, context.elementID);
 		root.layout.sizing = {
 			.width = CLAY_SIZING_GROW(0),
 			.height = CLAY_SIZING_GROW(0),
@@ -228,12 +245,12 @@ inline const DevHierarchyContentDef kDevHierarchyContent = {
 		root.layout.childGap = 0;
 		root.backgroundColor = context.params.backgroundColor;
 		root.clip = {
-			.horizontal = true,
+			.horizontal = false,
 			.vertical = true,
-			.childOffset = Clay_GetScrollOffset(),
+			.childOffset = scrollOffset,
 		};
 
-		CLAY(root){
+		CLAY(rootId, root){
 			if (!isViewingInstances)
 			{
 				const FlowUi::devMode::DevRegistry& registry = FlowUi::devMode::DevRegistry::instance();
@@ -281,19 +298,19 @@ inline const DevHierarchyContentDef kDevHierarchyContent = {
 							panelState != nullptr &&
 							panelState->selectedElementId == definitionSelectionId;
 
-						Clay_ElementDeclaration definitionRow{};
-						definitionRow.id = context.uiManager.toClayEID(
-							context.createChildElementId("definition-row-" + std::to_string(i)));
-						definitionRow.layout.sizing = {
-							.width = CLAY_SIZING_GROW(0),
-							.height = CLAY_SIZING_FIT(0),
-						};
-						definitionRow.layout.layoutDirection = CLAY_LEFT_TO_RIGHT;
-						definitionRow.layout.childAlignment = {.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER};
-						definitionRow.layout.childGap = 4;
-						definitionRow.backgroundColor = FlowUi::Flow_Color("#00000000");
+							Clay_ElementDeclaration definitionRow{};
+							const Clay_ElementId definitionRowId = context.uiManager.toClayEID(
+								context.createChildElementId("definition-row-" + std::to_string(i)));
+							definitionRow.layout.sizing = {
+								.width = CLAY_SIZING_FIXED(static_cast<float>(hierarchyInnerWidthPx)),
+								.height = CLAY_SIZING_FIT(0),
+							};
+							definitionRow.layout.layoutDirection = CLAY_LEFT_TO_RIGHT;
+							definitionRow.layout.childAlignment = {.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER};
+							definitionRow.layout.childGap = static_cast<uint16_t>(rowChildGapPx);
+							definitionRow.backgroundColor = FlowUi::Flow_Color("#00000000");
 
-						CLAY(definitionRow){
+						CLAY(definitionRowId, definitionRow){
 							context.uiManager
 								.createElement(kDevBasicButton, context.createChildElementId("definition-row-" + std::to_string(i) + "/expand"))
 								.setParameters(devBasicButtonParams{
@@ -313,12 +330,12 @@ inline const DevHierarchyContentDef kDevHierarchyContent = {
 											}
 										}
 									},
-									.contentMode = devBasicButtonParams::ContentMode::IconOnly,
-									.padding = context.params.disclosureButtonPadding,
-									.sizing = Clay_Sizing{
-										.width = CLAY_SIZING_FIXED(static_cast<float>(std::max(1, context.params.arrowSlotWidthPx))),
-										.height = CLAY_SIZING_FIT(0),
-									},
+										.contentMode = devBasicButtonParams::ContentMode::IconOnly,
+										.padding = context.params.disclosureButtonPadding,
+										.sizing = Clay_Sizing{
+											.width = CLAY_SIZING_FIXED(static_cast<float>(arrowSlotWidthPx)),
+											.height = CLAY_SIZING_FIT(0),
+										},
 									.backgroundColor = context.params.disclosureButtonBackgroundColor,
 									.borderColor = FlowUi::Flow_Color("#00000000"),
 									.borderWidth = Clay_BorderWidth{0, 0, 0, 0, 0},
@@ -338,12 +355,12 @@ inline const DevHierarchyContentDef kDevHierarchyContent = {
 											}
 											(void)setSelectedDevPropertiesNode(definitionSelectionNode);
 										},
-										.contentMode = devBasicButtonParams::ContentMode::TextOnly,
-									.padding = CLAY_PADDING_ALL(4),
-									.sizing = Clay_Sizing{
-										.width = CLAY_SIZING_GROW(0),
-										.height = CLAY_SIZING_FIT(0),
-									},
+											.contentMode = devBasicButtonParams::ContentMode::TextOnly,
+										.padding = CLAY_PADDING_ALL(4),
+										.sizing = Clay_Sizing{
+											.width = CLAY_SIZING_FIXED(static_cast<float>(rowTextButtonWidthPx(arrowSlotWidthPx, 1))),
+											.height = CLAY_SIZING_FIT(0),
+										},
 									.backgroundColor =
 										isDefinitionSelected
 										? context.params.selectedRowBackgroundColor
@@ -377,35 +394,33 @@ inline const DevHierarchyContentDef kDevHierarchyContent = {
 									panelState != nullptr &&
 									panelState->selectedElementId == childSelectionId;
 
-							Clay_ElementDeclaration pseudoRow{};
-							pseudoRow.id = context.uiManager.toClayEID(
-								context.createChildElementId(
-									"definition-row-" + std::to_string(i) + "/" + std::string(localChildId)));
-							pseudoRow.layout.sizing = {
-								.width = CLAY_SIZING_GROW(0),
-								.height = CLAY_SIZING_FIT(0),
-							};
-							pseudoRow.layout.layoutDirection = CLAY_LEFT_TO_RIGHT;
-							pseudoRow.layout.childAlignment = {.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER};
-							pseudoRow.layout.childGap = 4;
-							pseudoRow.backgroundColor = FlowUi::Flow_Color("#00000000");
+								Clay_ElementDeclaration pseudoRow{};
+								const Clay_ElementId pseudoRowId = context.uiManager.toClayEID(
+									context.createChildElementId(
+										"definition-row-" + std::to_string(i) + "/" + std::string(localChildId)));
+								pseudoRow.layout.sizing = {
+									.width = CLAY_SIZING_FIXED(static_cast<float>(hierarchyInnerWidthPx)),
+									.height = CLAY_SIZING_FIT(0),
+								};
+								pseudoRow.layout.layoutDirection = CLAY_LEFT_TO_RIGHT;
+								pseudoRow.layout.childAlignment = {.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER};
+								pseudoRow.layout.childGap = static_cast<uint16_t>(rowChildGapPx);
+								pseudoRow.backgroundColor = FlowUi::Flow_Color("#00000000");
 
-							CLAY(pseudoRow){
-								CLAY({
-									.id = context.uiManager.toClayEID(
+							CLAY(pseudoRowId, pseudoRow){
+								CLAY(context.uiManager.toClayEID(
 										context.createChildElementId(
-											"definition-row-" + std::to_string(i) + "/" + std::string(localChildId) + "/expand-spacer")),
-									.layout = {
-										.sizing = {
-											.width = CLAY_SIZING_FIXED(static_cast<float>(std::max(1, context.params.arrowSlotWidthPx))),
-											.height = CLAY_SIZING_FIT(0),
+											"definition-row-" + std::to_string(i) + "/" + std::string(localChildId) + "/expand-spacer")), {
+										.layout = {
+											.sizing = {
+												.width = CLAY_SIZING_FIXED(static_cast<float>(arrowSlotWidthPx)),
+												.height = CLAY_SIZING_FIT(0),
+											},
 										},
-									},
 								}){};
-								CLAY({
-									.id = context.uiManager.toClayEID(
+								CLAY(context.uiManager.toClayEID(
 										context.createChildElementId(
-											"definition-row-" + std::to_string(i) + "/" + std::string(localChildId) + "/inset-spacer")),
+											"definition-row-" + std::to_string(i) + "/" + std::string(localChildId) + "/inset-spacer")), {
 									.layout = {
 										.sizing = {
 											.width = CLAY_SIZING_FIXED(20.0f),
@@ -427,12 +442,13 @@ inline const DevHierarchyContentDef kDevHierarchyContent = {
 												}
 												(void)setSelectedDevPropertiesNode(childSelectionNode);
 											},
-											.contentMode = devBasicButtonParams::ContentMode::TextOnly,
-										.padding = CLAY_PADDING_ALL(4),
-										.sizing = Clay_Sizing{
-											.width = CLAY_SIZING_GROW(0),
-											.height = CLAY_SIZING_FIT(0),
-										},
+												.contentMode = devBasicButtonParams::ContentMode::TextOnly,
+											.padding = CLAY_PADDING_ALL(4),
+											.sizing = Clay_Sizing{
+												.width = CLAY_SIZING_FIXED(
+													static_cast<float>(rowTextButtonWidthPx(arrowSlotWidthPx + 20, 2))),
+												.height = CLAY_SIZING_FIT(0),
+											},
 										.backgroundColor =
 											isChildSelected
 											? context.params.selectedRowBackgroundColor
@@ -523,20 +539,19 @@ inline const DevHierarchyContentDef kDevHierarchyContent = {
 							const std::string rowText = definitionLabel + " / " + hierarchyLeafSegment(elementId);
 						const bool isSelected = panelState != nullptr && panelState->selectedElementId == elementId;
 
-						Clay_ElementDeclaration row{};
-						row.id = context.uiManager.toClayEID(context.createChildElementId("row-" + std::to_string(i)));
-						row.layout.sizing = {
-							.width = CLAY_SIZING_GROW(0),
-							.height = CLAY_SIZING_FIT(0),
-						};
-						row.layout.layoutDirection = CLAY_LEFT_TO_RIGHT;
-						row.layout.childAlignment = {.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER};
-						row.layout.childGap = 4;
+							Clay_ElementDeclaration row{};
+							const Clay_ElementId rowId = context.uiManager.toClayEID(context.createChildElementId("row-" + std::to_string(i)));
+							row.layout.sizing = {
+								.width = CLAY_SIZING_FIXED(static_cast<float>(hierarchyInnerWidthPx)),
+								.height = CLAY_SIZING_FIT(0),
+							};
+							row.layout.layoutDirection = CLAY_LEFT_TO_RIGHT;
+							row.layout.childAlignment = {.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER};
+							row.layout.childGap = static_cast<uint16_t>(rowChildGapPx);
 						row.backgroundColor = FlowUi::Flow_Color("#00000000");
 
-						CLAY(row){
-							CLAY({
-								.id = context.uiManager.toClayEID(context.createChildElementId("row-" + std::to_string(i) + "/indent")),
+						CLAY(rowId, row){
+							CLAY(context.uiManager.toClayEID(context.createChildElementId("row-" + std::to_string(i) + "/indent")), {
 								.layout = {
 									.sizing = {
 										.width = CLAY_SIZING_FIXED(static_cast<float>(indentPx)),
@@ -569,7 +584,7 @@ inline const DevHierarchyContentDef kDevHierarchyContent = {
 										.contentMode = devBasicButtonParams::ContentMode::IconOnly,
 										.padding = context.params.disclosureButtonPadding,
 										.sizing = Clay_Sizing{
-											.width = CLAY_SIZING_FIXED(static_cast<float>(std::max(1, context.params.arrowSlotWidthPx))),
+											.width = CLAY_SIZING_FIXED(static_cast<float>(arrowSlotWidthPx)),
 											.height = CLAY_SIZING_FIT(0),
 										},
 										.backgroundColor = context.params.disclosureButtonBackgroundColor,
@@ -581,15 +596,14 @@ inline const DevHierarchyContentDef kDevHierarchyContent = {
 							}
 							else
 							{
-								CLAY({
-									.id = context.uiManager.toClayEID(context.createChildElementId("row-" + std::to_string(i) + "/expand-spacer")),
-									.layout = {
-										.sizing = {
-											.width = CLAY_SIZING_FIXED(static_cast<float>(std::max(1, context.params.arrowSlotWidthPx))),
-											.height = CLAY_SIZING_FIT(0),
+									CLAY(context.uiManager.toClayEID(context.createChildElementId("row-" + std::to_string(i) + "/expand-spacer")), {
+										.layout = {
+											.sizing = {
+												.width = CLAY_SIZING_FIXED(static_cast<float>(arrowSlotWidthPx)),
+												.height = CLAY_SIZING_FIT(0),
+											},
 										},
-									},
-								}){};
+									}){};
 							}
 
 								context.uiManager
@@ -604,12 +618,13 @@ inline const DevHierarchyContentDef kDevHierarchyContent = {
 											}
 											(void)setSelectedDevPropertiesNode(instanceSelectionNode);
 										},
-										.contentMode = devBasicButtonParams::ContentMode::TextOnly,
-									.padding = CLAY_PADDING_ALL(4),
-									.sizing = Clay_Sizing{
-										.width = CLAY_SIZING_GROW(0),
-										.height = CLAY_SIZING_FIT(0),
-									},
+											.contentMode = devBasicButtonParams::ContentMode::TextOnly,
+											.padding = CLAY_PADDING_ALL(4),
+											.sizing = Clay_Sizing{
+												.width = CLAY_SIZING_FIXED(
+													static_cast<float>(rowTextButtonWidthPx(indentPx + arrowSlotWidthPx, 2))),
+												.height = CLAY_SIZING_FIT(0),
+											},
 									.backgroundColor = isSelected ? context.params.selectedRowBackgroundColor : context.params.rowBackgroundColor,
 									.borderColor = FlowUi::Flow_Color("#00000000"),
 									.borderWidth = Clay_BorderWidth{0, 0, 0, 0, 0},

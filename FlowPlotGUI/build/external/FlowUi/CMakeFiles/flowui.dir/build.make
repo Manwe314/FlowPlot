@@ -307,19 +307,19 @@ external/FlowUi/CMakeFiles/flowui.dir/src/Vulkan/Vk_Swapchain.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/flowui.dir/src/Vulkan/Vk_Swapchain.cpp.s"
 	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/Vulkan/Vk_Swapchain.cpp -o CMakeFiles/flowui.dir/src/Vulkan/Vk_Swapchain.cpp.s
 
-external/FlowUi/CMakeFiles/flowui.dir/src/managers/SvgManager.cpp.o: external/FlowUi/CMakeFiles/flowui.dir/flags.make
-external/FlowUi/CMakeFiles/flowui.dir/src/managers/SvgManager.cpp.o: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/SvgManager.cpp
-external/FlowUi/CMakeFiles/flowui.dir/src/managers/SvgManager.cpp.o: external/FlowUi/CMakeFiles/flowui.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object external/FlowUi/CMakeFiles/flowui.dir/src/managers/SvgManager.cpp.o"
-	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT external/FlowUi/CMakeFiles/flowui.dir/src/managers/SvgManager.cpp.o -MF CMakeFiles/flowui.dir/src/managers/SvgManager.cpp.o.d -o CMakeFiles/flowui.dir/src/managers/SvgManager.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/SvgManager.cpp
+external/FlowUi/CMakeFiles/flowui.dir/src/managers/IconManager.cpp.o: external/FlowUi/CMakeFiles/flowui.dir/flags.make
+external/FlowUi/CMakeFiles/flowui.dir/src/managers/IconManager.cpp.o: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/IconManager.cpp
+external/FlowUi/CMakeFiles/flowui.dir/src/managers/IconManager.cpp.o: external/FlowUi/CMakeFiles/flowui.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object external/FlowUi/CMakeFiles/flowui.dir/src/managers/IconManager.cpp.o"
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT external/FlowUi/CMakeFiles/flowui.dir/src/managers/IconManager.cpp.o -MF CMakeFiles/flowui.dir/src/managers/IconManager.cpp.o.d -o CMakeFiles/flowui.dir/src/managers/IconManager.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/IconManager.cpp
 
-external/FlowUi/CMakeFiles/flowui.dir/src/managers/SvgManager.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/flowui.dir/src/managers/SvgManager.cpp.i"
-	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/SvgManager.cpp > CMakeFiles/flowui.dir/src/managers/SvgManager.cpp.i
+external/FlowUi/CMakeFiles/flowui.dir/src/managers/IconManager.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/flowui.dir/src/managers/IconManager.cpp.i"
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/IconManager.cpp > CMakeFiles/flowui.dir/src/managers/IconManager.cpp.i
 
-external/FlowUi/CMakeFiles/flowui.dir/src/managers/SvgManager.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/flowui.dir/src/managers/SvgManager.cpp.s"
-	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/SvgManager.cpp -o CMakeFiles/flowui.dir/src/managers/SvgManager.cpp.s
+external/FlowUi/CMakeFiles/flowui.dir/src/managers/IconManager.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/flowui.dir/src/managers/IconManager.cpp.s"
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/managers/IconManager.cpp -o CMakeFiles/flowui.dir/src/managers/IconManager.cpp.s
 
 # Object files for target flowui
 flowui_OBJECTS = \
@@ -340,7 +340,7 @@ flowui_OBJECTS = \
 "CMakeFiles/flowui.dir/src/Vulkan/Vk_Context.cpp.o" \
 "CMakeFiles/flowui.dir/src/Vulkan/Vk_Frames.cpp.o" \
 "CMakeFiles/flowui.dir/src/Vulkan/Vk_Swapchain.cpp.o" \
-"CMakeFiles/flowui.dir/src/managers/SvgManager.cpp.o"
+"CMakeFiles/flowui.dir/src/managers/IconManager.cpp.o"
 
 # External object files for target flowui
 flowui_EXTERNAL_OBJECTS =
@@ -362,7 +362,7 @@ external/FlowUi/libflowui.a: external/FlowUi/CMakeFiles/flowui.dir/src/window/In
 external/FlowUi/libflowui.a: external/FlowUi/CMakeFiles/flowui.dir/src/Vulkan/Vk_Context.cpp.o
 external/FlowUi/libflowui.a: external/FlowUi/CMakeFiles/flowui.dir/src/Vulkan/Vk_Frames.cpp.o
 external/FlowUi/libflowui.a: external/FlowUi/CMakeFiles/flowui.dir/src/Vulkan/Vk_Swapchain.cpp.o
-external/FlowUi/libflowui.a: external/FlowUi/CMakeFiles/flowui.dir/src/managers/SvgManager.cpp.o
+external/FlowUi/libflowui.a: external/FlowUi/CMakeFiles/flowui.dir/src/managers/IconManager.cpp.o
 external/FlowUi/libflowui.a: external/FlowUi/CMakeFiles/flowui.dir/build.make
 external/FlowUi/libflowui.a: external/FlowUi/CMakeFiles/flowui.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Linking CXX static library libflowui.a"

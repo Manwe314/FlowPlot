@@ -132,6 +132,18 @@ namespace FlowUi
 			getClipboardTextAccessor_ = std::move(getClipboardTextAccessor);
 		}
 
+		void UiManager::setCursorAccessor(std::function<void(CursorType)> setCursorTypeAccessor) {
+			setCursorTypeAccessor_ = std::move(setCursorTypeAccessor);
+		}
+
+		void UiManager::requestCursor(CursorType cursorType, uint8_t priority) {
+			if (priority < cursorPriority_) {
+				return;
+			}
+			cursor_ = cursorType;
+			cursorPriority_ = priority;
+		}
+
 		Clay_Dimensions UiManager::measureText(Clay_StringSlice text, Clay_TextElementConfig* config) const {
 			if (!config || !text.chars || text.length <= 0) {
 				return Clay_Dimensions{ 0.0f, 0.0f };
@@ -197,6 +209,8 @@ namespace FlowUi
 		frameInputForCurrentLayout_ = frameInput;
 		inputFieldManager_.beginFrame(frameInputForCurrentLayout_, previousFrameInputForCurrentLayout_);
 		shortcutManager_.beginFrame(*this, frameInputForCurrentLayout_, previousFrameInputForCurrentLayout_);
+		cursor_ = CursorType::Arrow;
+		cursorPriority_ = 0;
 
 		Clay_SetCurrentContext(clayContext_);
 
@@ -219,11 +233,11 @@ namespace FlowUi
 #if FLOW_UI_DEV_MODE
 		if (devToolsConfig_.enabled && devPanelVisible_) {
 			Clay_ElementDeclaration devRoot{};
-			devRoot.id = toClaySID("_Flow_Dev_root_");
+			const Clay_ElementId devRootId = toClaySID("_Flow_Dev_root_");
 			devRoot.layout.sizing.width = CLAY_SIZING_GROW(0);
 			devRoot.layout.sizing.height = CLAY_SIZING_GROW(0);
 			devRoot.layout.layoutDirection = CLAY_LEFT_TO_RIGHT;
-			Clay__OpenElement();
+			Clay__OpenElementWithId(devRootId);
 			Clay__ConfigureOpenElement(devRoot);
 			devRootElementOpenThisFrame_ = true;
 		}
@@ -261,7 +275,7 @@ namespace FlowUi
 			devRootElementOpenThisFrame_ = false;
 		}
 #endif
-		Clay_RenderCommandArray renderCommands = Clay_EndLayout();
+		Clay_RenderCommandArray renderCommands = Clay_EndLayout(static_cast<float>(frameInputForCurrentLayout_.dt));
 
 		InteractionSnapshot interactionSnapshot;
 		Clay_ElementIdArray hoveredIds = Clay_GetPointerOverIds();
@@ -282,6 +296,12 @@ namespace FlowUi
 
 		renderCommands = inputFieldManager_.endFrame(renderCommands);
 		setCurrentInteractionSnapshot(std::move(interactionSnapshot));
+		if (cursor_ != previousCursor_) {
+			if (setCursorTypeAccessor_) {
+				setCursorTypeAccessor_(cursor_);
+			}
+			previousCursor_ = cursor_;
+		}
 #if FLOW_UI_DEV_MODE
 		devRuntime_.endFrame();
 #endif
@@ -359,6 +379,10 @@ namespace FlowUi
 		std::string_view elementID,
 		uint64_t flowId,
 		bool isInternalToDevMode) {
+		if (isInternalToDevMode && uiManager.devToolsConfig().excludeInternalDevElementsFromCapture) {
+			return devMode::DevRuntime::kInvalidCaptureIndex;
+		}
+
 		devMode::DevRuntime& runtime = uiManager.devRuntime();
 		const std::size_t captureIndex = runtime.beginCapturedFlowElement(
 			definitionId,

@@ -20,8 +20,8 @@ struct devBasicInputFieldParams {
 	Clay_BorderWidth borderWidth = Clay_BorderWidth{1, 1, 1, 1, 0};
 	Clay_Color backgroundColor = FlowUi::Flow_Color("#cfcfcfff");
 	Clay_CornerRadius cornerRadius = CLAY_CORNER_RADIUS(6);
-	bool clipHorizontal = true;
-	bool clipVertical = true;
+	bool clipHorizontal = false;
+	bool clipVertical = false;
 	Clay_ChildAlignment childTextAlignment = Clay_ChildAlignment{
 		.x = CLAY_ALIGN_X_LEFT,
 		.y = CLAY_ALIGN_Y_CENTER,
@@ -47,7 +47,7 @@ using DevBasicInputFieldDef = FlowUi::ElementDefinition<
 
 inline const DevBasicInputFieldDef kDevBasicInputField = {
 	+[](DevBasicInputFieldDef::InteractionContext& context) {
-		(void)context;
+		context.uiManager.requestCursor(FlowUi::CursorType::IBeam);
 	},
 	+[](DevBasicInputFieldDef::InteractionContext& context) {
 		const std::string_view fieldId =
@@ -110,7 +110,6 @@ inline const DevBasicInputFieldDef kDevBasicInputField = {
 		rootLayout.childAlignment = context.params.childTextAlignment;
 
 		Clay_ElementDeclaration root{};
-		root.id = rootId;
 		root.layout = rootLayout;
 		root.backgroundColor = context.params.backgroundColor;
 		root.cornerRadius = context.params.cornerRadius;
@@ -121,7 +120,6 @@ inline const DevBasicInputFieldDef kDevBasicInputField = {
 		root.border = {.color = context.params.borderColor, .width = context.params.borderWidth};
 
 		Clay_ElementDeclaration content{};
-		content.id = contentId;
 		content.layout.sizing = {
 			.width = CLAY_SIZING_GROW(0),
 			.height =
@@ -141,9 +139,9 @@ inline const DevBasicInputFieldDef kDevBasicInputField = {
 		textConfig.textAlignment = context.params.textAlignment;
 		textConfig.fontId = context.params.fontId;
 
-		CLAY(root){
-			CLAY(content){
-				CLAY({.id = textId}){
+		CLAY(rootId, root){
+			CLAY(contentId, content){
+				CLAY(textId, {}){
 					CLAY_TEXT(
 						context.uiManager.toClayString(result.text),
 						CLAY_TEXT_CONFIG(textConfig));

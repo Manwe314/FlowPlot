@@ -55,11 +55,11 @@ set_target_properties(plutovg::plutovg PROPERTIES
   INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:m>"
 )
 
-# Import target "plutovg::plutovg" for configuration ""
-set_property(TARGET plutovg::plutovg APPEND PROPERTY IMPORTED_CONFIGURATIONS NOCONFIG)
+# Import target "plutovg::plutovg" for configuration "Release"
+set_property(TARGET plutovg::plutovg APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
 set_target_properties(plutovg::plutovg PROPERTIES
-  IMPORTED_LINK_INTERFACE_LANGUAGES_NOCONFIG "C"
-  IMPORTED_LOCATION_NOCONFIG "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/external/plutosvg/plutovg/libplutovg.a"
+  IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "C"
+  IMPORTED_LOCATION_RELEASE "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/external/plutosvg/plutovg/libplutovg.a"
   )
 
 # This file does not depend on other imported targets which have

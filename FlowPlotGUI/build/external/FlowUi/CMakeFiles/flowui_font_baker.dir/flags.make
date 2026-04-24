@@ -6,5 +6,5 @@ CXX_DEFINES = -DMSDFGEN_COPYRIGHT_YEAR=2026 -DMSDFGEN_DISABLE_SVG -DMSDFGEN_EXTE
 
 CXX_INCLUDES = -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdfgen
 
-CXX_FLAGS = -std=c++2b
+CXX_FLAGS = -O3 -DNDEBUG -std=c++2b
 

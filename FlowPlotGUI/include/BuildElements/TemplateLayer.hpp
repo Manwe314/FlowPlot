@@ -182,7 +182,6 @@ inline const TemplateLayerDef kTemplateLayer = {
 		rootLayout.childGap = 0;
 
 		Clay_ElementDeclaration root{};
-		root.id = rootId;
 		root.layout = rootLayout;
 		root.backgroundColor = context.params.backgroundColor;
 		root.cornerRadius = CLAY_CORNER_RADIUS(0);
@@ -198,7 +197,6 @@ inline const TemplateLayerDef kTemplateLayer = {
 		};
 
 		Clay_ElementDeclaration indicator{};
-		indicator.id = indicatorId;
 		indicator.layout = indicatorLayout;
 		indicator.backgroundColor = context.params.indicatorColor;
 		indicator.cornerRadius = CLAY_CORNER_RADIUS(0);
@@ -210,7 +208,6 @@ inline const TemplateLayerDef kTemplateLayer = {
 		};
 
 		Clay_ElementDeclaration leftSpacer{};
-		leftSpacer.id = leftSpacerId;
 		leftSpacer.layout = leftSpacerLayout;
 
 		Clay_LayoutConfig mainContentLayout{};
@@ -224,7 +221,6 @@ inline const TemplateLayerDef kTemplateLayer = {
 		mainContentLayout.childGap = static_cast<uint16_t>(context.params.mainContentChildGap);
 
 		Clay_ElementDeclaration mainContent{};
-		mainContent.id = mainContentId;
 		mainContent.layout = mainContentLayout;
 		mainContent.backgroundColor = context.params.mainContentBackgroundColor;
 		mainContent.cornerRadius = CLAY_CORNER_RADIUS(0);
@@ -241,7 +237,6 @@ inline const TemplateLayerDef kTemplateLayer = {
 		mainLeadingButtonSlotLayout.childGap = 0;
 
 		Clay_ElementDeclaration mainLeadingButtonSlot{};
-		mainLeadingButtonSlot.id = mainLeadingButtonSlotId;
 		mainLeadingButtonSlot.layout = mainLeadingButtonSlotLayout;
 		mainLeadingButtonSlot.backgroundColor = FlowUi::Flow_Color("#00000000");
 		mainLeadingButtonSlot.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
@@ -254,7 +249,6 @@ inline const TemplateLayerDef kTemplateLayer = {
 		mainIconContainerLayout.childGap = 0;
 
 		Clay_ElementDeclaration mainIconContainer{};
-		mainIconContainer.id = mainIconContainerId;
 		mainIconContainer.layout = mainIconContainerLayout;
 		mainIconContainer.backgroundColor = FlowUi::Flow_Color("#00000000");
 		mainIconContainer.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
@@ -263,7 +257,6 @@ inline const TemplateLayerDef kTemplateLayer = {
 		mainIconLayout.sizing = context.params.mainIconSizing;
 
 		Clay_ElementDeclaration mainIcon{};
-		mainIcon.id = mainIconId;
 		mainIcon.layout = mainIconLayout;
 		mainIcon.backgroundColor = context.params.mainIconTintColor;
 		mainIcon.image = {
@@ -284,21 +277,20 @@ inline const TemplateLayerDef kTemplateLayer = {
 		};
 
 		Clay_ElementDeclaration rightSpacer{};
-		rightSpacer.id = rightSpacerId;
 		rightSpacer.layout = rightSpacerLayout;
 
 		const std::string expanderPath = context.createChildElementId("main-content/expander");
 		const std::string adderPath = context.createChildElementId("adder");
 
-		CLAY(root){
+		CLAY(rootId, root){
 			if (context.params.focused)
 			{
-				CLAY(indicator){};
+				CLAY(indicatorId, indicator){};
 			}
-			CLAY(leftSpacer){};
+			CLAY(leftSpacerId, leftSpacer){};
 
-			CLAY(mainContent){
-				CLAY(mainLeadingButtonSlot){
+			CLAY(mainContentId, mainContent){
+				CLAY(mainLeadingButtonSlotId, mainLeadingButtonSlot){
 					if (context.params.showExpanderButton)
 					{
 						resources.expanderBuilder
@@ -307,14 +299,14 @@ inline const TemplateLayerDef kTemplateLayer = {
 					}
 				};
 
-				CLAY(mainIconContainer){
+				CLAY(mainIconContainerId, mainIconContainer){
 					if (hasMainIcon)
 					{
-						CLAY(mainIcon){};
+						CLAY(mainIconId, mainIcon){};
 					}
 				};
 
-				CLAY({.id = mainTextId}){
+				CLAY(mainTextId, {}){
 					CLAY_TEXT(
 						context.uiManager.toClayString(context.params.mainText),
 						CLAY_TEXT_CONFIG(mainTextConfig)
@@ -322,7 +314,7 @@ inline const TemplateLayerDef kTemplateLayer = {
 				};
 			};
 
-			CLAY(rightSpacer){};
+			CLAY(rightSpacerId, rightSpacer){};
 
 			if (context.params.showAdderButton)
 			{

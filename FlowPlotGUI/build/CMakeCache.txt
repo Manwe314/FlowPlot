@@ -23,9 +23,8 @@ CMAKE_ADDR2LINE:FILEPATH=/usr/bin/addr2line
 //Path to a program.
 CMAKE_AR:FILEPATH=/usr/bin/ar
 
-//Choose the type of build, options are: None Debug Release RelWithDebInfo
-// MinSizeRel ...
-CMAKE_BUILD_TYPE:STRING=
+//Build type
+CMAKE_BUILD_TYPE:STRING=Release
 
 //Enable/Disable color output during build.
 CMAKE_COLOR_MAKEFILE:BOOL=ON
@@ -292,6 +291,9 @@ FLOWUI_ENABLE_RUNTIME_FONT_BAKING:BOOL=OFF
 //GLFW provider: auto, system, vendored
 FLOWUI_GLFW_PROVIDER:STRING=auto
 
+//Enable IconManager support (PlutoSVG).
+FLOWUI_INCLUDE_ICON_MANAGER:BOOL=ON
+
 //Enable SVG manager support (PlutoSVG).
 FLOWUI_INCLUDE_SVG_MANAGER:BOOL=ON
 
@@ -458,6 +460,8 @@ plutovg_SOURCE_DIR:STATIC=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/Flow
 CMAKE_ADDR2LINE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_AR
 CMAKE_AR-ADVANCED:INTERNAL=1
+//STRINGS property for variable: CMAKE_BUILD_TYPE
+CMAKE_BUILD_TYPE-STRINGS:INTERNAL=Debug;Release;RelWithDebInfo;MinSizeRel
 //This is the directory where this CMakeCache.txt was created
 CMAKE_CACHEFILE_DIR:INTERNAL=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build
 //Major version of cmake used to create the current loaded cache

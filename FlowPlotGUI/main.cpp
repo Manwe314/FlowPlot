@@ -9,8 +9,7 @@
 
 int main()
 {
-	constexpr size_t kUiStringArenaSizeBytes = 2 * 1024 * 1024;
-	constexpr size_t kUiStringArenaSizeBytesDevTools = 16 * 1024 * 1024;
+
 
 	try
 	{
@@ -22,9 +21,7 @@ int main()
 		config.dev.enabled = true;
 		config.dev.panelOpenByDefault = true;
 		config.dev.useShortcutManagerForPanelToggle = true;
-		config.ui.stringArenaSize = config.dev.enabled
-			? kUiStringArenaSizeBytesDevTools
-			: kUiStringArenaSizeBytes;
+		config.ui.stringArenaSize = 2 * 1024 * 1024;
 		FlowUi::App app = FlowUi::makeApplication(config);
 		FlowPlotGui::registerIcons(app);
 		(void)NavBarDef::getResources(app);
@@ -40,7 +37,15 @@ int main()
 			ui.createElement(kRootBackground, "rootBackground")
 			.setParameters({.backgroundColor = FlowUi::Flow_Color("#18181aff")})
 			.construct(FlowUi::ElementDrawOptions::SkipEventCallbacks);
-				ui.createElement(kNavBar, "NavBar").draw();
+				ui.createElement(kNavBar, "NavBar")
+				.setParameters({
+				    .child2Gap = 16,
+				    .padding = Clay_Padding{.left = 16, .right = 16, .top = 0, .bottom = 8},
+				    .spacer1Sizing = Clay_Sizing{.width = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 22.0f, .max = 45.0f}}, .type = CLAY__SIZING_TYPE_GROW}, .height = Clay_SizingAxis{.size = {.percent = 0.0f}, .type = CLAY__SIZING_TYPE_PERCENT}},
+				    .spacer2Sizing = Clay_Sizing{.width = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 22.0f, .max = 45.0f}}, .type = CLAY__SIZING_TYPE_GROW}, .height = Clay_SizingAxis{.size = {.percent = 1.0f}, .type = CLAY__SIZING_TYPE_PERCENT}},
+				    .spacerLine1Color = Clay_Color{.r = 65.0f, .g = 65.0f, .b = 67.0f, .a = 255.0f},
+				    .spacerLine2Color = Clay_Color{.r = 65.0f, .g = 65.0f, .b = 67.0f, .a = 255.0f}
+				}).draw();
 				ui.createElement(kMainContent, "MainContent").construct();
 					const std::string leftId = "TemplatePanel";
 					ui.createElement(kTemplatePanel, leftId).construct();

@@ -24,7 +24,9 @@ inline const DevPropertiesContentDef kDevPropertiesContent = {
 		textConfig.textAlignment = CLAY_TEXT_ALIGN_LEFT;
 
 		Clay_ElementDeclaration root{};
-		root.id = context.uiManager.toClayEID(context.elementID);
+		const Clay_ElementId rootId = context.uiManager.toClayEID(context.elementID);
+		const Clay_Vector2 scrollOffset =
+			devScrollOffsetForElementId(context.uiManager, context.elementID);
 		root.layout.sizing = {
 			.width = CLAY_SIZING_GROW(0),
 			.height = CLAY_SIZING_GROW(0),
@@ -36,10 +38,10 @@ inline const DevPropertiesContentDef kDevPropertiesContent = {
 		root.clip = {
 			.horizontal = true,
 			.vertical = true,
-			.childOffset = Clay_GetScrollOffset(),
+			.childOffset = scrollOffset,
 		};
 
-		CLAY(root){
+		CLAY(rootId, root){
 			if (isDevPropertiesSelectionNull(selection))
 			{
 				Clay_TextElementConfig noSelectionTextConfig = textConfig;
@@ -105,7 +107,7 @@ inline const DevPropertiesContentDef kDevPropertiesContent = {
 				else
 				{
 					Clay_ElementDeclaration fieldsColumn{};
-					fieldsColumn.id = context.uiManager.toClayEID(context.createChildElementId("rows"));
+					const Clay_ElementId fieldsColumnId = context.uiManager.toClayEID(context.createChildElementId("rows"));
 					fieldsColumn.layout.sizing = {
 						.width = CLAY_SIZING_GROW(0),
 						.height = CLAY_SIZING_FIT(0),
@@ -114,7 +116,7 @@ inline const DevPropertiesContentDef kDevPropertiesContent = {
 					fieldsColumn.layout.childGap = context.params.rowGap;
 					fieldsColumn.backgroundColor = FlowUi::Flow_Color("#00000000");
 
-					CLAY(fieldsColumn){
+					CLAY(fieldsColumnId, fieldsColumn){
 						for (std::size_t i = 0; i < structure->fields.size(); ++i)
 						{
 							const FlowUi::devMode::FieldDescriptor& field = structure->fields[i];

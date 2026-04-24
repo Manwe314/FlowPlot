@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <string_view>
 #include <utility>
 
@@ -12,43 +13,102 @@
 
 struct navBarParams {
 	Clay_Color backgroundColor = FlowUi::Flow_Color("#18181aff");
-	int heightMin = 52;
-	int heightMax = 72;
-	int spacer1MinWidth = 22;
-	int spacer1MaxWidth = 68;
-	int spacer2MinWidth = 22;
-	int spacer2MaxWidth = 68;
+	Clay_Sizing sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(52, 72)};
+	Clay_Padding padding = Clay_Padding{16, 16, 0, 0};
+	uint16_t childGap = 0;
+	Clay_ChildAlignment childAlignment = Clay_ChildAlignment{.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER};
+
+	Clay_Sizing spacer1Sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(22, 68), .height = CLAY_SIZING_PERCENT(1.0f)};
+	Clay_Sizing spacer2Sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(22, 68), .height = CLAY_SIZING_PERCENT(1.0f)};
+	Clay_Color spacerLine1Color = FlowUi::Flow_Color("#5e646eff");
+	Clay_Color spacerLine2Color = FlowUi::Flow_Color("#5e646eff");
+
+	uint16_t child2Gap = 8;
+	Clay_Padding child2Padding = CLAY_PADDING_ALL(0);
+	Clay_ChildAlignment child2Alignment = Clay_ChildAlignment{.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER};
+
+	uint16_t child3Gap = 8;
+	Clay_Padding child3Padding = CLAY_PADDING_ALL(0);
+	Clay_ChildAlignment child3Alignment = Clay_ChildAlignment{.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER};
+
+	Clay_Color dirtyColor = FlowUi::Flow_Color("#f5b84bff");
+	Clay_Color cleanColor = FlowUi::Flow_Color("#7dd3a8ff");
+};
+
+struct navBarState {
+	bool isDirty = false;
 };
 
 FLOWUI_DEV_REGISTER_STRUCT(
 	navBarParams,
 	FLOWUI_DEV_REFLECT_FIELD(navBarParams, backgroundColor),
-	FLOWUI_DEV_REFLECT_FIELD(navBarParams, heightMin),
-	FLOWUI_DEV_REFLECT_FIELD(navBarParams, heightMax),
-	FLOWUI_DEV_REFLECT_FIELD(navBarParams, spacer1MinWidth),
-	FLOWUI_DEV_REFLECT_FIELD(navBarParams, spacer1MaxWidth),
-	FLOWUI_DEV_REFLECT_FIELD(navBarParams, spacer2MinWidth),
-	FLOWUI_DEV_REFLECT_FIELD(navBarParams, spacer2MaxWidth));
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, sizing),
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, padding),
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, childGap),
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, childAlignment),
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, spacer1Sizing),
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, spacer2Sizing),
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, spacerLine1Color),
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, spacerLine2Color),
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, child2Gap),
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, child2Padding),
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, child2Alignment),
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, child3Gap),
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, child3Padding),
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, child3Alignment),
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, dirtyColor),
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, cleanColor));
+
+FLOWUI_DEV_REGISTER_STRUCT(
+	navBarState,
+	FLOWUI_DEV_REFLECT_FIELD(navBarState, isDirty));
 
 using BasicTitleBuilder = FlowUi::ElementBuilder<basicTitleParams, void, void, FLOW_DEF_ID("Basic title")>;
-using NavBarButtonBuilder = FlowUi::ElementBuilder<basicButtonParams, void, void, FLOW_DEF_ID("Basic button")>;
 
 struct navBarResources {
+	Clay_ElementId rootId{};
+	Clay_ElementId child1Id{};
+	Clay_ElementId spacer1Id{};
+	Clay_ElementId spacer1LineId{};
+	Clay_ElementId child2Id{};
+	Clay_ElementId child2GrowSpacerId{};
+	Clay_ElementId spacer2Id{};
+	Clay_ElementId spacer2LineId{};
+	Clay_ElementId child3Id{};
+
+	std::string child1TitlePath{};
+	std::string newButtonPath{};
+	std::string importButtonPath{};
+	std::string exportButtonPath{};
+	std::string statusTitlePath{};
+	FlowUi::TextureRef newIcon{};
+	FlowUi::TextureRef importIcon{};
+	FlowUi::TextureRef exportIcon{};
+
 	BasicTitleBuilder child1Builder;
-	NavBarButtonBuilder importButtonBuilder;
-	NavBarButtonBuilder layersButtonBuilder;
-	NavBarButtonBuilder exportButtonBuilder;
-	NavBarButtonBuilder settingsButtonBuilder;
 
 	explicit navBarResources(FlowUi::App& app) :
-		child1Builder(makeChild1Builder(app)),
-		importButtonBuilder(makeimportButtonBuilder(app)),
-		layersButtonBuilder(makeLayersButtonBuilder(app)),
-		exportButtonBuilder(makeExportButtonBuilder(app)),
-		settingsButtonBuilder(makeSettingsButtonBuilder(app)) {}
+		rootId(app.ui().toClayEID("NavBar")),
+		child1Id(app.ui().toClayEID("NavBar/child-1")),
+		spacer1Id(app.ui().toClayEID("NavBar/spacer-1")),
+		spacer1LineId(app.ui().toClayEID("NavBar/spacer-1/line")),
+		child2Id(app.ui().toClayEID("NavBar/child-2")),
+		child2GrowSpacerId(app.ui().toClayEID("NavBar/child-2/grow-spacer")),
+		spacer2Id(app.ui().toClayEID("NavBar/spacer-2")),
+		spacer2LineId(app.ui().toClayEID("NavBar/spacer-2/line")),
+		child3Id(app.ui().toClayEID("NavBar/child-3")),
+		child1TitlePath("NavBar/child-1/title"),
+		newButtonPath("NavBar/child-2/new"),
+		importButtonPath("NavBar/child-2/import"),
+		exportButtonPath("NavBar/child-2/export"),
+		statusTitlePath("NavBar/child-3/status"),
+		newIcon(app.icons().textureRef("New")),
+		importIcon(app.icons().textureRef("Import")),
+		exportIcon(app.icons().textureRef("Export")),
+		child1Builder(makeChild1Builder(app, child1TitlePath)) {}
 
 private:
-	static BasicTitleBuilder makeChild1Builder(FlowUi::App& app)
+	static BasicTitleBuilder makeChild1Builder(FlowUi::App& app, std::string_view path)
 	{
 		basicTitleParams params{};
 		params.text = "FlowPlot";
@@ -60,60 +120,22 @@ private:
 		params.sizing = {.width = CLAY_SIZING_FIT(0), .height = CLAY_SIZING_FIT(0)};
 		params.icon = app.icons().textureRef("FlowPlotIcon");
 
-		BasicTitleBuilder builder = app.ui().createElement(kBasicTitle, "NavBar/shared/child-1/title");
+		BasicTitleBuilder builder = app.ui().createElement(kBasicTitle, path)
+			.setParameters({
+			    .childGap = 13,
+			    .contentMode = basicTitleParams::ContentMode::IconThenText,
+			    .fontSize = 32,
+			    .iconTintColor = Clay_Color{.r = 122.0f, .g = 209.0f, .b = 230.0f, .a = 0.0f},
+			    .textColor = Clay_Color{.r = 243.0f, .g = 243.0f, .b = 243.0f, .a = 255.0f}
+			});
 		builder.setParameters(std::move(params));
 		return builder;
-	}
-
-	static NavBarButtonBuilder makeButtonBuilder(
-		FlowUi::App& app,
-		std::string_view sharedPath,
-		basicButtonParams& parameters)
-	{
-		NavBarButtonBuilder builder = app.ui().createElement(kBasicButton, sharedPath).setParameters(std::move(parameters))
-		/* V1 cant Update parameters made with variables */
-		.mergeParams([](auto& params) {
-		    params.text = "Export";
-		});
-		return builder;
-	}
-
-	// Placeholder factories: keep per-button entry points so each one can be
-	// customized independently later without touching constructor wiring.
-	static NavBarButtonBuilder makeimportButtonBuilder(FlowUi::App& app)
-	{
-		basicButtonParams params{};
-		params.text = "Import";
-		params.icon = app.icons().textureRef("Import");
-		params.contentMode = basicButtonParams::ContentMode::IconThenText;
-		return makeButtonBuilder(app, "NavBar/shared/child-2/button-1", params);
-	}
-
-	static NavBarButtonBuilder makeLayersButtonBuilder(FlowUi::App& app)
-	{
-		basicButtonParams params{};
-		params.text = "Import";
-		return makeButtonBuilder(app, "NavBar/shared/child-2/button-2",params);
-	}
-
-	static NavBarButtonBuilder makeExportButtonBuilder(FlowUi::App& app)
-	{
-		basicButtonParams params{};
-		params.text = "Import";
-		return makeButtonBuilder(app, "NavBar/shared/child-3/button-1", params);
-	}
-
-	static NavBarButtonBuilder makeSettingsButtonBuilder(FlowUi::App& app)
-	{
-		basicButtonParams params{};
-		params.text = "Import";
-		return makeButtonBuilder(app, "NavBar/shared/child-3/button-2", params);
 	}
 };
 
 using NavBarDef = FlowUi::ElementDefinition<
 	navBarParams,
-	void,
+	navBarState,
 	navBarResources,
 	FLOW_DEF_ID("NavBar")>;
 
@@ -131,63 +153,28 @@ inline const NavBarDef kNavBar = {
 		(void)context;
 	},
 	+[](NavBarDef::InteractionContext& context) {
-		(void)context;
+		(void)NavBarDef::getOrCreateState(FlowUi::toFlowId(context.elementID));
 	},
 	+[](NavBarDef::BuildContext& context) -> Clay_ElementDeclaration {
 		(void)context;
 		return Clay_ElementDeclaration{};
 	},
 	+[](NavBarDef::BuildContext& context) {
-
-		int navHeightMin = context.params.heightMin;
-		int navHeightMax = context.params.heightMax;
-		if (navHeightMax < navHeightMin)
+		navBarState& state = NavBarDef::getOrCreateState(FlowUi::toFlowId(context.elementID));
+		if (!NavBarDef::resources.has_value())
 		{
-			navHeightMax = navHeightMin;
+			return;
 		}
-
-		int spacer1MinWidth = context.params.spacer1MinWidth;
-		int spacer1MaxWidth = context.params.spacer1MaxWidth;
-		if (spacer1MaxWidth < spacer1MinWidth)
-		{
-			spacer1MaxWidth = spacer1MinWidth;
-		}
-
-		int spacer2MinWidth = context.params.spacer2MinWidth;
-		int spacer2MaxWidth = context.params.spacer2MaxWidth;
-		if (spacer2MaxWidth < spacer2MinWidth)
-		{
-			spacer2MaxWidth = spacer2MinWidth;
-		}
-
-		const Clay_ElementId rootId = context.uiManager.toClayEID(context.elementID);
-		const Clay_ElementId child1Id = context.uiManager.toClayEID(context.createChildElementId("child-1"));
-		const Clay_ElementId spacer1Id = context.uiManager.toClayEID(context.createChildElementId("spacer-1"));
-		const Clay_ElementId spacer1LineId = context.uiManager.toClayEID(context.createChildElementId("spacer-1/line"));
-		const Clay_ElementId child2Id = context.uiManager.toClayEID(context.createChildElementId("child-2"));
-		const Clay_ElementId child2GrowSpacerId = context.uiManager.toClayEID(context.createChildElementId("child-2/grow-spacer"));
-		const Clay_ElementId spacer2Id = context.uiManager.toClayEID(context.createChildElementId("spacer-2"));
-		const Clay_ElementId spacer2LineId = context.uiManager.toClayEID(context.createChildElementId("spacer-2/line"));
-		const Clay_ElementId child3Id = context.uiManager.toClayEID(context.createChildElementId("child-3"));
-
-		const std::string button21Path = context.createChildElementId("child-2/button-1");
-		const std::string button22Path = context.createChildElementId("child-2/button-2");
-		const std::string button31Path = context.createChildElementId("child-3/button-1");
-		const std::string button32Path = context.createChildElementId("child-3/button-2");
-		const std::string child1TitlePath = context.createChildElementId("child-1/title");
+		navBarResources& resources = *NavBarDef::resources;
 
 		Clay_LayoutConfig rootLayout{};
 		rootLayout.layoutDirection = CLAY_LEFT_TO_RIGHT;
-		rootLayout.childGap = 0;
-		rootLayout.padding = CLAY_PADDING_ALL(0);
-		rootLayout.childAlignment = {.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER};
-		rootLayout.sizing = {
-			.width = CLAY_SIZING_GROW(0),
-			.height = CLAY_SIZING_FIT(static_cast<float>(navHeightMin), static_cast<float>(navHeightMax)),
-		};
+		rootLayout.childGap = context.params.childGap;
+		rootLayout.padding = context.params.padding;
+		rootLayout.childAlignment = context.params.childAlignment;
+		rootLayout.sizing = context.params.sizing;
 
 		Clay_ElementDeclaration root{};
-		root.id = rootId;
 		root.layout = rootLayout;
 		root.backgroundColor = context.params.backgroundColor;
 		root.cornerRadius = CLAY_CORNER_RADIUS(0);
@@ -201,7 +188,6 @@ inline const NavBarDef kNavBar = {
 		child1Layout.sizing = {.width = CLAY_SIZING_FIT(0), .height = CLAY_SIZING_FIT(0)};
 
 		Clay_ElementDeclaration child1{};
-		child1.id = child1Id;
 		child1.layout = child1Layout;
 		child1.backgroundColor = FlowUi::Flow_Color("#00000000");
 		child1.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
@@ -211,13 +197,9 @@ inline const NavBarDef kNavBar = {
 		spacer1Layout.childGap = 0;
 		spacer1Layout.padding = CLAY_PADDING_ALL(0);
 		spacer1Layout.childAlignment = {.x = CLAY_ALIGN_X_CENTER, .y = CLAY_ALIGN_Y_CENTER};
-		spacer1Layout.sizing = {
-			.width = CLAY_SIZING_GROW(static_cast<float>(spacer1MinWidth), static_cast<float>(spacer1MaxWidth)),
-			.height = CLAY_SIZING_PERCENT(1.0f),
-		};
+		spacer1Layout.sizing = context.params.spacer1Sizing;
 
 		Clay_ElementDeclaration spacer1{};
-		spacer1.id = spacer1Id;
 		spacer1.layout = spacer1Layout;
 		spacer1.backgroundColor = FlowUi::Flow_Color("#00000000");
 		spacer1.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
@@ -226,20 +208,18 @@ inline const NavBarDef kNavBar = {
 		spacerLineLayout.sizing = {.width = CLAY_SIZING_FIXED(2), .height = CLAY_SIZING_FIXED(20)};
 
 		Clay_ElementDeclaration spacer1Line{};
-		spacer1Line.id = spacer1LineId;
 		spacer1Line.layout = spacerLineLayout;
-		spacer1Line.backgroundColor = FlowUi::Flow_Color("#5e646eff");
+		spacer1Line.backgroundColor = context.params.spacerLine1Color;
 		spacer1Line.cornerRadius = CLAY_CORNER_RADIUS(0);
 
 		Clay_LayoutConfig child2Layout{};
 		child2Layout.layoutDirection = CLAY_LEFT_TO_RIGHT;
-		child2Layout.childGap = 8;
-		child2Layout.padding = CLAY_PADDING_ALL(0);
-		child2Layout.childAlignment = {.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER};
+		child2Layout.childGap = context.params.child2Gap;
+		child2Layout.padding = context.params.child2Padding;
+		child2Layout.childAlignment = context.params.child2Alignment;
 		child2Layout.sizing = {.width = CLAY_SIZING_GROW(0, 100000), .height = CLAY_SIZING_FIT(0)};
 
 		Clay_ElementDeclaration child2{};
-		child2.id = child2Id;
 		child2.layout = child2Layout;
 		child2.backgroundColor = FlowUi::Flow_Color("#00000000");
 		child2.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
@@ -248,7 +228,6 @@ inline const NavBarDef kNavBar = {
 		child2GrowSpacerLayout.sizing = {.width = CLAY_SIZING_GROW(0, 100000), .height = CLAY_SIZING_PERCENT(1.0f)};
 
 		Clay_ElementDeclaration child2GrowSpacer{};
-		child2GrowSpacer.id = child2GrowSpacerId;
 		child2GrowSpacer.layout = child2GrowSpacerLayout;
 
 		Clay_LayoutConfig spacer2Layout{};
@@ -256,81 +235,129 @@ inline const NavBarDef kNavBar = {
 		spacer2Layout.childGap = 0;
 		spacer2Layout.padding = CLAY_PADDING_ALL(0);
 		spacer2Layout.childAlignment = {.x = CLAY_ALIGN_X_CENTER, .y = CLAY_ALIGN_Y_CENTER};
-		spacer2Layout.sizing = {
-			.width = CLAY_SIZING_GROW(static_cast<float>(spacer2MinWidth), static_cast<float>(spacer2MaxWidth)),
-			.height = CLAY_SIZING_PERCENT(1.0f),
-		};
+		spacer2Layout.sizing = context.params.spacer2Sizing;
 
 		Clay_ElementDeclaration spacer2{};
-		spacer2.id = spacer2Id;
 		spacer2.layout = spacer2Layout;
 		spacer2.backgroundColor = FlowUi::Flow_Color("#00000000");
 		spacer2.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
 
 		Clay_ElementDeclaration spacer2Line{};
-		spacer2Line.id = spacer2LineId;
 		spacer2Line.layout = spacerLineLayout;
-		spacer2Line.backgroundColor = FlowUi::Flow_Color("#5e646eff");
+		spacer2Line.backgroundColor = context.params.spacerLine2Color;
 		spacer2Line.cornerRadius = CLAY_CORNER_RADIUS(0);
 
 		Clay_LayoutConfig child3Layout{};
 		child3Layout.layoutDirection = CLAY_LEFT_TO_RIGHT;
-		child3Layout.childGap = 8;
-		child3Layout.padding = CLAY_PADDING_ALL(0);
-		child3Layout.childAlignment = {.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER};
+		child3Layout.childGap = context.params.child3Gap;
+		child3Layout.padding = context.params.child3Padding;
+		child3Layout.childAlignment = context.params.child3Alignment;
 		child3Layout.sizing = {.width = CLAY_SIZING_FIT(0), .height = CLAY_SIZING_FIT(0)};
 
 		Clay_ElementDeclaration child3{};
-		child3.id = child3Id;
 		child3.layout = child3Layout;
 		child3.backgroundColor = FlowUi::Flow_Color("#00000000");
 		child3.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
 
-		CLAY(root){
-			CLAY(child1){
-				if (NavBarDef::resources.has_value())
-				{
-					navBarResources& resources = *NavBarDef::resources;
-					resources.child1Builder
-					.withElementID(child1TitlePath)
+		basicTitleParams statusParams{};
+		statusParams.text = state.isDirty ? "Unsaved" : "Saved";
+		statusParams.contentMode = basicTitleParams::ContentMode::TextOnly;
+		statusParams.textColor = state.isDirty ? context.params.dirtyColor : context.params.cleanColor;
+		statusParams.fontSize = 13;
+		statusParams.padding = Clay_Padding{8, 8, 4, 4};
+		statusParams.sizing = {.width = CLAY_SIZING_FIT(0), .height = CLAY_SIZING_FIT(0)};
+		statusParams.backgroundColor = FlowUi::Flow_Color("#242428ff");
+		statusParams.borderColor = FlowUi::Flow_Color("#3a3a40ff");
+		statusParams.borderWidth = Clay_BorderWidth{1, 1, 1, 1, 0};
+		statusParams.cornerRadius = CLAY_CORNER_RADIUS(6);
+
+		auto makeButtonParams = [](std::string_view text, FlowUi::TextureRef icon) {
+			basicButtonParams params{};
+			params.text = std::string(text);
+			params.icon = icon;
+			params.contentMode = basicButtonParams::ContentMode::IconThenText;
+			params.sizing = {.width = CLAY_SIZING_FIT(0), .height = CLAY_SIZING_FIT(0)};
+			params.padding = Clay_Padding{10, 10, 8, 8};
+			params.backgroundColor = FlowUi::Flow_Color("#242428ff");
+			params.borderColor = FlowUi::Flow_Color("#3a3a40ff");
+			params.borderWidth = Clay_BorderWidth{1, 1, 1, 1, 0};
+			params.cornerRadius = CLAY_CORNER_RADIUS(6);
+			params.childGap = 8;
+			params.fontSize = 14;
+			params.textColor = FlowUi::Flow_Color("#f4f4f6ff");
+			params.iconContainerSizing = {.width = CLAY_SIZING_FIXED(16), .height = CLAY_SIZING_FIXED(16)};
+			params.iconTintColor = FlowUi::Flow_Color("#00000000");
+			return params;
+		};
+
+		CLAY(resources.rootId, root){
+			CLAY(resources.child1Id, child1){
+				resources.child1Builder
+					.withElementID(resources.child1TitlePath)
 					.draw();
-				}
 			};
 
-			CLAY(spacer1){
-				CLAY(spacer1Line){};
+			CLAY(resources.spacer1Id, spacer1){
+				CLAY(resources.spacer1LineId, spacer1Line){};
 			};
 
-			CLAY(child2){
-				if (NavBarDef::resources.has_value())
-				{
-					navBarResources& resources = *NavBarDef::resources;
-					resources.importButtonBuilder
-						.withElementID(button21Path)
-						.draw();
-					resources.layersButtonBuilder
-						.withElementID(button22Path)
-						.draw();
-				}
+			CLAY(resources.child2Id, child2){
+				context.uiManager.createElement(kBasicButton, resources.newButtonPath)
+					.setParameters(makeButtonParams("New", resources.newIcon))
+					/* V1 cant Update parameters made with variables */
+					.mergeParams([](auto& params) {
+					    params.backgroundColor = Clay_Color{.r = 36.0f, .g = 36.0f, .b = 40.0f, .a = 0.0f};
+					    params.borderColor = Clay_Color{.r = 58.0f, .g = 58.0f, .b = 64.0f, .a = 0.0f};
+					    params.borderWidth = Clay_BorderWidth{.left = 0, .right = 0, .top = 0, .bottom = 0, .betweenChildren = 0};
+					    params.cornerRadius = Clay_CornerRadius{.topLeft = 10.0f, .topRight = 10.0f, .bottomLeft = 10.0f, .bottomRight = 10.0f};
+					    params.fontSize = 14;
+					    params.hoverBackgroundColor = Clay_Color{.r = 36.0f, .g = 36.0f, .b = 40.0f, .a = 255.0f};
+					    params.iconContainerSizing = Clay_Sizing{.width = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 20.0f, .max = 20.0f}}, .type = CLAY__SIZING_TYPE_FIXED}, .height = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 20.0f, .max = 20.0f}}, .type = CLAY__SIZING_TYPE_FIXED}};
+					    params.iconTintColor = Clay_Color{.r = 0.0f, .g = 0.0f, .b = 0.0f, .a = 0.0f};
+					    params.textColor = Clay_Color{.r = 243.0f, .g = 243.0f, .b = 243.0f, .a = 255.0f};
+					})
+					.draw();
+				context.uiManager.createElement(kBasicButton, resources.importButtonPath)
+					.setParameters(makeButtonParams("Import", resources.importIcon))
+					/* V1 cant Update parameters made with variables */
+					.mergeParams([](auto& params) {
+					    params.backgroundColor = Clay_Color{.r = 36.0f, .g = 36.0f, .b = 40.0f, .a = 0.0f};
+					    params.borderColor = Clay_Color{.r = 58.0f, .g = 58.0f, .b = 64.0f, .a = 0.0f};
+					    params.borderWidth = Clay_BorderWidth{.left = 0, .right = 0, .top = 0, .bottom = 0, .betweenChildren = 0};
+					    params.hoverBackgroundColor = Clay_Color{.r = 36.0f, .g = 36.0f, .b = 40.0f, .a = 255.0f};
+					    params.iconContainerSizing = Clay_Sizing{.width = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 20.0f, .max = 20.0f}}, .type = CLAY__SIZING_TYPE_FIXED}, .height = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 20.0f, .max = 20.0f}}, .type = CLAY__SIZING_TYPE_FIXED}};
+					    params.textColor = Clay_Color{.r = 243.0f, .g = 243.0f, .b = 243.0f, .a = 255.0f};
+					})
+					.draw();
+				context.uiManager.createElement(kBasicButton, resources.exportButtonPath)
+					.setParameters(makeButtonParams("Export", resources.exportIcon))
+					/* V1 cant Update parameters made with variables */
+					.mergeParams([](auto& params) {
+					    params.backgroundColor = Clay_Color{.r = 36.0f, .g = 36.0f, .b = 40.0f, .a = 0.0f};
+					    params.borderColor = Clay_Color{.r = 58.0f, .g = 58.0f, .b = 64.0f, .a = 0.0f};
+					    params.borderWidth = Clay_BorderWidth{.left = 0, .right = 0, .top = 0, .bottom = 0, .betweenChildren = 0};
+					    params.hoverBackgroundColor = Clay_Color{.r = 36.0f, .g = 36.0f, .b = 40.0f, .a = 255.0f};
+					    params.iconContainerSizing = Clay_Sizing{.width = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 20.0f, .max = 20.0f}}, .type = CLAY__SIZING_TYPE_FIXED}, .height = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 20.0f, .max = 20.0f}}, .type = CLAY__SIZING_TYPE_FIXED}};
+					    params.textColor = Clay_Color{.r = 243.0f, .g = 243.0f, .b = 243.0f, .a = 255.0f};
+					})
+					.draw();
 
-				CLAY(child2GrowSpacer){};
+				CLAY(resources.child2GrowSpacerId, child2GrowSpacer){};
 			};
 
-			CLAY(spacer2){
-				CLAY(spacer2Line){};
+			CLAY(resources.spacer2Id, spacer2){
+				CLAY(resources.spacer2LineId, spacer2Line){};
 			};
 
-			CLAY(child3){
-				if (NavBarDef::resources.has_value())
-				{
-					navBarResources& resources = *NavBarDef::resources;
-					resources.exportButtonBuilder
-						.withElementID(button31Path)
-						.draw();
-					resources.settingsButtonBuilder
-						.withElementID(button32Path)
-						.draw();
-				}
+			CLAY(resources.child3Id, child3){
+				context.uiManager.createElement(kBasicTitle, resources.statusTitlePath)
+					.setParameters(std::move(statusParams))
+					/* V1 cant Update parameters made with variables */
+					.mergeParams([](auto& params) {
+					    params.backgroundColor = Clay_Color{.r = 31.0f, .g = 46.0f, .b = 60.0f, .a = 150.0f};
+					    params.borderColor = Clay_Color{.r = 0.0f, .g = 151.0f, .b = 137.0f, .a = 255.0f};
+					})
+					.draw();
 			};
 		};
 	},

@@ -6,5 +6,5 @@ C_DEFINES = -DPLUTOVG_BUILD -DPLUTOVG_BUILD_STATIC
 
 C_INCLUDES = -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/include -I/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source
 
-C_FLAGS = -std=gnu99 -fvisibility=hidden
+C_FLAGS = -O3 -DNDEBUG -std=gnu99 -fvisibility=hidden
 

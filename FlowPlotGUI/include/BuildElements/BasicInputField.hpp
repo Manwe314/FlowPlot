@@ -75,7 +75,6 @@ inline const BasicInputFieldDef kBasicInputField = {
 		rootLayout.childAlignment = context.params.childTextAlignment;
 
 		Clay_ElementDeclaration root{};
-		root.id = contentId;
 		root.layout = rootLayout;
 		root.backgroundColor = context.params.backgroundColor;
 		root.cornerRadius = context.params.cornerRadius;
@@ -89,8 +88,8 @@ inline const BasicInputFieldDef kBasicInputField = {
 		textConfig.textAlignment = context.params.textAlignment;
 		textConfig.fontId = context.params.fontId;
 
-		CLAY(root){
-			CLAY({.id = textId}){
+		CLAY(contentId, root){
+			CLAY(textId, {}){
 				CLAY_TEXT(
 					context.uiManager.toClayString(result.text),
 					CLAY_TEXT_CONFIG(textConfig)

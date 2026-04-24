@@ -124,7 +124,6 @@ inline const PanelTitleDef kPanelTitle = {
 		rootLayout.childGap = context.params.childGap;
 
 		Clay_ElementDeclaration root{};
-		root.id = rootId;
 		root.layout = rootLayout;
 		root.backgroundColor = context.params.backgroundColor;
 		root.cornerRadius = CLAY_CORNER_RADIUS(0);
@@ -141,7 +140,6 @@ inline const PanelTitleDef kPanelTitle = {
 		contentLayout.childGap = context.params.contentChildGap;
 
 		Clay_ElementDeclaration content{};
-		content.id = contentId;
 		content.layout = contentLayout;
 		content.backgroundColor = context.params.contentBackgroundColor;
 		content.border = {.color = context.params.contentBorderColor, .width = context.params.contentBorderWidth};
@@ -157,7 +155,6 @@ inline const PanelTitleDef kPanelTitle = {
 		leftColumnLayout.childGap = context.params.leftColumnChildGap;
 
 		Clay_ElementDeclaration leftColumn{};
-		leftColumn.id = leftColumnId;
 		leftColumn.layout = leftColumnLayout;
 		leftColumn.backgroundColor = FlowUi::Flow_Color("#00000000");
 		leftColumn.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
@@ -173,7 +170,6 @@ inline const PanelTitleDef kPanelTitle = {
 		rightContentLayout.childGap = 0;
 
 		Clay_ElementDeclaration rightContent{};
-		rightContent.id = rightContentId;
 		rightContent.layout = rightContentLayout;
 		rightContent.backgroundColor = FlowUi::Flow_Color("#00000000");
 		rightContent.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
@@ -185,7 +181,6 @@ inline const PanelTitleDef kPanelTitle = {
 		};
 
 		Clay_ElementDeclaration separator{};
-		separator.id = separatorId;
 		separator.layout = separatorLayout;
 		separator.backgroundColor = context.params.separatorColor;
 		separator.cornerRadius = CLAY_CORNER_RADIUS(0);
@@ -197,10 +192,10 @@ inline const PanelTitleDef kPanelTitle = {
 		titleTextConfig.textAlignment = context.params.titleAlignment;
 		titleTextConfig.fontId = context.params.titleFontId;
 
-		CLAY(root){
-			CLAY(content){
-				CLAY(leftColumn){
-					CLAY({.id = titleTextId}){
+		CLAY(rootId, root){
+			CLAY(contentId, content){
+				CLAY(leftColumnId, leftColumn){
+					CLAY(titleTextId, {}){
 						CLAY_TEXT(
 							context.uiManager.toClayString(context.params.titleText),
 							CLAY_TEXT_CONFIG(titleTextConfig)
@@ -215,7 +210,7 @@ inline const PanelTitleDef kPanelTitle = {
 					}
 				};
 
-				CLAY(rightContent){
+				CLAY(rightContentId, rightContent){
 					switch (context.params.rightContentMode)
 					{
 					case panelTitleParams::RightContentMode::None:
@@ -234,7 +229,7 @@ inline const PanelTitleDef kPanelTitle = {
 				};
 			};
 
-			CLAY(separator){};
+			CLAY(separatorId, separator){};
 		};
 	},
 };

@@ -48,6 +48,7 @@ external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/source/plutovg-
   /usr/include/x86_64-linux-gnu/bits/struct_mutex.h \
   /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h \
   /usr/include/alloca.h \
+  /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
   /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
   /usr/include/string.h \
   /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
@@ -70,7 +71,8 @@ external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/source/plutovg-
   /usr/include/x86_64-linux-gnu/bits/types/__FILE.h \
   /usr/include/x86_64-linux-gnu/bits/types/FILE.h \
   /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h \
-  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h /usr/include/assert.h \
+  /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
+  /usr/include/x86_64-linux-gnu/bits/stdio.h /usr/include/assert.h \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/plutosvg/plutovg/source/plutovg-stb-image.h \
   /usr/lib/llvm-12/lib/clang/12.0.1/include/limits.h \
   /usr/include/limits.h /usr/include/x86_64-linux-gnu/bits/posix1_lim.h \
