@@ -6,6 +6,7 @@
 
 #include "elements.hpp"
 #include "iconRegistry.hpp"
+#include "templateHelper.hpp"
 
 int main()
 {
@@ -27,6 +28,11 @@ int main()
 		(void)NavBarDef::getResources(app);
 
 		FlowUi::UiManager& ui = app.ui();
+		FlowPlotGui::state guiState{};
+		guiState.activeTemplate.panels.emplace_back();
+		guiState.activeTemplate.panels.back().id = "panel_1";
+		guiState.activeTemplate.panels.back().layers.emplace_back();
+		guiState.activeTemplate.panels.back().layers.back().id = "layer_1";
 
 
 
@@ -56,10 +62,9 @@ int main()
 							.secondaryTitleParams = {.text = "click to edit properties", .fontSize = 12}
 						})
 						.draw();
-						ui.createElement(kRootBackground, "TemplatePanelBack")
-						.setParameters({.backgroundColor = Clay_Color{0.0f,0.0f,0.0f,0.0f}})
-						.construct();
-						ui.drawConstructed(); // TemplatePanelBack
+						FlowPlotGui::drawTemplateNode(app, ui, guiState, "TemplatePanel/tree", {
+							.kind = FlowPlotGui::TemplateNodeKind::Figure,
+						});
 					ui.drawConstructed(); // TemplatePanel
 					ui.createElement(kDynamicSeparator, "separator1")
 					.setParameters({
@@ -97,7 +102,9 @@ int main()
 							PropsPanelDef::getOrCreateState(FlowUi::toFlowId(rightId)).minWidth = v;
 						},
 					}).draw();
-					ui.createElement(kPropsPanel, rightId).construct();
+					ui.createElement(kPropsPanel, rightId)
+					.setParameters({.guiState = &guiState})
+					.construct();
 						ui.createElement(kPanelTitle, "TemplateTitle")
 						.setParameters({
 							.titleText = "Properties",

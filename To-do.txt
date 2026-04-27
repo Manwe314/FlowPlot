@@ -20,3 +20,7 @@
 6. Support more dataTypes as vector inputs
 	- time/date
 	- custom layouts???
+
+
+
+GUI app:

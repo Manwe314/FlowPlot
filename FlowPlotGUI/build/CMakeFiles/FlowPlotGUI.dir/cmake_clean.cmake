@@ -3,6 +3,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/FlowPlotGUI.dir/main.cpp.o.d"
   "CMakeFiles/FlowPlotGUI.dir/src/iconRegistry.cpp.o"
   "CMakeFiles/FlowPlotGUI.dir/src/iconRegistry.cpp.o.d"
+  "CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.o"
+  "CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.o.d"
   "FlowPlotGUI"
   "FlowPlotGUI.pdb"
 )

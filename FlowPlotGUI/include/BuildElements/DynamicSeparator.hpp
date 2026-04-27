@@ -48,6 +48,7 @@ using DynamicSeparatorDef = FlowUi::ElementDefinition<
 	FLOW_DEF_ID("DynamicSeparator")>;
 
 inline const DynamicSeparatorDef kDynamicSeparator = {
+	nullptr,
 	+[](DynamicSeparatorDef::InteractionContext& context) {
 		dynamicSeparatorState& state = DynamicSeparatorDef::getOrCreateState(FlowUi::toFlowId(context.elementID));
 		state.isPressed = true;
@@ -84,19 +85,23 @@ inline const DynamicSeparatorDef kDynamicSeparator = {
 	nullptr,
 	+[](DynamicSeparatorDef::InteractionContext& context) {
 		dynamicSeparatorState& state = DynamicSeparatorDef::getOrCreateState(FlowUi::toFlowId(context.elementID));
-		state.isPressed = false;
-		state.isDragging = false;
-	},
-	+[](DynamicSeparatorDef::InteractionContext& context) {
-		dynamicSeparatorState& state = DynamicSeparatorDef::getOrCreateState(FlowUi::toFlowId(context.elementID));
 		const FrameInput& input = context.uiManager.getCurrentFrameInput();
-		if (!input.mouseDown[0])
+		const FrameInput& previousInput = context.uiManager.getPreviousFrameInput();
+
+		if (!state.isDragging)
+		{
+			return;
+		}
+
+		const bool primaryMouseReleased = previousInput.mouseDown[0] && !input.mouseDown[0];
+		if (primaryMouseReleased)
 		{
 			state.isPressed = false;
 			state.isDragging = false;
 			return;
 		}
-		if (!state.isDragging)
+
+		if (!input.mouseDown[0])
 		{
 			return;
 		}

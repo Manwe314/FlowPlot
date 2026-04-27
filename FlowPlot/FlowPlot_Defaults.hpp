@@ -92,6 +92,7 @@ namespace FlowPlot
 
 		struct LegendElementSpec
 		{
+			std::string id = "legend_element_1";
 			std::string text = "Untitled Plot";
 			std::string fontFamily = "Default";
 			float fontSize = 24.0f;
@@ -106,6 +107,7 @@ namespace FlowPlot
 
 		struct LegendSpec
 		{
+			std::string id = "legend_1";
 			bool visible = false;
 			std::string background = "#ffffff";
 			std::string borderColor = "#cccccc";

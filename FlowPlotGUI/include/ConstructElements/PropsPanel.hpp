@@ -8,6 +8,7 @@
 struct propsPanelParams {
 	int maxWidth = 520;
 	Clay_Color backgroundColor = FlowUi::Flow_Color("#00000000");
+	FlowPlotGui::state* guiState = nullptr;
 };
 
 struct propsPanelState {

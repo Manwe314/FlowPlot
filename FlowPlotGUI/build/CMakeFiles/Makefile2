@@ -174,12 +174,12 @@ CMakeFiles/FlowPlotGUI.dir/all: external/FlowUi/external/plutosvg/CMakeFiles/plu
 CMakeFiles/FlowPlotGUI.dir/all: external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=1,2,3 "Built target FlowPlotGUI"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=1,2,3,4 "Built target FlowPlotGUI"
 .PHONY : CMakeFiles/FlowPlotGUI.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/FlowPlotGUI.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles 42
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles 43
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/FlowPlotGUI.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles 0
 .PHONY : CMakeFiles/FlowPlotGUI.dir/rule
@@ -200,7 +200,7 @@ CMakeFiles/FlowPlotGUI.dir/clean:
 external/FlowUi/CMakeFiles/flowui_shaders.dir/all:
 	$(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui_shaders.dir/build.make external/FlowUi/CMakeFiles/flowui_shaders.dir/depend
 	$(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui_shaders.dir/build.make external/FlowUi/CMakeFiles/flowui_shaders.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=25,26,27,28,29,30 "Built target flowui_shaders"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=26,27,28,29,30,31 "Built target flowui_shaders"
 .PHONY : external/FlowUi/CMakeFiles/flowui_shaders.dir/all
 
 # Build rule for subdir invocation for target.
@@ -228,7 +228,7 @@ external/FlowUi/CMakeFiles/flowui_font_baker.dir/all: external/FlowUi/external/m
 external/FlowUi/CMakeFiles/flowui_font_baker.dir/all: external/FlowUi/external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-ext.dir/all
 	$(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui_font_baker.dir/build.make external/FlowUi/CMakeFiles/flowui_font_baker.dir/depend
 	$(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui_font_baker.dir/build.make external/FlowUi/CMakeFiles/flowui_font_baker.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=23,24 "Built target flowui_font_baker"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=24,25 "Built target flowui_font_baker"
 .PHONY : external/FlowUi/CMakeFiles/flowui_font_baker.dir/all
 
 # Build rule for subdir invocation for target.
@@ -256,7 +256,7 @@ external/FlowUi/CMakeFiles/flowui.dir/all: external/FlowUi/external/plutosvg/CMa
 external/FlowUi/CMakeFiles/flowui.dir/all: external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/all
 	$(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/depend
 	$(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22 "Built target flowui"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23 "Built target flowui"
 .PHONY : external/FlowUi/CMakeFiles/flowui.dir/all
 
 # Build rule for subdir invocation for target.
@@ -283,7 +283,7 @@ external/FlowUi/external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/all: exter
 external/FlowUi/external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/all: external/FlowUi/external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-ext.dir/all
 	$(MAKE) $(MAKESILENT) -f external/FlowUi/external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/build.make external/FlowUi/external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/depend
 	$(MAKE) $(MAKESILENT) -f external/FlowUi/external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/build.make external/FlowUi/external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50 "Built target msdf-atlas-gen"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51 "Built target msdf-atlas-gen"
 .PHONY : external/FlowUi/external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/all
 
 # Build rule for subdir invocation for target.
@@ -309,7 +309,7 @@ external/FlowUi/external/msdf-atlas-gen/CMakeFiles/msdf-atlas-gen.dir/clean:
 external/FlowUi/external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/all:
 	$(MAKE) $(MAKESILENT) -f external/FlowUi/external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/build.make external/FlowUi/external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/depend
 	$(MAKE) $(MAKESILENT) -f external/FlowUi/external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/build.make external/FlowUi/external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75 "Built target msdfgen-core"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76 "Built target msdfgen-core"
 .PHONY : external/FlowUi/external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/all
 
 # Build rule for subdir invocation for target.
@@ -335,7 +335,7 @@ external/FlowUi/external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/clea
 external/FlowUi/external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-ext.dir/all: external/FlowUi/external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-core.dir/all
 	$(MAKE) $(MAKESILENT) -f external/FlowUi/external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-ext.dir/build.make external/FlowUi/external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-ext.dir/depend
 	$(MAKE) $(MAKESILENT) -f external/FlowUi/external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-ext.dir/build.make external/FlowUi/external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-ext.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=76,77,78,79,80 "Built target msdfgen-ext"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=77,78,79,80,81 "Built target msdfgen-ext"
 .PHONY : external/FlowUi/external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-ext.dir/all
 
 # Build rule for subdir invocation for target.
@@ -361,7 +361,7 @@ external/FlowUi/external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-ext.dir/clean
 external/FlowUi/external/plutosvg/CMakeFiles/plutosvg.dir/all: external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/all
 	$(MAKE) $(MAKESILENT) -f external/FlowUi/external/plutosvg/CMakeFiles/plutosvg.dir/build.make external/FlowUi/external/plutosvg/CMakeFiles/plutosvg.dir/depend
 	$(MAKE) $(MAKESILENT) -f external/FlowUi/external/plutosvg/CMakeFiles/plutosvg.dir/build.make external/FlowUi/external/plutosvg/CMakeFiles/plutosvg.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=81,82 "Built target plutosvg"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=82,83 "Built target plutosvg"
 .PHONY : external/FlowUi/external/plutosvg/CMakeFiles/plutosvg.dir/all
 
 # Build rule for subdir invocation for target.
@@ -387,7 +387,7 @@ external/FlowUi/external/plutosvg/CMakeFiles/plutosvg.dir/clean:
 external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/all:
 	$(MAKE) $(MAKESILENT) -f external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/build.make external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/depend
 	$(MAKE) $(MAKESILENT) -f external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/build.make external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=83,84,85,86,87,88,89,90,91,92,93,94 "Built target plutovg"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=84,85,86,87,88,89,90,91,92,93,94,95 "Built target plutovg"
 .PHONY : external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/all
 
 # Build rule for subdir invocation for target.

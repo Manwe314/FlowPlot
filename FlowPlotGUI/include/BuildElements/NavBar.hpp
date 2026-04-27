@@ -13,6 +13,8 @@
 
 struct navBarParams {
 	Clay_Color backgroundColor = FlowUi::Flow_Color("#18181aff");
+	Clay_Color borderColor = FlowUi::Flow_Color("#00000000");
+	Clay_BorderWidth borderWidth = Clay_BorderWidth{0, 0, 0, 0, 0};
 	Clay_Sizing sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(52, 72)};
 	Clay_Padding padding = Clay_Padding{16, 16, 0, 0};
 	uint16_t childGap = 0;
@@ -42,6 +44,8 @@ struct navBarState {
 FLOWUI_DEV_REGISTER_STRUCT(
 	navBarParams,
 	FLOWUI_DEV_REFLECT_FIELD(navBarParams, backgroundColor),
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, borderColor),
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, borderWidth),
 	FLOWUI_DEV_REFLECT_FIELD(navBarParams, sizing),
 	FLOWUI_DEV_REFLECT_FIELD(navBarParams, padding),
 	FLOWUI_DEV_REFLECT_FIELD(navBarParams, childGap),
@@ -178,7 +182,7 @@ inline const NavBarDef kNavBar = {
 		root.layout = rootLayout;
 		root.backgroundColor = context.params.backgroundColor;
 		root.cornerRadius = CLAY_CORNER_RADIUS(0);
-		root.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
+		root.border = {.color = context.params.borderColor, .width = context.params.borderWidth};
 
 		Clay_LayoutConfig child1Layout{};
 		child1Layout.layoutDirection = CLAY_LEFT_TO_RIGHT;
