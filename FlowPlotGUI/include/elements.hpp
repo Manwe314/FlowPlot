@@ -11,6 +11,7 @@
 #include "BuildElements/DynamicSeparator.hpp"
 #include "BuildElements/TemplateLayer.hpp"
 #include "BuildElements/NavBar.hpp"
+#include "BuildElements/propertiesContent.hpp"
 
 #include "ConstructElements/RootBackground.hpp"
 #include "ConstructElements/MainContent.hpp"
@@ -34,6 +35,8 @@ FLOWUI_DEV_REGISTER_ELEMENT(DynamicSeparatorDef, "DynamicSeparator");
 FLOWUI_DEV_REGISTER_ELEMENT(TemplateLayerDef, "TemplateLayer");
 
 FLOWUI_DEV_REGISTER_ELEMENT(NavBarDef, "NavBar");
+
+FLOWUI_DEV_REGISTER_ELEMENT(PropertiesContentDef, "PropertiesContent");
 
 FLOWUI_DEV_REGISTER_ELEMENT(RootBackgroundDef, "RootBackground");
 

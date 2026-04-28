@@ -360,6 +360,11 @@ CMakeFiles/FlowPlotGUI.dir/main.cpp.o: \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/DynamicSeparator.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/TemplateLayer.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/NavBar.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/propertiesContent.hpp \
+  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/algorithm \
+  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/ranges_algo.h \
+  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/ranges_util.h \
+  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/pstl/glue_algorithm_defs.h \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/ConstructElements/RootBackground.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/ConstructElements/MainContent.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/ConstructElements/MainContentPanel.hpp \

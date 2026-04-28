@@ -24,3 +24,11 @@
 
 
 GUI app:
+
+- wire in Nav bar button functionality
+- add ability to choose pre made template patterns (pair plot)
+- add conviniance shortcuts, text copy paste, endite layer duplication property copy paste
+- CSV parsing input as "mock" data?
+- ViewPort
+- Data block
+

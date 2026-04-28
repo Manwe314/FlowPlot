@@ -12,12 +12,30 @@ namespace FlowPlotGui {
 
 struct TemplateNodeRef {
 	TemplateNodeKind kind = TemplateNodeKind::Figure;
+	TemplateNodeKind axisKind = TemplateNodeKind::XAxis;
 	std::size_t panelIndex = 0;
 	std::size_t layerIndex = 0;
 	std::size_t legendIndex = 0;
 	std::size_t legendElementIndex = 0;
 	int depth = 0;
 };
+
+inline const char* axisTemplateNodeSlug(TemplateNodeKind kind)
+{
+	switch (kind)
+	{
+	case TemplateNodeKind::XAxis:
+		return "x-axis";
+	case TemplateNodeKind::YAxis:
+		return "y-axis";
+	case TemplateNodeKind::XSecondaryAxis:
+		return "x-secondary-axis";
+	case TemplateNodeKind::YSecondaryAxis:
+		return "y-secondary-axis";
+	default:
+		return "axis";
+	}
+}
 
 templateLayerParams makeTemplateLayerParams(
 	FlowUi::App& app,
@@ -39,10 +57,15 @@ inline TemplateNodeKey templateNodeKey(
 	case TemplateNodeKind::YAxis:
 	case TemplateNodeKind::XSecondaryAxis:
 	case TemplateNodeKind::YSecondaryAxis:
+	case TemplateNodeKind::AxisTitle:
 	case TemplateNodeKind::LayersGroup:
 		if (node.panelIndex < spec.panels.size())
 		{
 			key.outer = spec.panels[node.panelIndex].id;
+		}
+		if (node.kind == TemplateNodeKind::AxisTitle)
+		{
+			key.inner = axisTemplateNodeSlug(node.axisKind);
 		}
 		break;
 	case TemplateNodeKind::Layer:
@@ -126,6 +149,12 @@ inline std::string templateNodeId(
 			return root + "/panels/" + spec.panels[node.panelIndex].id + "/y-secondary-axis";
 		}
 		return root + "/panels/invalid/y-secondary-axis";
+	case TemplateNodeKind::AxisTitle:
+		if (node.panelIndex < spec.panels.size())
+		{
+			return root + "/panels/" + spec.panels[node.panelIndex].id + "/" + axisTemplateNodeSlug(node.axisKind) + "/title";
+		}
+		return root + "/panels/invalid/" + std::string(axisTemplateNodeSlug(node.axisKind)) + "/title";
 	case TemplateNodeKind::LayersGroup:
 		if (node.panelIndex < spec.panels.size())
 		{
@@ -221,7 +250,29 @@ inline void drawTemplateNode(
 			.depth = node.depth + 1,
 		});
 		drawTemplateNode(app, ui, guiState, treeRootId, {
+			.kind = TemplateNodeKind::XSecondaryAxis,
+			.panelIndex = node.panelIndex,
+			.depth = node.depth + 1,
+		});
+		drawTemplateNode(app, ui, guiState, treeRootId, {
+			.kind = TemplateNodeKind::YSecondaryAxis,
+			.panelIndex = node.panelIndex,
+			.depth = node.depth + 1,
+		});
+		drawTemplateNode(app, ui, guiState, treeRootId, {
 			.kind = TemplateNodeKind::LayersGroup,
+			.panelIndex = node.panelIndex,
+			.depth = node.depth + 1,
+		});
+		break;
+
+	case TemplateNodeKind::XAxis:
+	case TemplateNodeKind::YAxis:
+	case TemplateNodeKind::XSecondaryAxis:
+	case TemplateNodeKind::YSecondaryAxis:
+		drawTemplateNode(app, ui, guiState, treeRootId, {
+			.kind = TemplateNodeKind::AxisTitle,
+			.axisKind = node.kind,
 			.panelIndex = node.panelIndex,
 			.depth = node.depth + 1,
 		});

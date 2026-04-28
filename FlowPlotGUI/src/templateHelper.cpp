@@ -133,6 +133,8 @@ void addTemplateNodeChild(FlowPlotGui::state& guiState, const TemplateNodeKey& p
 		legend.legendElements.push_back(std::move(element));
 		break;
 	}
+	case TemplateNodeKind::AxisTitle:
+		break;
 	default:
 		break;
 	}
@@ -190,6 +192,8 @@ void deleteTemplateNode(FlowPlotGui::state& guiState, const TemplateNodeKey& key
 		}
 		break;
 	}
+	case TemplateNodeKind::AxisTitle:
+		break;
 	default:
 		break;
 	}
@@ -262,18 +266,26 @@ templateLayerParams makeTemplateLayerParams(
 	case TemplateNodeKind::XAxis:
 		params.mainText = "X axis";
 		params.mainIcon = app.icons().textureRef("Axis");
+		params.showExpanderButton = true;
 		break;
 	case TemplateNodeKind::YAxis:
 		params.mainText = "Y axis";
 		params.mainIcon = app.icons().textureRef("Axis");
+		params.showExpanderButton = true;
 		break;
 	case TemplateNodeKind::XSecondaryAxis:
 		params.mainText = "X secondary axis";
 		params.mainIcon = app.icons().textureRef("Axis");
+		params.showExpanderButton = true;
 		break;
 	case TemplateNodeKind::YSecondaryAxis:
 		params.mainText = "Y secondary axis";
 		params.mainIcon = app.icons().textureRef("Axis");
+		params.showExpanderButton = true;
+		break;
+	case TemplateNodeKind::AxisTitle:
+		params.mainText = "Axis title";
+		params.mainIcon = app.icons().textureRef("T");
 		break;
 	case TemplateNodeKind::LayersGroup:
 		params.mainText = "Layers";

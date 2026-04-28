@@ -39,6 +39,7 @@ CMakeFiles/FlowPlotGUI.dir/main.cpp.o: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/PanelTitle.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/PlotviewPort.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/TemplateLayer.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/propertiesContent.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/ConstructElements/MainContent.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/ConstructElements/MainContentPanel.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/ConstructElements/PropsPanel.hpp \
@@ -63,6 +64,7 @@ CMakeFiles/FlowPlotGUI.dir/main.cpp.o: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/
   /home/lkukhale/vulkan/1.4.321.1/x86_64/include/vulkan/vk_platform.h \
   /home/lkukhale/vulkan/1.4.321.1/x86_64/include/vulkan/vulkan.h \
   /home/lkukhale/vulkan/1.4.321.1/x86_64/include/vulkan/vulkan_core.h \
+  /usr/include/c++/12/algorithm \
   /usr/include/c++/12/array \
   /usr/include/c++/12/backward/auto_ptr.h \
   /usr/include/c++/12/backward/binders.h \
@@ -129,10 +131,12 @@ CMakeFiles/FlowPlotGUI.dir/main.cpp.o: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/
   /usr/include/c++/12/bits/ptr_traits.h \
   /usr/include/c++/12/bits/quoted_string.h \
   /usr/include/c++/12/bits/range_access.h \
+  /usr/include/c++/12/bits/ranges_algo.h \
   /usr/include/c++/12/bits/ranges_algobase.h \
   /usr/include/c++/12/bits/ranges_base.h \
   /usr/include/c++/12/bits/ranges_cmp.h \
   /usr/include/c++/12/bits/ranges_uninitialized.h \
+  /usr/include/c++/12/bits/ranges_util.h \
   /usr/include/c++/12/bits/refwrap.h \
   /usr/include/c++/12/bits/shared_ptr.h \
   /usr/include/c++/12/bits/shared_ptr_atomic.h \
@@ -210,6 +214,7 @@ CMakeFiles/FlowPlotGUI.dir/main.cpp.o: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/
   /usr/include/c++/12/optional \
   /usr/include/c++/12/ostream \
   /usr/include/c++/12/pstl/execution_defs.h \
+  /usr/include/c++/12/pstl/glue_algorithm_defs.h \
   /usr/include/c++/12/pstl/glue_memory_defs.h \
   /usr/include/c++/12/pstl/pstl_config.h \
   /usr/include/c++/12/ratio \
@@ -1132,14 +1137,6 @@ CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.o: /home/lkukhale/kodi/FlowPlo
   /usr/lib/llvm-12/lib/clang/12.0.1/include/xmmintrin.h
 
 
-/usr/include/c++/12/pstl/glue_algorithm_defs.h:
-
-/usr/include/c++/12/bits/ranges_util.h:
-
-/usr/include/c++/12/bits/ranges_algo.h:
-
-/usr/include/c++/12/algorithm:
-
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/src/templateHelper.cpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/Icons.hpp:
@@ -1212,11 +1209,13 @@ CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.o: /home/lkukhale/kodi/FlowPlo
 
 /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
 
-/usr/include/c++/12/bits/basic_ios.h:
+/usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h:
 
-/usr/include/c++/12/bits/unordered_set.h:
+/usr/include/x86_64-linux-gnu/bits/types/__FILE.h:
 
-/usr/include/x86_64-linux-gnu/bits/fp-logb.h:
+/usr/include/x86_64-linux-gnu/bits/types.h:
+
+/usr/include/x86_64-linux-gnu/bits/timex.h:
 
 /usr/include/c++/12/bits/uniform_int_dist.h:
 
@@ -1239,10 +1238,6 @@ CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.o: /home/lkukhale/kodi/FlowPlo
 /usr/include/c++/12/bits/vector.tcc:
 
 /usr/include/linux/close_range.h:
-
-/usr/include/c++/12/bits/stl_pair.h:
-
-external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/bits/stl_iterator_base_types.h:
 
@@ -1284,8 +1279,6 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/bits/node_handle.h:
 
-/usr/include/c++/12/bits/utility.h:
-
 /usr/include/c++/12/bits/ranges_base.h:
 
 /usr/lib/llvm-12/lib/clang/12.0.1/include/stdarg.h:
@@ -1298,17 +1291,19 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/bits/enable_special_members.h:
 
-/usr/include/c++/12/bits/uses_allocator_args.h:
-
 /usr/include/c++/12/bits/locale_facets_nonio.tcc:
 
 /usr/include/strings.h:
 
+/usr/include/c++/12/bits/ranges_algo.h:
+
+/usr/include/c++/12/bits/move.h:
+
 /usr/include/c++/12/bits/cxxabi_forced.h:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/iconRegistry.hpp:
-
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/templateHelper.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/iconRegistry.hpp:
 
 /usr/include/c++/12/bits/string_view.tcc:
 
@@ -1334,10 +1329,6 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/InputFieldManager.hpp:
 
-/usr/include/c++/12/bits/unordered_map.h:
-
-/usr/include/c++/12/filesystem:
-
 /usr/include/c++/12/bits/ios_base.h:
 
 /usr/include/c++/12/bits/ostream.tcc:
@@ -1347,6 +1338,8 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /usr/include/c++/12/bits/invoke.h:
 
 /usr/include/x86_64-linux-gnu/c++/12/bits/messages_members.h:
+
+/usr/include/c++/12/bits/basic_ios.h:
 
 /usr/include/c++/12/bits/exception_defines.h:
 
@@ -1362,9 +1355,11 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/getopt_core.h:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/elements.hpp:
+/usr/include/c++/12/bits/shared_ptr_base.h:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/IWindow.hpp:
+/usr/include/x86_64-linux-gnu/c++/12/bits/c++locale.h:
+
+/usr/include/c++/12/bits/functional_hash.h:
 
 /usr/include/c++/12/bits/std_mutex.h:
 
@@ -1377,6 +1372,10 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /usr/include/c++/12/bits/move_only_function.h:
 
 /usr/include/c++/12/bits/basic_string.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/elements.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/IWindow.hpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ViewPortManager.hpp:
 
@@ -1395,12 +1394,6 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /usr/include/c++/12/bit:
 
 /usr/include/c++/12/variant:
-
-/usr/include/c++/12/bits/shared_ptr_base.h:
-
-/usr/include/x86_64-linux-gnu/c++/12/bits/c++locale.h:
-
-/usr/include/c++/12/bits/functional_hash.h:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ImageManager.hpp:
 
@@ -1460,6 +1453,14 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/Inputs.hpp:
 
+external/FlowUi/include/FlowUi/BuildConfig.hpp:
+
+/usr/include/c++/12/bits/stl_pair.h:
+
+/usr/include/c++/12/filesystem:
+
+/usr/include/c++/12/bits/unordered_map.h:
+
 /usr/include/c++/12/bits/new_allocator.h:
 
 /usr/include/c++/12/bits/quoted_string.h:
@@ -1485,6 +1486,12 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/TemplateLayer.hpp:
 
 /usr/include/x86_64-linux-gnu/c++/12/bits/c++config.h:
+
+/usr/include/c++/12/algorithm:
+
+/usr/include/x86_64-linux-gnu/bits/long-double.h:
+
+/usr/include/x86_64-linux-gnu/bits/stdio_lim.h:
 
 /usr/include/x86_64-linux-gnu/bits/errno.h:
 
@@ -1562,6 +1569,12 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/bits/allocated_ptr.h:
 
+/usr/include/c++/12/bits/utility.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/propertiesContent.hpp:
+
+/usr/include/x86_64-linux-gnu/c++/12/bits/os_defines.h:
+
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/ConstructElements/MainContentPanel.hpp:
 
 /usr/include/c++/12/locale:
@@ -1608,6 +1621,8 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/bits/atomic_base.h:
 
+/usr/include/c++/12/bits/ranges_util.h:
+
 /usr/include/c++/12/bits/ptr_traits.h:
 
 /usr/include/x86_64-linux-gnu/bits/time.h:
@@ -1626,7 +1641,11 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/bits/stl_raw_storage_iter.h:
 
-/usr/include/c++/12/bits/move.h:
+/usr/include/c++/12/bits/unordered_set.h:
+
+/usr/include/x86_64-linux-gnu/bits/fp-logb.h:
+
+/usr/include/c++/12/bits/uses_allocator_args.h:
 
 /usr/include/c++/12/cctype:
 
@@ -1699,6 +1718,8 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /usr/include/c++/12/optional:
 
 /usr/include/c++/12/ostream:
+
+/usr/include/c++/12/pstl/glue_algorithm_defs.h:
 
 /usr/include/c++/12/pstl/glue_memory_defs.h:
 
@@ -1786,8 +1807,6 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/x86_64-linux-gnu/c++/12/bits/gthr.h:
 
-/usr/include/x86_64-linux-gnu/c++/12/bits/os_defines.h:
-
 /usr/include/x86_64-linux-gnu/c++/12/bits/time_members.h:
 
 /usr/include/c++/12/concepts:
@@ -1842,9 +1861,9 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/wchar.h:
 
-/usr/include/c++/12/bits/stl_bvector.h:
-
 /usr/include/c++/12/bits/stl_tempbuf.h:
+
+/usr/include/c++/12/bits/stl_bvector.h:
 
 /usr/include/c++/12/pstl/execution_defs.h:
 
@@ -1871,10 +1890,6 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /usr/include/x86_64-linux-gnu/bits/iscanonical.h:
 
 /usr/include/x86_64-linux-gnu/bits/libc-header-start.h:
-
-/usr/include/x86_64-linux-gnu/bits/long-double.h:
-
-/usr/include/x86_64-linux-gnu/bits/stdio_lim.h:
 
 /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h:
 
@@ -1907,11 +1922,3 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /usr/include/x86_64-linux-gnu/bits/time64.h:
 
 /usr/include/x86_64-linux-gnu/bits/timesize.h:
-
-/usr/include/x86_64-linux-gnu/bits/timex.h:
-
-/usr/include/x86_64-linux-gnu/bits/types.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/__FILE.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h:

@@ -158,7 +158,11 @@ inline const BasicButtonDef kBasicButton = {
 			iconLayout.sizing = Clay_Sizing{.width = CLAY_SIZING_PERCENT(1.0f), .height = CLAY_SIZING_PERCENT(1.0f)};
 
 			iconElement.layout = iconLayout;
-			iconElement.backgroundColor = context.params.iconTintColor;
+			if (context.params.iconTintColor.a > 0.0f)
+			{
+				context.params.icon.tintEnabled = true;
+				iconElement.backgroundColor = context.params.iconTintColor;
+			}
 			iconElement.image = {
 				.imageData = context.uiManager.storeTexture(context.params.icon),
 			};

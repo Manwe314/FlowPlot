@@ -367,3 +367,195 @@ Histogram defaults:
 ok now that we have all of that in order its time to resolve the layer via the data and specs at the same time finalize the tick labels and axis labels. to get that out of the way we simply want to keep track of min and max values seen in the data for a given axis. IF the min or max is set in the Axis spec then we take that as the baseline we do not override those values. we can then later after finishing reolving the layers write the tick labels and axis labels based on the min and max values that we will get. ok so we are building LayerResolved struct from LayerSpec. we can simply take the zIndex and Opacity for the struct thats simple enough. then we must construct the LayerPayload here the data comes in. first we read type (currantly we support scatter and histogram. if its anythighn else we ignore the layer. based on what it is we know we want a vector of ResolvedMarkers OR a vector of ResolvedBox & ResolvedLine. meaning in the std::variant are we constructiong ScatterResolved or HistogramResolved. lets start with scatter resolved assuming type == scatter. we have the dataset name here and we know which index panel and layer we are resolving now so we should be able to find the relevant data in BoundIR. i trust that you can figure it out and make that relible at the end give me an extra break down of how we made index matching work. now that we have acess to data for scatter we need to simply see what we are Mapping first so we open ScatterMappingSpec first at minimum x and y fields are required. but thats simply placement we need to batch scatter markers based on color/fill  shape and size basically all the things that are not variable in the MarkersCommand. how might they change in the scatter layer: 
 in ScatterMappingSpec we have colorfield sizeField and label field. IF these optional mappings are set that means that on this scatter layer marker's color / size / label is variable and based on the data mapped to it. in those cases those values are overriding the syle values for markers. OTHERWISE if those mappings are null then we simply take the ScatterStyleSpec and for ALL markerscommands we set the appropriate values to whats defined in ScatterStyleSpec. ok now how might those mappings work. 
 ScatterColorMappingSpec has  type: that can be either bins or contigious. we need some validating at this point. bins can work for both number / bool / string datasets.  contigious only works for number data. the idea then is simple if the type is bins we must look into categories each element will either define the value found in data as string / bool (true false). OR string representation for numerical ranges ("0-20") without spaces. at categorie[index] we have the definitof of WHICH category should be what color. and color we read from the values[index] so the same index. if categories index > size of values we should  throw error. so this way category helps us map value in the data (which is maped by the colorfield from ScatterMappingspec) to colors to use. IF the type is contigious  we simply assign minvalue in the same struct to the min of the ascociated data and maxvalue to the max of the same data. then each element should be linear interpolated between these min and max colors. this is why contigious must be number to have distinct min and max value. ScatterSizeMappingSpec works Exactly the same way but with flaot sizes instead of color sting values. and ScatterLabelMappingSpec basically always acts as type = bins with only having categories and values vectors. so these are the rules with scatter mapping. lets now for example assume that color size and label mapping are all null. in this case we need to make each marker at x and y field mappings wiht the style from ScatterStyleSpec. to place the pointF s for the Mrkerscommand we need to know the "data value" per pixel for that we need to knwo min and max but if those values are not set by the SPec we need to take the min and max of all datasets that use the same axis across layers. because of this we can for optimization utilize this trick. we simply for now set the VALUE points converted to float and we can apply the % jitter from ScatterConfigSpec now. as we do this for all layers we will keep track of min and max values seen. (each in their layer padded by their appropriate domainPadding). after having all the commands now we know the min and max and we can calculate dataValue per pixel. and use that scalar to then go over all the MarkersCommands and 
+
+
+
+Params editors:
+
+when Pressing Figure:
+	- numeric input width
+	- numeric input height
+	- color picker background
+	- Nine Split Padding
+
+when pressing T title under figure:
+	- Text Spec editor:
+		- toggle visible
+		- string input text
+		- string input fontFamily
+		- numeric input fontSize
+		- numeric input fontWeight
+		- color picker color
+		- enum picker overflow
+		- enum picker hAlign
+		- enum picker vAlign 
+
+when pressing panels:
+	- Layout editor:
+		- numeric input rows
+		- numeric input cols
+		- numeric input gap
+
+when pressing Panel_X under panels:
+	- toggle visible
+	- color picker background
+	- color picker borderColor
+	- numeric input borderWidth
+	- nine Split padding
+	- toggle Clip content
+
+When pressing T title under Panel_X:
+	- Text Spec editor.
+
+when pressing ? Axis under Panel_X:
+	- toggle visible
+	- enum picker scale
+	- numeric input min
+	- numeric input max
+	- toggle invert
+	- toggle grid
+	- Grid settings editor:
+		- color picker girdColor
+		- numeric input grid width
+	- line settings editor:
+		- color picker lineColor
+		- numeric input lineWidth
+	- tick settings editor:
+		- color picker tickColor
+		- numeric input tick width
+		- numeric input tickLength
+		- numeric input Tick construct
+		- numeric input tick Value gap
+		- string input ticklabel fontFamily
+		- numeric input ticklabel fontSize
+		- numeric input tickLabelFontWeight
+		- color picker ticklabel color
+		- toggle show minor ticks 
+		- numeric input minor tick count 
+
+when pressing T title under ? Axis:
+	- Text Spec editor.
+
+when pressing Layers under Panel_X
+	- Hint: "Select a layer to edit Its Properties"
+
+when pressing Layer_X under layers:
+	- enum picker type
+	- toggle visible
+	- numeric input opacity
+	- numeric input zIndex
+	- string input dataset
+	- Double Enum picker AxisDataSpec
+	- Variable Card Type settings:
+		- Type-Mapping:
+		- Type-Style:
+		- Type-Stats:
+		- Type-config:
+
+when pressing Legends under figure:
+	- Hint: "Add or Select a Legend to edit its properties"
+
+when pressing Legend_X under Legends:
+	- toggle visible
+	- color picker background color
+	- color picker border color
+	- numeric input borderWidth
+	- NineSplit padding
+	- numeric input gap
+
+When pressing Legend_element_X under Legend_X:
+	- string input Text
+	- string input fontFamily
+	- numeric input fontSize
+	- numeric input fontWeight
+	- color picker color
+	- enum picker overflow
+	- enum picker icon shape
+	- color picker icon color
+
+
+
+Type Mappings:
+
+Scatter:
+	- string input xField Schema name
+	- string input yField Schema name
+	- string input colorField Schema name
+	- Scatter Color Mapping settings:
+		- enum picker type
+		- Conditional on type:
+			- 2 Column input for string vectors
+			OR
+			- color picker minValue
+			- color picker maxValue
+	- string input sizefield Schema name
+	- Scatter Size Mapping settings:
+		- enum picker type
+		- Conditional on type:
+			- 2 column input for string && float vectors
+			OR 
+			- numeric input minValue
+			- numeric input maxValue
+	- string input labelfield Schema name
+	- Scatter label Mapping settings:
+		- 2 column input for string && enum vectors
+	
+Histogram:
+	- string input datafield schema name
+	- enum picker data axis
+	- string input colorfield schema name
+	- histogram Color Mapping settings:
+		- enum picker Type
+		- Conditional on type:
+			- 2 Column input for string vectors
+			OR
+			- color picker minValue
+			- color picker maxValue
+
+
+Type Style:
+
+Scatter:
+	- enum picker marker shape
+	- color picker fill color
+	- color picker stroke color
+	- numeric input strokeWidth
+	- numeric input markerSize
+Histogram:
+	- color picker fillColor
+	- color picker strokeColor
+	- numeric input stroke width
+
+
+
+Type Stats:
+
+Scatter:
+	- toggle show mean point
+	- enum picker mean point shape
+	- color picker mean point color
+	- color picker stroke color
+	- numeric picker mean point stroke width
+	- numeric picker mean point size
+Histogram:
+	- toggle show mean line
+	- color picker mean line color
+	- numeric input mean line width
+	- toggle show meadian line
+	- color picker median line color
+	- numeric input median line width
+
+
+
+Type config:
+
+Scatter:
+	- numeric input jitterX
+	- numeric input jitterY
+	- numeric input domainPadding
+Histogram:
+	- numeric input binCount
+	- toggle normalize
+	- toggle cumulative
+	- toggle showEmptyBins
+	- numeric input domain padding

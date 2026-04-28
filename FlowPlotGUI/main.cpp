@@ -105,11 +105,18 @@ int main()
 					ui.createElement(kPropsPanel, rightId)
 					.setParameters({.guiState = &guiState})
 					.construct();
-						ui.createElement(kPanelTitle, "TemplateTitle")
+						ui.createElement(kPanelTitle, "PropsTitle")
 						.setParameters({
 							.titleText = "Properties",
 							.showSecondaryTitle = true,
 							.secondaryTitleParams = {.text = "panel 1", .fontSize = 12}
+						})
+						.draw();
+						ui.createElement(kPropertiesContent, "PropertiesContent")
+						.setParameters({
+							.padding = Clay_Padding{12, 12, 12, 12},
+							.childGap = 8,
+							.guiState = &guiState,
 						})
 						.draw();
 					ui.drawConstructed(); //PropsPanel

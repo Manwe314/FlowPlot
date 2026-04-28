@@ -294,9 +294,6 @@ FLOWUI_GLFW_PROVIDER:STRING=auto
 //Enable IconManager support (PlutoSVG).
 FLOWUI_INCLUDE_ICON_MANAGER:BOOL=ON
 
-//Enable SVG manager support (PlutoSVG).
-FLOWUI_INCLUDE_SVG_MANAGER:BOOL=ON
-
 //Enable install rules
 FLOWUI_INSTALL:BOOL=ON
 

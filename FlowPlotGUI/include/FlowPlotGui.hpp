@@ -23,6 +23,7 @@ enum class TemplateNodeKind : uint8_t {
 	YAxis,
 	XSecondaryAxis,
 	YSecondaryAxis,
+	AxisTitle,
 	LayersGroup,
 	Layer,
 	LegendsGroup,
