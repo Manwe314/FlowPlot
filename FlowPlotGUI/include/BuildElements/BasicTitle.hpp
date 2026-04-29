@@ -140,6 +140,10 @@ inline const BasicTitleDef kBasicTitle = {
 			iconLayout.sizing = context.params.iconSizing;
 
 			iconElement.layout = iconLayout;
+			if (context.params.iconTintColor.a > 0.0f)
+			{
+				context.params.icon.tintEnabled = true;
+			}
 			iconElement.backgroundColor = context.params.iconTintColor;
 			iconElement.image = {
 				.imageData = context.uiManager.storeTexture(context.params.icon),

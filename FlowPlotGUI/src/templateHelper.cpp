@@ -229,8 +229,8 @@ templateLayerParams makeTemplateLayerParams(
 	params.collapsedIcon = app.icons().textureRef("RightArrow");
 	params.adderIcon = app.icons().textureRef("Plus");
 	params.deleterIcon = app.icons().textureRef("Trash");
-	params.mainIconTintColor = FlowUi::Flow_Color("#00000000");
-	params.buttonIconTintColor = FlowUi::Flow_Color("#00000000");
+	params.mainIconTintColor = FlowUi::Flow_Color("#ffffffff");
+	params.buttonIconTintColor = FlowUi::Flow_Color("#ffffffff");
 
 	switch (node.kind)
 	{

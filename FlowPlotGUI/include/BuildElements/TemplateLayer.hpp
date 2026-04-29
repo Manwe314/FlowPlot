@@ -52,7 +52,7 @@ struct templateLayerParams {
 	Clay_Color buttonBorderColor = FlowUi::Flow_Color("#00000000");
 	Clay_BorderWidth buttonBorderWidth = Clay_BorderWidth{0, 0, 0, 0, 0};
 	Clay_Sizing buttonIconContainerSizing = Clay_Sizing{.width = CLAY_SIZING_FIXED(18), .height = CLAY_SIZING_FIXED(18)};
-	Clay_Color buttonIconTintColor = FlowUi::Flow_Color("#00000000");
+	Clay_Color buttonIconTintColor = FlowUi::Flow_Color("#ffffffff");
 	FlowUi::TextureRef expandedIcon = FlowUi::TextureRef{};
 	FlowUi::TextureRef collapsedIcon = FlowUi::TextureRef{};
 	FlowUi::TextureRef adderIcon = FlowUi::TextureRef{};
@@ -63,7 +63,7 @@ struct templateLayerParams {
 	FlowUi::TextureRef mainIcon = FlowUi::TextureRef{};
 	Clay_Sizing mainIconContainerSizing = Clay_Sizing{.width = CLAY_SIZING_FIXED(18), .height = CLAY_SIZING_FIXED(18)};
 	Clay_Sizing mainIconSizing = Clay_Sizing{.width = CLAY_SIZING_PERCENT(1.0f), .height = CLAY_SIZING_PERCENT(1.0f)};
-	Clay_Color mainIconTintColor = FlowUi::Flow_Color("#00000000");
+	Clay_Color mainIconTintColor = FlowUi::Flow_Color("#ffffffff");
 
 	std::string mainText = "Template Layer";
 	Clay_TextElementConfigWrapMode mainTextWrapMode = CLAY_TEXT_WRAP_NONE;
@@ -352,6 +352,10 @@ inline const TemplateLayerDef kTemplateLayer = {
 
 		Clay_ElementDeclaration mainIcon{};
 		mainIcon.layout = mainIconLayout;
+		if (context.params.mainIconTintColor.a > 0.0f)
+		{
+			context.params.mainIcon.tintEnabled = true;
+		}
 		mainIcon.backgroundColor = context.params.mainIconTintColor;
 		mainIcon.image = {
 			.imageData = context.uiManager.storeTexture(context.params.mainIcon),

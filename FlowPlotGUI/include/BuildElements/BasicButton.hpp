@@ -44,7 +44,7 @@ struct basicButtonParams {
 	Clay_Color textColor = FlowUi::Flow_Color("#000000ff");
 
 	Clay_Sizing iconContainerSizing = Clay_Sizing{.width = CLAY_SIZING_FIXED(18), .height = CLAY_SIZING_FIXED(18)};
-	Clay_Color iconTintColor = FlowUi::Flow_Color("#00000000");
+	Clay_Color iconTintColor = FlowUi::Flow_Color("#ffffffff");
 };
 
 FLOWUI_DEV_REGISTER_ENUM(

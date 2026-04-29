@@ -15,9 +15,11 @@ struct InlineIcon {
 	std::string_view svg;
 };
 
-constexpr std::array<InlineIcon, 16> kInlineIcons{{
+constexpr std::array<InlineIcon, 18> kInlineIcons{{
 	{"DownArrow", kDownArrow},
+	{"UpArrow", kUpArrow},
 	{"RightArrow", kRightArrow},
+	{"Link", kLink},
 	{"file", kfile},
 	{"Plus", kPlus},
 	{"Settings", kSettings},

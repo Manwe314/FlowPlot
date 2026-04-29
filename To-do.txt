@@ -32,3 +32,16 @@ GUI app:
 - ViewPort
 - Data block
 
+- add numeric 0-255 values to color picker
+- make outside prress capture transparent
+- make toggle actually rounnd with nob beegin a circle
+- enum picker icon not showing
+- enum box dettection vissually off
+- nine split completely disfigured.
+- compund cards toggle button not visible
+- segfault on collapse compound cards.
+- numeric inputs . and - dont write
+-numeric input on clear sets to 0 and removes carat.
+- sting input height is tiny on empty defualt text
+- column input + button not in middle 
+- wire in Properties Title for both Id editing and node selected kind show

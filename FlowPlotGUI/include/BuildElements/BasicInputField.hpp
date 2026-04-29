@@ -1,12 +1,21 @@
 #pragma once
 
+#include <functional>
+#include <string>
+#include <string_view>
+
 #include <FlowUi/Flow.hpp>
 #include <devMode/devApi.hpp>
 
 #include "FlowPlotGui.hpp"
 
 struct basicInputFieldParams {
+	std::string fieldId = "";
 	std::string defaultText = "...";
+	std::string value = "";
+	bool syncValueFromParams = false;
+	std::function<void(std::string_view)> onTextChangedCallback = nullptr;
+
 	Clay_Padding padding = CLAY_PADDING_ALL(10);
 	Clay_Sizing sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(30, 90), .height = CLAY_SIZING_FIT(0)};
 	Clay_Color borderColor = FlowUi::Flow_Color("#8f8d8dff");
@@ -23,7 +32,10 @@ struct basicInputFieldParams {
 
 FLOWUI_DEV_REGISTER_STRUCT(
 	basicInputFieldParams,
+	FLOWUI_DEV_REFLECT_FIELD(basicInputFieldParams, fieldId),
 	FLOWUI_DEV_REFLECT_FIELD(basicInputFieldParams, defaultText),
+	FLOWUI_DEV_REFLECT_FIELD(basicInputFieldParams, value),
+	FLOWUI_DEV_REFLECT_FIELD(basicInputFieldParams, syncValueFromParams),
 	FLOWUI_DEV_REFLECT_FIELD(basicInputFieldParams, padding),
 	FLOWUI_DEV_REFLECT_FIELD(basicInputFieldParams, sizing),
 	FLOWUI_DEV_REFLECT_FIELD(basicInputFieldParams, borderColor),
@@ -37,15 +49,35 @@ FLOWUI_DEV_REGISTER_STRUCT(
 	FLOWUI_DEV_REFLECT_FIELD(basicInputFieldParams, fontSize),
 	FLOWUI_DEV_REFLECT_FIELD(basicInputFieldParams, textColor));
 
-using BasicInputFieldDef = FlowUi::ElementDefinition<basicInputFieldParams, void, void, FLOW_DEF_ID("Basic input field")>;
+struct basicInputFieldState {
+	bool hasLastObservedText = false;
+	bool hadPrimaryCaretLastFrame = false;
+	std::string lastObservedText{};
+};
+
+FLOWUI_DEV_REGISTER_STRUCT(
+	basicInputFieldState,
+	FLOWUI_DEV_REFLECT_FIELD(basicInputFieldState, hasLastObservedText),
+	FLOWUI_DEV_REFLECT_FIELD(basicInputFieldState, hadPrimaryCaretLastFrame),
+	FLOWUI_DEV_REFLECT_FIELD(basicInputFieldState, lastObservedText));
+
+using BasicInputFieldDef = FlowUi::ElementDefinition<
+	basicInputFieldParams,
+	basicInputFieldState,
+	void,
+	FLOW_DEF_ID("Basic input field")>;
 
 inline const BasicInputFieldDef kBasicInputField = {
 	+[](BasicInputFieldDef::InteractionContext& context) {
 		(void)context;
 	},
 	+[](BasicInputFieldDef::InteractionContext& context) {
+		const std::string_view fieldId =
+			context.params.fieldId.empty()
+			? context.elementID
+			: std::string_view(context.params.fieldId);
 		context.uiManager.inputFields().requestCaret(
-			context.elementID,
+			fieldId,
 			FlowUi::InputFieldManager::CaretRequestKind::SetPrimary);
 	},
 	nullptr,
@@ -53,13 +85,37 @@ inline const BasicInputFieldDef kBasicInputField = {
 	nullptr,
 	nullptr,
 	+[](BasicInputFieldDef::BuildContext& context) {
+		basicInputFieldState& state = BasicInputFieldDef::getOrCreateState(FlowUi::toFlowId(context.elementID));
+		const std::string_view fieldIdView =
+			context.params.fieldId.empty()
+			? context.elementID
+			: std::string_view(context.params.fieldId);
+		const std::string fieldId(fieldIdView);
+		const std::string_view requestedText =
+			context.params.syncValueFromParams
+			? std::string_view(context.params.value)
+			: std::string_view(context.params.defaultText);
+
+		const bool needsExternalValueSync =
+			context.params.syncValueFromParams &&
+			state.hasLastObservedText &&
+			!state.hadPrimaryCaretLastFrame &&
+			state.lastObservedText != requestedText;
+		if (needsExternalValueSync)
+		{
+			(void)context.uiManager.inputFields().removeField(fieldId);
+			state.hasLastObservedText = false;
+			state.lastObservedText.clear();
+		}
+
 		const Clay_ElementId contentId = context.uiManager.toClayEID(context.elementID);
 		const std::string textElementPath = context.createChildElementId("text");
 		const Clay_ElementId textId = context.uiManager.toClayEID(textElementPath);
 
-		auto result = context.uiManager.inputFields().requestField({
-			.fieldId = context.elementID,
-			.initialText = context.params.defaultText,
+		const FlowUi::InputFieldManager::FieldQueryResult result =
+			context.uiManager.inputFields().requestField({
+			.fieldId = fieldId,
+			.initialText = requestedText,
 			.config = FlowUi::InputFieldManager::FieldConfig{
 				.readOnly = false,
 				.allowNewline = false,
@@ -68,6 +124,23 @@ inline const BasicInputFieldDef kBasicInputField = {
 			.textElementId = textId,
 			.contentElementId = contentId,
 		});
+
+		const std::string resultText(result.text);
+		if (!state.hasLastObservedText)
+		{
+			state.hasLastObservedText = true;
+			state.lastObservedText = resultText;
+		}
+		else if (state.lastObservedText != resultText)
+		{
+			state.lastObservedText = resultText;
+			if (context.params.onTextChangedCallback != nullptr)
+			{
+				context.params.onTextChangedCallback(resultText);
+			}
+		}
+		state.hadPrimaryCaretLastFrame = result.hasPrimaryCaret;
+
 		Clay_LayoutConfig rootLayout{};
 		rootLayout.layoutDirection = CLAY_LEFT_TO_RIGHT;
 		rootLayout.sizing = context.params.sizing;

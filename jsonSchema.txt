@@ -460,7 +460,7 @@ when pressing Legend_X under Legends:
 	- color picker background color
 	- color picker border color
 	- numeric input borderWidth
-	- NineSplit padding
+	- Nine Split padding
 	- numeric input gap
 
 When pressing Legend_element_X under Legend_X:

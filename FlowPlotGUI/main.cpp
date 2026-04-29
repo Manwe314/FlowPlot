@@ -26,6 +26,26 @@ int main()
 		FlowUi::App app = FlowUi::makeApplication(config);
 		FlowPlotGui::registerIcons(app);
 		(void)NavBarDef::getResources(app);
+		(void)EnumPickerMenuDef::getResources(app);
+		(void)NineSplitMatrixDef::getResources(app);
+		(void)TwoColumnInputTableDef::getResources(app);
+		(void)TextSpecEditorDef::getResources(app);
+		(void)LayoutEditorDef::getResources(app);
+		(void)GridSettingsEditorDef::getResources(app);
+		(void)LineSettingsEditorDef::getResources(app);
+		(void)TickSettingsEditorDef::getResources(app);
+		(void)ScatterMappingSettingsEditorDef::getResources(app);
+		(void)ScatterColorMappingSettingsDef::getResources(app);
+		(void)ScatterSizeMappingSettingsDef::getResources(app);
+		(void)ScatterStyleSettingsEditorDef::getResources(app);
+		(void)ScatterStatsSettingsEditorDef::getResources(app);
+		(void)ScatterConfigSettingsEditorDef::getResources(app);
+		(void)HistogramMappingSettingsEditorDef::getResources(app);
+		(void)HistogramColorMappingSettingsDef::getResources(app);
+		(void)HistogramStyleSettingsEditorDef::getResources(app);
+		(void)HistogramStatsSettingsEditorDef::getResources(app);
+		(void)HistogramConfigSettingsEditorDef::getResources(app);
+		(void)VariableTypeSettingsEditorDef::getResources(app);
 
 		FlowUi::UiManager& ui = app.ui();
 		FlowPlotGui::state guiState{};
