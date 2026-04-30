@@ -25,27 +25,7 @@ int main()
 		config.ui.stringArenaSize = 2 * 1024 * 1024;
 		FlowUi::App app = FlowUi::makeApplication(config);
 		FlowPlotGui::registerIcons(app);
-		(void)NavBarDef::getResources(app);
-		(void)EnumPickerMenuDef::getResources(app);
-		(void)NineSplitMatrixDef::getResources(app);
-		(void)TwoColumnInputTableDef::getResources(app);
-		(void)TextSpecEditorDef::getResources(app);
-		(void)LayoutEditorDef::getResources(app);
-		(void)GridSettingsEditorDef::getResources(app);
-		(void)LineSettingsEditorDef::getResources(app);
-		(void)TickSettingsEditorDef::getResources(app);
-		(void)ScatterMappingSettingsEditorDef::getResources(app);
-		(void)ScatterColorMappingSettingsDef::getResources(app);
-		(void)ScatterSizeMappingSettingsDef::getResources(app);
-		(void)ScatterStyleSettingsEditorDef::getResources(app);
-		(void)ScatterStatsSettingsEditorDef::getResources(app);
-		(void)ScatterConfigSettingsEditorDef::getResources(app);
-		(void)HistogramMappingSettingsEditorDef::getResources(app);
-		(void)HistogramColorMappingSettingsDef::getResources(app);
-		(void)HistogramStyleSettingsEditorDef::getResources(app);
-		(void)HistogramStatsSettingsEditorDef::getResources(app);
-		(void)HistogramConfigSettingsEditorDef::getResources(app);
-		(void)VariableTypeSettingsEditorDef::getResources(app);
+
 
 		FlowUi::UiManager& ui = app.ui();
 		FlowPlotGui::state guiState{};
@@ -104,7 +84,9 @@ int main()
 					.setParameters({.backgroundColor = FlowUi::Flow_Color("#18181aff")})
 					.construct(FlowUi::ElementDrawOptions::SkipEventCallbacks);
 						ui.createElement(kPlotviewPort, "PlotViewPort").draw();
-						ui.createElement(kDataInput, "DataInput").draw();
+							ui.createElement(kDataInput, "DataInput")
+							.setParameters({.guiState = &guiState})
+							.draw();
 					ui.drawConstructed(); // MainContentPanel
 					const std::string rightId = "PropsPanel";
 					ui.createElement(kDynamicSeparator, "separator2")

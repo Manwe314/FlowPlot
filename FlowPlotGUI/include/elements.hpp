@@ -5,6 +5,7 @@
 #include "BuildElements/BasicInputField.hpp"
 #include "BuildElements/BasicButton.hpp"
 #include "BuildElements/BasicTitle.hpp"
+#include "BuildElements/BoolToggle.hpp"
 #include "BuildElements/PanelTitle.hpp"
 #include "BuildElements/PlotviewPort.hpp"
 #include "BuildElements/DataInput.hpp"
@@ -48,6 +49,8 @@ FLOWUI_DEV_REGISTER_ELEMENT(BasicButtonDef, "BasicButton");
 
 FLOWUI_DEV_REGISTER_ELEMENT(BasicInputFieldDef, "BasicInputField");
 
+FLOWUI_DEV_REGISTER_ELEMENT(BoolToggleDef, "BoolToggle");
+
 FLOWUI_DEV_REGISTER_ELEMENT(BasicTitleDef, "BasicTitle");
 
 FLOWUI_DEV_REGISTER_ELEMENT(PanelTitleDef, "PanelTitle");
@@ -55,6 +58,17 @@ FLOWUI_DEV_REGISTER_ELEMENT(PanelTitleDef, "PanelTitle");
 FLOWUI_DEV_REGISTER_ELEMENT(PlotviewPortDef, "PlotviewPort");
 
 FLOWUI_DEV_REGISTER_ELEMENT(DataInputDef, "DataInput");
+
+FLOWUI_DEV_REGISTER_ELEMENT(DataInputHeaderDef, "DataInputHeader");
+
+FLOWUI_DEV_REGISTER_ELEMENT(DataTabDef, "DataTab");
+
+FLOWUI_DEV_REGISTER_ELEMENT(DataInputTableDef, "DataInputTable");
+
+FLOWUI_DEV_REGISTER_ELEMENT(DataInputHeaderRowDef, "DataInputHeaderRow");
+
+FLOWUI_DEV_REGISTER_ELEMENT(DataInputDataRowDef, "DataInputDataRow");
+
 FLOWUI_DEV_REGISTER_ELEMENT(DynamicSeparatorDef, "DynamicSeparator");
 
 FLOWUI_DEV_REGISTER_ELEMENT(TemplateLayerDef, "TemplateLayer");
