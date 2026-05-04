@@ -3,9 +3,11 @@
 #include <cstddef>
 #include <cstdio>
 #include <exception>
+#include <filesystem>
 
 #include "elements.hpp"
 #include "iconRegistry.hpp"
+#include "PlotViewportScene.hpp"
 #include "templateHelper.hpp"
 
 int main()
@@ -23,6 +25,18 @@ int main()
 		config.dev.panelOpenByDefault = true;
 		config.dev.useShortcutManagerForPanelToggle = true;
 		config.ui.stringArenaSize = 2 * 1024 * 1024;
+		config.ui.defaultFontFamily = FlowUi::FontFamilyCreateInfo{
+			.name = "Inter",
+			.faces = {
+				FlowUi::FontFaceCreateInfo{
+					.path = std::filesystem::path(__FILE__).parent_path() / "assets" / "Fonts" / "Inter.arfont",
+					.pixelSize = 18.0f,
+					.weight = 400,
+					.style = FlowUi::FontStyle::Normal,
+				},
+			},
+		};
+		config.ui.fontAtlasSize = 1024;
 		FlowUi::App app = FlowUi::makeApplication(config);
 		FlowPlotGui::registerIcons(app);
 
@@ -131,6 +145,7 @@ int main()
 			app.endFrame();
 			app.drawFrame();
 		}
+		FlowPlotGui::shutdownPlotViewportScene();
 		return 0;
 	}
 	catch (const std::exception& e)

@@ -163,6 +163,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named flowplotgui_shaders
+
+# Build rule for target.
+flowplotgui_shaders: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 flowplotgui_shaders
+.PHONY : flowplotgui_shaders
+
+# fast build rule for target.
+flowplotgui_shaders/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/flowplotgui_shaders.dir/build.make CMakeFiles/flowplotgui_shaders.dir/build
+.PHONY : flowplotgui_shaders/fast
+
+#=============================================================================
 # Target rules for targets named FlowPlotGUI
 
 # Build rule for target.
@@ -303,6 +316,30 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+src/PlotViewportScene.o: src/PlotViewportScene.cpp.o
+.PHONY : src/PlotViewportScene.o
+
+# target to build an object file
+src/PlotViewportScene.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/src/PlotViewportScene.cpp.o
+.PHONY : src/PlotViewportScene.cpp.o
+
+src/PlotViewportScene.i: src/PlotViewportScene.cpp.i
+.PHONY : src/PlotViewportScene.i
+
+# target to preprocess a source file
+src/PlotViewportScene.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/src/PlotViewportScene.cpp.i
+.PHONY : src/PlotViewportScene.cpp.i
+
+src/PlotViewportScene.s: src/PlotViewportScene.cpp.s
+.PHONY : src/PlotViewportScene.s
+
+# target to generate assembly for a file
+src/PlotViewportScene.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/src/PlotViewportScene.cpp.s
+.PHONY : src/PlotViewportScene.cpp.s
+
 src/iconRegistry.o: src/iconRegistry.cpp.o
 .PHONY : src/iconRegistry.o
 
@@ -363,6 +400,7 @@ help:
 	@echo "... install/strip"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
+	@echo "... flowplotgui_shaders"
 	@echo "... flowui_shaders"
 	@echo "... FlowPlotGUI"
 	@echo "... flowui"
@@ -375,6 +413,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... src/PlotViewportScene.o"
+	@echo "... src/PlotViewportScene.i"
+	@echo "... src/PlotViewportScene.s"
 	@echo "... src/iconRegistry.o"
 	@echo "... src/iconRegistry.i"
 	@echo "... src/iconRegistry.s"

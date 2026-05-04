@@ -1,11 +1,13 @@
 #pragma once
 
+#include <string>
 #include <utility>
 
 #include <FlowUi/Flow.hpp>
 #include <devMode/devApi.hpp>
 
 #include "FlowPlotGui.hpp"
+#include "PlotViewportScene.hpp"
 #include "BuildElements/PanelTitle.hpp"
 
 struct plotviewPortParams {
@@ -24,9 +26,14 @@ FLOWUI_DEV_REGISTER_STRUCT(
 
 struct plotviewPortResources {
 	PanelTitleBuilder titleBuilder;
+	FlowUi::ViewPortManager* viewPortManager = nullptr;
+	std::string viewportKey = "FlowPlotGUI/PlotPreview";
+	FlowPlotGui::PlotViewportSceneHandle scene{};
 
-	explicit plotviewPortResources(FlowUi::UiManager& uiManager) :
-		titleBuilder(makeTitleBuilder(uiManager)) {}
+	explicit plotviewPortResources(FlowUi::App& app) :
+		titleBuilder(makeTitleBuilder(app.ui())),
+		viewPortManager(&app.viewPorts()),
+		scene(FlowPlotGui::setupPlotViewportScene(app, viewportKey)) {}
 
 private:
 	static PanelTitleBuilder makeTitleBuilder(FlowUi::UiManager& uiManager)
@@ -63,7 +70,7 @@ inline const PlotviewPortDef kPlotviewPort = {
 	+[](PlotviewPortDef::BuildContext& context) {
 		if (!PlotviewPortDef::resources.has_value())
 		{
-			PlotviewPortDef::resources.emplace(context.uiManager);
+			return;
 		}
 		plotviewPortResources& resources = *PlotviewPortDef::resources;
 
@@ -95,6 +102,14 @@ inline const PlotviewPortDef kPlotviewPort = {
 		viewport.backgroundColor = context.params.viewportColor;
 		viewport.cornerRadius = CLAY_CORNER_RADIUS(0);
 		viewport.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
+		if (resources.viewPortManager != nullptr)
+		{
+			FlowUi::TextureRef viewportTexture = resources.viewPortManager->getTexture(resources.viewportKey);
+			viewportTexture.fitMode = FlowUi::TextureFitMode::Stretch;
+			viewport.image = {
+				.imageData = context.uiManager.storeTexture(viewportTexture),
+			};
+		}
 
 		CLAY(rootId, root){
 			resources.titleBuilder

@@ -45,3 +45,9 @@ GUI app:
 - dataset + icon should have tint on hover + background color.
 - + add row text should not go beyond its box.
 - propertites title for sting ID edditing
+
+- enhance font handling
+- add additional font data carry json and loaded fonts list in GUI 
+- GUI uses MSDF either add runtime TTF -> msdf atlas baking or use compiled font baker tool
+- use stbTextEngine for layout.
+- 

@@ -78,6 +78,7 @@ void registerIcons(FlowUi::App& app)
 	(void)DataInputHeaderDef::getResources(app);
 	(void)DataTabDef::getResources(app);
 	(void)DataInputHeaderRowDef::getResources(app);
+	(void)PlotviewPortDef::getResources(app);
 }
 
 } // namespace FlowPlotGui

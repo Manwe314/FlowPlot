@@ -1,4 +1,5 @@
 # Hashes of file build rules.
+848a7d585a616c6f77fe8bce0218707f CMakeFiles/flowplotgui_shaders
 0759479d0531f5ea552bae21705cb006 external/FlowUi/CMakeFiles/flowui_shaders
 603107c4045613741338d06d286a0b84 external/FlowUi/shaders/flowui_ui_msdf.frag.spv
 7c35b2ae1adb74f1271021701e10d354 external/FlowUi/shaders/flowui_ui_msdf.vert.spv
@@ -6,3 +7,5 @@ ae9d51a017691595c9b5cb5a9f3e9658 external/FlowUi/shaders/flowui_ui_solid.frag.sp
 d695fd3255b18817ab1af8994049f6e1 external/FlowUi/shaders/flowui_ui_solid.vert.spv
 1e14da630eee71a2f240d357283ba1bb external/FlowUi/shaders/flowui_ui_textured.frag.spv
 c1e06cc75dc365e6004b5c8a8b13464c external/FlowUi/shaders/flowui_ui_textured.vert.spv
+70d2e6987d5004e65d7efa6336d7002f shaders/plot_viewport_solid.frag.spv
+51da2bae41a0cac07b714670ca0407e4 shaders/plot_viewport_solid.vert.spv

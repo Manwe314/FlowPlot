@@ -34,6 +34,45 @@ set(FLOW_UI_DEV_MODE ON CACHE BOOL "Enable FlowUi developer mode APIs/UI" FORCE)
 
 add_subdirectory(external/FlowUi)
 
+find_package(Vulkan REQUIRED)
+
+set(FLOWPLOTGUI_SHADER_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/shaders")
+set(FLOWPLOTGUI_SHADER_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/shaders")
+set(FLOWPLOTGUI_SHADER_SOURCES
+    "${FLOWPLOTGUI_SHADER_SOURCE_DIR}/plot_viewport_solid.vert"
+    "${FLOWPLOTGUI_SHADER_SOURCE_DIR}/plot_viewport_solid.frag"
+)
+
+if(Vulkan_GLSLC_EXECUTABLE)
+    set(FLOWPLOTGUI_SHADER_COMPILER "${Vulkan_GLSLC_EXECUTABLE}")
+    set(FLOWPLOTGUI_SHADER_COMPILE_ARGS -O)
+elseif(Vulkan_GLSLANG_VALIDATOR_EXECUTABLE)
+    set(FLOWPLOTGUI_SHADER_COMPILER "${Vulkan_GLSLANG_VALIDATOR_EXECUTABLE}")
+    set(FLOWPLOTGUI_SHADER_COMPILE_ARGS -V)
+    message(WARNING "Vulkan glslc was not found; using glslangValidator to compile FlowPlotGUI shaders.")
+else()
+    message(FATAL_ERROR "No shader compiler found. Install Vulkan glslc (preferred) or glslangValidator.")
+endif()
+
+set(FLOWPLOTGUI_SHADER_SPIRV_FILES)
+foreach(FLOWPLOTGUI_SHADER_SOURCE IN LISTS FLOWPLOTGUI_SHADER_SOURCES)
+    get_filename_component(FLOWPLOTGUI_SHADER_FILE_NAME "${FLOWPLOTGUI_SHADER_SOURCE}" NAME)
+    set(FLOWPLOTGUI_SHADER_SPIRV "${FLOWPLOTGUI_SHADER_OUTPUT_DIR}/${FLOWPLOTGUI_SHADER_FILE_NAME}.spv")
+
+    add_custom_command(
+        OUTPUT "${FLOWPLOTGUI_SHADER_SPIRV}"
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${FLOWPLOTGUI_SHADER_OUTPUT_DIR}"
+        COMMAND "${FLOWPLOTGUI_SHADER_COMPILER}" ${FLOWPLOTGUI_SHADER_COMPILE_ARGS} "${FLOWPLOTGUI_SHADER_SOURCE}" -o "${FLOWPLOTGUI_SHADER_SPIRV}"
+        DEPENDS "${FLOWPLOTGUI_SHADER_SOURCE}"
+        COMMENT "Compiling FlowPlotGUI shader ${FLOWPLOTGUI_SHADER_FILE_NAME}"
+        VERBATIM
+    )
+
+    list(APPEND FLOWPLOTGUI_SHADER_SPIRV_FILES "${FLOWPLOTGUI_SHADER_SPIRV}")
+endforeach()
+
+add_custom_target(flowplotgui_shaders DEPENDS ${FLOWPLOTGUI_SHADER_SPIRV_FILES})
+
 file(GLOB_RECURSE FLOWPLOTGUI_SOURCES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
 )
@@ -42,6 +81,8 @@ add_executable(FlowPlotGUI
     main.cpp
     ${FLOWPLOTGUI_SOURCES}
 )
+
+add_dependencies(FlowPlotGUI flowplotgui_shaders)
 
 target_include_directories(FlowPlotGUI
     PRIVATE
@@ -53,4 +94,9 @@ target_include_directories(FlowPlotGUI
 target_link_libraries(FlowPlotGUI
     PRIVATE
         FlowUi::FlowUi
+)
+
+target_compile_definitions(FlowPlotGUI
+    PRIVATE
+        FLOWPLOTGUI_SHADER_OUTPUT_DIR="${FLOWPLOTGUI_SHADER_OUTPUT_DIR}"
 )
