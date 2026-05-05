@@ -320,6 +320,14 @@ Histogram defaults:
 
 {
   "version": "1.0",
+  "fonts": [
+    {
+      "family": "Inter",
+      "weight": 400,
+      "style": "normal",
+      "path": "/absolute/path/to/fonts/Inter-Regular.ttf"
+    }
+  ],
 
   "figure": {
     "width": 1200,
@@ -338,6 +346,7 @@ Histogram defaults:
       "fontFamily": "Default",
       "fontSize": 24,
       "fontWeight": 700,
+      "fontStyle": "normal",
       "color": "#111111",
       "overflow": "clip",
       "clip": true,

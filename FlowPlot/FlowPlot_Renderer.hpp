@@ -75,16 +75,20 @@ namespace FlowPlot
 		{
 			const char* defaultFontPath = FLOW_PLOT_DEFAULT_FONT_PATH;
 			if (defaultFontPath != nullptr && defaultFontPath[0] != '\0')
-				registerFont("Default", std::filesystem::path(defaultFontPath), 400);
+				registerFont("Default", std::filesystem::path(defaultFontPath), 400, FontStyle::Normal);
 		}
 
 		explicit StbTextEngine(const std::filesystem::path& defaultFontPath)
 		{
 			if (!defaultFontPath.empty())
-				registerFont("Default", defaultFontPath, 400);
+				registerFont("Default", defaultFontPath, 400, FontStyle::Normal);
 		}
 
-		void registerFont(std::string_view familyName, const std::filesystem::path& ttfPath, std::uint16_t weight = 400) override
+		void registerFont(
+			std::string_view familyName,
+			const std::filesystem::path& ttfPath,
+			std::uint16_t weight = 400,
+			FontStyle style = FontStyle::Normal) override
 		{
 			if (familyName.empty())
 				throw std::invalid_argument("StbTextEngine::registerFont: family name cannot be empty");
@@ -110,14 +114,19 @@ namespace FlowPlot
 			stbtt_GetFontVMetrics(&face.fontInfo, &face.ascent, &face.descent, &face.lineGap);
 
 			const std::string canonicalFamily = canonicalizeFamily(familyName);
-			fonts_[FontKey{canonicalFamily, weight}] = std::move(face);
+			fonts_[FontKey{canonicalFamily, weight, style}] = std::move(face);
 		}
 
-		bool hasFont(std::string_view familyName, std::uint16_t weight = 400) const override
+		bool hasFont(
+			std::string_view familyName,
+			std::uint16_t weight = 400,
+			FontStyle style = FontStyle::Normal) const override
 		{
 			const std::string canonicalFamily = canonicalizeFamily(familyName);
-			return fonts_.find(FontKey{canonicalFamily, weight}) != fonts_.end()
-				|| fonts_.find(FontKey{canonicalFamily, 400}) != fonts_.end();
+			return fonts_.find(FontKey{canonicalFamily, weight, style}) != fonts_.end()
+				|| fonts_.find(FontKey{canonicalFamily, weight, FontStyle::Normal}) != fonts_.end()
+				|| fonts_.find(FontKey{canonicalFamily, 400, style}) != fonts_.end()
+				|| fonts_.find(FontKey{canonicalFamily, 400, FontStyle::Normal}) != fonts_.end();
 		}
 
 		struct GlyphBitmap
@@ -133,10 +142,11 @@ namespace FlowPlot
 		TextMeasurement measureText(
 			std::string_view familyName,
 			std::uint16_t weight,
+			FontStyle style,
 			float fontSizePx,
 			std::string_view text) const override
 		{
-			const LaidOutText layout = layoutText(familyName, weight, fontSizePx, text);
+			const LaidOutText layout = layoutText(familyName, weight, style, fontSizePx, text);
 			TextMeasurement measurement;
 			measurement.width = layout.width;
 			measurement.height = layout.height;
@@ -149,6 +159,7 @@ namespace FlowPlot
 		LaidOutText layoutText(
 			std::string_view familyName,
 			std::uint16_t weight,
+			FontStyle style,
 			float fontSizePx,
 			std::string_view text,
 			float maxWidth = std::numeric_limits<float>::infinity()) const override
@@ -156,7 +167,7 @@ namespace FlowPlot
 			if (fontSizePx <= 0.0f)
 				throw std::invalid_argument("StbTextEngine::layoutText: fontSizePx must be positive");
 
-			const FontFace& face = resolveFontWithFallback(familyName, weight);
+			const FontFace& face = resolveFontWithFallback(familyName, weight, style);
 			const float scale = stbtt_ScaleForPixelHeight(&face.fontInfo, fontSizePx);
 			const float ascentPx = static_cast<float>(face.ascent) * scale;
 			const float descentPx = static_cast<float>(face.descent) * scale;
@@ -238,13 +249,14 @@ namespace FlowPlot
 		GlyphBitmap rasterizeGlyph(
 			std::string_view familyName,
 			std::uint16_t weight,
+			FontStyle style,
 			float fontSizePx,
 			std::uint32_t codepoint) const
 		{
 			if (fontSizePx <= 0.0f)
 				throw std::invalid_argument("StbTextEngine::rasterizeGlyph: fontSizePx must be positive");
 
-			const FontFace& face = resolveFontWithFallback(familyName, weight);
+			const FontFace& face = resolveFontWithFallback(familyName, weight, style);
 			const float scale = stbtt_ScaleForPixelHeight(&face.fontInfo, fontSizePx);
 
 			GlyphBitmap bitmap{};
@@ -293,10 +305,11 @@ namespace FlowPlot
 		{
 			std::string family;
 			std::uint16_t weight = 400;
+			FontStyle style = FontStyle::Normal;
 
 			bool operator==(const FontKey& other) const
 			{
-				return family == other.family && weight == other.weight;
+				return family == other.family && weight == other.weight && style == other.style;
 			}
 		};
 
@@ -306,7 +319,11 @@ namespace FlowPlot
 			{
 				const std::size_t familyHash = std::hash<std::string>{}(key.family);
 				const std::size_t weightHash = std::hash<std::uint16_t>{}(key.weight);
-				return familyHash ^ (weightHash + 0x9e3779b97f4a7c15ULL + (familyHash << 6U) + (familyHash >> 2U));
+				const std::size_t styleHash = std::hash<std::uint8_t>{}(static_cast<std::uint8_t>(key.style));
+				std::size_t h = familyHash;
+				h ^= weightHash + 0x9e3779b97f4a7c15ULL + (h << 6U) + (h >> 2U);
+				h ^= styleHash + 0x9e3779b97f4a7c15ULL + (h << 6U) + (h >> 2U);
+				return h;
 			}
 		};
 
@@ -435,28 +452,46 @@ namespace FlowPlot
 			return out;
 		}
 
-		const FontFace& resolveFontWithFallback(std::string_view familyName, std::uint16_t weight) const
+		const FontFace& resolveFontWithFallback(std::string_view familyName, std::uint16_t weight, FontStyle style) const
 		{
 			const std::string canonicalFamily = canonicalizeFamily(familyName);
-			auto it = fonts_.find(FontKey{canonicalFamily, weight});
+			auto it = fonts_.find(FontKey{canonicalFamily, weight, style});
 			if (it != fonts_.end())
 				return it->second;
 
-			it = fonts_.find(FontKey{canonicalFamily, 400});
+			it = fonts_.find(FontKey{canonicalFamily, weight, FontStyle::Normal});
 			if (it != fonts_.end())
 				return it->second;
 
-			it = fonts_.find(FontKey{kDefaultFamilyName, weight});
+			it = fonts_.find(FontKey{canonicalFamily, 400, style});
 			if (it != fonts_.end())
 				return it->second;
 
-			it = fonts_.find(FontKey{kDefaultFamilyName, 400});
+			it = fonts_.find(FontKey{canonicalFamily, 400, FontStyle::Normal});
+			if (it != fonts_.end())
+				return it->second;
+
+			it = fonts_.find(FontKey{kDefaultFamilyName, weight, style});
+			if (it != fonts_.end())
+				return it->second;
+
+			it = fonts_.find(FontKey{kDefaultFamilyName, weight, FontStyle::Normal});
+			if (it != fonts_.end())
+				return it->second;
+
+			it = fonts_.find(FontKey{kDefaultFamilyName, 400, style});
+			if (it != fonts_.end())
+				return it->second;
+
+			it = fonts_.find(FontKey{kDefaultFamilyName, 400, FontStyle::Normal});
 			if (it != fonts_.end())
 				return it->second;
 
 			throw std::runtime_error(
 				"StbTextEngine: no registered font for family '" + std::string(familyName) +
-				"' and no registered 'Default' fallback");
+				"', weight " + std::to_string(weight) +
+				", style '" + fontStyleName(style) +
+				"', and no registered 'Default' fallback");
 		}
 
 		static constexpr const char* kDefaultFamilyName = "default";
@@ -578,6 +613,7 @@ namespace FlowPlot
 			const StbTextEngine* engine = nullptr;
 			std::string family{};
 			std::uint16_t weight = 400;
+			FontStyle style = FontStyle::Normal;
 			std::uint32_t codepoint = 0;
 			float fontSizePx = 0.0f;
 			std::uint8_t subX = 0;
@@ -587,6 +623,7 @@ namespace FlowPlot
 				return engine == other.engine
 					&& family == other.family
 					&& weight == other.weight
+					&& style == other.style
 					&& codepoint == other.codepoint
 					&& fontSizePx == other.fontSizePx
 					&& subX == other.subX;
@@ -600,6 +637,7 @@ namespace FlowPlot
 				std::size_t h = std::hash<const StbTextEngine*>{}(key.engine);
 				h ^= std::hash<std::string>{}(key.family) + 0x9e3779b97f4a7c15ULL + (h << 6U) + (h >> 2U);
 				h ^= std::hash<std::uint16_t>{}(key.weight) + 0x9e3779b97f4a7c15ULL + (h << 6U) + (h >> 2U);
+				h ^= std::hash<std::uint8_t>{}(static_cast<std::uint8_t>(key.style)) + 0x9e3779b97f4a7c15ULL + (h << 6U) + (h >> 2U);
 				h ^= std::hash<std::uint32_t>{}(key.codepoint) + 0x9e3779b97f4a7c15ULL + (h << 6U) + (h >> 2U);
 				h ^= std::hash<float>{}(key.fontSizePx) + 0x9e3779b97f4a7c15ULL + (h << 6U) + (h >> 2U);
 				h ^= std::hash<std::uint8_t>{}(key.subX) + 0x9e3779b97f4a7c15ULL + (h << 6U) + (h >> 2U);
@@ -852,6 +890,7 @@ namespace FlowPlot
 			key.engine = &engine;
 			key.family = cmd.fontFamily;
 			key.weight = cmd.fontWeight;
+			key.style = cmd.fontStyle;
 			key.codepoint = codepoint;
 			key.fontSizePx = cmd.fontSize;
 			key.subX = 0;
@@ -863,6 +902,7 @@ namespace FlowPlot
 			StbTextEngine::GlyphBitmap bitmap = engine.rasterizeGlyph(
 				cmd.fontFamily,
 				cmd.fontWeight,
+				cmd.fontStyle,
 				cmd.fontSize,
 				codepoint);
 			const auto inserted = cache.emplace(std::move(key), std::move(bitmap));
@@ -914,6 +954,7 @@ namespace FlowPlot
 			const LaidOutText layout = engine.layoutText(
 				cmd.fontFamily,
 				cmd.fontWeight,
+				cmd.fontStyle,
 				cmd.fontSize,
 				cmd.text);
 
@@ -959,6 +1000,24 @@ namespace FlowPlot
 		}
 	};
 
+	inline RenderPlot PlotBuilder::getCommands() const
+	{
+		const ITextEngine* activeTextEngine = textEngine_;
+		std::optional<StbTextEngine> fallbackEngine;
+		if (activeTextEngine == nullptr)
+		{
+			fallbackEngine.emplace();
+			registerFonts(*fallbackEngine, template_);
+			activeTextEngine = &(*fallbackEngine);
+		}
+
+		Spec::MasterTemplateSpec compiledTemplate = FlowInternal::compileTemplateToSpec(template_);
+		FlowInternal::BoundIR::PlotBoundIR bound = FlowInternal::buildBoundIR(compiledTemplate, data_);
+		FlowInternal::ResolvedIR::PlotResolvedIR resolved =
+			FlowInternal::resolvePlotIR(compiledTemplate, bound, activeTextEngine);
+		return FlowInternal::buildRenderPlot(resolved);
+	}
+
 	inline void PlotBuilder::writePng(const std::filesystem::path& outputPath) const
 	{
 		const ITextEngine* activeTextEngine = textEngine_;
@@ -966,12 +1025,7 @@ namespace FlowPlot
 		if (activeTextEngine == nullptr)
 		{
 			fallbackEngine.emplace();
-			if (!fallbackEngine->hasFont("Default", 400))
-			{
-				throw std::runtime_error(
-					"PlotBuilder::writePng: no text engine is set and no default font is registered. "
-					"Call useTextEngine(...) or define FLOW_PLOT_DEFAULT_FONT_PATH.");
-			}
+			registerFonts(*fallbackEngine, template_);
 			activeTextEngine = &(*fallbackEngine);
 		}
 

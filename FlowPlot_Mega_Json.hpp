@@ -12562,6 +12562,7 @@ namespace FlowPlot
 			std::string fontFamily = "Default";
 			float fontSize = 16.0f;
 			std::uint16_t fontWeight = 400;
+			std::string fontStyle = "normal";
 			std::string color = "#111111";
 			std::string overflow = "clip";
 			bool clip = true;
@@ -12620,10 +12621,12 @@ namespace FlowPlot
 
 		struct LegendElementSpec
 		{
+			std::string id = "legend_element_1";
 			std::string text = "Untitled Plot";
 			std::string fontFamily = "Default";
 			float fontSize = 24.0f;
 			std::uint16_t fontWeight = 700;
+			std::string fontStyle = "normal";
 			std::string color = "#111111";
 			std::string overflow = "clip";
 			bool clip = true;
@@ -12634,6 +12637,7 @@ namespace FlowPlot
 
 		struct LegendSpec
 		{
+			std::string id = "legend_1";
 			bool visible = false;
 			std::string background = "#ffffff";
 			std::string borderColor = "#cccccc";
@@ -12812,6 +12816,7 @@ namespace FlowPlot
 			std::string tickLabelFontFamily = "Default";
 			float tickLabelFontSize = 12.0f;
 			std::uint16_t tickLabelFontWeight = 400;
+			std::string tickLabelFontStyle = "normal";
 			std::string tickLabelColor = "#333333";
 			bool showMinorTicks = false;
 			std::uint32_t minorTickCount = 0;
@@ -12916,6 +12921,7 @@ namespace FlowInternal
   "fontFamily": "Default",
   "fontSize": 24,
   "fontWeight": 700,
+  "fontStyle": "normal",
   "color": "#111111",
   "overflow": "clip",
   "clip": true,
@@ -13106,6 +13112,7 @@ namespace FlowInternal
     "text": "",
     "fontFamily": "Default",
     "fontSize": 16,
+    "fontStyle": "normal",
     "color": "#111111",
     "overflow": "clip",
     "clip": true,
@@ -13123,6 +13130,7 @@ namespace FlowInternal
       "text": "X",
       "fontFamily": "Default",
       "fontSize": 14,
+      "fontStyle": "normal",
       "color": "#222222",
       "overflow": "clip",
       "clip": true,
@@ -13152,6 +13160,7 @@ namespace FlowInternal
     "tickLabelFontFamily": "Default",
     "tickLabelFontSize": 12,
     "tickLabelFontWeight": 400,
+    "tickLabelFontStyle": "normal",
     "tickLabelColor": "#333333",
     "showMinorTicks": false,
     "minorTickCount": 0
@@ -13163,6 +13172,7 @@ namespace FlowInternal
       "text": "X",
       "fontFamily": "Default",
       "fontSize": 14,
+      "fontStyle": "normal",
       "color": "#222222",
       "overflow": "clip",
       "clip": true,
@@ -13192,6 +13202,7 @@ namespace FlowInternal
     "tickLabelFontFamily": "Default",
     "tickLabelFontSize": 12,
     "tickLabelFontWeight": 400,
+    "tickLabelFontStyle": "normal",
     "tickLabelColor": "#333333",
     "showMinorTicks": false,
     "minorTickCount": 0
@@ -13204,6 +13215,7 @@ namespace FlowInternal
       "fontFamily": "Default",
       "fontSize": 14,
       "fontWeight": 500,
+      "fontStyle": "normal",
       "color": "#222222",
       "hAlign": "center",
       "vAlign": "middle",
@@ -13235,6 +13247,7 @@ namespace FlowInternal
     "tickLabelFontFamily": "Default",
     "tickLabelFontSize": 12,
     "tickLabelFontWeight": 400,
+    "tickLabelFontStyle": "normal",
     "tickLabelColor": "#333333",
     "showMinorTicks": false,
     "minorTickCount": 0
@@ -13247,6 +13260,7 @@ namespace FlowInternal
       "fontFamily": "Default",
       "fontSize": 14,
       "fontWeight": 500,
+      "fontStyle": "normal",
       "color": "#222222",
       "hAlign": "center",
       "vAlign": "middle",
@@ -13278,6 +13292,7 @@ namespace FlowInternal
     "tickLabelFontFamily": "Default",
     "tickLabelFontSize": 12,
     "tickLabelFontWeight": 400,
+    "tickLabelFontStyle": "normal",
     "tickLabelColor": "#333333",
     "showMinorTicks": false,
     "minorTickCount": 0
@@ -13289,6 +13304,7 @@ namespace FlowInternal
 		inline constexpr std::string_view kMasterTemplateJson = R"flowplot(
 {
   "version": "1.0",
+  "fonts": [],
   "figure": {
     "width": 1200,
     "height": 800,
@@ -13306,6 +13322,7 @@ namespace FlowInternal
       "fontFamily": "Default",
       "fontSize": 24,
       "fontWeight": 700,
+      "fontStyle": "normal",
       "color": "#111111",
       "overflow": "clip",
       "clip": true,
@@ -13412,6 +13429,13 @@ namespace FlowPlot
 		Round
 	};
 
+	enum class FontStyle : std::uint8_t
+	{
+		Normal,
+		Italic,
+		Oblique
+	};
+
 	struct TextMeasurement
 	{
 		float width = 0.0f;
@@ -13442,16 +13466,25 @@ namespace FlowPlot
 	{
 	public:
 		virtual ~ITextEngine() = default;
-		virtual void registerFont(std::string_view familyName, const std::filesystem::path& ttfPath, std::uint16_t weight = 400) = 0;
-		virtual bool hasFont(std::string_view familyName, std::uint16_t weight = 400) const = 0;
+		virtual void registerFont(
+			std::string_view familyName,
+			const std::filesystem::path& ttfPath,
+			std::uint16_t weight = 400,
+			FontStyle style = FontStyle::Normal) = 0;
+		virtual bool hasFont(
+			std::string_view familyName,
+			std::uint16_t weight = 400,
+			FontStyle style = FontStyle::Normal) const = 0;
 		virtual TextMeasurement measureText(
 			std::string_view familyName,
 			std::uint16_t weight,
+			FontStyle style,
 			float fontSizePx,
 			std::string_view text) const = 0;
 		virtual LaidOutText layoutText(
 			std::string_view familyName,
 			std::uint16_t weight,
+			FontStyle style,
 			float fontSizePx,
 			std::string_view text,
 			float maxWidth = std::numeric_limits<float>::infinity()) const = 0;
@@ -13482,6 +13515,7 @@ namespace FlowPlot
 		std::string fontFamily{"Default"};
 		float fontSize = 12.0f;
 		std::uint16_t fontWeight = 400;
+		FontStyle fontStyle = FontStyle::Normal;
 		HorizontalAlign hAlign = HorizontalAlign::Left;
 		VerticalAlign vAlign = VerticalAlign::Top;
 		bool clipToBox = true;
@@ -13521,6 +13555,9 @@ namespace FlowPlot
 		Color background{255, 255, 255, 255};
 		std::vector<RenderCommand> commands{};
 	};
+
+	inline FontStyle parseFontStyle(std::string_view rawStyle);
+	inline const char* fontStyleName(FontStyle style) noexcept;
 
 } // namespace FlowPlot
 
@@ -14161,6 +14198,7 @@ namespace FlowInternal
 			readString(objectJson, "fontFamily", text.fontFamily, path);
 			readFloat(objectJson, "fontSize", text.fontSize, path);
 			readUint16(objectJson, "fontWeight", text.fontWeight, path);
+			readString(objectJson, "fontStyle", text.fontStyle, path);
 			readString(objectJson, "color", text.color, path);
 			readString(objectJson, "overflow", text.overflow, path);
 			readBool(objectJson, "clip", text.clip, path);
@@ -14177,6 +14215,7 @@ namespace FlowInternal
 			readString(objectJson, "fontFamily", element.fontFamily, path);
 			readFloat(objectJson, "fontSize", element.fontSize, path);
 			readUint16(objectJson, "fontWeight", element.fontWeight, path);
+			readString(objectJson, "fontStyle", element.fontStyle, path);
 			readString(objectJson, "color", element.color, path);
 			readString(objectJson, "overflow", element.overflow, path);
 			readBool(objectJson, "clip", element.clip, path);
@@ -14245,6 +14284,7 @@ namespace FlowInternal
 			readString(objectJson, "tickLabelFontFamily", axis.tickLabelFontFamily, path);
 			readFloat(objectJson, "tickLabelFontSize", axis.tickLabelFontSize, path);
 			readUint16(objectJson, "tickLabelFontWeight", axis.tickLabelFontWeight, path);
+			readString(objectJson, "tickLabelFontStyle", axis.tickLabelFontStyle, path);
 			readString(objectJson, "tickLabelColor", axis.tickLabelColor, path);
 			readBool(objectJson, "showMinorTicks", axis.showMinorTicks, path);
 			readUint32(objectJson, "minorTickCount", axis.minorTickCount, path);
@@ -15014,6 +15054,7 @@ namespace FlowInternal
 			const FlowPlot::ITextEngine* textEngine,
 			std::string_view fontFamily,
 			std::uint16_t fontWeight,
+			FlowPlot::FontStyle fontStyle,
 			float fontSize,
 			std::string_view text,
 			const std::string& path)
@@ -15027,6 +15068,7 @@ namespace FlowInternal
 			return textEngine->measureText(
 				fontFamily,
 				fontWeight,
+				fontStyle,
 				fontSize,
 				text);
 		}
@@ -15040,6 +15082,7 @@ namespace FlowInternal
 				textEngine,
 				textSpec.fontFamily,
 				textSpec.fontWeight,
+				FlowPlot::parseFontStyle(textSpec.fontStyle),
 				textSpec.fontSize,
 				textSpec.text,
 				path);
@@ -15079,6 +15122,7 @@ namespace FlowInternal
 			resolved.fontFamily = titleSpec.fontFamily;
 			resolved.fontSize = titleSpec.fontSize;
 			resolved.fontWeight = titleSpec.fontWeight;
+			resolved.fontStyle = FlowPlot::parseFontStyle(titleSpec.fontStyle);
 			resolved.color = parseColor(titleSpec.color, "figure.title.color");
 			resolved.hAlign = parseHorizontalAlign(titleSpec.hAlign, "figure.title.hAlign");
 			resolved.vAlign = parseVerticalAlign(titleSpec.vAlign, "figure.title.vAlign");
@@ -15113,6 +15157,7 @@ namespace FlowInternal
 					textEngine,
 					elementSpec.fontFamily,
 					elementSpec.fontWeight,
+					FlowPlot::parseFontStyle(elementSpec.fontStyle),
 					elementSpec.fontSize,
 					elementSpec.text,
 					path + ".box");
@@ -15134,6 +15179,7 @@ namespace FlowInternal
 			cache.label.fontFamily = elementSpec.fontFamily;
 			cache.label.fontSize = elementSpec.fontSize;
 			cache.label.fontWeight = elementSpec.fontWeight;
+			cache.label.fontStyle = FlowPlot::parseFontStyle(elementSpec.fontStyle);
 			cache.label.color = parseColor(elementSpec.color, path + ".color");
 			cache.label.clipToBox = elementSpec.clip;
 			cache.label.box.w = textWidth;
@@ -15306,6 +15352,7 @@ namespace FlowInternal
 			resolved.fontFamily = titleSpec.fontFamily;
 			resolved.fontSize = titleSpec.fontSize;
 			resolved.fontWeight = titleSpec.fontWeight;
+			resolved.fontStyle = FlowPlot::parseFontStyle(titleSpec.fontStyle);
 			resolved.color = parseColor(titleSpec.color, path + ".color");
 			resolved.hAlign = parseHorizontalAlign(titleSpec.hAlign, path + ".hAlign");
 			resolved.vAlign = parseVerticalAlign(titleSpec.vAlign, path + ".vAlign");
@@ -16286,6 +16333,7 @@ namespace FlowInternal
 					textEngine,
 					axisSpec.tickLabelFontFamily,
 					axisSpec.tickLabelFontWeight,
+					FlowPlot::parseFontStyle(axisSpec.tickLabelFontStyle),
 					axisSpec.tickLabelFontSize,
 					tickText,
 					path + ".tickLabels[" + std::to_string(majorIdx) + "]");
@@ -16301,6 +16349,7 @@ namespace FlowInternal
 				label.fontFamily = axisSpec.tickLabelFontFamily;
 				label.fontSize = axisSpec.tickLabelFontSize;
 				label.fontWeight = axisSpec.tickLabelFontWeight;
+				label.fontStyle = FlowPlot::parseFontStyle(axisSpec.tickLabelFontStyle);
 				label.color = tickLabelColor;
 				label.hAlign = FlowPlot::HorizontalAlign::Left;
 				label.vAlign = FlowPlot::VerticalAlign::Top;
@@ -16340,6 +16389,7 @@ namespace FlowInternal
 						textEngine,
 						titleSpec.fontFamily,
 						titleSpec.fontWeight,
+						FlowPlot::parseFontStyle(titleSpec.fontStyle),
 						titleSpec.fontSize,
 						titleSpec.text,
 						path + ".title.box");
@@ -16370,6 +16420,7 @@ namespace FlowInternal
 				title.fontFamily = titleSpec.fontFamily;
 				title.fontSize = titleSpec.fontSize;
 				title.fontWeight = titleSpec.fontWeight;
+				title.fontStyle = FlowPlot::parseFontStyle(titleSpec.fontStyle);
 				title.color = parseColor(titleSpec.color, path + ".title.color");
 				title.hAlign = parseHorizontalAlign(titleSpec.hAlign, path + ".title.hAlign");
 				title.vAlign = parseVerticalAlign(titleSpec.vAlign, path + ".title.vAlign");
@@ -18039,6 +18090,108 @@ namespace FlowInternal
 
 namespace FlowPlot
 {
+	inline FontStyle parseFontStyle(std::string_view rawStyle)
+	{
+		std::string style;
+		style.reserve(rawStyle.size());
+		for (const char c : rawStyle)
+		{
+			if (c >= 'A' && c <= 'Z')
+				style.push_back(static_cast<char>(c - 'A' + 'a'));
+			else
+				style.push_back(c);
+		}
+
+		if (style.empty() || style == "normal")
+			return FontStyle::Normal;
+		if (style == "italic")
+			return FontStyle::Italic;
+		if (style == "oblique")
+			return FontStyle::Oblique;
+
+		throw std::invalid_argument("parseFontStyle: unsupported font style '" + std::string(rawStyle) + "'");
+	}
+
+	inline const char* fontStyleName(FontStyle style) noexcept
+	{
+		switch (style)
+		{
+		case FontStyle::Italic:
+			return "italic";
+		case FontStyle::Oblique:
+			return "oblique";
+		case FontStyle::Normal:
+		default:
+			return "normal";
+		}
+	}
+
+	inline void registerFonts(ITextEngine& textEngine, const rapidjson::Value& templateJson)
+	{
+		if (!templateJson.IsObject())
+			throw std::runtime_error("registerFonts: template root must be a JSON object");
+
+		const auto fontsIt = templateJson.FindMember("fonts");
+		if (fontsIt == templateJson.MemberEnd())
+			return;
+		if (!fontsIt->value.IsArray())
+			throw std::runtime_error("registerFonts: 'fonts' must be an array");
+
+		const rapidjson::Value& fonts = fontsIt->value;
+		for (rapidjson::SizeType i = 0; i < fonts.Size(); ++i)
+		{
+			const rapidjson::Value& fontJson = fonts[i];
+			const std::string path = "fonts[" + std::to_string(i) + "]";
+			if (!fontJson.IsObject())
+				throw std::runtime_error("registerFonts: '" + path + "' must be an object");
+
+			auto requireString = [&](const char* key) -> std::string
+			{
+				const auto memberIt = fontJson.FindMember(key);
+				if (memberIt == fontJson.MemberEnd())
+					throw std::runtime_error("registerFonts: '" + path + "." + key + "' is required");
+				if (!memberIt->value.IsString())
+					throw std::runtime_error("registerFonts: '" + path + "." + key + "' must be a string");
+				return std::string(memberIt->value.GetString(), memberIt->value.GetStringLength());
+			};
+
+			const std::string family = requireString("family");
+			const std::string style = requireString("style");
+			const std::string fontPath = requireString("path");
+
+			const auto weightIt = fontJson.FindMember("weight");
+			if (weightIt == fontJson.MemberEnd())
+				throw std::runtime_error("registerFonts: '" + path + ".weight' is required");
+			if (!weightIt->value.IsUint())
+				throw std::runtime_error("registerFonts: '" + path + ".weight' must be a non-negative integer");
+			const unsigned rawWeight = weightIt->value.GetUint();
+			if (rawWeight > std::numeric_limits<std::uint16_t>::max())
+				throw std::runtime_error("registerFonts: '" + path + ".weight' is out of uint16 range");
+
+			textEngine.registerFont(
+				family,
+				std::filesystem::path(fontPath),
+				static_cast<std::uint16_t>(rawWeight),
+				parseFontStyle(style));
+		}
+	}
+
+	inline void registerFonts(ITextEngine& textEngine, std::string_view templateJsonText)
+	{
+		rapidjson::Document templateJson;
+		templateJson.Parse(templateJsonText.data(), templateJsonText.size());
+		if (templateJson.HasParseError())
+		{
+			throw std::runtime_error(
+				"registerFonts: failed to parse template JSON at offset "
+				+ std::to_string(templateJson.GetErrorOffset())
+				+ ": "
+				+ rapidjson::GetParseError_En(templateJson.GetParseError()));
+		}
+
+		registerFonts(textEngine, templateJson);
+	}
+
 
 	class PlotBuilder
 	{
@@ -18299,13 +18452,7 @@ namespace FlowPlot
 			return *this;
 		}
 
-		RenderPlot getCommands() const
-		{
-			Spec::MasterTemplateSpec 			     compiledTemplate = FlowInternal::compileTemplateToSpec(template_);
-			FlowInternal::BoundIR::PlotBoundIR 		 bound = FlowInternal::buildBoundIR(compiledTemplate, data_);
-			FlowInternal::ResolvedIR::PlotResolvedIR resolved = FlowInternal::resolvePlotIR(compiledTemplate, bound, textEngine_);
-			return FlowInternal::buildRenderPlot(resolved);
-		}
+		RenderPlot getCommands() const;
 
 #ifdef FLOW_PLOT_RENDERER
 		void writePng(const std::filesystem::path& outputPath) const;
@@ -18350,6 +18497,17 @@ namespace FlowPlot
 		builder.textEngine_ = nullptr;
 		return builder;
 	}
+
+#ifndef FLOW_PLOT_RENDERER
+	inline RenderPlot PlotBuilder::getCommands() const
+	{
+		Spec::MasterTemplateSpec compiledTemplate = FlowInternal::compileTemplateToSpec(template_);
+		FlowInternal::BoundIR::PlotBoundIR bound = FlowInternal::buildBoundIR(compiledTemplate, data_);
+		FlowInternal::ResolvedIR::PlotResolvedIR resolved =
+			FlowInternal::resolvePlotIR(compiledTemplate, bound, textEngine_);
+		return FlowInternal::buildRenderPlot(resolved);
+	}
+#endif
 
 #ifdef FLOW_PLOT_COMPLETE_JSON
 	inline std::string getCompleteJson(std::string_view templateJsonText, bool pretty = true)
@@ -18446,16 +18604,20 @@ namespace FlowPlot
 		{
 			const char* defaultFontPath = FLOW_PLOT_DEFAULT_FONT_PATH;
 			if (defaultFontPath != nullptr && defaultFontPath[0] != '\0')
-				registerFont("Default", std::filesystem::path(defaultFontPath), 400);
+				registerFont("Default", std::filesystem::path(defaultFontPath), 400, FontStyle::Normal);
 		}
 
 		explicit StbTextEngine(const std::filesystem::path& defaultFontPath)
 		{
 			if (!defaultFontPath.empty())
-				registerFont("Default", defaultFontPath, 400);
+				registerFont("Default", defaultFontPath, 400, FontStyle::Normal);
 		}
 
-		void registerFont(std::string_view familyName, const std::filesystem::path& ttfPath, std::uint16_t weight = 400) override
+		void registerFont(
+			std::string_view familyName,
+			const std::filesystem::path& ttfPath,
+			std::uint16_t weight = 400,
+			FontStyle style = FontStyle::Normal) override
 		{
 			if (familyName.empty())
 				throw std::invalid_argument("StbTextEngine::registerFont: family name cannot be empty");
@@ -18481,14 +18643,19 @@ namespace FlowPlot
 			stbtt_GetFontVMetrics(&face.fontInfo, &face.ascent, &face.descent, &face.lineGap);
 
 			const std::string canonicalFamily = canonicalizeFamily(familyName);
-			fonts_[FontKey{canonicalFamily, weight}] = std::move(face);
+			fonts_[FontKey{canonicalFamily, weight, style}] = std::move(face);
 		}
 
-		bool hasFont(std::string_view familyName, std::uint16_t weight = 400) const override
+		bool hasFont(
+			std::string_view familyName,
+			std::uint16_t weight = 400,
+			FontStyle style = FontStyle::Normal) const override
 		{
 			const std::string canonicalFamily = canonicalizeFamily(familyName);
-			return fonts_.find(FontKey{canonicalFamily, weight}) != fonts_.end()
-				|| fonts_.find(FontKey{canonicalFamily, 400}) != fonts_.end();
+			return fonts_.find(FontKey{canonicalFamily, weight, style}) != fonts_.end()
+				|| fonts_.find(FontKey{canonicalFamily, weight, FontStyle::Normal}) != fonts_.end()
+				|| fonts_.find(FontKey{canonicalFamily, 400, style}) != fonts_.end()
+				|| fonts_.find(FontKey{canonicalFamily, 400, FontStyle::Normal}) != fonts_.end();
 		}
 
 		struct GlyphBitmap
@@ -18504,10 +18671,11 @@ namespace FlowPlot
 		TextMeasurement measureText(
 			std::string_view familyName,
 			std::uint16_t weight,
+			FontStyle style,
 			float fontSizePx,
 			std::string_view text) const override
 		{
-			const LaidOutText layout = layoutText(familyName, weight, fontSizePx, text);
+			const LaidOutText layout = layoutText(familyName, weight, style, fontSizePx, text);
 			TextMeasurement measurement;
 			measurement.width = layout.width;
 			measurement.height = layout.height;
@@ -18520,6 +18688,7 @@ namespace FlowPlot
 		LaidOutText layoutText(
 			std::string_view familyName,
 			std::uint16_t weight,
+			FontStyle style,
 			float fontSizePx,
 			std::string_view text,
 			float maxWidth = std::numeric_limits<float>::infinity()) const override
@@ -18527,7 +18696,7 @@ namespace FlowPlot
 			if (fontSizePx <= 0.0f)
 				throw std::invalid_argument("StbTextEngine::layoutText: fontSizePx must be positive");
 
-			const FontFace& face = resolveFontWithFallback(familyName, weight);
+			const FontFace& face = resolveFontWithFallback(familyName, weight, style);
 			const float scale = stbtt_ScaleForPixelHeight(&face.fontInfo, fontSizePx);
 			const float ascentPx = static_cast<float>(face.ascent) * scale;
 			const float descentPx = static_cast<float>(face.descent) * scale;
@@ -18609,13 +18778,14 @@ namespace FlowPlot
 		GlyphBitmap rasterizeGlyph(
 			std::string_view familyName,
 			std::uint16_t weight,
+			FontStyle style,
 			float fontSizePx,
 			std::uint32_t codepoint) const
 		{
 			if (fontSizePx <= 0.0f)
 				throw std::invalid_argument("StbTextEngine::rasterizeGlyph: fontSizePx must be positive");
 
-			const FontFace& face = resolveFontWithFallback(familyName, weight);
+			const FontFace& face = resolveFontWithFallback(familyName, weight, style);
 			const float scale = stbtt_ScaleForPixelHeight(&face.fontInfo, fontSizePx);
 
 			GlyphBitmap bitmap{};
@@ -18664,10 +18834,11 @@ namespace FlowPlot
 		{
 			std::string family;
 			std::uint16_t weight = 400;
+			FontStyle style = FontStyle::Normal;
 
 			bool operator==(const FontKey& other) const
 			{
-				return family == other.family && weight == other.weight;
+				return family == other.family && weight == other.weight && style == other.style;
 			}
 		};
 
@@ -18677,7 +18848,11 @@ namespace FlowPlot
 			{
 				const std::size_t familyHash = std::hash<std::string>{}(key.family);
 				const std::size_t weightHash = std::hash<std::uint16_t>{}(key.weight);
-				return familyHash ^ (weightHash + 0x9e3779b97f4a7c15ULL + (familyHash << 6U) + (familyHash >> 2U));
+				const std::size_t styleHash = std::hash<std::uint8_t>{}(static_cast<std::uint8_t>(key.style));
+				std::size_t h = familyHash;
+				h ^= weightHash + 0x9e3779b97f4a7c15ULL + (h << 6U) + (h >> 2U);
+				h ^= styleHash + 0x9e3779b97f4a7c15ULL + (h << 6U) + (h >> 2U);
+				return h;
 			}
 		};
 
@@ -18806,28 +18981,46 @@ namespace FlowPlot
 			return out;
 		}
 
-		const FontFace& resolveFontWithFallback(std::string_view familyName, std::uint16_t weight) const
+		const FontFace& resolveFontWithFallback(std::string_view familyName, std::uint16_t weight, FontStyle style) const
 		{
 			const std::string canonicalFamily = canonicalizeFamily(familyName);
-			auto it = fonts_.find(FontKey{canonicalFamily, weight});
+			auto it = fonts_.find(FontKey{canonicalFamily, weight, style});
 			if (it != fonts_.end())
 				return it->second;
 
-			it = fonts_.find(FontKey{canonicalFamily, 400});
+			it = fonts_.find(FontKey{canonicalFamily, weight, FontStyle::Normal});
 			if (it != fonts_.end())
 				return it->second;
 
-			it = fonts_.find(FontKey{kDefaultFamilyName, weight});
+			it = fonts_.find(FontKey{canonicalFamily, 400, style});
 			if (it != fonts_.end())
 				return it->second;
 
-			it = fonts_.find(FontKey{kDefaultFamilyName, 400});
+			it = fonts_.find(FontKey{canonicalFamily, 400, FontStyle::Normal});
+			if (it != fonts_.end())
+				return it->second;
+
+			it = fonts_.find(FontKey{kDefaultFamilyName, weight, style});
+			if (it != fonts_.end())
+				return it->second;
+
+			it = fonts_.find(FontKey{kDefaultFamilyName, weight, FontStyle::Normal});
+			if (it != fonts_.end())
+				return it->second;
+
+			it = fonts_.find(FontKey{kDefaultFamilyName, 400, style});
+			if (it != fonts_.end())
+				return it->second;
+
+			it = fonts_.find(FontKey{kDefaultFamilyName, 400, FontStyle::Normal});
 			if (it != fonts_.end())
 				return it->second;
 
 			throw std::runtime_error(
 				"StbTextEngine: no registered font for family '" + std::string(familyName) +
-				"' and no registered 'Default' fallback");
+				"', weight " + std::to_string(weight) +
+				", style '" + fontStyleName(style) +
+				"', and no registered 'Default' fallback");
 		}
 
 		static constexpr const char* kDefaultFamilyName = "default";
@@ -18949,6 +19142,7 @@ namespace FlowPlot
 			const StbTextEngine* engine = nullptr;
 			std::string family{};
 			std::uint16_t weight = 400;
+			FontStyle style = FontStyle::Normal;
 			std::uint32_t codepoint = 0;
 			float fontSizePx = 0.0f;
 			std::uint8_t subX = 0;
@@ -18958,6 +19152,7 @@ namespace FlowPlot
 				return engine == other.engine
 					&& family == other.family
 					&& weight == other.weight
+					&& style == other.style
 					&& codepoint == other.codepoint
 					&& fontSizePx == other.fontSizePx
 					&& subX == other.subX;
@@ -18971,6 +19166,7 @@ namespace FlowPlot
 				std::size_t h = std::hash<const StbTextEngine*>{}(key.engine);
 				h ^= std::hash<std::string>{}(key.family) + 0x9e3779b97f4a7c15ULL + (h << 6U) + (h >> 2U);
 				h ^= std::hash<std::uint16_t>{}(key.weight) + 0x9e3779b97f4a7c15ULL + (h << 6U) + (h >> 2U);
+				h ^= std::hash<std::uint8_t>{}(static_cast<std::uint8_t>(key.style)) + 0x9e3779b97f4a7c15ULL + (h << 6U) + (h >> 2U);
 				h ^= std::hash<std::uint32_t>{}(key.codepoint) + 0x9e3779b97f4a7c15ULL + (h << 6U) + (h >> 2U);
 				h ^= std::hash<float>{}(key.fontSizePx) + 0x9e3779b97f4a7c15ULL + (h << 6U) + (h >> 2U);
 				h ^= std::hash<std::uint8_t>{}(key.subX) + 0x9e3779b97f4a7c15ULL + (h << 6U) + (h >> 2U);
@@ -19223,6 +19419,7 @@ namespace FlowPlot
 			key.engine = &engine;
 			key.family = cmd.fontFamily;
 			key.weight = cmd.fontWeight;
+			key.style = cmd.fontStyle;
 			key.codepoint = codepoint;
 			key.fontSizePx = cmd.fontSize;
 			key.subX = 0;
@@ -19234,6 +19431,7 @@ namespace FlowPlot
 			StbTextEngine::GlyphBitmap bitmap = engine.rasterizeGlyph(
 				cmd.fontFamily,
 				cmd.fontWeight,
+				cmd.fontStyle,
 				cmd.fontSize,
 				codepoint);
 			const auto inserted = cache.emplace(std::move(key), std::move(bitmap));
@@ -19285,6 +19483,7 @@ namespace FlowPlot
 			const LaidOutText layout = engine.layoutText(
 				cmd.fontFamily,
 				cmd.fontWeight,
+				cmd.fontStyle,
 				cmd.fontSize,
 				cmd.text);
 
@@ -19330,6 +19529,24 @@ namespace FlowPlot
 		}
 	};
 
+	inline RenderPlot PlotBuilder::getCommands() const
+	{
+		const ITextEngine* activeTextEngine = textEngine_;
+		std::optional<StbTextEngine> fallbackEngine;
+		if (activeTextEngine == nullptr)
+		{
+			fallbackEngine.emplace();
+			registerFonts(*fallbackEngine, template_);
+			activeTextEngine = &(*fallbackEngine);
+		}
+
+		Spec::MasterTemplateSpec compiledTemplate = FlowInternal::compileTemplateToSpec(template_);
+		FlowInternal::BoundIR::PlotBoundIR bound = FlowInternal::buildBoundIR(compiledTemplate, data_);
+		FlowInternal::ResolvedIR::PlotResolvedIR resolved =
+			FlowInternal::resolvePlotIR(compiledTemplate, bound, activeTextEngine);
+		return FlowInternal::buildRenderPlot(resolved);
+	}
+
 	inline void PlotBuilder::writePng(const std::filesystem::path& outputPath) const
 	{
 		const ITextEngine* activeTextEngine = textEngine_;
@@ -19337,12 +19554,7 @@ namespace FlowPlot
 		if (activeTextEngine == nullptr)
 		{
 			fallbackEngine.emplace();
-			if (!fallbackEngine->hasFont("Default", 400))
-			{
-				throw std::runtime_error(
-					"PlotBuilder::writePng: no text engine is set and no default font is registered. "
-					"Call useTextEngine(...) or define FLOW_PLOT_DEFAULT_FONT_PATH.");
-			}
+			registerFonts(*fallbackEngine, template_);
 			activeTextEngine = &(*fallbackEngine);
 		}
 

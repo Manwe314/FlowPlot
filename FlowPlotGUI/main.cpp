@@ -64,7 +64,9 @@ int main()
 				    .spacer1Sizing = Clay_Sizing{.width = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 22.0f, .max = 45.0f}}, .type = CLAY__SIZING_TYPE_GROW}, .height = Clay_SizingAxis{.size = {.percent = 0.0f}, .type = CLAY__SIZING_TYPE_PERCENT}},
 				    .spacer2Sizing = Clay_Sizing{.width = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 22.0f, .max = 45.0f}}, .type = CLAY__SIZING_TYPE_GROW}, .height = Clay_SizingAxis{.size = {.percent = 1.0f}, .type = CLAY__SIZING_TYPE_PERCENT}},
 				    .spacerLine1Color = Clay_Color{.r = 65.0f, .g = 65.0f, .b = 67.0f, .a = 255.0f},
-				    .spacerLine2Color = Clay_Color{.r = 65.0f, .g = 65.0f, .b = 67.0f, .a = 255.0f}
+				    .spacerLine2Color = Clay_Color{.r = 65.0f, .g = 65.0f, .b = 67.0f, .a = 255.0f},
+				    .guiState = &guiState,
+				    .nativeWindowHandle = app.nativeWindowHandle()
 				}).draw();
 				ui.createElement(kMainContent, "MainContent").construct();
 					const std::string leftId = "TemplatePanel";

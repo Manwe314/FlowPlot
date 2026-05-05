@@ -65,16 +65,19 @@ CMAKE_BINARY_DIR = /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build
 # The main recursive "all" target.
 all: CMakeFiles/FlowPlotGUI.dir/all
 all: external/FlowUi/all
+all: external/Nfd/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
 preinstall: external/FlowUi/preinstall
+preinstall: external/Nfd/preinstall
 .PHONY : preinstall
 
 # The main recursive "clean" target.
 clean: CMakeFiles/flowplotgui_shaders.dir/clean
 clean: CMakeFiles/FlowPlotGUI.dir/clean
 clean: external/FlowUi/clean
+clean: external/Nfd/clean
 .PHONY : clean
 
 #=============================================================================
@@ -167,6 +170,36 @@ external/FlowUi/external/plutosvg/plutovg/clean: external/FlowUi/external/plutos
 .PHONY : external/FlowUi/external/plutosvg/plutovg/clean
 
 #=============================================================================
+# Directory level rules for directory external/Nfd
+
+# Recursive "all" directory target.
+external/Nfd/all: external/Nfd/src/all
+.PHONY : external/Nfd/all
+
+# Recursive "preinstall" directory target.
+external/Nfd/preinstall: external/Nfd/src/preinstall
+.PHONY : external/Nfd/preinstall
+
+# Recursive "clean" directory target.
+external/Nfd/clean: external/Nfd/src/clean
+.PHONY : external/Nfd/clean
+
+#=============================================================================
+# Directory level rules for directory external/Nfd/src
+
+# Recursive "all" directory target.
+external/Nfd/src/all: external/Nfd/src/CMakeFiles/nfd.dir/all
+.PHONY : external/Nfd/src/all
+
+# Recursive "preinstall" directory target.
+external/Nfd/src/preinstall:
+.PHONY : external/Nfd/src/preinstall
+
+# Recursive "clean" directory target.
+external/Nfd/src/clean: external/Nfd/src/CMakeFiles/nfd.dir/clean
+.PHONY : external/Nfd/src/clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/flowplotgui_shaders.dir
 
 # All Build rule for target.
@@ -200,6 +233,7 @@ CMakeFiles/FlowPlotGUI.dir/all: CMakeFiles/flowplotgui_shaders.dir/all
 CMakeFiles/FlowPlotGUI.dir/all: external/FlowUi/CMakeFiles/flowui.dir/all
 CMakeFiles/FlowPlotGUI.dir/all: external/FlowUi/external/plutosvg/CMakeFiles/plutosvg.dir/all
 CMakeFiles/FlowPlotGUI.dir/all: external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/all
+CMakeFiles/FlowPlotGUI.dir/all: external/Nfd/src/CMakeFiles/nfd.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=1,2,3,4,5 "Built target FlowPlotGUI"
@@ -207,7 +241,7 @@ CMakeFiles/FlowPlotGUI.dir/all: external/FlowUi/external/plutosvg/plutovg/CMakeF
 
 # Build rule for subdir invocation for target.
 CMakeFiles/FlowPlotGUI.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles 46
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles 48
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/FlowPlotGUI.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles 0
 .PHONY : CMakeFiles/FlowPlotGUI.dir/rule
@@ -389,7 +423,7 @@ external/FlowUi/external/msdf-atlas-gen/msdfgen/CMakeFiles/msdfgen-ext.dir/clean
 external/FlowUi/external/plutosvg/CMakeFiles/plutosvg.dir/all: external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/all
 	$(MAKE) $(MAKESILENT) -f external/FlowUi/external/plutosvg/CMakeFiles/plutosvg.dir/build.make external/FlowUi/external/plutosvg/CMakeFiles/plutosvg.dir/depend
 	$(MAKE) $(MAKESILENT) -f external/FlowUi/external/plutosvg/CMakeFiles/plutosvg.dir/build.make external/FlowUi/external/plutosvg/CMakeFiles/plutosvg.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=85,86 "Built target plutosvg"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=87,88 "Built target plutosvg"
 .PHONY : external/FlowUi/external/plutosvg/CMakeFiles/plutosvg.dir/all
 
 # Build rule for subdir invocation for target.
@@ -415,7 +449,7 @@ external/FlowUi/external/plutosvg/CMakeFiles/plutosvg.dir/clean:
 external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/all:
 	$(MAKE) $(MAKESILENT) -f external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/build.make external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/depend
 	$(MAKE) $(MAKESILENT) -f external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/build.make external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=87,88,89,90,91,92,93,94,95,96,97,98 "Built target plutovg"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=89,90,91,92,93,94,95,96,97,98,99,100 "Built target plutovg"
 .PHONY : external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/all
 
 # Build rule for subdir invocation for target.
@@ -433,6 +467,32 @@ plutovg: external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/rule
 external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/clean:
 	$(MAKE) $(MAKESILENT) -f external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/build.make external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/clean
 .PHONY : external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/clean
+
+#=============================================================================
+# Target rules for target external/Nfd/src/CMakeFiles/nfd.dir
+
+# All Build rule for target.
+external/Nfd/src/CMakeFiles/nfd.dir/all:
+	$(MAKE) $(MAKESILENT) -f external/Nfd/src/CMakeFiles/nfd.dir/build.make external/Nfd/src/CMakeFiles/nfd.dir/depend
+	$(MAKE) $(MAKESILENT) -f external/Nfd/src/CMakeFiles/nfd.dir/build.make external/Nfd/src/CMakeFiles/nfd.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=85,86 "Built target nfd"
+.PHONY : external/Nfd/src/CMakeFiles/nfd.dir/all
+
+# Build rule for subdir invocation for target.
+external/Nfd/src/CMakeFiles/nfd.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 external/Nfd/src/CMakeFiles/nfd.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles 0
+.PHONY : external/Nfd/src/CMakeFiles/nfd.dir/rule
+
+# Convenience name for target.
+nfd: external/Nfd/src/CMakeFiles/nfd.dir/rule
+.PHONY : nfd
+
+# clean rule for target.
+external/Nfd/src/CMakeFiles/nfd.dir/clean:
+	$(MAKE) $(MAKESILENT) -f external/Nfd/src/CMakeFiles/nfd.dir/build.make external/Nfd/src/CMakeFiles/nfd.dir/clean
+.PHONY : external/Nfd/src/CMakeFiles/nfd.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

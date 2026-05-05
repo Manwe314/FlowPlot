@@ -44,3 +44,16 @@
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/external/plutosvg/plutovg/CMakeFiles/install.dir
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/external/plutosvg/plutovg/CMakeFiles/install/local.dir
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/FlowUi/external/plutosvg/plutovg/CMakeFiles/install/strip.dir
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/Nfd/CMakeFiles/edit_cache.dir
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/Nfd/CMakeFiles/rebuild_cache.dir
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/Nfd/CMakeFiles/list_install_components.dir
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/Nfd/CMakeFiles/install.dir
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/Nfd/CMakeFiles/install/local.dir
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/Nfd/CMakeFiles/install/strip.dir
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/Nfd/src/CMakeFiles/nfd.dir
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/Nfd/src/CMakeFiles/edit_cache.dir
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/Nfd/src/CMakeFiles/rebuild_cache.dir
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/Nfd/src/CMakeFiles/list_install_components.dir
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/Nfd/src/CMakeFiles/install.dir
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/Nfd/src/CMakeFiles/install/local.dir
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/external/Nfd/src/CMakeFiles/install/strip.dir

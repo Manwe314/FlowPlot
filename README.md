@@ -8,6 +8,7 @@ FlowPlot is a header-only plotting library that:
 - optionally rasterizes to PNG with the built-in CPU renderer
 
 It supports scatter and histogram layers, automatic axis-domain inference, legends/titles, and pluggable text measurement/layout through `ITextEngine`.
+Text styling supports font family, numeric weight, and style (`normal`, `italic`, `oblique`).
 
 ## Quick Start
 
@@ -16,10 +17,30 @@ It supports scatter and histogram layers, automatic axis-domain inference, legen
 ```json
 {
   "version": "1.0",
+  "fonts": [
+    {
+      "family": "Inter",
+      "weight": 400,
+      "style": "normal",
+      "path": "/absolute/path/to/Inter-Regular.ttf"
+    },
+    {
+      "family": "Inter",
+      "weight": 700,
+      "style": "normal",
+      "path": "/absolute/path/to/Inter-Bold.ttf"
+    }
+  ],
   "figure": {
     "width": 1200,
     "height": 800,
-    "title": { "visible": true, "text": "Scatter Plot" }
+    "title": {
+      "visible": true,
+      "text": "Scatter Plot",
+      "fontFamily": "Inter",
+      "fontWeight": 700,
+      "fontStyle": "normal"
+    }
   },
   "datasets": [
     {
@@ -86,6 +107,7 @@ g++ -std=c++20 -I. -IFlowPlot main.cpp -o plot
 - `PlotBuilder::useTextEngine(engine)` injects a custom text engine.
 - `PlotBuilder::getCommands()` returns `RenderPlot` (resolved command stream).
 - `PlotBuilder::writePng(path)` (only when `FLOW_PLOT_RENDERER` is enabled).
+- `FlowPlot::registerFonts(textEngine, templateJsonText)` registers every root-level `fonts[]` entry with an `ITextEngine`.
 - `FlowPlot::getCompleteJson(templateJsonText, pretty = true)` (only when `FLOW_PLOT_COMPLETE_JSON` is enabled).
 
 ## Defines
@@ -104,7 +126,7 @@ g++ -std=c++20 -I. -IFlowPlot main.cpp -o plot
 
 - `FLOW_PLOT_DEFAULT_FONT_PATH`
   - String literal path to a default TTF file auto-registered by `StbTextEngine`.
-  - `PlotBuilder::writePng` now auto-creates a fallback `StbTextEngine` if none is set; this default font path makes that work out of the box.
+  - `PlotBuilder::writePng` and renderer-enabled `PlotBuilder::getCommands` auto-create a fallback `StbTextEngine` if none is set; this default font path makes that work out of the box.
 
 - `FLOW_PLOT_COMPLETE_JSON`
   - Enables full-template normalization helper: `getCompleteJson(templateJsonText, pretty)`.
@@ -122,10 +144,31 @@ Examples: `FLOW_PLOT_HPP_INCLUDED`, `FLOW_PLOT_RENDERER_HPP_INCLUDED`, `FLOW_PLO
 Root object:
 
 - `version` (`"1.0"`)
+- `fonts` optional array of font variants
 - `figure`
 - `datasets`
 - `layout`
 - `panels`
+
+### `fonts`
+
+Optional root-level font manifest. Each entry describes one concrete font face:
+
+```json
+{
+  "family": "Inter",
+  "weight": 400,
+  "style": "normal",
+  "path": "/absolute/path/to/Inter-Regular.ttf"
+}
+```
+
+- `family`: family name referenced by text specs.
+- `weight`: numeric font weight, usually `100..900`.
+- `style`: `normal`, `italic`, or `oblique`.
+- `path`: absolute path to a `.ttf`/`.ttc` font file.
+
+The built-in fallback `StbTextEngine` automatically registers these entries for `writePng()` and renderer-enabled `getCommands()`. Custom text engines can opt in by calling `FlowPlot::registerFonts(engine, templateJsonText)`.
 
 ### `figure`
 
@@ -208,8 +251,10 @@ Built-in `StbTextEngine` provides UTF-8 layout and glyph bitmap raster support u
 Important current behavior:
 
 - `resolvePlotIR` needs a text engine for auto-sized text boxes.
-- `PlotBuilder::writePng` auto-falls back to `StbTextEngine` when no engine is explicitly set.
+- `PlotBuilder::writePng` and renderer-enabled `PlotBuilder::getCommands` auto-fall back to `StbTextEngine` when no engine is explicitly set.
+- The fallback `StbTextEngine` automatically registers root `fonts[]` entries before resolving text.
 - If no default font is available, `writePng` throws with guidance (`useTextEngine(...)` or set `FLOW_PLOT_DEFAULT_FONT_PATH`).
+- Font lookup uses `family + weight + style`, with fallback to normal style/default weight/default family where possible.
 - Non-`StbTextEngine` custom engines can drive measurement/layout, but glyph rasterization in the built-in renderer is currently specialized for `StbTextEngine`.
 
 ## Header Options
@@ -242,3 +287,7 @@ All variants support the same feature macros and runtime API.
 ## JSON Backend
 
 FlowPlot uses RapidJSON. The JSON-inlined mega variants include only the RapidJSON subset reachable from FlowPlot's actual include usage.
+
+## Documentation Status
+
+This is a temporary README. FlowPlot will get full documentation and a pre-v1.0.0 release soon.

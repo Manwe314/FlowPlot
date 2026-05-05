@@ -30,7 +30,6 @@ GUI app:
 - add conviniance shortcuts, text copy paste, endite layer duplication property copy paste
 - CSV parsing input as "mock" data?
 - ViewPort
-- Data block
 
 - make toggle actually rounnd with nob beegin a circle
 - enum box dettection vissually off
@@ -46,8 +45,4 @@ GUI app:
 - + add row text should not go beyond its box.
 - propertites title for sting ID edditing
 
-- enhance font handling
-- add additional font data carry json and loaded fonts list in GUI 
-- GUI uses MSDF either add runtime TTF -> msdf atlas baking or use compiled font baker tool
-- use stbTextEngine for layout.
-- 
+- wire in the "fonts": [] export with the rest of the export wiring. 

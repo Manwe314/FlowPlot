@@ -220,6 +220,8 @@ public:
 
 	/** @brief Set the native window title. */
 	void setWindowTitle(std::string_view title);
+	/** @brief Return the backend native window handle, or nullptr if unavailable. */
+	void* nativeWindowHandle() const;
 	/** @brief Return the window size in screen coordinates. */
 	std::pair<int,int> windowSize() const;
 	/** @brief Return the framebuffer size in pixels. */

@@ -1,11 +1,14 @@
 #pragma once
 
+#include <algorithm>
 #include <array>
 #include <functional>
+#include <limits>
 #include <span>
 #include <string>
 #include <string_view>
 #include <utility>
+#include <vector>
 
 #include <FlowUi/Flow.hpp>
 #include <devMode/devApi.hpp>
@@ -37,6 +40,24 @@ inline std::span<const std::string> textSpecEditorDefaultVerticalAlignOptions()
 	return options;
 }
 
+inline std::span<const std::string> textSpecEditorDefaultFontFamilyOptions()
+{
+	static const std::array<std::string, 1> options{"Default"};
+	return options;
+}
+
+inline std::span<const std::string> textSpecEditorDefaultFontWeightOptions()
+{
+	static const std::array<std::string, 1> options{"400"};
+	return options;
+}
+
+inline std::span<const std::string> textSpecEditorDefaultFontStyleOptions()
+{
+	static const std::array<std::string, 1> options{"normal"};
+	return options;
+}
+
 struct textSpecEditorParams {
 	std::string hintText = "Text";
 	FlowPlot::Spec::TextSpec value{};
@@ -45,6 +66,9 @@ struct textSpecEditorParams {
 	std::span<const std::string> overflowOptions{};
 	std::span<const std::string> horizontalAlignOptions{};
 	std::span<const std::string> verticalAlignOptions{};
+	std::vector<std::string> fontFamilyOptions{};
+	std::vector<std::string> fontWeightOptions{};
+	std::vector<std::string> fontStyleOptions{};
 
 	bool defaultExpanded = true;
 
@@ -84,9 +108,10 @@ struct textSpecEditorParams {
 
 	toggleCardParams visibleToggle{};
 	stringInputCardParams textInput{};
-	stringInputCardParams fontFamilyInput{};
+	enumPickerCardParams fontFamilyInput{};
 	numericInputCardParams fontSizeInput{};
-	numericInputCardParams fontWeightInput{};
+	enumPickerCardParams fontWeightInput{};
+	enumPickerCardParams fontStyleInput{};
 	colorPickerCardParams textColorInput{};
 	enumPickerCardParams overflowInput{};
 	enumPickerCardParams horizontalAlignInput{};
@@ -131,6 +156,7 @@ FLOWUI_DEV_REGISTER_STRUCT(
 	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, fontFamilyInput),
 	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, fontSizeInput),
 	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, fontWeightInput),
+	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, fontStyleInput),
 	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, textColorInput),
 	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, overflowInput),
 	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, horizontalAlignInput),
@@ -302,6 +328,15 @@ inline const TextSpecEditorDef kTextSpecEditor = {
 		const std::span<const std::string> verticalAlignOptions = context.params.verticalAlignOptions.empty()
 			? textSpecEditorDefaultVerticalAlignOptions()
 			: context.params.verticalAlignOptions;
+		const std::span<const std::string> fontFamilyOptions = context.params.fontFamilyOptions.empty()
+			? textSpecEditorDefaultFontFamilyOptions()
+			: std::span<const std::string>(context.params.fontFamilyOptions);
+		const std::span<const std::string> fontWeightOptions = context.params.fontWeightOptions.empty()
+			? textSpecEditorDefaultFontWeightOptions()
+			: std::span<const std::string>(context.params.fontWeightOptions);
+		const std::span<const std::string> fontStyleOptions = context.params.fontStyleOptions.empty()
+			? textSpecEditorDefaultFontStyleOptions()
+			: std::span<const std::string>(context.params.fontStyleOptions);
 
 		CLAY(rootId, root)
 		{
@@ -354,15 +389,17 @@ inline const TextSpecEditorDef kTextSpecEditor = {
 			});
 
 			textSpecEditorDrawInputRow(context, "row-font-family", context.params, [&](const std::string& rowPath) {
-				stringInputCardParams params = context.params.fontFamilyInput;
+				enumPickerCardParams params = context.params.fontFamilyInput;
 				params.hintText = "Font Family";
+				params.options = fontFamilyOptions;
 				params.value = context.params.value.fontFamily;
+				params.defaultValue = "Default";
 				params.fontId = context.params.fontId;
 				params.onChange = [value = context.params.value, onChange = context.params.onChange](std::string_view changed) mutable {
 					value.fontFamily = std::string(changed);
 					textSpecEditorEmit(std::move(value), onChange);
 				};
-				context.uiManager.createElement(kStringInputCard, rowPath + "/font-family")
+				context.uiManager.createElement(kEnumPickerCard, rowPath + "/font-family")
 					.setParameters(std::move(params))
 					.draw();
 			});
@@ -385,22 +422,43 @@ inline const TextSpecEditorDef kTextSpecEditor = {
 			});
 
 			textSpecEditorDrawInputRow(context, "row-font-weight", context.params, [&](const std::string& rowPath) {
-				numericInputCardParams params = context.params.fontWeightInput;
+				enumPickerCardParams params = context.params.fontWeightInput;
 				params.hintText = "Font Weight";
-				params.valueType = numericInputValueType::UInt16;
-				params.value = static_cast<double>(context.params.value.fontWeight);
-				params.minValue = 0.0;
-				params.maxValue = 1000.0;
+				params.options = fontWeightOptions;
+				params.value = std::to_string(context.params.value.fontWeight);
+				params.defaultValue = "400";
 				params.fontId = context.params.fontId;
-				params.onChange = [value = context.params.value, onChange = context.params.onChange](double changed) mutable {
-					value.fontWeight = static_cast<std::uint16_t>(numericInputNormalizeValue(
-						numericInputValueType::UInt16,
-						changed,
-						0.0,
-						1000.0));
+				params.onChange = [value = context.params.value, onChange = context.params.onChange](std::string_view changed) mutable {
+					try
+					{
+						const unsigned long parsed = std::stoul(std::string(changed));
+						value.fontWeight = static_cast<std::uint16_t>(std::min<unsigned long>(
+							parsed,
+							static_cast<unsigned long>(std::numeric_limits<std::uint16_t>::max())));
+					}
+					catch (...)
+					{
+						value.fontWeight = 400;
+					}
 					textSpecEditorEmit(std::move(value), onChange);
 				};
-				context.uiManager.createElement(kNumericInputCard, rowPath + "/font-weight")
+				context.uiManager.createElement(kEnumPickerCard, rowPath + "/font-weight")
+					.setParameters(std::move(params))
+					.draw();
+			});
+
+			textSpecEditorDrawInputRow(context, "row-font-style", context.params, [&](const std::string& rowPath) {
+				enumPickerCardParams params = context.params.fontStyleInput;
+				params.hintText = "Font Style";
+				params.options = fontStyleOptions;
+				params.value = context.params.value.fontStyle;
+				params.defaultValue = "normal";
+				params.fontId = context.params.fontId;
+				params.onChange = [value = context.params.value, onChange = context.params.onChange](std::string_view changed) mutable {
+					value.fontStyle = std::string(changed);
+					textSpecEditorEmit(std::move(value), onChange);
+				};
+				context.uiManager.createElement(kEnumPickerCard, rowPath + "/font-style")
 					.setParameters(std::move(params))
 					.draw();
 			});

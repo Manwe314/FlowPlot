@@ -34,6 +34,7 @@ namespace FlowPlot
 			std::string fontFamily = "Default";
 			float fontSize = 16.0f;
 			std::uint16_t fontWeight = 400;
+			std::string fontStyle = "normal";
 			std::string color = "#111111";
 			std::string overflow = "clip";
 			bool clip = true;
@@ -97,6 +98,7 @@ namespace FlowPlot
 			std::string fontFamily = "Default";
 			float fontSize = 24.0f;
 			std::uint16_t fontWeight = 700;
+			std::string fontStyle = "normal";
 			std::string color = "#111111";
 			std::string overflow = "clip";
 			bool clip = true;
@@ -286,6 +288,7 @@ namespace FlowPlot
 			std::string tickLabelFontFamily = "Default";
 			float tickLabelFontSize = 12.0f;
 			std::uint16_t tickLabelFontWeight = 400;
+			std::string tickLabelFontStyle = "normal";
 			std::string tickLabelColor = "#333333";
 			bool showMinorTicks = false;
 			std::uint32_t minorTickCount = 0;
@@ -390,6 +393,7 @@ namespace FlowInternal
   "fontFamily": "Default",
   "fontSize": 24,
   "fontWeight": 700,
+  "fontStyle": "normal",
   "color": "#111111",
   "overflow": "clip",
   "clip": true,
@@ -580,6 +584,7 @@ namespace FlowInternal
     "text": "",
     "fontFamily": "Default",
     "fontSize": 16,
+    "fontStyle": "normal",
     "color": "#111111",
     "overflow": "clip",
     "clip": true,
@@ -597,6 +602,7 @@ namespace FlowInternal
       "text": "X",
       "fontFamily": "Default",
       "fontSize": 14,
+      "fontStyle": "normal",
       "color": "#222222",
       "overflow": "clip",
       "clip": true,
@@ -626,6 +632,7 @@ namespace FlowInternal
     "tickLabelFontFamily": "Default",
     "tickLabelFontSize": 12,
     "tickLabelFontWeight": 400,
+    "tickLabelFontStyle": "normal",
     "tickLabelColor": "#333333",
     "showMinorTicks": false,
     "minorTickCount": 0
@@ -637,6 +644,7 @@ namespace FlowInternal
       "text": "X",
       "fontFamily": "Default",
       "fontSize": 14,
+      "fontStyle": "normal",
       "color": "#222222",
       "overflow": "clip",
       "clip": true,
@@ -666,6 +674,7 @@ namespace FlowInternal
     "tickLabelFontFamily": "Default",
     "tickLabelFontSize": 12,
     "tickLabelFontWeight": 400,
+    "tickLabelFontStyle": "normal",
     "tickLabelColor": "#333333",
     "showMinorTicks": false,
     "minorTickCount": 0
@@ -678,6 +687,7 @@ namespace FlowInternal
       "fontFamily": "Default",
       "fontSize": 14,
       "fontWeight": 500,
+      "fontStyle": "normal",
       "color": "#222222",
       "hAlign": "center",
       "vAlign": "middle",
@@ -709,6 +719,7 @@ namespace FlowInternal
     "tickLabelFontFamily": "Default",
     "tickLabelFontSize": 12,
     "tickLabelFontWeight": 400,
+    "tickLabelFontStyle": "normal",
     "tickLabelColor": "#333333",
     "showMinorTicks": false,
     "minorTickCount": 0
@@ -721,6 +732,7 @@ namespace FlowInternal
       "fontFamily": "Default",
       "fontSize": 14,
       "fontWeight": 500,
+      "fontStyle": "normal",
       "color": "#222222",
       "hAlign": "center",
       "vAlign": "middle",
@@ -752,6 +764,7 @@ namespace FlowInternal
     "tickLabelFontFamily": "Default",
     "tickLabelFontSize": 12,
     "tickLabelFontWeight": 400,
+    "tickLabelFontStyle": "normal",
     "tickLabelColor": "#333333",
     "showMinorTicks": false,
     "minorTickCount": 0
@@ -763,6 +776,7 @@ namespace FlowInternal
 		inline constexpr std::string_view kMasterTemplateJson = R"flowplot(
 {
   "version": "1.0",
+  "fonts": [],
   "figure": {
     "width": 1200,
     "height": 800,
@@ -780,6 +794,7 @@ namespace FlowInternal
       "fontFamily": "Default",
       "fontSize": 24,
       "fontWeight": 700,
+      "fontStyle": "normal",
       "color": "#111111",
       "overflow": "clip",
       "clip": true,

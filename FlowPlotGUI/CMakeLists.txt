@@ -34,6 +34,13 @@ set(FLOW_UI_DEV_MODE ON CACHE BOOL "Enable FlowUi developer mode APIs/UI" FORCE)
 
 add_subdirectory(external/FlowUi)
 
+set(NFD_BUILD_TESTS OFF CACHE BOOL "Disable NFD tests" FORCE)
+set(NFD_BUILD_SDL2_TESTS OFF CACHE BOOL "Disable NFD SDL tests" FORCE)
+set(NFD_BUILD_GLFW3_TESTS OFF CACHE BOOL "Disable NFD GLFW tests" FORCE)
+set(NFD_INSTALL OFF CACHE BOOL "Disable NFD install rules" FORCE)
+set(NFD_WAYLAND OFF CACHE BOOL "Disable NFD Wayland support until vendored protocols are initialized" FORCE)
+add_subdirectory(external/Nfd)
+
 find_package(Vulkan REQUIRED)
 
 set(FLOWPLOTGUI_SHADER_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/shaders")
@@ -94,6 +101,7 @@ target_include_directories(FlowPlotGUI
 target_link_libraries(FlowPlotGUI
     PRIVATE
         FlowUi::FlowUi
+        nfd::nfd
 )
 
 target_compile_definitions(FlowPlotGUI

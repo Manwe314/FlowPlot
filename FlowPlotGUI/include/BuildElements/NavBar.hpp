@@ -10,6 +10,7 @@
 #include "FlowPlotGui.hpp"
 #include "BuildElements/BasicButton.hpp"
 #include "BuildElements/BasicTitle.hpp"
+#include "fontImport.hpp"
 
 struct navBarParams {
 	Clay_Color backgroundColor = FlowUi::Flow_Color("#18181aff");
@@ -35,6 +36,8 @@ struct navBarParams {
 
 	Clay_Color dirtyColor = FlowUi::Flow_Color("#f5b84bff");
 	Clay_Color cleanColor = FlowUi::Flow_Color("#7dd3a8ff");
+	FlowPlotGui::state* guiState = nullptr;
+	void* nativeWindowHandle = nullptr;
 };
 
 struct navBarState {
@@ -84,10 +87,12 @@ struct navBarResources {
 	std::string newButtonPath{};
 	std::string importButtonPath{};
 	std::string exportButtonPath{};
+	std::string addFontButtonPath{};
 	std::string statusTitlePath{};
 	FlowUi::TextureRef newIcon{};
 	FlowUi::TextureRef importIcon{};
 	FlowUi::TextureRef exportIcon{};
+	FlowUi::TextureRef addFontIcon{};
 
 	BasicTitleBuilder child1Builder;
 
@@ -105,10 +110,12 @@ struct navBarResources {
 		newButtonPath("NavBar/child-2/new"),
 		importButtonPath("NavBar/child-2/import"),
 		exportButtonPath("NavBar/child-2/export"),
+		addFontButtonPath("NavBar/child-2/add-font"),
 		statusTitlePath("NavBar/child-3/status"),
 		newIcon(app.icons().textureRef("New")),
 		importIcon(app.icons().textureRef("Import")),
 		exportIcon(app.icons().textureRef("Export")),
+		addFontIcon(app.icons().textureRef("T")),
 		child1Builder(makeChild1Builder(app, child1TitlePath)) {}
 
 private:
@@ -294,6 +301,18 @@ inline const NavBarDef kNavBar = {
 			return params;
 		};
 
+		auto applyNavButtonVisuals = [](auto& params) {
+			params.backgroundColor = Clay_Color{.r = 36.0f, .g = 36.0f, .b = 40.0f, .a = 0.0f};
+			params.borderColor = Clay_Color{.r = 58.0f, .g = 58.0f, .b = 64.0f, .a = 0.0f};
+			params.borderWidth = Clay_BorderWidth{.left = 0, .right = 0, .top = 0, .bottom = 0, .betweenChildren = 0};
+			params.cornerRadius = Clay_CornerRadius{.topLeft = 10.0f, .topRight = 10.0f, .bottomLeft = 10.0f, .bottomRight = 10.0f};
+			params.fontSize = 14;
+			params.hoverBackgroundColor = Clay_Color{.r = 36.0f, .g = 36.0f, .b = 40.0f, .a = 255.0f};
+			params.iconContainerSizing = Clay_Sizing{.width = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 20.0f, .max = 20.0f}}, .type = CLAY__SIZING_TYPE_FIXED}, .height = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 20.0f, .max = 20.0f}}, .type = CLAY__SIZING_TYPE_FIXED}};
+			params.iconTintColor = Clay_Color{.r = 0.0f, .g = 0.0f, .b = 0.0f, .a = 0.0f};
+			params.textColor = Clay_Color{.r = 243.0f, .g = 243.0f, .b = 243.0f, .a = 255.0f};
+		};
+
 		CLAY(resources.rootId, root){
 			CLAY(resources.child1Id, child1){
 				resources.child1Builder
@@ -309,41 +328,32 @@ inline const NavBarDef kNavBar = {
 				context.uiManager.createElement(kBasicButton, resources.newButtonPath)
 					.setParameters(makeButtonParams("New", resources.newIcon))
 					/* V1 cant Update parameters made with variables */
-					.mergeParams([](auto& params) {
-					    params.backgroundColor = Clay_Color{.r = 36.0f, .g = 36.0f, .b = 40.0f, .a = 0.0f};
-					    params.borderColor = Clay_Color{.r = 58.0f, .g = 58.0f, .b = 64.0f, .a = 0.0f};
-					    params.borderWidth = Clay_BorderWidth{.left = 0, .right = 0, .top = 0, .bottom = 0, .betweenChildren = 0};
-					    params.cornerRadius = Clay_CornerRadius{.topLeft = 10.0f, .topRight = 10.0f, .bottomLeft = 10.0f, .bottomRight = 10.0f};
-					    params.fontSize = 14;
-					    params.hoverBackgroundColor = Clay_Color{.r = 36.0f, .g = 36.0f, .b = 40.0f, .a = 255.0f};
-					    params.iconContainerSizing = Clay_Sizing{.width = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 20.0f, .max = 20.0f}}, .type = CLAY__SIZING_TYPE_FIXED}, .height = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 20.0f, .max = 20.0f}}, .type = CLAY__SIZING_TYPE_FIXED}};
-					    params.iconTintColor = Clay_Color{.r = 0.0f, .g = 0.0f, .b = 0.0f, .a = 0.0f};
-					    params.textColor = Clay_Color{.r = 243.0f, .g = 243.0f, .b = 243.0f, .a = 255.0f};
-					})
+					.mergeParams(applyNavButtonVisuals)
 					.draw();
 				context.uiManager.createElement(kBasicButton, resources.importButtonPath)
 					.setParameters(makeButtonParams("Import", resources.importIcon))
 					/* V1 cant Update parameters made with variables */
-					.mergeParams([](auto& params) {
-					    params.backgroundColor = Clay_Color{.r = 36.0f, .g = 36.0f, .b = 40.0f, .a = 0.0f};
-					    params.borderColor = Clay_Color{.r = 58.0f, .g = 58.0f, .b = 64.0f, .a = 0.0f};
-					    params.borderWidth = Clay_BorderWidth{.left = 0, .right = 0, .top = 0, .bottom = 0, .betweenChildren = 0};
-					    params.hoverBackgroundColor = Clay_Color{.r = 36.0f, .g = 36.0f, .b = 40.0f, .a = 255.0f};
-					    params.iconContainerSizing = Clay_Sizing{.width = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 20.0f, .max = 20.0f}}, .type = CLAY__SIZING_TYPE_FIXED}, .height = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 20.0f, .max = 20.0f}}, .type = CLAY__SIZING_TYPE_FIXED}};
-					    params.textColor = Clay_Color{.r = 243.0f, .g = 243.0f, .b = 243.0f, .a = 255.0f};
-					})
+					.mergeParams(applyNavButtonVisuals)
 					.draw();
 				context.uiManager.createElement(kBasicButton, resources.exportButtonPath)
 					.setParameters(makeButtonParams("Export", resources.exportIcon))
 					/* V1 cant Update parameters made with variables */
-					.mergeParams([](auto& params) {
-					    params.backgroundColor = Clay_Color{.r = 36.0f, .g = 36.0f, .b = 40.0f, .a = 0.0f};
-					    params.borderColor = Clay_Color{.r = 58.0f, .g = 58.0f, .b = 64.0f, .a = 0.0f};
-					    params.borderWidth = Clay_BorderWidth{.left = 0, .right = 0, .top = 0, .bottom = 0, .betweenChildren = 0};
-					    params.hoverBackgroundColor = Clay_Color{.r = 36.0f, .g = 36.0f, .b = 40.0f, .a = 255.0f};
-					    params.iconContainerSizing = Clay_Sizing{.width = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 20.0f, .max = 20.0f}}, .type = CLAY__SIZING_TYPE_FIXED}, .height = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 20.0f, .max = 20.0f}}, .type = CLAY__SIZING_TYPE_FIXED}};
-					    params.textColor = Clay_Color{.r = 243.0f, .g = 243.0f, .b = 243.0f, .a = 255.0f};
-					})
+					.mergeParams(applyNavButtonVisuals)
+					.draw();
+				basicButtonParams addFontParams = makeButtonParams("Add Font", resources.addFontIcon);
+				addFontParams.onPressedCallback = [
+					guiState = context.params.guiState,
+					nativeWindowHandle = context.params.nativeWindowHandle
+				](BasicButtonInteractionContext) {
+					if (guiState != nullptr)
+					{
+						FlowPlotGui::openFontImportDialog(*guiState, nativeWindowHandle);
+					}
+				};
+				context.uiManager.createElement(kBasicButton, resources.addFontButtonPath)
+					.setParameters(std::move(addFontParams))
+					/* V1 cant Update parameters made with variables */
+					.mergeParams(applyNavButtonVisuals)
 					.draw();
 
 				CLAY(resources.child2GrowSpacerId, child2GrowSpacer){};

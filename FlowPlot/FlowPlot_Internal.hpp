@@ -642,6 +642,7 @@ namespace FlowInternal
 			readString(objectJson, "fontFamily", text.fontFamily, path);
 			readFloat(objectJson, "fontSize", text.fontSize, path);
 			readUint16(objectJson, "fontWeight", text.fontWeight, path);
+			readString(objectJson, "fontStyle", text.fontStyle, path);
 			readString(objectJson, "color", text.color, path);
 			readString(objectJson, "overflow", text.overflow, path);
 			readBool(objectJson, "clip", text.clip, path);
@@ -658,6 +659,7 @@ namespace FlowInternal
 			readString(objectJson, "fontFamily", element.fontFamily, path);
 			readFloat(objectJson, "fontSize", element.fontSize, path);
 			readUint16(objectJson, "fontWeight", element.fontWeight, path);
+			readString(objectJson, "fontStyle", element.fontStyle, path);
 			readString(objectJson, "color", element.color, path);
 			readString(objectJson, "overflow", element.overflow, path);
 			readBool(objectJson, "clip", element.clip, path);
@@ -726,6 +728,7 @@ namespace FlowInternal
 			readString(objectJson, "tickLabelFontFamily", axis.tickLabelFontFamily, path);
 			readFloat(objectJson, "tickLabelFontSize", axis.tickLabelFontSize, path);
 			readUint16(objectJson, "tickLabelFontWeight", axis.tickLabelFontWeight, path);
+			readString(objectJson, "tickLabelFontStyle", axis.tickLabelFontStyle, path);
 			readString(objectJson, "tickLabelColor", axis.tickLabelColor, path);
 			readBool(objectJson, "showMinorTicks", axis.showMinorTicks, path);
 			readUint32(objectJson, "minorTickCount", axis.minorTickCount, path);
@@ -1495,6 +1498,7 @@ namespace FlowInternal
 			const FlowPlot::ITextEngine* textEngine,
 			std::string_view fontFamily,
 			std::uint16_t fontWeight,
+			FlowPlot::FontStyle fontStyle,
 			float fontSize,
 			std::string_view text,
 			const std::string& path)
@@ -1508,6 +1512,7 @@ namespace FlowInternal
 			return textEngine->measureText(
 				fontFamily,
 				fontWeight,
+				fontStyle,
 				fontSize,
 				text);
 		}
@@ -1521,6 +1526,7 @@ namespace FlowInternal
 				textEngine,
 				textSpec.fontFamily,
 				textSpec.fontWeight,
+				FlowPlot::parseFontStyle(textSpec.fontStyle),
 				textSpec.fontSize,
 				textSpec.text,
 				path);
@@ -1560,6 +1566,7 @@ namespace FlowInternal
 			resolved.fontFamily = titleSpec.fontFamily;
 			resolved.fontSize = titleSpec.fontSize;
 			resolved.fontWeight = titleSpec.fontWeight;
+			resolved.fontStyle = FlowPlot::parseFontStyle(titleSpec.fontStyle);
 			resolved.color = parseColor(titleSpec.color, "figure.title.color");
 			resolved.hAlign = parseHorizontalAlign(titleSpec.hAlign, "figure.title.hAlign");
 			resolved.vAlign = parseVerticalAlign(titleSpec.vAlign, "figure.title.vAlign");
@@ -1594,6 +1601,7 @@ namespace FlowInternal
 					textEngine,
 					elementSpec.fontFamily,
 					elementSpec.fontWeight,
+					FlowPlot::parseFontStyle(elementSpec.fontStyle),
 					elementSpec.fontSize,
 					elementSpec.text,
 					path + ".box");
@@ -1615,6 +1623,7 @@ namespace FlowInternal
 			cache.label.fontFamily = elementSpec.fontFamily;
 			cache.label.fontSize = elementSpec.fontSize;
 			cache.label.fontWeight = elementSpec.fontWeight;
+			cache.label.fontStyle = FlowPlot::parseFontStyle(elementSpec.fontStyle);
 			cache.label.color = parseColor(elementSpec.color, path + ".color");
 			cache.label.clipToBox = elementSpec.clip;
 			cache.label.box.w = textWidth;
@@ -1787,6 +1796,7 @@ namespace FlowInternal
 			resolved.fontFamily = titleSpec.fontFamily;
 			resolved.fontSize = titleSpec.fontSize;
 			resolved.fontWeight = titleSpec.fontWeight;
+			resolved.fontStyle = FlowPlot::parseFontStyle(titleSpec.fontStyle);
 			resolved.color = parseColor(titleSpec.color, path + ".color");
 			resolved.hAlign = parseHorizontalAlign(titleSpec.hAlign, path + ".hAlign");
 			resolved.vAlign = parseVerticalAlign(titleSpec.vAlign, path + ".vAlign");
@@ -2767,6 +2777,7 @@ namespace FlowInternal
 					textEngine,
 					axisSpec.tickLabelFontFamily,
 					axisSpec.tickLabelFontWeight,
+					FlowPlot::parseFontStyle(axisSpec.tickLabelFontStyle),
 					axisSpec.tickLabelFontSize,
 					tickText,
 					path + ".tickLabels[" + std::to_string(majorIdx) + "]");
@@ -2782,6 +2793,7 @@ namespace FlowInternal
 				label.fontFamily = axisSpec.tickLabelFontFamily;
 				label.fontSize = axisSpec.tickLabelFontSize;
 				label.fontWeight = axisSpec.tickLabelFontWeight;
+				label.fontStyle = FlowPlot::parseFontStyle(axisSpec.tickLabelFontStyle);
 				label.color = tickLabelColor;
 				label.hAlign = FlowPlot::HorizontalAlign::Left;
 				label.vAlign = FlowPlot::VerticalAlign::Top;
@@ -2821,6 +2833,7 @@ namespace FlowInternal
 						textEngine,
 						titleSpec.fontFamily,
 						titleSpec.fontWeight,
+						FlowPlot::parseFontStyle(titleSpec.fontStyle),
 						titleSpec.fontSize,
 						titleSpec.text,
 						path + ".title.box");
@@ -2851,6 +2864,7 @@ namespace FlowInternal
 				title.fontFamily = titleSpec.fontFamily;
 				title.fontSize = titleSpec.fontSize;
 				title.fontWeight = titleSpec.fontWeight;
+				title.fontStyle = FlowPlot::parseFontStyle(titleSpec.fontStyle);
 				title.color = parseColor(titleSpec.color, path + ".title.color");
 				title.hAlign = parseHorizontalAlign(titleSpec.hAlign, path + ".title.hAlign");
 				title.vAlign = parseVerticalAlign(titleSpec.vAlign, path + ".title.vAlign");

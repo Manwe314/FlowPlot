@@ -86,6 +86,13 @@ namespace FlowPlot
 		Round
 	};
 
+	enum class FontStyle : std::uint8_t
+	{
+		Normal,
+		Italic,
+		Oblique
+	};
+
 	struct TextMeasurement
 	{
 		float width = 0.0f;
@@ -116,16 +123,25 @@ namespace FlowPlot
 	{
 	public:
 		virtual ~ITextEngine() = default;
-		virtual void registerFont(std::string_view familyName, const std::filesystem::path& ttfPath, std::uint16_t weight = 400) = 0;
-		virtual bool hasFont(std::string_view familyName, std::uint16_t weight = 400) const = 0;
+		virtual void registerFont(
+			std::string_view familyName,
+			const std::filesystem::path& ttfPath,
+			std::uint16_t weight = 400,
+			FontStyle style = FontStyle::Normal) = 0;
+		virtual bool hasFont(
+			std::string_view familyName,
+			std::uint16_t weight = 400,
+			FontStyle style = FontStyle::Normal) const = 0;
 		virtual TextMeasurement measureText(
 			std::string_view familyName,
 			std::uint16_t weight,
+			FontStyle style,
 			float fontSizePx,
 			std::string_view text) const = 0;
 		virtual LaidOutText layoutText(
 			std::string_view familyName,
 			std::uint16_t weight,
+			FontStyle style,
 			float fontSizePx,
 			std::string_view text,
 			float maxWidth = std::numeric_limits<float>::infinity()) const = 0;
@@ -156,6 +172,7 @@ namespace FlowPlot
 		std::string fontFamily{"Default"};
 		float fontSize = 12.0f;
 		std::uint16_t fontWeight = 400;
+		FontStyle fontStyle = FontStyle::Normal;
 		HorizontalAlign hAlign = HorizontalAlign::Left;
 		VerticalAlign vAlign = VerticalAlign::Top;
 		bool clipToBox = true;
@@ -196,12 +213,117 @@ namespace FlowPlot
 		std::vector<RenderCommand> commands{};
 	};
 
+	inline FontStyle parseFontStyle(std::string_view rawStyle);
+	inline const char* fontStyleName(FontStyle style) noexcept;
+
 } // namespace FlowPlot
 
 #include "FlowPlot_Internal.hpp"
 
 namespace FlowPlot
 {
+	inline FontStyle parseFontStyle(std::string_view rawStyle)
+	{
+		std::string style;
+		style.reserve(rawStyle.size());
+		for (const char c : rawStyle)
+		{
+			if (c >= 'A' && c <= 'Z')
+				style.push_back(static_cast<char>(c - 'A' + 'a'));
+			else
+				style.push_back(c);
+		}
+
+		if (style.empty() || style == "normal")
+			return FontStyle::Normal;
+		if (style == "italic")
+			return FontStyle::Italic;
+		if (style == "oblique")
+			return FontStyle::Oblique;
+
+		throw std::invalid_argument("parseFontStyle: unsupported font style '" + std::string(rawStyle) + "'");
+	}
+
+	inline const char* fontStyleName(FontStyle style) noexcept
+	{
+		switch (style)
+		{
+		case FontStyle::Italic:
+			return "italic";
+		case FontStyle::Oblique:
+			return "oblique";
+		case FontStyle::Normal:
+		default:
+			return "normal";
+		}
+	}
+
+	inline void registerFonts(ITextEngine& textEngine, const rapidjson::Value& templateJson)
+	{
+		if (!templateJson.IsObject())
+			throw std::runtime_error("registerFonts: template root must be a JSON object");
+
+		const auto fontsIt = templateJson.FindMember("fonts");
+		if (fontsIt == templateJson.MemberEnd())
+			return;
+		if (!fontsIt->value.IsArray())
+			throw std::runtime_error("registerFonts: 'fonts' must be an array");
+
+		const rapidjson::Value& fonts = fontsIt->value;
+		for (rapidjson::SizeType i = 0; i < fonts.Size(); ++i)
+		{
+			const rapidjson::Value& fontJson = fonts[i];
+			const std::string path = "fonts[" + std::to_string(i) + "]";
+			if (!fontJson.IsObject())
+				throw std::runtime_error("registerFonts: '" + path + "' must be an object");
+
+			auto requireString = [&](const char* key) -> std::string
+			{
+				const auto memberIt = fontJson.FindMember(key);
+				if (memberIt == fontJson.MemberEnd())
+					throw std::runtime_error("registerFonts: '" + path + "." + key + "' is required");
+				if (!memberIt->value.IsString())
+					throw std::runtime_error("registerFonts: '" + path + "." + key + "' must be a string");
+				return std::string(memberIt->value.GetString(), memberIt->value.GetStringLength());
+			};
+
+			const std::string family = requireString("family");
+			const std::string style = requireString("style");
+			const std::string fontPath = requireString("path");
+
+			const auto weightIt = fontJson.FindMember("weight");
+			if (weightIt == fontJson.MemberEnd())
+				throw std::runtime_error("registerFonts: '" + path + ".weight' is required");
+			if (!weightIt->value.IsUint())
+				throw std::runtime_error("registerFonts: '" + path + ".weight' must be a non-negative integer");
+			const unsigned rawWeight = weightIt->value.GetUint();
+			if (rawWeight > std::numeric_limits<std::uint16_t>::max())
+				throw std::runtime_error("registerFonts: '" + path + ".weight' is out of uint16 range");
+
+			textEngine.registerFont(
+				family,
+				std::filesystem::path(fontPath),
+				static_cast<std::uint16_t>(rawWeight),
+				parseFontStyle(style));
+		}
+	}
+
+	inline void registerFonts(ITextEngine& textEngine, std::string_view templateJsonText)
+	{
+		rapidjson::Document templateJson;
+		templateJson.Parse(templateJsonText.data(), templateJsonText.size());
+		if (templateJson.HasParseError())
+		{
+			throw std::runtime_error(
+				"registerFonts: failed to parse template JSON at offset "
+				+ std::to_string(templateJson.GetErrorOffset())
+				+ ": "
+				+ rapidjson::GetParseError_En(templateJson.GetParseError()));
+		}
+
+		registerFonts(textEngine, templateJson);
+	}
+
 
 	class PlotBuilder
 	{
@@ -462,13 +584,7 @@ namespace FlowPlot
 			return *this;
 		}
 
-		RenderPlot getCommands() const
-		{
-			Spec::MasterTemplateSpec 			     compiledTemplate = FlowInternal::compileTemplateToSpec(template_);
-			FlowInternal::BoundIR::PlotBoundIR 		 bound = FlowInternal::buildBoundIR(compiledTemplate, data_);
-			FlowInternal::ResolvedIR::PlotResolvedIR resolved = FlowInternal::resolvePlotIR(compiledTemplate, bound, textEngine_);
-			return FlowInternal::buildRenderPlot(resolved);
-		}
+		RenderPlot getCommands() const;
 
 #ifdef FLOW_PLOT_RENDERER
 		void writePng(const std::filesystem::path& outputPath) const;
@@ -513,6 +629,17 @@ namespace FlowPlot
 		builder.textEngine_ = nullptr;
 		return builder;
 	}
+
+#ifndef FLOW_PLOT_RENDERER
+	inline RenderPlot PlotBuilder::getCommands() const
+	{
+		Spec::MasterTemplateSpec compiledTemplate = FlowInternal::compileTemplateToSpec(template_);
+		FlowInternal::BoundIR::PlotBoundIR bound = FlowInternal::buildBoundIR(compiledTemplate, data_);
+		FlowInternal::ResolvedIR::PlotResolvedIR resolved =
+			FlowInternal::resolvePlotIR(compiledTemplate, bound, textEngine_);
+		return FlowInternal::buildRenderPlot(resolved);
+	}
+#endif
 
 #ifdef FLOW_PLOT_COMPLETE_JSON
 	inline std::string getCompleteJson(std::string_view templateJsonText, bool pretty = true)

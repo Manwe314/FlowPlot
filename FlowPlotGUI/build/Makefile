@@ -292,6 +292,19 @@ plutovg/fast:
 	$(MAKE) $(MAKESILENT) -f external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/build.make external/FlowUi/external/plutosvg/plutovg/CMakeFiles/plutovg.dir/build
 .PHONY : plutovg/fast
 
+#=============================================================================
+# Target rules for targets named nfd
+
+# Build rule for target.
+nfd: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 nfd
+.PHONY : nfd
+
+# fast build rule for target.
+nfd/fast:
+	$(MAKE) $(MAKESILENT) -f external/Nfd/src/CMakeFiles/nfd.dir/build.make external/Nfd/src/CMakeFiles/nfd.dir/build
+.PHONY : nfd/fast
+
 main.o: main.cpp.o
 .PHONY : main.o
 
@@ -339,6 +352,30 @@ src/PlotViewportScene.s: src/PlotViewportScene.cpp.s
 src/PlotViewportScene.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/src/PlotViewportScene.cpp.s
 .PHONY : src/PlotViewportScene.cpp.s
+
+src/fontImport.o: src/fontImport.cpp.o
+.PHONY : src/fontImport.o
+
+# target to build an object file
+src/fontImport.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/src/fontImport.cpp.o
+.PHONY : src/fontImport.cpp.o
+
+src/fontImport.i: src/fontImport.cpp.i
+.PHONY : src/fontImport.i
+
+# target to preprocess a source file
+src/fontImport.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/src/fontImport.cpp.i
+.PHONY : src/fontImport.cpp.i
+
+src/fontImport.s: src/fontImport.cpp.s
+.PHONY : src/fontImport.s
+
+# target to generate assembly for a file
+src/fontImport.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/src/fontImport.cpp.s
+.PHONY : src/fontImport.cpp.s
 
 src/iconRegistry.o: src/iconRegistry.cpp.o
 .PHONY : src/iconRegistry.o
@@ -408,6 +445,7 @@ help:
 	@echo "... msdf-atlas-gen"
 	@echo "... msdfgen-core"
 	@echo "... msdfgen-ext"
+	@echo "... nfd"
 	@echo "... plutosvg"
 	@echo "... plutovg"
 	@echo "... main.o"
@@ -416,6 +454,9 @@ help:
 	@echo "... src/PlotViewportScene.o"
 	@echo "... src/PlotViewportScene.i"
 	@echo "... src/PlotViewportScene.s"
+	@echo "... src/fontImport.o"
+	@echo "... src/fontImport.i"
+	@echo "... src/fontImport.s"
 	@echo "... src/iconRegistry.o"
 	@echo "... src/iconRegistry.i"
 	@echo "... src/iconRegistry.s"

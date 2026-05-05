@@ -101,6 +101,29 @@ namespace FlowPlotGui
 		return std::nullopt;
 	}
 
+	inline void propertiesContentApplyTextFontOptions(
+		textSpecEditorParams& params,
+		const state& guiState,
+		const FlowPlot::Spec::TextSpec& text)
+	{
+		params.fontFamilyOptions = availableFontFamilies(guiState.fontLibrary);
+		params.fontWeightOptions = availableWeightsForFamily(guiState.fontLibrary, text.fontFamily);
+		params.fontStyleOptions = availableStylesForFamilyWeight(guiState.fontLibrary, text.fontFamily, text.fontWeight);
+	}
+
+	inline void propertiesContentApplyTickFontOptions(
+		tickSettingsEditorParams& params,
+		const state& guiState,
+		const FlowPlot::Spec::AxisSpec& axis)
+	{
+		params.fontFamilyOptions = availableFontFamilies(guiState.fontLibrary);
+		params.fontWeightOptions = availableWeightsForFamily(guiState.fontLibrary, axis.tickLabelFontFamily);
+		params.fontStyleOptions = availableStylesForFamilyWeight(
+			guiState.fontLibrary,
+			axis.tickLabelFontFamily,
+			axis.tickLabelFontWeight);
+	}
+
 	inline std::optional<std::size_t> propertiesContentFindLayerIndex(
 		const FlowPlot::Spec::PanelSpec& panel,
 		std::string_view layerId)
@@ -409,14 +432,16 @@ namespace FlowPlotGui
 
 	inline void drawFigureTitleEditor(FlowUi::UiManager& ui, state& guiState, std::string_view rootId)
 	{
+		textSpecEditorParams params{};
+		params.hintText = "Figure Title";
+		params.value = guiState.activeTemplate.figure.title;
+		params.onChange = [&guiState](FlowPlot::Spec::TextSpec changed) {
+			guiState.activeTemplate.figure.title = std::move(changed);
+		};
+		propertiesContentApplyTextFontOptions(params, guiState, params.value);
+
 		ui.createElement(kTextSpecEditor, std::string(rootId) + "/figure-title-editor")
-			.setParameters(textSpecEditorParams{
-				.hintText = "Figure Title",
-				.value = guiState.activeTemplate.figure.title,
-				.onChange = [&guiState](FlowPlot::Spec::TextSpec changed) {
-					guiState.activeTemplate.figure.title = std::move(changed);
-				},
-			})
+			.setParameters(std::move(params))
 			.draw();
 	}
 
@@ -544,18 +569,19 @@ namespace FlowPlotGui
 
 		const FlowPlot::Spec::PanelSpec& panel = guiState.activeTemplate.panels[*panelIndex];
 		const std::string panelId = panel.id;
+		textSpecEditorParams params{};
+		params.hintText = "Panel Title";
+		params.value = panel.title;
+		params.onChange = [&guiState, panelId](FlowPlot::Spec::TextSpec changed) {
+			if (const auto index = propertiesContentFindPanelIndex(guiState.activeTemplate, panelId))
+			{
+				guiState.activeTemplate.panels[*index].title = std::move(changed);
+			}
+		};
+		propertiesContentApplyTextFontOptions(params, guiState, params.value);
 
 		ui.createElement(kTextSpecEditor, std::string(rootId) + "/panel-title-editor")
-			.setParameters(textSpecEditorParams{
-				.hintText = "Panel Title",
-				.value = panel.title,
-				.onChange = [&guiState, panelId](FlowPlot::Spec::TextSpec changed) {
-					if (const auto index = propertiesContentFindPanelIndex(guiState.activeTemplate, panelId))
-					{
-						guiState.activeTemplate.panels[*index].title = std::move(changed);
-					}
-				},
-			})
+			.setParameters(std::move(params))
 			.draw();
 	}
 
@@ -676,11 +702,14 @@ namespace FlowPlotGui
 			.draw();
 
 		ui.createElement(kTickSettingsEditor, std::string(rootId) + "/axis-tick-settings")
-			.setParameters(tickSettingsEditorParams{
-				.hintText = "Tick Settings",
-				.value = *axis,
-				.onChange = emitAxisChange,
-			})
+			.setParameters([&]() {
+				tickSettingsEditorParams params{};
+				params.hintText = "Tick Settings";
+				params.value = *axis;
+				params.onChange = emitAxisChange;
+				propertiesContentApplyTickFontOptions(params, guiState, params.value);
+				return params;
+			}())
 			.draw();
 	}
 
@@ -710,21 +739,23 @@ namespace FlowPlotGui
 		}
 
 		const std::string panelId = panel.id;
+		textSpecEditorParams params{};
+		params.hintText = "Axis Title";
+		params.value = axis->title;
+		params.onChange = [&guiState, panelId, axisKind = *axisKind](FlowPlot::Spec::TextSpec changed) {
+			if (const auto index = propertiesContentFindPanelIndex(guiState.activeTemplate, panelId))
+			{
+				if (FlowPlot::Spec::AxisSpec* axis =
+						propertiesContentAxisForKind(guiState.activeTemplate.panels[*index], axisKind))
+				{
+					axis->title = std::move(changed);
+				}
+			}
+		};
+		propertiesContentApplyTextFontOptions(params, guiState, params.value);
+
 		ui.createElement(kTextSpecEditor, std::string(rootId) + "/axis-title-editor")
-			.setParameters(textSpecEditorParams{
-				.hintText = "Axis Title",
-				.value = axis->title,
-				.onChange = [&guiState, panelId, axisKind = *axisKind](FlowPlot::Spec::TextSpec changed) {
-					if (const auto index = propertiesContentFindPanelIndex(guiState.activeTemplate, panelId))
-					{
-						if (FlowPlot::Spec::AxisSpec* axis =
-								propertiesContentAxisForKind(guiState.activeTemplate.panels[*index], axisKind))
-						{
-							axis->title = std::move(changed);
-						}
-					}
-				},
-			})
+			.setParameters(std::move(params))
 			.draw();
 	}
 
@@ -997,6 +1028,14 @@ namespace FlowPlotGui
 		const FlowPlot::Spec::LegendElementSpec& element = legend->legendElements[*elementIndex];
 		const std::string legendId = legend->id;
 		const std::string elementId = element.id;
+		const std::vector<std::string> fontFamilyOptions = availableFontFamilies(guiState.fontLibrary);
+		const std::vector<std::string> fontWeightOptions = availableWeightsForFamily(
+			guiState.fontLibrary,
+			element.fontFamily);
+		const std::vector<std::string> fontStyleOptions = availableStylesForFamilyWeight(
+			guiState.fontLibrary,
+			element.fontFamily,
+			element.fontWeight);
 		const auto emitElementChange = [&guiState, legendId, elementId](FlowPlot::Spec::LegendElementSpec changed) {
 			if (FlowPlot::Spec::LegendElementSpec* target =
 					propertiesContentLegendElementForIds(guiState, legendId, elementId))
@@ -1016,10 +1055,12 @@ namespace FlowPlotGui
 			})
 			.draw();
 
-		ui.createElement(kStringInputCard, std::string(rootId) + "/legend-element-font-family")
-			.setParameters(stringInputCardParams{
+		ui.createElement(kEnumPickerCard, std::string(rootId) + "/legend-element-font-family")
+			.setParameters(enumPickerCardParams{
 				.hintText = "Font Family",
+				.options = fontFamilyOptions,
 				.value = element.fontFamily,
+				.defaultValue = "Default",
 				.onChange = [elementValue = element, emitElementChange](std::string_view changed) mutable {
 					elementValue.fontFamily = std::string(changed);
 					emitElementChange(std::move(elementValue));
@@ -1041,19 +1082,37 @@ namespace FlowPlotGui
 			})
 			.draw();
 
-		ui.createElement(kNumericInputCard, std::string(rootId) + "/legend-element-font-weight")
-			.setParameters(numericInputCardParams{
+		ui.createElement(kEnumPickerCard, std::string(rootId) + "/legend-element-font-weight")
+			.setParameters(enumPickerCardParams{
 				.hintText = "Font Weight",
-				.valueType = numericInputValueType::UInt16,
-				.value = static_cast<double>(element.fontWeight),
-				.minValue = 0.0,
-				.maxValue = static_cast<double>(std::numeric_limits<std::uint16_t>::max()),
-				.onChange = [elementValue = element, emitElementChange](double changed) mutable {
-					elementValue.fontWeight = static_cast<std::uint16_t>(numericInputNormalizeValue(
-						numericInputValueType::UInt16,
-						changed,
-						0.0,
-						static_cast<double>(std::numeric_limits<std::uint16_t>::max())));
+				.options = fontWeightOptions,
+				.value = std::to_string(element.fontWeight),
+				.defaultValue = "400",
+				.onChange = [elementValue = element, emitElementChange](std::string_view changed) mutable {
+					try
+					{
+						const unsigned long parsed = std::stoul(std::string(changed));
+						elementValue.fontWeight = static_cast<std::uint16_t>(std::min<unsigned long>(
+							parsed,
+							static_cast<unsigned long>(std::numeric_limits<std::uint16_t>::max())));
+					}
+					catch (...)
+					{
+						elementValue.fontWeight = 400;
+					}
+					emitElementChange(std::move(elementValue));
+				},
+			})
+			.draw();
+
+		ui.createElement(kEnumPickerCard, std::string(rootId) + "/legend-element-font-style")
+			.setParameters(enumPickerCardParams{
+				.hintText = "Font Style",
+				.options = fontStyleOptions,
+				.value = element.fontStyle,
+				.defaultValue = "normal",
+				.onChange = [elementValue = element, emitElementChange](std::string_view changed) mutable {
+					elementValue.fontStyle = std::string(changed);
 					emitElementChange(std::move(elementValue));
 				},
 			})
