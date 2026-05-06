@@ -329,6 +329,30 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+src/PlotRenderer.o: src/PlotRenderer.cpp.o
+.PHONY : src/PlotRenderer.o
+
+# target to build an object file
+src/PlotRenderer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/src/PlotRenderer.cpp.o
+.PHONY : src/PlotRenderer.cpp.o
+
+src/PlotRenderer.i: src/PlotRenderer.cpp.i
+.PHONY : src/PlotRenderer.i
+
+# target to preprocess a source file
+src/PlotRenderer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/src/PlotRenderer.cpp.i
+.PHONY : src/PlotRenderer.cpp.i
+
+src/PlotRenderer.s: src/PlotRenderer.cpp.s
+.PHONY : src/PlotRenderer.s
+
+# target to generate assembly for a file
+src/PlotRenderer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/src/PlotRenderer.cpp.s
+.PHONY : src/PlotRenderer.cpp.s
+
 src/PlotViewportScene.o: src/PlotViewportScene.cpp.o
 .PHONY : src/PlotViewportScene.o
 
@@ -451,6 +475,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... src/PlotRenderer.o"
+	@echo "... src/PlotRenderer.i"
+	@echo "... src/PlotRenderer.s"
 	@echo "... src/PlotViewportScene.o"
 	@echo "... src/PlotViewportScene.i"
 	@echo "... src/PlotViewportScene.s"

@@ -46,3 +46,5 @@ GUI app:
 - propertites title for sting ID edditing
 
 - wire in the "fonts": [] export with the rest of the export wiring. 
+- wire in revisions uint64_t increment on editors.
+- add better "rebuild if needed" for vulkan renderer for dataset recration trigger 

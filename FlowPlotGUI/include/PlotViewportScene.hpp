@@ -1,23 +1,21 @@
 #pragma once
 
-#include <chrono>
 #include <memory>
 #include <string_view>
 
 #include <FlowUi/Flow.hpp>
 #include <vulkan/vulkan.h>
 
+#include "PlotRenderer.hpp"
+
 namespace FlowPlotGui {
 
 struct PlotViewportSceneResources {
 	VkDevice device = VK_NULL_HANDLE;
 	VkFormat colorFormat = VK_FORMAT_UNDEFINED;
-	VkPipeline graphicsPipeline = VK_NULL_HANDLE;
-	VkPipelineLayout pipelineLayout = VK_NULL_HANDLE;
-	VkShaderModule vertexShader = VK_NULL_HANDLE;
-	VkShaderModule fragmentShader = VK_NULL_HANDLE;
-	std::chrono::steady_clock::time_point animationStart = std::chrono::steady_clock::now();
+	PlotRenderer renderer{};
 
+	void setInput(PlotRendererInput input);
 	void destroy();
 	~PlotViewportSceneResources();
 };

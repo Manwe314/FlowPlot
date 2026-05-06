@@ -1,4 +1,7 @@
+#define FLOW_PLOT_RENDERER
+#define FLOW_PLOT_IMPLEMENTATION
 #include "fontImport.hpp"
+#include "managers/FontManager.hpp"
 
 #include <algorithm>
 #include <array>
@@ -7,6 +10,7 @@
 #include <cstdio>
 #include <fstream>
 #include <iterator>
+#include <limits>
 #include <optional>
 #include <stdexcept>
 #include <string_view>
@@ -20,17 +24,6 @@
 #endif
 
 #include <nfd_glfw3.h>
-
-#define STBTT_STATIC
-#ifndef STB_TRUETYPE_IMPLEMENTATION
-#define STB_TRUETYPE_IMPLEMENTATION
-#define FLOWPLOTGUI_UNDEF_STB_TRUETYPE_IMPLEMENTATION
-#endif
-#include "stb_truetype.h"
-#ifdef FLOWPLOTGUI_UNDEF_STB_TRUETYPE_IMPLEMENTATION
-#undef STB_TRUETYPE_IMPLEMENTATION
-#undef FLOWPLOTGUI_UNDEF_STB_TRUETYPE_IMPLEMENTATION
-#endif
 
 namespace FlowPlotGui {
 namespace {
@@ -330,10 +323,65 @@ void logImportResult(const FontImportResult& result)
 	}
 }
 
+FlowUi::FontStyle toFlowUiFontStyle(FlowPlot::FontStyle style)
+{
+	return style == FlowPlot::FontStyle::Italic || style == FlowPlot::FontStyle::Oblique
+		? FlowUi::FontStyle::Italic
+		: FlowUi::FontStyle::Normal;
+}
+
+FlowPlot::StbTextEngine& ensureTextEngine(state& guiState)
+{
+	if (!guiState.textEngine)
+	{
+		guiState.textEngine = std::make_shared<FlowPlot::StbTextEngine>();
+	}
+	FlowPlot::StbTextEngine* engine = dynamic_cast<FlowPlot::StbTextEngine*>(guiState.textEngine.get());
+	if (engine == nullptr)
+	{
+		throw std::runtime_error("FlowPlotGUI text engine is not a StbTextEngine.");
+	}
+	return *engine;
+}
+
+void registerImportedFont(state& guiState, FontManager* fontManager, const AddedFontVariant& variant)
+{
+	ensureTextEngine(guiState).registerFont(
+		variant.family,
+		variant.path,
+		variant.weight,
+		variant.style);
+
+	if (fontManager == nullptr)
+	{
+		return;
+	}
+
+	FlowUi::FontFaceCreateInfo face{};
+	face.path = variant.path;
+	face.pixelSize = 48.0f;
+	face.weight = variant.weight;
+	face.style = toFlowUiFontStyle(variant.style);
+	face.name = variant.family;
+
+	const FontManager::FontFamilyId familyId = fontManager->getFamilyId(variant.family);
+	if (familyId == std::numeric_limits<FontManager::FontFamilyId>::max())
+	{
+		FlowUi::FontFamilyCreateInfo family{};
+		family.name = variant.family;
+		family.faces.push_back(std::move(face));
+		fontManager->createFamily(family);
+		return;
+	}
+
+	fontManager->addFamilyFace(familyId, face);
+}
+
 } // namespace
 
 FontImportResult importFontFiles(
 	state& guiState,
+	FontManager* fontManager,
 	const std::vector<std::filesystem::path>& paths)
 {
 	FontImportResult result{};
@@ -344,7 +392,9 @@ FontImportResult importFontFiles(
 			std::vector<ParsedFontFace> faces = parseFontFile(path);
 			for (ParsedFontFace& face : faces)
 			{
+				registerImportedFont(guiState, fontManager, face.variant);
 				upsertFontVariant(guiState.fontLibrary, std::move(face.variant));
+				++guiState.templateRevision;
 				++result.addedCount;
 			}
 			if (path.has_parent_path())
@@ -362,6 +412,7 @@ FontImportResult importFontFiles(
 
 FontImportResult openFontImportDialog(
 	state& guiState,
+	FontManager* fontManager,
 	void* nativeWindowHandle)
 {
 	FontImportResult result{};
@@ -440,7 +491,7 @@ FontImportResult openFontImportDialog(
 		guiState.lastFontDialogDirectory = selectedPaths.back().parent_path();
 	}
 
-	result = importFontFiles(guiState, selectedPaths);
+	result = importFontFiles(guiState, fontManager, selectedPaths);
 	logImportResult(result);
 	return result;
 }

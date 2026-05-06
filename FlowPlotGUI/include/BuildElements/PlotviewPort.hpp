@@ -15,6 +15,7 @@ struct plotviewPortParams {
 	Clay_Padding padding = CLAY_PADDING_ALL(0);
 	Clay_Color backgroundColor = FlowUi::Flow_Color("#00000000");
 	Clay_Color viewportColor = FlowUi::Flow_Color("#7a7a7aff");
+	FlowPlotGui::state* guiState = nullptr;
 };
 
 FLOWUI_DEV_REGISTER_STRUCT(
@@ -22,17 +23,21 @@ FLOWUI_DEV_REGISTER_STRUCT(
 	FLOWUI_DEV_REFLECT_FIELD(plotviewPortParams, sizing),
 	FLOWUI_DEV_REFLECT_FIELD(plotviewPortParams, padding),
 	FLOWUI_DEV_REFLECT_FIELD(plotviewPortParams, backgroundColor),
-	FLOWUI_DEV_REFLECT_FIELD(plotviewPortParams, viewportColor));
+	FLOWUI_DEV_REFLECT_FIELD(plotviewPortParams, viewportColor),
+	FLOWUI_DEV_REFLECT_FIELD(plotviewPortParams, guiState));
 
 struct plotviewPortResources {
 	PanelTitleBuilder titleBuilder;
 	FlowUi::ViewPortManager* viewPortManager = nullptr;
+	FontManager* fontManager = nullptr;
 	std::string viewportKey = "FlowPlotGUI/PlotPreview";
 	FlowPlotGui::PlotViewportSceneHandle scene{};
+	FlowPlotGui::PlotCamera camera{};
 
 	explicit plotviewPortResources(FlowUi::App& app) :
 		titleBuilder(makeTitleBuilder(app.ui())),
 		viewPortManager(&app.viewPorts()),
+		fontManager(&app.fonts()),
 		scene(FlowPlotGui::setupPlotViewportScene(app, viewportKey)) {}
 
 private:
@@ -73,6 +78,14 @@ inline const PlotviewPortDef kPlotviewPort = {
 			return;
 		}
 		plotviewPortResources& resources = *PlotviewPortDef::resources;
+		if (resources.scene.resources)
+		{
+			resources.scene.resources->setInput({
+				.guiState = context.params.guiState,
+				.fontManager = resources.fontManager,
+				.camera = resources.camera,
+			});
+		}
 
 		const Clay_ElementId rootId = context.uiManager.toClayEID(context.elementID);
 		const Clay_ElementId viewportId = context.uiManager.toClayEID(context.createChildElementId("viewport"));

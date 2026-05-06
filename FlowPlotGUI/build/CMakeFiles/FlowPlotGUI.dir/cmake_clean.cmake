@@ -1,6 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/FlowPlotGUI.dir/main.cpp.o"
   "CMakeFiles/FlowPlotGUI.dir/main.cpp.o.d"
+  "CMakeFiles/FlowPlotGUI.dir/src/PlotRenderer.cpp.o"
+  "CMakeFiles/FlowPlotGUI.dir/src/PlotRenderer.cpp.o.d"
   "CMakeFiles/FlowPlotGUI.dir/src/PlotViewportScene.cpp.o"
   "CMakeFiles/FlowPlotGUI.dir/src/PlotViewportScene.cpp.o.d"
   "CMakeFiles/FlowPlotGUI.dir/src/fontImport.cpp.o"

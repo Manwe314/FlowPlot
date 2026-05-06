@@ -29,7 +29,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # FlowUi options
 set(FLOWUI_INCLUDE_ICON_MANAGER ON CACHE BOOL "Enable FlowUi Icon manager" FORCE)
 set(FLOWUI_PUBLIC_VULKAN_INTEROP ON CACHE BOOL "Enable FlowUi Vulkan interop API" FORCE)
-set(FLOWUI_ENABLE_RUNTIME_FONT_BAKING OFF CACHE BOOL "Disable FlowUi runtime font baking" FORCE)
+set(FLOWUI_ENABLE_RUNTIME_FONT_BAKING ON CACHE BOOL "Enable FlowUi runtime font baking" FORCE)
 set(FLOW_UI_DEV_MODE ON CACHE BOOL "Enable FlowUi developer mode APIs/UI" FORCE)
 
 add_subdirectory(external/FlowUi)

@@ -93,6 +93,7 @@ struct navBarResources {
 	FlowUi::TextureRef importIcon{};
 	FlowUi::TextureRef exportIcon{};
 	FlowUi::TextureRef addFontIcon{};
+	FontManager* fontManager = nullptr;
 
 	BasicTitleBuilder child1Builder;
 
@@ -116,6 +117,7 @@ struct navBarResources {
 		importIcon(app.icons().textureRef("Import")),
 		exportIcon(app.icons().textureRef("Export")),
 		addFontIcon(app.icons().textureRef("T")),
+		fontManager(&app.fonts()),
 		child1Builder(makeChild1Builder(app, child1TitlePath)) {}
 
 private:
@@ -343,11 +345,12 @@ inline const NavBarDef kNavBar = {
 				basicButtonParams addFontParams = makeButtonParams("Add Font", resources.addFontIcon);
 				addFontParams.onPressedCallback = [
 					guiState = context.params.guiState,
+					fontManager = resources.fontManager,
 					nativeWindowHandle = context.params.nativeWindowHandle
 				](BasicButtonInteractionContext) {
 					if (guiState != nullptr)
 					{
-						FlowPlotGui::openFontImportDialog(*guiState, nativeWindowHandle);
+						FlowPlotGui::openFontImportDialog(*guiState, fontManager, nativeWindowHandle);
 					}
 				};
 				context.uiManager.createElement(kBasicButton, resources.addFontButtonPath)

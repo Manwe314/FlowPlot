@@ -99,10 +99,12 @@ int main()
 					ui.createElement(kMainContentPanel, "MainContentPanel")
 					.setParameters({.backgroundColor = FlowUi::Flow_Color("#18181aff")})
 					.construct(FlowUi::ElementDrawOptions::SkipEventCallbacks);
-						ui.createElement(kPlotviewPort, "PlotViewPort").draw();
-							ui.createElement(kDataInput, "DataInput")
-							.setParameters({.guiState = &guiState})
-							.draw();
+						ui.createElement(kPlotviewPort, "PlotViewPort")
+						.setParameters({.guiState = &guiState})
+						.draw();
+						ui.createElement(kDataInput, "DataInput")
+						.setParameters({.guiState = &guiState})
+						.draw();
 					ui.drawConstructed(); // MainContentPanel
 					const std::string rightId = "PropsPanel";
 					ui.createElement(kDynamicSeparator, "separator2")

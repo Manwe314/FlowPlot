@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <filesystem>
 #include <optional>
+#include <memory>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -196,10 +197,14 @@ struct state {
 	}
 
 	GlobalState globalAppState = GlobalState::working;
+	std::uint64_t templateRevision = 1;
+	std::uint64_t datasetRevision = 1;
+	std::uint64_t viewportRevision = 1;
 	FlowPlot::Spec::MasterTemplateSpec activeTemplate{};
 	std::optional<TemplateNodeKey> selectedNode{};
 	std::vector<RunningDataset> datasets;
 	std::vector<AddedFontVariant> fontLibrary{};
+	std::shared_ptr<FlowPlot::ITextEngine> textEngine{};
 	std::filesystem::path lastFontDialogDirectory{};
 };
 
