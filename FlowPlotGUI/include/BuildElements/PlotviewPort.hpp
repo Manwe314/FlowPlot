@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+#include <cmath>
 #include <string>
 #include <utility>
 
@@ -32,7 +34,6 @@ struct plotviewPortResources {
 	FontManager* fontManager = nullptr;
 	std::string viewportKey = "FlowPlotGUI/PlotPreview";
 	FlowPlotGui::PlotViewportSceneHandle scene{};
-	FlowPlotGui::PlotCamera camera{};
 
 	explicit plotviewPortResources(FlowUi::App& app) :
 		titleBuilder(makeTitleBuilder(app.ui())),
@@ -56,39 +57,138 @@ private:
 	}
 };
 
+struct plotviewPortState {
+	FlowPlotGui::PlotCamera camera{};
+	bool cameraInitialized = false;
+	bool cameraDragging = false;
+	float lastPointerX = 0.0f;
+	float lastPointerY = 0.0f;
+};
+
+inline void plotviewPortEnsureCameraInitialized(
+	plotviewPortState& state,
+	const FlowPlotGui::state* guiState)
+{
+	if (state.cameraInitialized)
+	{
+		return;
+	}
+
+	if (guiState != nullptr)
+	{
+		state.camera.centerX = static_cast<float>(guiState->activeTemplate.figure.width) * 0.5f;
+		state.camera.centerY = static_cast<float>(guiState->activeTemplate.figure.height) * 0.5f;
+	}
+	state.camera.zoom = std::max(state.camera.zoom, 1.0e-6f);
+	state.cameraInitialized = true;
+}
+
 using PlotviewPortDef = FlowUi::ElementDefinition<
 	plotviewPortParams,
-	void,
+	plotviewPortState,
 	plotviewPortResources,
 	FLOW_DEF_ID("PlotviewPort")>;
 
 inline const PlotviewPortDef kPlotviewPort = {
-	nullptr,
-	nullptr,
-	nullptr,
-	nullptr,
-	nullptr,
-	+[](PlotviewPortDef::BuildContext& context) -> Clay_ElementDeclaration {
-		(void)context;
-		return Clay_ElementDeclaration{};
+	+[](PlotviewPortDef::InteractionContext& context) {
+		const Clay_ElementId viewportId = context.uiManager.toClayEID(context.createChildElementId("viewport"));
+		if (!context.previousInteraction.isHovered(viewportId))
+		{
+			return;
+		}
+
+		plotviewPortState& state = PlotviewPortDef::getOrCreateState(FlowUi::toFlowId(context.elementID));
+		plotviewPortEnsureCameraInitialized(state, context.params.guiState);
+
+		const FrameInput& input = context.uiManager.getCurrentFrameInput();
+		const bool middleMouseDown = input.mouseDown[2];
+		if (middleMouseDown)
+		{
+			if (state.cameraDragging)
+			{
+				const float dx = input.mouseX - state.lastPointerX;
+				const float dy = input.mouseY - state.lastPointerY;
+				const float invZoom = 1.0f / std::max(state.camera.zoom, 1.0e-6f);
+				state.camera.centerX -= dx * invZoom;
+				state.camera.centerY -= dy * invZoom;
+			}
+			state.cameraDragging = true;
+			state.lastPointerX = input.mouseX;
+			state.lastPointerY = input.mouseY;
+		}
+		else
+		{
+			state.cameraDragging = false;
+			state.lastPointerX = input.mouseX;
+			state.lastPointerY = input.mouseY;
+		}
+
+		if (input.scrollY == 0.0f)
+		{
+			return;
+		}
+
+		const Clay_ElementData viewportData = Clay_GetElementData(viewportId);
+		if (!viewportData.found || viewportData.boundingBox.width <= 0.0f || viewportData.boundingBox.height <= 0.0f)
+		{
+			return;
+		}
+
+		constexpr float kScrollUnitsPerWheelStep = 20.0f;
+		constexpr float kZoomBasePerWheelStep = 1.1f;
+		constexpr float kMinZoom = 0.02f;
+		constexpr float kMaxZoom = 100.0f;
+
+		const float oldZoom = std::max(state.camera.zoom, 1.0e-6f);
+		const float zoomFactor = std::pow(kZoomBasePerWheelStep, input.scrollY / kScrollUnitsPerWheelStep);
+		const float newZoom = std::clamp(oldZoom * zoomFactor, kMinZoom, kMaxZoom);
+		if (newZoom == oldZoom)
+		{
+			return;
+		}
+
+		const float viewportX = input.mouseX - viewportData.boundingBox.x;
+		const float viewportY = input.mouseY - viewportData.boundingBox.y;
+		const float halfWidth = viewportData.boundingBox.width * 0.5f;
+		const float halfHeight = viewportData.boundingBox.height * 0.5f;
+		const float worldXUnderCursor = state.camera.centerX + (viewportX - halfWidth) / oldZoom;
+		const float worldYUnderCursor = state.camera.centerY + (viewportY - halfHeight) / oldZoom;
+
+		state.camera.zoom = newZoom;
+		state.camera.centerX = worldXUnderCursor - (viewportX - halfWidth) / newZoom;
+		state.camera.centerY = worldYUnderCursor - (viewportY - halfHeight) / newZoom;
 	},
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
 	+[](PlotviewPortDef::BuildContext& context) {
 		if (!PlotviewPortDef::resources.has_value())
 		{
 			return;
 		}
 		plotviewPortResources& resources = *PlotviewPortDef::resources;
+		plotviewPortState& state = PlotviewPortDef::getOrCreateState(FlowUi::toFlowId(context.elementID));
+		plotviewPortEnsureCameraInitialized(state, context.params.guiState);
+
+		const Clay_ElementId viewportId = context.uiManager.toClayEID(context.createChildElementId("viewport"));
+		const bool viewportHovered = context.uiManager.getPreviousFramesInteraction().isHovered(viewportId);
+		if (!context.uiManager.getCurrentFrameInput().mouseDown[2] || !viewportHovered)
+		{
+			state.cameraDragging = false;
+		}
+
 		if (resources.scene.resources)
 		{
 			resources.scene.resources->setInput({
 				.guiState = context.params.guiState,
 				.fontManager = resources.fontManager,
-				.camera = resources.camera,
+				.camera = state.camera,
 			});
 		}
 
 		const Clay_ElementId rootId = context.uiManager.toClayEID(context.elementID);
-		const Clay_ElementId viewportId = context.uiManager.toClayEID(context.createChildElementId("viewport"));
 		const std::string titlePath = context.createChildElementId("title");
 
 		Clay_LayoutConfig rootLayout{};

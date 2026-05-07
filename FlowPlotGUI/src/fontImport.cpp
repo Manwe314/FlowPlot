@@ -394,7 +394,7 @@ FontImportResult importFontFiles(
 			{
 				registerImportedFont(guiState, fontManager, face.variant);
 				upsertFontVariant(guiState.fontLibrary, std::move(face.variant));
-				++guiState.templateRevision;
+				markTemplateChanged(guiState);
 				++result.addedCount;
 			}
 			if (path.has_parent_path())

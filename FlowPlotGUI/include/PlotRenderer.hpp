@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
+#include <unordered_map>
 #include <vector>
 
 #include <FlowUi/Flow.hpp>
@@ -14,12 +16,6 @@ struct VmaAllocation_T;
 struct VmaAllocator_T;
 
 namespace FlowPlotGui {
-
-struct PlotCamera {
-	float centerX = 0.0f;
-	float centerY = 0.0f;
-	float zoom = 1.0f;
-};
 
 struct PlotRendererInput {
 	const state* guiState = nullptr;
@@ -66,8 +62,6 @@ private:
 	struct CacheKey {
 		std::uint64_t templateRevision = 0;
 		std::uint64_t datasetRevision = 0;
-		std::uint64_t viewportRevision = 0;
-		VkExtent2D viewportExtent{};
 	};
 
 	struct PlotPushConstants {
@@ -118,6 +112,7 @@ private:
 		float u1 = 0.0f;
 		float v1 = 0.0f;
 		std::uint32_t atlasLayer = 0;
+		float distanceRangePx = 2.0f;
 		PackedColor color{};
 	};
 
@@ -137,11 +132,12 @@ private:
 	};
 
 	void rebuildIfNeeded(const FlowUi::ViewPortRenderContext& ctx);
-	FlowPlot::RenderPlot buildFlowPlotCommands() const;
+	FlowPlot::RenderPlot buildFlowPlotCommands();
 	void buildRuns();
 	void uploadRuns(const FlowUi::ViewPortRenderContext& ctx);
 	void triangulatePolyline(const FlowPlot::PolylineCommand& cmd);
 	void recordDrawPlan(const FlowUi::ViewPortRenderContext& ctx);
+	void updateDescriptorSet(std::uint32_t frameIndex);
 
 	VkDevice device_ = VK_NULL_HANDLE;
 	VmaAllocator_T* allocator_ = nullptr;
@@ -151,6 +147,9 @@ private:
 	VkPipeline textPipeline_ = VK_NULL_HANDLE;
 	VkPipeline polylinePipeline_ = VK_NULL_HANDLE;
 	VkPipelineLayout pipelineLayout_ = VK_NULL_HANDLE;
+	VkDescriptorSetLayout descriptorSetLayout_ = VK_NULL_HANDLE;
+	VkDescriptorPool descriptorPool_ = VK_NULL_HANDLE;
+	std::vector<VkDescriptorSet> descriptorSets_{};
 	VkShaderModule vertexShader_ = VK_NULL_HANDLE;
 	VkShaderModule fragmentShader_ = VK_NULL_HANDLE;
 	AllocatedBuffer boxBuffer_{};
@@ -165,6 +164,8 @@ private:
 	bool viewportDirty_ = true;
 
 	GpuDrawPlan drawPlan_{};
+	std::unordered_map<FlowInternal::DataKey, FlowInternal::DataView, FlowInternal::DataKeyHash> cachedDataViews_{};
+	std::vector<std::unique_ptr<bool[]>> cachedBoolScratch_{};
 };
 
 } // namespace FlowPlotGui

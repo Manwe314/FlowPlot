@@ -366,6 +366,7 @@ namespace FlowPlotGui
 						changed,
 						1.0,
 						static_cast<double>(std::numeric_limits<std::uint32_t>::max())));
+					markTemplateChanged(guiState);
 				},
 			})
 			.draw();
@@ -383,6 +384,7 @@ namespace FlowPlotGui
 						changed,
 						1.0,
 						static_cast<double>(std::numeric_limits<std::uint32_t>::max())));
+					markTemplateChanged(guiState);
 				},
 			})
 			.draw();
@@ -393,6 +395,7 @@ namespace FlowPlotGui
 				.value = figure.background,
 				.onChange = [&guiState](std::string_view changed) {
 					guiState.activeTemplate.figure.background = std::string(changed);
+					markTemplateChanged(guiState);
 				},
 			})
 			.draw();
@@ -425,6 +428,7 @@ namespace FlowPlotGui
 					guiState.activeTemplate.figure.padding.right = static_cast<float>(changed.right);
 					guiState.activeTemplate.figure.padding.top = static_cast<float>(changed.top);
 					guiState.activeTemplate.figure.padding.bottom = static_cast<float>(changed.bottom);
+					markTemplateChanged(guiState);
 				},
 			})
 			.draw();
@@ -437,6 +441,7 @@ namespace FlowPlotGui
 		params.value = guiState.activeTemplate.figure.title;
 		params.onChange = [&guiState](FlowPlot::Spec::TextSpec changed) {
 			guiState.activeTemplate.figure.title = std::move(changed);
+			markTemplateChanged(guiState);
 		};
 		propertiesContentApplyTextFontOptions(params, guiState, params.value);
 
@@ -453,6 +458,7 @@ namespace FlowPlotGui
 				.value = guiState.activeTemplate.layout,
 				.onChange = [&guiState](FlowPlot::Spec::LayoutSpec changed) {
 					guiState.activeTemplate.layout = std::move(changed);
+					markTemplateChanged(guiState);
 				},
 			})
 			.draw();
@@ -479,6 +485,7 @@ namespace FlowPlotGui
 					if (const auto index = propertiesContentFindPanelIndex(guiState.activeTemplate, panelId))
 					{
 						guiState.activeTemplate.panels[*index].visible = changed;
+						markTemplateChanged(guiState);
 					}
 				},
 			})
@@ -492,6 +499,7 @@ namespace FlowPlotGui
 					if (const auto index = propertiesContentFindPanelIndex(guiState.activeTemplate, panelId))
 					{
 						guiState.activeTemplate.panels[*index].background = std::string(changed);
+						markTemplateChanged(guiState);
 					}
 				},
 			})
@@ -505,6 +513,7 @@ namespace FlowPlotGui
 					if (const auto index = propertiesContentFindPanelIndex(guiState.activeTemplate, panelId))
 					{
 						guiState.activeTemplate.panels[*index].borderColor = std::string(changed);
+						markTemplateChanged(guiState);
 					}
 				},
 			})
@@ -521,6 +530,7 @@ namespace FlowPlotGui
 					if (const auto index = propertiesContentFindPanelIndex(guiState.activeTemplate, panelId))
 					{
 						guiState.activeTemplate.panels[*index].borderWidth = static_cast<float>(changed);
+						markTemplateChanged(guiState);
 					}
 				},
 			})
@@ -538,6 +548,7 @@ namespace FlowPlotGui
 						padding.right = static_cast<float>(changed.right);
 						padding.top = static_cast<float>(changed.top);
 						padding.bottom = static_cast<float>(changed.bottom);
+						markTemplateChanged(guiState);
 					}
 				},
 			})
@@ -551,6 +562,7 @@ namespace FlowPlotGui
 					if (const auto index = propertiesContentFindPanelIndex(guiState.activeTemplate, panelId))
 					{
 						guiState.activeTemplate.panels[*index].clipContent = changed;
+						markTemplateChanged(guiState);
 					}
 				},
 			})
@@ -576,6 +588,7 @@ namespace FlowPlotGui
 			if (const auto index = propertiesContentFindPanelIndex(guiState.activeTemplate, panelId))
 			{
 				guiState.activeTemplate.panels[*index].title = std::move(changed);
+				markTemplateChanged(guiState);
 			}
 		};
 		propertiesContentApplyTextFontOptions(params, guiState, params.value);
@@ -609,6 +622,7 @@ namespace FlowPlotGui
 		const TemplateNodeKind axisKind = key.kind;
 		const auto emitAxisChange = [&guiState, panelId, axisKind](FlowPlot::Spec::AxisSpec changed) {
 			propertiesContentSetPanelAxis(guiState, panelId, axisKind, std::move(changed));
+			markTemplateChanged(guiState);
 		};
 
 		ui.createElement(kToggleCard, std::string(rootId) + "/axis-visible")
@@ -749,6 +763,7 @@ namespace FlowPlotGui
 						propertiesContentAxisForKind(guiState.activeTemplate.panels[*index], axisKind))
 				{
 					axis->title = std::move(changed);
+					markTemplateChanged(guiState);
 				}
 			}
 		};
@@ -794,6 +809,7 @@ namespace FlowPlotGui
 			if (FlowPlot::Spec::LayerSpec* target = propertiesContentLayerForIds(guiState, panelId, layerId))
 			{
 				*target = std::move(changed);
+				markTemplateChanged(guiState);
 			}
 		};
 
@@ -915,6 +931,7 @@ namespace FlowPlotGui
 			if (FlowPlot::Spec::LegendSpec* target = propertiesContentLegendForId(guiState, legendId))
 			{
 				*target = std::move(changed);
+				markTemplateChanged(guiState);
 			}
 		};
 
@@ -1041,6 +1058,7 @@ namespace FlowPlotGui
 					propertiesContentLegendElementForIds(guiState, legendId, elementId))
 			{
 				*target = std::move(changed);
+				markTemplateChanged(guiState);
 			}
 		};
 

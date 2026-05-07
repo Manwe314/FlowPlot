@@ -22,8 +22,14 @@
 namespace FlowPlotGui {
 namespace {
 
-constexpr const char* kSceneVertexShaderFile = "plot_viewport_solid.vert.spv";
-constexpr const char* kSceneFragmentShaderFile = "plot_viewport_solid.frag.spv";
+constexpr const char* kBoxVertexShaderFile = "plot_viewport_box.vert.spv";
+constexpr const char* kBoxFragmentShaderFile = "plot_viewport_box.frag.spv";
+constexpr const char* kMarkerVertexShaderFile = "plot_viewport_marker.vert.spv";
+constexpr const char* kMarkerFragmentShaderFile = "plot_viewport_marker.frag.spv";
+constexpr const char* kTextVertexShaderFile = "plot_viewport_text.vert.spv";
+constexpr const char* kTextFragmentShaderFile = "plot_viewport_text.frag.spv";
+constexpr const char* kPolylineVertexShaderFile = "plot_viewport_polyline.vert.spv";
+constexpr const char* kPolylineFragmentShaderFile = "plot_viewport_polyline.frag.spv";
 
 struct DataViewBuildResult {
 	std::unordered_map<FlowInternal::DataKey, FlowInternal::DataView, FlowInternal::DataKeyHash> views{};
@@ -33,10 +39,20 @@ struct DataViewBuildResult {
 PlotRenderer::PackedColor packColor(const FlowPlot::Color& color)
 {
 	constexpr float inv255 = 1.0f / 255.0f;
+	const auto srgbToLinear = [](float srgb) {
+		if (srgb <= 0.04045f)
+		{
+			return srgb / 12.92f;
+		}
+		return std::pow((srgb + 0.055f) / 1.055f, 2.4f);
+	};
+	const float r = static_cast<float>(color.r) * inv255;
+	const float g = static_cast<float>(color.g) * inv255;
+	const float b = static_cast<float>(color.b) * inv255;
 	return PlotRenderer::PackedColor{
-		.r = static_cast<float>(color.r) * inv255,
-		.g = static_cast<float>(color.g) * inv255,
-		.b = static_cast<float>(color.b) * inv255,
+		.r = srgbToLinear(r),
+		.g = srgbToLinear(g),
+		.b = srgbToLinear(b),
 		.a = static_cast<float>(color.a) * inv255,
 	};
 }
@@ -84,6 +100,79 @@ FlowPlot::RectF intersectRect(const FlowPlot::RectF& lhs, const FlowPlot::RectF&
 		.w = std::max(0.0f, x1 - x0),
 		.h = std::max(0.0f, y1 - y0),
 	};
+}
+
+FlowPlot::PointF addPoint(const FlowPlot::PointF& lhs, const FlowPlot::PointF& rhs)
+{
+	return FlowPlot::PointF{.x = lhs.x + rhs.x, .y = lhs.y + rhs.y};
+}
+
+FlowPlot::PointF subtractPoints(const FlowPlot::PointF& lhs, const FlowPlot::PointF& rhs)
+{
+	return FlowPlot::PointF{.x = lhs.x - rhs.x, .y = lhs.y - rhs.y};
+}
+
+FlowPlot::PointF multiplyPoints(const FlowPlot::PointF& point, float scale)
+{
+	return FlowPlot::PointF{.x = point.x * scale, .y = point.y * scale};
+}
+
+float dotPoint(const FlowPlot::PointF& lhs, const FlowPlot::PointF& rhs)
+{
+	return lhs.x * rhs.x + lhs.y * rhs.y;
+}
+
+float crossPoint(const FlowPlot::PointF& lhs, const FlowPlot::PointF& rhs)
+{
+	return lhs.x * rhs.y - lhs.y * rhs.x;
+}
+
+float lengthPoint(const FlowPlot::PointF& point)
+{
+	return std::sqrt(dotPoint(point, point));
+}
+
+FlowPlot::PointF perpendicularPoint(const FlowPlot::PointF& point)
+{
+	return FlowPlot::PointF{.x = -point.y, .y = point.x};
+}
+
+FlowPlot::PointF pointFromAngle(float angle, float radius)
+{
+	return FlowPlot::PointF{.x = std::cos(angle) * radius, .y = std::sin(angle) * radius};
+}
+
+float normalizeAngleDelta(float delta)
+{
+	constexpr float kPi = 3.14159265358979323846f;
+	constexpr float kTwoPi = kPi * 2.0f;
+	while (delta <= -kPi)
+	{
+		delta += kTwoPi;
+	}
+	while (delta > kPi)
+	{
+		delta -= kTwoPi;
+	}
+	return delta;
+}
+
+bool lineIntersection(
+	const FlowPlot::PointF& p,
+	const FlowPlot::PointF& r,
+	const FlowPlot::PointF& q,
+	const FlowPlot::PointF& s,
+	FlowPlot::PointF& out)
+{
+	const float denom = crossPoint(r, s);
+	if (std::abs(denom) <= 1.0e-6f)
+	{
+		return false;
+	}
+
+	const float t = crossPoint(subtractPoints(q, p), s) / denom;
+	out = addPoint(p, multiplyPoints(r, t));
+	return true;
 }
 
 void vkCheck(VkResult result, const char* message)
@@ -205,6 +294,13 @@ VkPipeline createPipeline(
 	multisample.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
 
 	VkPipelineColorBlendAttachmentState blendAttachment{};
+	blendAttachment.blendEnable = VK_TRUE;
+	blendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+	blendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+	blendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
+	blendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
+	blendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+	blendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
 	blendAttachment.colorWriteMask =
 		VK_COLOR_COMPONENT_R_BIT |
 		VK_COLOR_COMPONENT_G_BIT |
@@ -434,11 +530,84 @@ void PlotRenderer::init(const FlowUi::ViewPortVulkanInterop& interop, VkFormat c
 
 	try
 	{
-		const std::vector<char> vertexShaderBytes = readShaderFile(kSceneVertexShaderFile);
-		const std::vector<char> fragmentShaderBytes = readShaderFile(kSceneFragmentShaderFile);
+		const std::vector<char> boxVertexShaderBytes = readShaderFile(kBoxVertexShaderFile);
+		const std::vector<char> boxFragmentShaderBytes = readShaderFile(kBoxFragmentShaderFile);
+		const std::vector<char> markerVertexShaderBytes = readShaderFile(kMarkerVertexShaderFile);
+		const std::vector<char> markerFragmentShaderBytes = readShaderFile(kMarkerFragmentShaderFile);
+		const std::vector<char> textVertexShaderBytes = readShaderFile(kTextVertexShaderFile);
+		const std::vector<char> textFragmentShaderBytes = readShaderFile(kTextFragmentShaderFile);
+		const std::vector<char> polylineVertexShaderBytes = readShaderFile(kPolylineVertexShaderFile);
+		const std::vector<char> polylineFragmentShaderBytes = readShaderFile(kPolylineFragmentShaderFile);
 
-		vertexShader_ = createShaderModule(device_, vertexShaderBytes);
-		fragmentShader_ = createShaderModule(device_, fragmentShaderBytes);
+		VkShaderModule boxVertexShader = createShaderModule(device_, boxVertexShaderBytes);
+		VkShaderModule boxFragmentShader = createShaderModule(device_, boxFragmentShaderBytes);
+		VkShaderModule markerVertexShader = createShaderModule(device_, markerVertexShaderBytes);
+		VkShaderModule markerFragmentShader = createShaderModule(device_, markerFragmentShaderBytes);
+		VkShaderModule textVertexShader = createShaderModule(device_, textVertexShaderBytes);
+		VkShaderModule textFragmentShader = createShaderModule(device_, textFragmentShaderBytes);
+		VkShaderModule polylineVertexShader = createShaderModule(device_, polylineVertexShaderBytes);
+		VkShaderModule polylineFragmentShader = createShaderModule(device_, polylineFragmentShaderBytes);
+
+		std::array<VkDescriptorSetLayoutBinding, 5> bindings{};
+		bindings[0].binding = 0;
+		bindings[0].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+		bindings[0].descriptorCount = 1;
+		bindings[0].stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+
+		bindings[1].binding = 1;
+		bindings[1].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+		bindings[1].descriptorCount = 1;
+		bindings[1].stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+
+		bindings[2].binding = 2;
+		bindings[2].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+		bindings[2].descriptorCount = 1;
+		bindings[2].stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+
+		bindings[3].binding = 3;
+		bindings[3].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		bindings[3].descriptorCount = 1;
+		bindings[3].stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+
+		bindings[4].binding = 4;
+		bindings[4].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+		bindings[4].descriptorCount = 1;
+		bindings[4].stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+
+		VkDescriptorSetLayoutCreateInfo setLayoutInfo{};
+		setLayoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+		setLayoutInfo.bindingCount = static_cast<std::uint32_t>(bindings.size());
+		setLayoutInfo.pBindings = bindings.data();
+		vkCheck(
+			vkCreateDescriptorSetLayout(device_, &setLayoutInfo, nullptr, &descriptorSetLayout_),
+			"Failed to create plot descriptor set layout.");
+
+		const std::uint32_t descriptorFrameCount = std::max<std::uint32_t>(1u, interop.framesInFlight);
+		std::array<VkDescriptorPoolSize, 2> poolSizes{};
+		poolSizes[0].type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+		poolSizes[0].descriptorCount = descriptorFrameCount * 4u;
+		poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		poolSizes[1].descriptorCount = descriptorFrameCount;
+
+		VkDescriptorPoolCreateInfo poolInfo{};
+		poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+		poolInfo.maxSets = descriptorFrameCount;
+		poolInfo.poolSizeCount = static_cast<std::uint32_t>(poolSizes.size());
+		poolInfo.pPoolSizes = poolSizes.data();
+		vkCheck(
+			vkCreateDescriptorPool(device_, &poolInfo, nullptr, &descriptorPool_),
+			"Failed to create plot descriptor pool.");
+
+		std::vector<VkDescriptorSetLayout> setLayouts(descriptorFrameCount, descriptorSetLayout_);
+		descriptorSets_.assign(descriptorFrameCount, VK_NULL_HANDLE);
+		VkDescriptorSetAllocateInfo allocInfo{};
+		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+		allocInfo.descriptorPool = descriptorPool_;
+		allocInfo.descriptorSetCount = descriptorFrameCount;
+		allocInfo.pSetLayouts = setLayouts.data();
+		vkCheck(
+			vkAllocateDescriptorSets(device_, &allocInfo, descriptorSets_.data()),
+			"Failed to allocate plot descriptor sets.");
 
 		VkPushConstantRange pushConstantRange{};
 		pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
@@ -447,21 +616,27 @@ void PlotRenderer::init(const FlowUi::ViewPortVulkanInterop& interop, VkFormat c
 
 		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+		pipelineLayoutInfo.setLayoutCount = 1;
+		pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout_;
 		pipelineLayoutInfo.pushConstantRangeCount = 1;
 		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 		vkCheck(
 			vkCreatePipelineLayout(device_, &pipelineLayoutInfo, nullptr, &pipelineLayout_),
 			"Failed to create plot pipeline layout.");
 
-		boxPipeline_ = createPipeline(device_, colorFormat_, pipelineLayout_, vertexShader_, fragmentShader_);
-		markerPipeline_ = createPipeline(device_, colorFormat_, pipelineLayout_, vertexShader_, fragmentShader_);
-		textPipeline_ = createPipeline(device_, colorFormat_, pipelineLayout_, vertexShader_, fragmentShader_);
-		polylinePipeline_ = createPipeline(device_, colorFormat_, pipelineLayout_, vertexShader_, fragmentShader_);
+		boxPipeline_ = createPipeline(device_, colorFormat_, pipelineLayout_, boxVertexShader, boxFragmentShader);
+		markerPipeline_ = createPipeline(device_, colorFormat_, pipelineLayout_, markerVertexShader, markerFragmentShader);
+		textPipeline_ = createPipeline(device_, colorFormat_, pipelineLayout_, textVertexShader, textFragmentShader);
+		polylinePipeline_ = createPipeline(device_, colorFormat_, pipelineLayout_, polylineVertexShader, polylineFragmentShader);
 
-		vkDestroyShaderModule(device_, vertexShader_, nullptr);
-		vkDestroyShaderModule(device_, fragmentShader_, nullptr);
-		vertexShader_ = VK_NULL_HANDLE;
-		fragmentShader_ = VK_NULL_HANDLE;
+		vkDestroyShaderModule(device_, boxVertexShader, nullptr);
+		vkDestroyShaderModule(device_, boxFragmentShader, nullptr);
+		vkDestroyShaderModule(device_, markerVertexShader, nullptr);
+		vkDestroyShaderModule(device_, markerFragmentShader, nullptr);
+		vkDestroyShaderModule(device_, textVertexShader, nullptr);
+		vkDestroyShaderModule(device_, textFragmentShader, nullptr);
+		vkDestroyShaderModule(device_, polylineVertexShader, nullptr);
+		vkDestroyShaderModule(device_, polylineFragmentShader, nullptr);
 	}
 	catch (...)
 	{
@@ -494,6 +669,14 @@ void PlotRenderer::destroy()
 		{
 			vkDestroyPipelineLayout(device_, pipelineLayout_, nullptr);
 		}
+		if (descriptorPool_ != VK_NULL_HANDLE)
+		{
+			vkDestroyDescriptorPool(device_, descriptorPool_, nullptr);
+		}
+		if (descriptorSetLayout_ != VK_NULL_HANDLE)
+		{
+			vkDestroyDescriptorSetLayout(device_, descriptorSetLayout_, nullptr);
+		}
 		if (vertexShader_ != VK_NULL_HANDLE)
 		{
 			vkDestroyShaderModule(device_, vertexShader_, nullptr);
@@ -516,9 +699,14 @@ void PlotRenderer::destroy()
 	textPipeline_ = VK_NULL_HANDLE;
 	polylinePipeline_ = VK_NULL_HANDLE;
 	pipelineLayout_ = VK_NULL_HANDLE;
+	descriptorSetLayout_ = VK_NULL_HANDLE;
+	descriptorPool_ = VK_NULL_HANDLE;
+	descriptorSets_.clear();
 	vertexShader_ = VK_NULL_HANDLE;
 	fragmentShader_ = VK_NULL_HANDLE;
 	drawPlan_ = {};
+	cachedDataViews_.clear();
+	cachedBoolScratch_.clear();
 	cacheKey_ = {};
 	flowCommandsDirty_ = true;
 	runsDirty_ = true;
@@ -573,17 +761,11 @@ void PlotRenderer::rebuildIfNeeded(const FlowUi::ViewPortRenderContext& ctx)
 	{
 		drawPlan_.plot = {};
 		drawPlan_.runs.clear();
-		cacheKey_.viewportExtent = ctx.extent;
 		return;
 	}
 
 	const bool templateChanged = flowCommandsDirty_ || cacheKey_.templateRevision != guiState->templateRevision;
 	const bool datasetsChanged = flowCommandsDirty_ || cacheKey_.datasetRevision != guiState->datasetRevision;
-	const bool viewportChanged =
-		viewportDirty_ ||
-		cacheKey_.viewportRevision != guiState->viewportRevision ||
-		cacheKey_.viewportExtent.width != ctx.extent.width ||
-		cacheKey_.viewportExtent.height != ctx.extent.height;
 	bool uploadDirty = false;
 
 	if (templateChanged || datasetsChanged)
@@ -604,18 +786,13 @@ void PlotRenderer::rebuildIfNeeded(const FlowUi::ViewPortRenderContext& ctx)
 	{
 		uploadRuns(ctx);
 	}
-	if (viewportChanged)
-	{
-		viewportDirty_ = false;
-	}
+	viewportDirty_ = false;
 
 	cacheKey_.templateRevision = guiState->templateRevision;
 	cacheKey_.datasetRevision = guiState->datasetRevision;
-	cacheKey_.viewportRevision = guiState->viewportRevision;
-	cacheKey_.viewportExtent = ctx.extent;
 }
 
-FlowPlot::RenderPlot PlotRenderer::buildFlowPlotCommands() const
+FlowPlot::RenderPlot PlotRenderer::buildFlowPlotCommands()
 {
 	if (input_.guiState == nullptr)
 	{
@@ -623,8 +800,14 @@ FlowPlot::RenderPlot PlotRenderer::buildFlowPlotCommands() const
 	}
 
 	const state& guiState = *input_.guiState;
-	DataViewBuildResult dataViews = makeDataViews(guiState.datasets);
-	FlowInternal::BoundIR::PlotBoundIR bound = FlowInternal::buildBoundIR(guiState.activeTemplate, dataViews.views);
+	if (flowCommandsDirty_ || cacheKey_.datasetRevision != guiState.datasetRevision)
+	{
+		DataViewBuildResult dataViews = makeDataViews(guiState.datasets);
+		cachedDataViews_ = std::move(dataViews.views);
+		cachedBoolScratch_ = std::move(dataViews.boolScratch);
+	}
+
+	FlowInternal::BoundIR::PlotBoundIR bound = FlowInternal::buildBoundIR(guiState.activeTemplate, cachedDataViews_);
 	FlowInternal::ResolvedIR::PlotResolvedIR resolved =
 		FlowInternal::resolvePlotIR(guiState.activeTemplate, bound, guiState.textEngine.get());
 	return FlowInternal::buildRenderPlot(resolved);
@@ -701,6 +884,18 @@ void PlotRenderer::buildRuns()
 			});
 		}
 	};
+
+	beginRun(RunType::Box);
+	drawPlan_.boxes.push_back(BoxInstance{
+		.x = 0.0f,
+		.y = 0.0f,
+		.w = static_cast<float>(drawPlan_.plot.width),
+		.h = static_cast<float>(drawPlan_.plot.height),
+		.strokeWidth = 0.0f,
+		.fill = packColor(drawPlan_.plot.background),
+		.stroke = packColor(FlowPlot::Color{0, 0, 0, 0}),
+	});
+	runBarrier = true;
 
 	for (const FlowPlot::RenderCommand& command : drawPlan_.plot.commands)
 	{
@@ -820,16 +1015,18 @@ void PlotRenderer::buildRuns()
 						const float y1 = originY - glyphPlacement.y - glyph.planeBottom * scale;
 						const float invAtlasW = fontFace->atlasWidth > 0 ? 1.0f / static_cast<float>(fontFace->atlasWidth) : 0.0f;
 						const float invAtlasH = fontFace->atlasHeight > 0 ? 1.0f / static_cast<float>(fontFace->atlasHeight) : 0.0f;
+						const float sourceAtlasHeight = static_cast<float>(fontFace->sourceAtlasHeight);
 						drawPlan_.textGlyphs.push_back(TextGlyphInstance{
 							.x = x0,
 							.y = y0,
 							.w = x1 - x0,
 							.h = y1 - y0,
 							.u0 = (static_cast<float>(fontFace->sourceAtlasX) + glyph.imageLeft) * invAtlasW,
-							.v0 = (static_cast<float>(fontFace->sourceAtlasY) + glyph.imageTop) * invAtlasH,
+							.v0 = (static_cast<float>(fontFace->sourceAtlasY) + (sourceAtlasHeight - glyph.imageTop)) * invAtlasH,
 							.u1 = (static_cast<float>(fontFace->sourceAtlasX) + glyph.imageRight) * invAtlasW,
-							.v1 = (static_cast<float>(fontFace->sourceAtlasY) + glyph.imageBottom) * invAtlasH,
+							.v1 = (static_cast<float>(fontFace->sourceAtlasY) + (sourceAtlasHeight - glyph.imageBottom)) * invAtlasH,
 							.atlasLayer = fontFace->atlasLayer,
+							.distanceRangePx = variant->distanceRange > 0.0f ? variant->distanceRange : 2.0f,
 							.color = packColor(concreteCommand.color),
 						});
 					}
@@ -855,11 +1052,306 @@ void PlotRenderer::uploadRuns(const FlowUi::ViewPortRenderContext& ctx)
 	uploadVector(allocator_, polylineBuffer_, drawPlan_.polylineVertices);
 }
 
+void PlotRenderer::updateDescriptorSet(std::uint32_t frameIndex)
+{
+	if (device_ == VK_NULL_HANDLE || descriptorSets_.empty())
+	{
+		return;
+	}
+
+	const std::uint32_t frameSlot = frameIndex % static_cast<std::uint32_t>(descriptorSets_.size());
+	const VkDescriptorSet descriptorSet = descriptorSets_[frameSlot];
+	if (descriptorSet == VK_NULL_HANDLE)
+	{
+		return;
+	}
+
+	std::array<VkDescriptorBufferInfo, 4> bufferInfos{};
+	std::array<VkDescriptorImageInfo, 1> imageInfos{};
+	std::array<VkWriteDescriptorSet, 5> writes{};
+	std::uint32_t writeCount = 0;
+
+	if (boxBuffer_.buffer != VK_NULL_HANDLE)
+	{
+		bufferInfos[0].buffer = boxBuffer_.buffer;
+		bufferInfos[0].offset = 0;
+		bufferInfos[0].range = boxBuffer_.size;
+
+		VkWriteDescriptorSet& write = writes[writeCount++];
+		write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		write.dstSet = descriptorSet;
+		write.dstBinding = 0;
+		write.descriptorCount = 1;
+		write.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+		write.pBufferInfo = &bufferInfos[0];
+	}
+
+	if (textGlyphBuffer_.buffer != VK_NULL_HANDLE)
+	{
+		bufferInfos[1].buffer = textGlyphBuffer_.buffer;
+		bufferInfos[1].offset = 0;
+		bufferInfos[1].range = textGlyphBuffer_.size;
+
+		VkWriteDescriptorSet& write = writes[writeCount++];
+		write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		write.dstSet = descriptorSet;
+		write.dstBinding = 1;
+		write.descriptorCount = 1;
+		write.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+		write.pBufferInfo = &bufferInfos[1];
+	}
+
+	if (markerBuffer_.buffer != VK_NULL_HANDLE)
+	{
+		bufferInfos[2].buffer = markerBuffer_.buffer;
+		bufferInfos[2].offset = 0;
+		bufferInfos[2].range = markerBuffer_.size;
+
+		VkWriteDescriptorSet& write = writes[writeCount++];
+		write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		write.dstSet = descriptorSet;
+		write.dstBinding = 2;
+		write.descriptorCount = 1;
+		write.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+		write.pBufferInfo = &bufferInfos[2];
+	}
+
+	if (polylineBuffer_.buffer != VK_NULL_HANDLE)
+	{
+		bufferInfos[3].buffer = polylineBuffer_.buffer;
+		bufferInfos[3].offset = 0;
+		bufferInfos[3].range = polylineBuffer_.size;
+
+		VkWriteDescriptorSet& write = writes[writeCount++];
+		write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		write.dstSet = descriptorSet;
+		write.dstBinding = 4;
+		write.descriptorCount = 1;
+		write.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+		write.pBufferInfo = &bufferInfos[3];
+	}
+
+	if (input_.fontManager != nullptr)
+	{
+		const FontManager::AtlasArrayResource& atlas = input_.fontManager->getAtlasResource();
+		if (atlas.view != VK_NULL_HANDLE && atlas.sampler != VK_NULL_HANDLE && atlas.layersUsed > 0u)
+		{
+			imageInfos[0].sampler = atlas.sampler;
+			imageInfos[0].imageView = atlas.view;
+			imageInfos[0].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+			VkWriteDescriptorSet& write = writes[writeCount++];
+			write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			write.dstSet = descriptorSet;
+			write.dstBinding = 3;
+			write.descriptorCount = 1;
+			write.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			write.pImageInfo = &imageInfos[0];
+		}
+	}
+
+	if (writeCount > 0)
+	{
+		vkUpdateDescriptorSets(device_, writeCount, writes.data(), 0, nullptr);
+	}
+}
+
 void PlotRenderer::triangulatePolyline(const FlowPlot::PolylineCommand& cmd)
 {
-	(void)cmd;
-	// Stub: CPU-side cap/join-aware polyline triangulation will append triangles
-	// into drawPlan_.polylineVertices while preserving command order.
+	if (cmd.points.size() < 2U || cmd.width <= 0.0f || cmd.color.a == 0U)
+	{
+		return;
+	}
+
+	struct Segment {
+		FlowPlot::PointF previousPoint{};
+		FlowPlot::PointF currentPoint{};
+		FlowPlot::PointF direction{};
+		FlowPlot::PointF normal{};
+	};
+
+	const PackedColor color = packColor(cmd.color);
+	const float halfWidth = std::max(cmd.width, 0.0f) * 0.5f;
+	constexpr float kJoinEpsilon = 1.0e-4f;
+	constexpr float kMiterLimit = 200.0f;
+	constexpr int kRoundCapSegments = 16;
+	constexpr int kRoundJoinSegments = 16;
+
+	std::vector<Segment> segments{};
+	segments.reserve(cmd.points.size() - 1U);
+	for (std::size_t i = 1; i < cmd.points.size(); ++i)
+	{
+		const FlowPlot::PointF previousPoint = cmd.points[i - 1U];
+		const FlowPlot::PointF currentPoint = cmd.points[i];
+		const FlowPlot::PointF delta = subtractPoints(currentPoint, previousPoint);
+		const float length = lengthPoint(delta);
+		if (length <= 1.0e-6f)
+		{
+			continue;
+		}
+
+		const FlowPlot::PointF direction = multiplyPoints(delta, 1.0f / length);
+		segments.push_back(Segment{
+			.previousPoint = previousPoint,
+			.currentPoint = currentPoint,
+			.direction = direction,
+			.normal = perpendicularPoint(direction),
+		});
+	}
+
+	if (segments.empty())
+	{
+		return;
+	}
+
+	auto appendVertex = [&](const FlowPlot::PointF& point) {
+		drawPlan_.polylineVertices.push_back(PolylineVertex{
+			.x = point.x,
+			.y = point.y,
+			.color = color,
+		});
+	};
+
+	auto appendTriangle = [&](const FlowPlot::PointF& a, const FlowPlot::PointF& b, const FlowPlot::PointF& c) {
+		appendVertex(a);
+		appendVertex(b);
+		appendVertex(c);
+	};
+
+	auto appendQuad = [&](const FlowPlot::PointF& a, const FlowPlot::PointF& b, const FlowPlot::PointF& c, const FlowPlot::PointF& d) {
+		appendTriangle(a, b, c);
+		appendTriangle(a, c, d);
+	};
+
+	auto segmentCorner = [&](const Segment& segment, bool atStart, float normalSign) {
+		const FlowPlot::PointF base = atStart ? segment.previousPoint : segment.currentPoint;
+		return addPoint(base, multiplyPoints(segment.normal, normalSign * halfWidth));
+	};
+
+	auto appendArcFan = [&](
+		const FlowPlot::PointF& center,
+		const FlowPlot::PointF& startVector,
+		const FlowPlot::PointF& endVector,
+		int segmentCount,
+		const FlowPlot::PointF& preferredMidVector) {
+		const float radius = std::max(lengthPoint(startVector), lengthPoint(endVector));
+		if (radius <= 1.0e-6f)
+		{
+			return;
+		}
+
+		const float startAngle = std::atan2(startVector.y, startVector.x);
+		float sweep = normalizeAngleDelta(std::atan2(endVector.y, endVector.x) - startAngle);
+		if (lengthPoint(preferredMidVector) > 1.0e-6f)
+		{
+			constexpr float kTwoPi = 6.28318530717958647692f;
+			const float alternateSweep = sweep > 0.0f ? sweep - kTwoPi : sweep + kTwoPi;
+			const FlowPlot::PointF sweepMid = pointFromAngle(startAngle + sweep * 0.5f, 1.0f);
+			const FlowPlot::PointF alternateMid = pointFromAngle(startAngle + alternateSweep * 0.5f, 1.0f);
+			if (dotPoint(alternateMid, preferredMidVector) > dotPoint(sweepMid, preferredMidVector))
+			{
+				sweep = alternateSweep;
+			}
+		}
+		const int steps = std::max(1, segmentCount);
+		FlowPlot::PointF previous = addPoint(center, startVector);
+		for (int i = 1; i <= steps; ++i)
+		{
+			const float t0 = static_cast<float>(i) / static_cast<float>(steps);
+			const FlowPlot::PointF current = addPoint(center, pointFromAngle(startAngle + sweep * t0, radius));
+			appendTriangle(center, previous, current);
+			previous = current;
+		}
+	};
+
+	for (const Segment& segment : segments)
+	{
+		const FlowPlot::PointF startPlus = segmentCorner(segment, true, 1.0f);
+		const FlowPlot::PointF startMinus = segmentCorner(segment, true, -1.0f);
+		const FlowPlot::PointF endPlus = segmentCorner(segment, false, 1.0f);
+		const FlowPlot::PointF endMinus = segmentCorner(segment, false, -1.0f);
+		appendQuad(startPlus, endPlus, endMinus, startMinus);
+	}
+
+	const Segment& firstSegment = segments.front();
+	const Segment& lastSegment = segments.back();
+	if (cmd.cap == FlowPlot::LineCap::Square)
+	{
+		const FlowPlot::PointF startExtension = multiplyPoints(firstSegment.direction, -halfWidth);
+		appendQuad(
+			addPoint(segmentCorner(firstSegment, true, 1.0f), startExtension),
+			segmentCorner(firstSegment, true, 1.0f),
+			segmentCorner(firstSegment, true, -1.0f),
+			addPoint(segmentCorner(firstSegment, true, -1.0f), startExtension));
+
+		const FlowPlot::PointF endExtension = multiplyPoints(lastSegment.direction, halfWidth);
+		appendQuad(
+			segmentCorner(lastSegment, false, 1.0f),
+			addPoint(segmentCorner(lastSegment, false, 1.0f), endExtension),
+			addPoint(segmentCorner(lastSegment, false, -1.0f), endExtension),
+			segmentCorner(lastSegment, false, -1.0f));
+	}
+	else if (cmd.cap == FlowPlot::LineCap::Round)
+	{
+		appendArcFan(
+			firstSegment.previousPoint,
+			multiplyPoints(firstSegment.normal, -halfWidth),
+			multiplyPoints(firstSegment.normal, halfWidth),
+			kRoundCapSegments,
+			multiplyPoints(firstSegment.direction, -1.0f));
+		appendArcFan(
+			lastSegment.currentPoint,
+			multiplyPoints(lastSegment.normal, halfWidth),
+			multiplyPoints(lastSegment.normal, -halfWidth),
+			kRoundCapSegments,
+			lastSegment.direction);
+	}
+
+	for (std::size_t i = 1; i < segments.size(); ++i)
+	{
+		const Segment& previousSegment = segments[i - 1U];
+		const Segment& currentSegment = segments[i];
+		const FlowPlot::PointF& currentPoint = previousSegment.currentPoint;
+		const float turn = crossPoint(previousSegment.direction, currentSegment.direction);
+		if (std::abs(turn) <= kJoinEpsilon)
+		{
+			continue;
+		}
+
+		const float outerSign = turn > 0.0f ? 1.0f : -1.0f;
+		const FlowPlot::PointF previousOuter = addPoint(currentPoint, multiplyPoints(previousSegment.normal, outerSign * halfWidth));
+		const FlowPlot::PointF currentOuter = addPoint(currentPoint, multiplyPoints(currentSegment.normal, outerSign * halfWidth));
+
+		if (cmd.join == FlowPlot::LineJoin::Round)
+		{
+			appendArcFan(
+				currentPoint,
+				subtractPoints(previousOuter, currentPoint),
+				subtractPoints(currentOuter, currentPoint),
+				kRoundJoinSegments,
+				addPoint(subtractPoints(previousOuter, currentPoint), subtractPoints(currentOuter, currentPoint)));
+			continue;
+		}
+
+		if (cmd.join == FlowPlot::LineJoin::Miter)
+		{
+			FlowPlot::PointF miterPoint{};
+			const bool hasMiter = lineIntersection(
+				previousOuter,
+				previousSegment.direction,
+				currentOuter,
+				currentSegment.direction,
+				miterPoint);
+			if (hasMiter && lengthPoint(subtractPoints(miterPoint, currentPoint)) <= kMiterLimit)
+			{
+				appendTriangle(previousOuter, miterPoint, currentPoint);
+				appendTriangle(miterPoint, currentOuter, currentPoint);
+				continue;
+			}
+		}
+
+		appendTriangle(previousOuter, currentOuter, currentPoint);
+	}
 }
 
 void PlotRenderer::recordDrawPlan(const FlowUi::ViewPortRenderContext& ctx)
@@ -888,21 +1380,7 @@ void PlotRenderer::recordDrawPlan(const FlowUi::ViewPortRenderContext& ctx)
 		.zoom = std::max(input_.camera.zoom, 1.0e-6f),
 		._pad = 0.0f,
 	};
-
-	auto pipelineFor = [&](RunType type) -> VkPipeline {
-		switch (type)
-		{
-			case RunType::Box:
-				return boxPipeline_;
-			case RunType::Marker:
-				return markerPipeline_;
-			case RunType::Text:
-				return textPipeline_;
-			case RunType::PolylineMesh:
-				return polylinePipeline_;
-		}
-		return boxPipeline_;
-	};
+	updateDescriptorSet(ctx.frameIndex);
 
 	auto worldScissorToVk = [&](const FlowPlot::RectF& world) {
 		const float zoom = std::max(input_.camera.zoom, 1.0e-6f);
@@ -931,6 +1409,32 @@ void PlotRenderer::recordDrawPlan(const FlowUi::ViewPortRenderContext& ctx)
 		{
 			continue;
 		}
+		const FontManager::AtlasArrayResource* atlas = nullptr;
+		if (input_.fontManager != nullptr)
+		{
+			atlas = &input_.fontManager->getAtlasResource();
+		}
+		const bool hasFontAtlas = atlas != nullptr
+			&& atlas->view != VK_NULL_HANDLE
+			&& atlas->sampler != VK_NULL_HANDLE
+			&& atlas->layersUsed > 0u;
+		const bool canDrawBox = run.type == RunType::Box
+			&& boxPipeline_ != VK_NULL_HANDLE
+			&& boxBuffer_.buffer != VK_NULL_HANDLE;
+		const bool canDrawMarker = run.type == RunType::Marker
+			&& markerPipeline_ != VK_NULL_HANDLE
+			&& markerBuffer_.buffer != VK_NULL_HANDLE;
+		const bool canDrawText = run.type == RunType::Text
+			&& textPipeline_ != VK_NULL_HANDLE
+			&& textGlyphBuffer_.buffer != VK_NULL_HANDLE
+			&& hasFontAtlas;
+		const bool canDrawPolyline = run.type == RunType::PolylineMesh
+			&& polylinePipeline_ != VK_NULL_HANDLE
+			&& polylineBuffer_.buffer != VK_NULL_HANDLE;
+		if ((!canDrawBox && !canDrawMarker && !canDrawText && !canDrawPolyline) || descriptorSets_.empty())
+		{
+			continue;
+		}
 
 		const VkRect2D runScissor = worldScissorToVk(run.scissor);
 		if (runScissor.extent.width == 0 || runScissor.extent.height == 0)
@@ -938,7 +1442,31 @@ void PlotRenderer::recordDrawPlan(const FlowUi::ViewPortRenderContext& ctx)
 			continue;
 		}
 		vkCmdSetScissor(ctx.commandBuffer, 0, 1, &runScissor);
-		vkCmdBindPipeline(ctx.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineFor(run.type));
+		VkPipeline pipeline = textPipeline_;
+		if (canDrawBox)
+		{
+			pipeline = boxPipeline_;
+		}
+		else if (canDrawMarker)
+		{
+			pipeline = markerPipeline_;
+		}
+		else if (canDrawPolyline)
+		{
+			pipeline = polylinePipeline_;
+		}
+		vkCmdBindPipeline(ctx.commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+		const VkDescriptorSet descriptorSet =
+			descriptorSets_[ctx.frameIndex % static_cast<std::uint32_t>(descriptorSets_.size())];
+		vkCmdBindDescriptorSets(
+			ctx.commandBuffer,
+			VK_PIPELINE_BIND_POINT_GRAPHICS,
+			pipelineLayout_,
+			0,
+			1,
+			&descriptorSet,
+			0,
+			nullptr);
 		vkCmdPushConstants(
 			ctx.commandBuffer,
 			pipelineLayout_,
@@ -947,7 +1475,7 @@ void PlotRenderer::recordDrawPlan(const FlowUi::ViewPortRenderContext& ctx)
 			static_cast<std::uint32_t>(sizeof(PlotPushConstants)),
 			&pushConstants);
 
-		if (run.type == RunType::PolylineMesh)
+		if (canDrawPolyline)
 		{
 			vkCmdDraw(ctx.commandBuffer, run.count, 1, run.first, 0);
 		}

@@ -25,6 +25,12 @@ enum class GlobalState : uint8_t
 	exporting,
 };
 
+struct PlotCamera {
+	float centerX = 0.0f;
+	float centerY = 0.0f;
+	float zoom = 1.0f;
+};
+
 enum class TemplateNodeKind : uint8_t {
 	Figure,
 	FigureTitle,
@@ -207,6 +213,21 @@ struct state {
 	std::shared_ptr<FlowPlot::ITextEngine> textEngine{};
 	std::filesystem::path lastFontDialogDirectory{};
 };
+
+inline void markTemplateChanged(state& guiState)
+{
+	++guiState.templateRevision;
+}
+
+inline void markDatasetsChanged(state& guiState)
+{
+	++guiState.datasetRevision;
+}
+
+inline void markViewportChanged(state& guiState)
+{
+	++guiState.viewportRevision;
+}
 
 
 

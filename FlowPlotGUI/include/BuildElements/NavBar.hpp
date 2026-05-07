@@ -135,11 +135,11 @@ private:
 
 		BasicTitleBuilder builder = app.ui().createElement(kBasicTitle, path)
 			.setParameters({
-			    .childGap = 13,
 			    .contentMode = basicTitleParams::ContentMode::IconThenText,
+			    .childGap = 13,
 			    .fontSize = 32,
-			    .iconTintColor = Clay_Color{.r = 122.0f, .g = 209.0f, .b = 230.0f, .a = 0.0f},
-			    .textColor = Clay_Color{.r = 243.0f, .g = 243.0f, .b = 243.0f, .a = 255.0f}
+			    .textColor = Clay_Color{.r = 243.0f, .g = 243.0f, .b = 243.0f, .a = 255.0f},
+			    .iconTintColor = Clay_Color{.r = 122.0f, .g = 209.0f, .b = 230.0f, .a = 0.0f}
 			});
 		builder.setParameters(std::move(params));
 		return builder;

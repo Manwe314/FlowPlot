@@ -95,12 +95,14 @@ void clearSelectionIfImpacted(FlowPlotGui::state& guiState, const TemplateNodeKe
 
 void addTemplateNodeChild(FlowPlotGui::state& guiState, const TemplateNodeKey& parentKey)
 {
+	bool changed = false;
 	switch (parentKey.kind)
 	{
 	case TemplateNodeKind::PanelsGroup: {
 		FlowPlot::Spec::PanelSpec panel{};
 		panel.id = makeUniqueId(guiState.activeTemplate.panels, "panel");
 		guiState.activeTemplate.panels.push_back(std::move(panel));
+		changed = true;
 		break;
 	}
 	case TemplateNodeKind::LayersGroup: {
@@ -113,12 +115,14 @@ void addTemplateNodeChild(FlowPlotGui::state& guiState, const TemplateNodeKey& p
 		FlowPlot::Spec::LayerSpec layer{};
 		layer.id = makeUniqueId(panel.layers, "layer");
 		panel.layers.push_back(std::move(layer));
+		changed = true;
 		break;
 	}
 	case TemplateNodeKind::LegendsGroup: {
 		FlowPlot::Spec::LegendSpec legend{};
 		legend.id = makeUniqueId(guiState.activeTemplate.figure.legends, "legend");
 		guiState.activeTemplate.figure.legends.push_back(std::move(legend));
+		changed = true;
 		break;
 	}
 	case TemplateNodeKind::Legend: {
@@ -131,6 +135,7 @@ void addTemplateNodeChild(FlowPlotGui::state& guiState, const TemplateNodeKey& p
 		FlowPlot::Spec::LegendElementSpec element{};
 		element.id = makeUniqueId(legend.legendElements, "legend_element");
 		legend.legendElements.push_back(std::move(element));
+		changed = true;
 		break;
 	}
 	case TemplateNodeKind::AxisTitle:
@@ -138,10 +143,15 @@ void addTemplateNodeChild(FlowPlotGui::state& guiState, const TemplateNodeKey& p
 	default:
 		break;
 	}
+	if (changed)
+	{
+		FlowPlotGui::markTemplateChanged(guiState);
+	}
 }
 
 void deleteTemplateNode(FlowPlotGui::state& guiState, const TemplateNodeKey& key)
 {
+	bool changed = false;
 	switch (key.kind)
 	{
 	case TemplateNodeKind::Panel: {
@@ -150,6 +160,7 @@ void deleteTemplateNode(FlowPlotGui::state& guiState, const TemplateNodeKey& key
 		{
 			guiState.activeTemplate.panels.erase(guiState.activeTemplate.panels.begin() + static_cast<std::ptrdiff_t>(*panelIndex));
 			clearSelectionIfImpacted(guiState, key);
+			changed = true;
 		}
 		break;
 	}
@@ -165,6 +176,7 @@ void deleteTemplateNode(FlowPlotGui::state& guiState, const TemplateNodeKey& key
 		{
 			panel.layers.erase(panel.layers.begin() + static_cast<std::ptrdiff_t>(*layerIndex));
 			clearSelectionIfImpacted(guiState, key);
+			changed = true;
 		}
 		break;
 	}
@@ -174,6 +186,7 @@ void deleteTemplateNode(FlowPlotGui::state& guiState, const TemplateNodeKey& key
 		{
 			guiState.activeTemplate.figure.legends.erase(guiState.activeTemplate.figure.legends.begin() + static_cast<std::ptrdiff_t>(*legendIndex));
 			clearSelectionIfImpacted(guiState, key);
+			changed = true;
 		}
 		break;
 	}
@@ -189,6 +202,7 @@ void deleteTemplateNode(FlowPlotGui::state& guiState, const TemplateNodeKey& key
 		{
 			legend.legendElements.erase(legend.legendElements.begin() + static_cast<std::ptrdiff_t>(*elementIndex));
 			clearSelectionIfImpacted(guiState, key);
+			changed = true;
 		}
 		break;
 	}
@@ -196,6 +210,10 @@ void deleteTemplateNode(FlowPlotGui::state& guiState, const TemplateNodeKey& key
 		break;
 	default:
 		break;
+	}
+	if (changed)
+	{
+		FlowPlotGui::markTemplateChanged(guiState);
 	}
 }
 

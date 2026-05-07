@@ -64,6 +64,8 @@ inline bool addDataset(state& guiState)
 	datasetSpec.name = datasetName;
 	guiState.activeTemplate.datasets.push_back(std::move(datasetSpec));
 
+	markDatasetsChanged(guiState);
+	markTemplateChanged(guiState);
 	return true;
 }
 
@@ -82,6 +84,8 @@ inline bool removeDataset(state& guiState, std::size_t datasetIndex)
 	guiState.activeTemplate.datasets.erase(
 		guiState.activeTemplate.datasets.begin() + static_cast<std::ptrdiff_t>(datasetIndex));
 
+	markDatasetsChanged(guiState);
+	markTemplateChanged(guiState);
 	return true;
 }
 
@@ -95,6 +99,8 @@ inline bool renameDataset(state& guiState, std::size_t datasetIndex, std::string
 	guiState.datasets[datasetIndex].name = std::string(name);
 	guiState.activeTemplate.datasets[datasetIndex].name = std::string(name);
 
+	markDatasetsChanged(guiState);
+	markTemplateChanged(guiState);
 	return true;
 }
 
@@ -203,6 +209,8 @@ inline bool addColumn(state& guiState, std::size_t datasetIndex, DatasetFieldTyp
 	}
 	}
 
+	markDatasetsChanged(guiState);
+	markTemplateChanged(guiState);
 	return true;
 }
 
@@ -244,6 +252,8 @@ inline bool removeColumn(state& guiState, std::size_t datasetIndex, DatasetField
 	}
 
 	guiState.activeTemplate.datasets[datasetIndex].schema.erase(columnName);
+	markDatasetsChanged(guiState);
+	markTemplateChanged(guiState);
 	return true;
 }
 
@@ -292,6 +302,8 @@ inline bool renameColumn(
 	FlowPlot::Spec::DatasetSpec& datasetSpec = guiState.activeTemplate.datasets[datasetIndex];
 	datasetSpec.schema.erase(oldName);
 	datasetSpec.schema[std::string(name)] = type;
+	markDatasetsChanged(guiState);
+	markTemplateChanged(guiState);
 	return true;
 }
 
@@ -316,6 +328,7 @@ inline bool addRow(state& guiState, std::size_t datasetIndex)
 		column.data.push_back(false);
 	}
 
+	markDatasetsChanged(guiState);
 	return true;
 }
 
@@ -355,6 +368,7 @@ inline bool removeRow(state& guiState, std::size_t datasetIndex, std::size_t row
 		}
 	}
 
+	markDatasetsChanged(guiState);
 	return true;
 }
 
@@ -376,6 +390,7 @@ inline bool setNumericCell(
 	}
 
 	dataset.numericColumns[typedColumnIndex].data[rowIndex] = value;
+	markDatasetsChanged(guiState);
 	return true;
 }
 
@@ -397,6 +412,7 @@ inline bool setStringCell(
 	}
 
 	dataset.stringColumns[typedColumnIndex].data[rowIndex] = std::string(value);
+	markDatasetsChanged(guiState);
 	return true;
 }
 
@@ -418,6 +434,7 @@ inline bool setBoolCell(
 	}
 
 	dataset.boolColumns[typedColumnIndex].data[rowIndex] = value;
+	markDatasetsChanged(guiState);
 	return true;
 }
 

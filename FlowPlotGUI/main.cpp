@@ -1,14 +1,98 @@
+#define FLOW_PLOT_RENDERER
+#define FLOW_PLOT_IMPLEMENTATION
+
 #include <FlowUi/Flow.hpp>
 
 #include <cstddef>
 #include <cstdio>
 #include <exception>
 #include <filesystem>
+#include <memory>
+#include <utility>
+#include <vector>
 
 #include "elements.hpp"
+#include "FlowPlotGui.hpp"
 #include "iconRegistry.hpp"
 #include "PlotViewportScene.hpp"
 #include "templateHelper.hpp"
+
+namespace {
+
+void populateInitialGuiState(FlowPlotGui::state& guiState)
+{
+	guiState.activeTemplate = FlowPlot::Spec::MasterTemplateSpec{};
+	guiState.datasets.clear();
+	guiState.selectedNode.reset();
+
+	FlowPlot::Spec::MasterTemplateSpec& spec = guiState.activeTemplate;
+	spec.version = "1.0";
+	spec.figure.width = 1200;
+	spec.figure.height = 800;
+	spec.figure.dpi = 96;
+	spec.figure.background = "#ffffff";
+	spec.figure.padding = FlowPlot::Spec::PaddingSpec{
+		.left = 24.0f,
+		.right = 24.0f,
+		.top = 24.0f,
+		.bottom = 24.0f,
+	};
+	spec.figure.title.visible = true;
+	spec.figure.title.text = "Scatter Plot";
+	spec.figure.title.fontFamily = "Default";
+	spec.figure.title.fontSize = 24.0f;
+	spec.figure.title.fontWeight = 700;
+	spec.figure.title.color = "#111111";
+	spec.figure.title.overflow = "clip";
+	spec.figure.title.clip = true;
+	spec.figure.title.box = FlowPlot::Spec::BoxSpec{};
+	spec.figure.legends.clear();
+
+	FlowPlot::Spec::DatasetSpec datasetSpec{};
+	datasetSpec.name = "main";
+	datasetSpec.schema["x"] = FlowPlot::Spec::DatasetSpec::FieldType::Number;
+	datasetSpec.schema["y"] = FlowPlot::Spec::DatasetSpec::FieldType::Number;
+	spec.datasets.push_back(std::move(datasetSpec));
+
+	FlowPlot::Spec::LayerSpec scatterLayer{};
+	scatterLayer.id = "layer_1";
+	scatterLayer.type = "scatter";
+	scatterLayer.dataset = "main";
+	scatterLayer.scatterMapping.xField = "x";
+	scatterLayer.scatterMapping.yField = "y";
+
+	FlowPlot::Spec::PanelSpec panel{};
+	panel.id = "panel_1";
+	panel.layers.clear();
+	panel.layers.push_back(std::move(scatterLayer));
+	spec.panels.clear();
+	spec.panels.push_back(std::move(panel));
+
+	const std::vector<int> x{1, 2, 3, 4, 5};
+	const std::vector<int> y{3, 4, 1, 4, 6};
+
+	FlowPlotGui::numericColumn xColumn{};
+	xColumn.name = "x";
+	xColumn.data.assign(x.begin(), x.end());
+
+	FlowPlotGui::numericColumn yColumn{};
+	yColumn.name = "y";
+	yColumn.data.assign(y.begin(), y.end());
+
+	FlowPlotGui::RunningDataset runningDataset{};
+	runningDataset.name = "main";
+	runningDataset.numericColumns.push_back(std::move(xColumn));
+	runningDataset.numericColumns.push_back(std::move(yColumn));
+	guiState.datasets.push_back(std::move(runningDataset));
+
+	guiState.templateRevision = 1;
+	guiState.datasetRevision = 1;
+	guiState.viewportRevision = 1;
+	guiState.textEngine = std::make_shared<FlowPlot::StbTextEngine>(
+		std::filesystem::path(__FILE__).parent_path() / "assets" / "Fonts" / "Inter-VariableFont_opsz,wght.ttf");
+}
+
+} // namespace
 
 int main()
 {
@@ -43,10 +127,7 @@ int main()
 
 		FlowUi::UiManager& ui = app.ui();
 		FlowPlotGui::state guiState{};
-		guiState.activeTemplate.panels.emplace_back();
-		guiState.activeTemplate.panels.back().id = "panel_1";
-		guiState.activeTemplate.panels.back().layers.emplace_back();
-		guiState.activeTemplate.panels.back().layers.back().id = "layer_1";
+		populateInitialGuiState(guiState);
 
 
 
@@ -59,12 +140,12 @@ int main()
 			.construct(FlowUi::ElementDrawOptions::SkipEventCallbacks);
 				ui.createElement(kNavBar, "NavBar")
 				.setParameters({
-				    .child2Gap = 16,
 				    .padding = Clay_Padding{.left = 16, .right = 16, .top = 0, .bottom = 8},
 				    .spacer1Sizing = Clay_Sizing{.width = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 22.0f, .max = 45.0f}}, .type = CLAY__SIZING_TYPE_GROW}, .height = Clay_SizingAxis{.size = {.percent = 0.0f}, .type = CLAY__SIZING_TYPE_PERCENT}},
 				    .spacer2Sizing = Clay_Sizing{.width = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 22.0f, .max = 45.0f}}, .type = CLAY__SIZING_TYPE_GROW}, .height = Clay_SizingAxis{.size = {.percent = 1.0f}, .type = CLAY__SIZING_TYPE_PERCENT}},
 				    .spacerLine1Color = Clay_Color{.r = 65.0f, .g = 65.0f, .b = 67.0f, .a = 255.0f},
 				    .spacerLine2Color = Clay_Color{.r = 65.0f, .g = 65.0f, .b = 67.0f, .a = 255.0f},
+				    .child2Gap = 16,
 				    .guiState = &guiState,
 				    .nativeWindowHandle = app.nativeWindowHandle()
 				}).draw();

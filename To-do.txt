@@ -29,7 +29,6 @@ GUI app:
 - add ability to choose pre made template patterns (pair plot)
 - add conviniance shortcuts, text copy paste, endite layer duplication property copy paste
 - CSV parsing input as "mock" data?
-- ViewPort
 
 - make toggle actually rounnd with nob beegin a circle
 - enum box dettection vissually off
@@ -43,8 +42,13 @@ GUI app:
 - double check + icons to be icon not text. 
 - dataset + icon should have tint on hover + background color.
 - + add row text should not go beyond its box.
-- propertites title for sting ID edditing
+- propertites title for string ID edditing
 
 - wire in the "fonts": [] export with the rest of the export wiring. 
-- wire in revisions uint64_t increment on editors.
-- add better "rebuild if needed" for vulkan renderer for dataset recration trigger 
+- pollyline trinagluation can be made better with inner line intersection + normal direction "across point" detection.
+- GPU renderer honoring text box Clip functionalty
+- Text Layout is simply not the same as CPU renderer
+- altering figure size and temporarly setting it to 0 causes: FlowPlotGUI fatal error: resolvePlotIR: figure size/padding/gap leaves negative panel layout space
+- lines falling into subpixel range dissapear
+- reset button at viewport title should rest the camera pos and zoom. 
+- horizontal dynamic separator needed between datasets adn viewport.

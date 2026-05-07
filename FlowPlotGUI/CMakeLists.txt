@@ -46,8 +46,14 @@ find_package(Vulkan REQUIRED)
 set(FLOWPLOTGUI_SHADER_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/shaders")
 set(FLOWPLOTGUI_SHADER_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}/shaders")
 set(FLOWPLOTGUI_SHADER_SOURCES
-    "${FLOWPLOTGUI_SHADER_SOURCE_DIR}/plot_viewport_solid.vert"
-    "${FLOWPLOTGUI_SHADER_SOURCE_DIR}/plot_viewport_solid.frag"
+    "${FLOWPLOTGUI_SHADER_SOURCE_DIR}/plot_viewport_box.vert"
+    "${FLOWPLOTGUI_SHADER_SOURCE_DIR}/plot_viewport_box.frag"
+    "${FLOWPLOTGUI_SHADER_SOURCE_DIR}/plot_viewport_marker.vert"
+    "${FLOWPLOTGUI_SHADER_SOURCE_DIR}/plot_viewport_marker.frag"
+    "${FLOWPLOTGUI_SHADER_SOURCE_DIR}/plot_viewport_text.vert"
+    "${FLOWPLOTGUI_SHADER_SOURCE_DIR}/plot_viewport_text.frag"
+    "${FLOWPLOTGUI_SHADER_SOURCE_DIR}/plot_viewport_polyline.vert"
+    "${FLOWPLOTGUI_SHADER_SOURCE_DIR}/plot_viewport_polyline.frag"
 )
 
 if(Vulkan_GLSLC_EXECUTABLE)
