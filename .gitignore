@@ -4,9 +4,11 @@
 /build/
 /build-*/
 /FlowPlotGUI/build/
+/FlowPlotGUI/build
 /FlowPlotGUI/build-*/
 **/build/
 **/build-*/
+build
 
 # -----------------------------
 # CMake / Ninja generated files

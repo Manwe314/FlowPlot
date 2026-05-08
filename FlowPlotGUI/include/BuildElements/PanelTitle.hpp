@@ -218,6 +218,17 @@ inline const PanelTitleDef kPanelTitle = {
 					case panelTitleParams::RightContentMode::Button:
 						context.uiManager.createElement(kBasicButton, rightButtonPath)
 							.setParameters(context.params.rightButtonParams)
+							/* V1 cant Update parameters made with variables */
+							.mergeParams([](auto& params) {
+							    params.backgroundColor = Clay_Color{.r = 207.0f, .g = 207.0f, .b = 207.0f, .a = 0.0f};
+							    params.borderColor = Clay_Color{.r = 143.0f, .g = 141.0f, .b = 141.0f, .a = 0.0f};
+							    params.borderWidth = Clay_BorderWidth{.left = 0, .right = 0, .top = 0, .bottom = 0, .betweenChildren = 0};
+							    params.cornerRadius = Clay_CornerRadius{.topLeft = 10.0f, .topRight = 10.0f, .bottomLeft = 10.0f, .bottomRight = 10.0f};
+							    params.fontSize = 11;
+							    params.hoverBackgroundColor = Clay_Color{.r = 36.0f, .g = 36.0f, .b = 40.0f, .a = 255.0f};
+							    params.padding = Clay_Padding{.left = 0, .right = 4, .top = 0, .bottom = 0};
+							    params.textColor = Clay_Color{.r = 242.0f, .g = 242.0f, .b = 242.0f, .a = 102.0f};
+							})
 							.draw();
 						break;
 					case panelTitleParams::RightContentMode::InputField:

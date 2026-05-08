@@ -11,6 +11,8 @@
 #include "BuildElements/BasicButton.hpp"
 #include "BuildElements/BasicTitle.hpp"
 #include "fontImport.hpp"
+#include "templateImport.hpp"
+#include "templateExport.hpp"
 
 struct navBarParams {
 	Clay_Color backgroundColor = FlowUi::Flow_Color("#18181aff");
@@ -42,6 +44,7 @@ struct navBarParams {
 
 struct navBarState {
 	bool isDirty = false;
+	bool newTemplatePresetPickerOpen = false;
 };
 
 FLOWUI_DEV_REGISTER_STRUCT(
@@ -68,7 +71,8 @@ FLOWUI_DEV_REGISTER_STRUCT(
 
 FLOWUI_DEV_REGISTER_STRUCT(
 	navBarState,
-	FLOWUI_DEV_REFLECT_FIELD(navBarState, isDirty));
+	FLOWUI_DEV_REFLECT_FIELD(navBarState, isDirty),
+	FLOWUI_DEV_REFLECT_FIELD(navBarState, newTemplatePresetPickerOpen));
 
 using BasicTitleBuilder = FlowUi::ElementBuilder<basicTitleParams, void, void, FLOW_DEF_ID("Basic title")>;
 
@@ -315,6 +319,37 @@ inline const NavBarDef kNavBar = {
 			params.textColor = Clay_Color{.r = 243.0f, .g = 243.0f, .b = 243.0f, .a = 255.0f};
 		};
 
+		basicButtonParams newButtonParams = makeButtonParams("New", resources.newIcon);
+		newButtonParams.onPressedCallback = [elementFlowId = FlowUi::toFlowId(context.elementID)](BasicButtonInteractionContext) {
+			if (navBarState* latestState = NavBarDef::tryGetState(elementFlowId))
+			{
+				latestState->newTemplatePresetPickerOpen = true;
+			}
+		};
+
+		basicButtonParams exportButtonParams = makeButtonParams("Export", resources.exportIcon);
+		exportButtonParams.onPressedCallback = [
+			guiState = context.params.guiState,
+			nativeWindowHandle = context.params.nativeWindowHandle
+		](BasicButtonInteractionContext) {
+			if (guiState != nullptr)
+			{
+				(void)FlowPlotGui::ExportTemplateWithExportDialog(*guiState, nativeWindowHandle);
+			}
+		};
+
+		basicButtonParams importButtonParams = makeButtonParams("Import", resources.importIcon);
+		importButtonParams.onPressedCallback = [
+			guiState = context.params.guiState,
+			fontManager = resources.fontManager,
+			nativeWindowHandle = context.params.nativeWindowHandle
+		](BasicButtonInteractionContext) {
+			if (guiState != nullptr)
+			{
+				(void)FlowPlotGui::ImportTemplateWithImportDialog(*guiState, fontManager, nativeWindowHandle);
+			}
+		};
+
 		CLAY(resources.rootId, root){
 			CLAY(resources.child1Id, child1){
 				resources.child1Builder
@@ -328,17 +363,17 @@ inline const NavBarDef kNavBar = {
 
 			CLAY(resources.child2Id, child2){
 				context.uiManager.createElement(kBasicButton, resources.newButtonPath)
-					.setParameters(makeButtonParams("New", resources.newIcon))
+					.setParameters(std::move(newButtonParams))
 					/* V1 cant Update parameters made with variables */
 					.mergeParams(applyNavButtonVisuals)
 					.draw();
 				context.uiManager.createElement(kBasicButton, resources.importButtonPath)
-					.setParameters(makeButtonParams("Import", resources.importIcon))
+					.setParameters(std::move(importButtonParams))
 					/* V1 cant Update parameters made with variables */
 					.mergeParams(applyNavButtonVisuals)
 					.draw();
 				context.uiManager.createElement(kBasicButton, resources.exportButtonPath)
-					.setParameters(makeButtonParams("Export", resources.exportIcon))
+					.setParameters(std::move(exportButtonParams))
 					/* V1 cant Update parameters made with variables */
 					.mergeParams(applyNavButtonVisuals)
 					.draw();

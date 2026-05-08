@@ -15,76 +15,14 @@
 #include "FlowPlotGui.hpp"
 #include "iconRegistry.hpp"
 #include "PlotViewportScene.hpp"
+#include "TemplatePresets.hpp"
 #include "templateHelper.hpp"
 
 namespace {
 
 void populateInitialGuiState(FlowPlotGui::state& guiState)
 {
-	guiState.activeTemplate = FlowPlot::Spec::MasterTemplateSpec{};
-	guiState.datasets.clear();
-	guiState.selectedNode.reset();
-
-	FlowPlot::Spec::MasterTemplateSpec& spec = guiState.activeTemplate;
-	spec.version = "1.0";
-	spec.figure.width = 1200;
-	spec.figure.height = 800;
-	spec.figure.dpi = 96;
-	spec.figure.background = "#ffffff";
-	spec.figure.padding = FlowPlot::Spec::PaddingSpec{
-		.left = 24.0f,
-		.right = 24.0f,
-		.top = 24.0f,
-		.bottom = 24.0f,
-	};
-	spec.figure.title.visible = true;
-	spec.figure.title.text = "Scatter Plot";
-	spec.figure.title.fontFamily = "Default";
-	spec.figure.title.fontSize = 24.0f;
-	spec.figure.title.fontWeight = 700;
-	spec.figure.title.color = "#111111";
-	spec.figure.title.overflow = "clip";
-	spec.figure.title.clip = true;
-	spec.figure.title.box = FlowPlot::Spec::BoxSpec{};
-	spec.figure.legends.clear();
-
-	FlowPlot::Spec::DatasetSpec datasetSpec{};
-	datasetSpec.name = "main";
-	datasetSpec.schema["x"] = FlowPlot::Spec::DatasetSpec::FieldType::Number;
-	datasetSpec.schema["y"] = FlowPlot::Spec::DatasetSpec::FieldType::Number;
-	spec.datasets.push_back(std::move(datasetSpec));
-
-	FlowPlot::Spec::LayerSpec scatterLayer{};
-	scatterLayer.id = "layer_1";
-	scatterLayer.type = "scatter";
-	scatterLayer.dataset = "main";
-	scatterLayer.scatterMapping.xField = "x";
-	scatterLayer.scatterMapping.yField = "y";
-
-	FlowPlot::Spec::PanelSpec panel{};
-	panel.id = "panel_1";
-	panel.layers.clear();
-	panel.layers.push_back(std::move(scatterLayer));
-	spec.panels.clear();
-	spec.panels.push_back(std::move(panel));
-
-	const std::vector<int> x{1, 2, 3, 4, 5};
-	const std::vector<int> y{3, 4, 1, 4, 6};
-
-	FlowPlotGui::numericColumn xColumn{};
-	xColumn.name = "x";
-	xColumn.data.assign(x.begin(), x.end());
-
-	FlowPlotGui::numericColumn yColumn{};
-	yColumn.name = "y";
-	yColumn.data.assign(y.begin(), y.end());
-
-	FlowPlotGui::RunningDataset runningDataset{};
-	runningDataset.name = "main";
-	runningDataset.numericColumns.push_back(std::move(xColumn));
-	runningDataset.numericColumns.push_back(std::move(yColumn));
-	guiState.datasets.push_back(std::move(runningDataset));
-
+	FlowPlotGui::replaceWithTemplatePreset(guiState, FlowPlotGui::makeScatterPlotPreset(), false);
 	guiState.templateRevision = 1;
 	guiState.datasetRevision = 1;
 	guiState.viewportRevision = 1;
@@ -138,6 +76,7 @@ int main()
 			ui.createElement(kRootBackground, "rootBackground")
 			.setParameters({.backgroundColor = FlowUi::Flow_Color("#18181aff")})
 			.construct(FlowUi::ElementDrawOptions::SkipEventCallbacks);
+				navBarState& navState = NavBarDef::getOrCreateState(FlowUi::toFlowId("NavBar"));
 				ui.createElement(kNavBar, "NavBar")
 				.setParameters({
 				    .padding = Clay_Padding{.left = 16, .right = 16, .top = 0, .bottom = 8},
@@ -183,8 +122,31 @@ int main()
 						ui.createElement(kPlotviewPort, "PlotViewPort")
 						.setParameters({.guiState = &guiState})
 						.draw();
+						ui.createElement(kDynamicSeparator, "plotDataSeparator")
+						.setParameters({
+							.orientation = dynamicSeparatorParams::Orientation::Horizontal,
+							.reverseDrag = true,
+							.color = FlowUi::Flow_Color("#3f3f41ff"),
+							.hoverColor = FlowUi::Flow_Color("#707074ff"),
+							.activeColor = FlowUi::Flow_Color("#409d97ff"),
+							.minValue = 180,
+							.maxValue = 520,
+							.getValue = [](){
+								return DataInputDef::getOrCreateState(FlowUi::toFlowId("DataInput")).height;
+							},
+							.setValue = [](int v){
+								DataInputDef::getOrCreateState(FlowUi::toFlowId("DataInput")).height = v;
+							},
+						}).draw();
+						const int dataInputHeight = DataInputDef::getOrCreateState(FlowUi::toFlowId("DataInput")).height;
 						ui.createElement(kDataInput, "DataInput")
-						.setParameters({.guiState = &guiState})
+						.setParameters({
+							.guiState = &guiState,
+							.sizing = Clay_Sizing{
+								.width = CLAY_SIZING_GROW(0),
+								.height = CLAY_SIZING_FIXED(static_cast<float>(dataInputHeight)),
+							},
+						})
 						.draw();
 					ui.drawConstructed(); // MainContentPanel
 					const std::string rightId = "PropsPanel";
@@ -223,6 +185,16 @@ int main()
 					ui.drawConstructed(); //PropsPanel
 
 				ui.drawConstructed(); // MainContent
+
+				if (navState.newTemplatePresetPickerOpen)
+				{
+					ui.createElement(kNewTemplatePresetPicker, "NewTemplatePresetPicker")
+					.setParameters({
+						.guiState = &guiState,
+						.isOpen = &navState.newTemplatePresetPickerOpen,
+					})
+					.draw();
+				}
 			
 			ui.drawConstructed(); // rootBackground
 

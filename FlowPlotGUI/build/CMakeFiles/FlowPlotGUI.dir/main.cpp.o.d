@@ -417,9 +417,13 @@ CMakeFiles/FlowPlotGUI.dir/main.cpp.o: \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/DataInputTable.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/basicInputs/numericInput.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/DynamicSeparator.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/NewTemplatePresetPicker.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/TemplatePresets.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/TemplateLayer.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/NavBar.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/fontImport.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/templateImport.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/templateExport.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/propertiesContent.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/basicInputs/colorPicker.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/basicInputs/doubleEnumPicker.hpp \

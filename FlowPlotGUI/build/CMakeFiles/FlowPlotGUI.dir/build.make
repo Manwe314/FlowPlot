@@ -139,10 +139,24 @@ CMakeFiles/FlowPlotGUI.dir/src/iconRegistry.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FlowPlotGUI.dir/src/iconRegistry.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/src/iconRegistry.cpp -o CMakeFiles/FlowPlotGUI.dir/src/iconRegistry.cpp.s
 
+CMakeFiles/FlowPlotGUI.dir/src/templateExport.cpp.o: CMakeFiles/FlowPlotGUI.dir/flags.make
+CMakeFiles/FlowPlotGUI.dir/src/templateExport.cpp.o: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/src/templateExport.cpp
+CMakeFiles/FlowPlotGUI.dir/src/templateExport.cpp.o: CMakeFiles/FlowPlotGUI.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/FlowPlotGUI.dir/src/templateExport.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FlowPlotGUI.dir/src/templateExport.cpp.o -MF CMakeFiles/FlowPlotGUI.dir/src/templateExport.cpp.o.d -o CMakeFiles/FlowPlotGUI.dir/src/templateExport.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/src/templateExport.cpp
+
+CMakeFiles/FlowPlotGUI.dir/src/templateExport.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FlowPlotGUI.dir/src/templateExport.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/src/templateExport.cpp > CMakeFiles/FlowPlotGUI.dir/src/templateExport.cpp.i
+
+CMakeFiles/FlowPlotGUI.dir/src/templateExport.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FlowPlotGUI.dir/src/templateExport.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/src/templateExport.cpp -o CMakeFiles/FlowPlotGUI.dir/src/templateExport.cpp.s
+
 CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.o: CMakeFiles/FlowPlotGUI.dir/flags.make
 CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.o: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/src/templateHelper.cpp
 CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.o: CMakeFiles/FlowPlotGUI.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.o -MF CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.o.d -o CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/src/templateHelper.cpp
 
 CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.i: cmake_force
@@ -153,6 +167,20 @@ CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/src/templateHelper.cpp -o CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.s
 
+CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o: CMakeFiles/FlowPlotGUI.dir/flags.make
+CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/src/templateImport.cpp
+CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o: CMakeFiles/FlowPlotGUI.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o -MF CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o.d -o CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o -c /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/src/templateImport.cpp
+
+CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/src/templateImport.cpp > CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.i
+
+CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/src/templateImport.cpp -o CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.s
+
 # Object files for target FlowPlotGUI
 FlowPlotGUI_OBJECTS = \
 "CMakeFiles/FlowPlotGUI.dir/main.cpp.o" \
@@ -160,7 +188,9 @@ FlowPlotGUI_OBJECTS = \
 "CMakeFiles/FlowPlotGUI.dir/src/PlotViewportScene.cpp.o" \
 "CMakeFiles/FlowPlotGUI.dir/src/fontImport.cpp.o" \
 "CMakeFiles/FlowPlotGUI.dir/src/iconRegistry.cpp.o" \
-"CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.o"
+"CMakeFiles/FlowPlotGUI.dir/src/templateExport.cpp.o" \
+"CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.o" \
+"CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o"
 
 # External object files for target FlowPlotGUI
 FlowPlotGUI_EXTERNAL_OBJECTS =
@@ -170,7 +200,9 @@ FlowPlotGUI: CMakeFiles/FlowPlotGUI.dir/src/PlotRenderer.cpp.o
 FlowPlotGUI: CMakeFiles/FlowPlotGUI.dir/src/PlotViewportScene.cpp.o
 FlowPlotGUI: CMakeFiles/FlowPlotGUI.dir/src/fontImport.cpp.o
 FlowPlotGUI: CMakeFiles/FlowPlotGUI.dir/src/iconRegistry.cpp.o
+FlowPlotGUI: CMakeFiles/FlowPlotGUI.dir/src/templateExport.cpp.o
 FlowPlotGUI: CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.o
+FlowPlotGUI: CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o
 FlowPlotGUI: CMakeFiles/FlowPlotGUI.dir/build.make
 FlowPlotGUI: external/FlowUi/libflowui.a
 FlowPlotGUI: external/Nfd/src/libnfd.a
@@ -199,7 +231,7 @@ FlowPlotGUI: /usr/lib/x86_64-linux-gnu/libgio-2.0.so
 FlowPlotGUI: /usr/lib/x86_64-linux-gnu/libgobject-2.0.so
 FlowPlotGUI: /usr/lib/x86_64-linux-gnu/libglib-2.0.so
 FlowPlotGUI: CMakeFiles/FlowPlotGUI.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable FlowPlotGUI"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable FlowPlotGUI"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/FlowPlotGUI.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

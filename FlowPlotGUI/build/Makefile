@@ -425,6 +425,30 @@ src/iconRegistry.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/src/iconRegistry.cpp.s
 .PHONY : src/iconRegistry.cpp.s
 
+src/templateExport.o: src/templateExport.cpp.o
+.PHONY : src/templateExport.o
+
+# target to build an object file
+src/templateExport.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/src/templateExport.cpp.o
+.PHONY : src/templateExport.cpp.o
+
+src/templateExport.i: src/templateExport.cpp.i
+.PHONY : src/templateExport.i
+
+# target to preprocess a source file
+src/templateExport.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/src/templateExport.cpp.i
+.PHONY : src/templateExport.cpp.i
+
+src/templateExport.s: src/templateExport.cpp.s
+.PHONY : src/templateExport.s
+
+# target to generate assembly for a file
+src/templateExport.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/src/templateExport.cpp.s
+.PHONY : src/templateExport.cpp.s
+
 src/templateHelper.o: src/templateHelper.cpp.o
 .PHONY : src/templateHelper.o
 
@@ -448,6 +472,30 @@ src/templateHelper.s: src/templateHelper.cpp.s
 src/templateHelper.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.s
 .PHONY : src/templateHelper.cpp.s
+
+src/templateImport.o: src/templateImport.cpp.o
+.PHONY : src/templateImport.o
+
+# target to build an object file
+src/templateImport.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o
+.PHONY : src/templateImport.cpp.o
+
+src/templateImport.i: src/templateImport.cpp.i
+.PHONY : src/templateImport.i
+
+# target to preprocess a source file
+src/templateImport.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.i
+.PHONY : src/templateImport.cpp.i
+
+src/templateImport.s: src/templateImport.cpp.s
+.PHONY : src/templateImport.s
+
+# target to generate assembly for a file
+src/templateImport.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/FlowPlotGUI.dir/build.make CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.s
+.PHONY : src/templateImport.cpp.s
 
 # Help Target
 help:
@@ -487,9 +535,15 @@ help:
 	@echo "... src/iconRegistry.o"
 	@echo "... src/iconRegistry.i"
 	@echo "... src/iconRegistry.s"
+	@echo "... src/templateExport.o"
+	@echo "... src/templateExport.i"
+	@echo "... src/templateExport.s"
 	@echo "... src/templateHelper.o"
 	@echo "... src/templateHelper.i"
 	@echo "... src/templateHelper.s"
+	@echo "... src/templateImport.o"
+	@echo "... src/templateImport.i"
+	@echo "... src/templateImport.s"
 .PHONY : help
 
 

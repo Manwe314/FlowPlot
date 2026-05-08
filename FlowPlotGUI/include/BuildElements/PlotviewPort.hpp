@@ -51,8 +51,16 @@ private:
 		params.rightButtonParams.contentMode = basicButtonParams::ContentMode::TextOnly;
 		params.rightButtonParams.sizing = {.width = CLAY_SIZING_FIT(0), .height = CLAY_SIZING_FIT(0)};
 
-		PanelTitleBuilder builder = uiManager.createElement(kPanelTitle, "PlotviewPort/shared/title");
-		builder.setParameters(std::move(params));
+		PanelTitleBuilder builder = uiManager.createElement(kPanelTitle, "PlotviewPort/shared/title")
+		.setParameters(std::move(params))
+		.mergeParams([](auto& params) {
+		    params.minHeight = 20;
+		    params.padding = Clay_Padding{.left = 0, .right = 0, .top = 5, .bottom = 0};
+		    params.contentPadding = Clay_Padding{.left = 10, .right = 10, .top = 0, .bottom = 0};
+		    params.titleFontSize = 12;
+		    params.titleColor = Clay_Color{.r = 244.0f, .g = 246.0f, .b = 248.0f, .a = 89.0f};
+		    params.separatorColor = Clay_Color{.r = 94.0f, .g = 100.0f, .b = 110.0f, .a = 255.0f};
+		});
 		return builder;
 	}
 };

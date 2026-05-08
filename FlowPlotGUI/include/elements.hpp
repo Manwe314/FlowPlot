@@ -10,6 +10,7 @@
 #include "BuildElements/PlotviewPort.hpp"
 #include "BuildElements/DataInput.hpp"
 #include "BuildElements/DynamicSeparator.hpp"
+#include "BuildElements/NewTemplatePresetPicker.hpp"
 #include "BuildElements/TemplateLayer.hpp"
 #include "BuildElements/NavBar.hpp"
 #include "BuildElements/propertiesContent.hpp"
@@ -70,6 +71,8 @@ FLOWUI_DEV_REGISTER_ELEMENT(DataInputHeaderRowDef, "DataInputHeaderRow");
 FLOWUI_DEV_REGISTER_ELEMENT(DataInputDataRowDef, "DataInputDataRow");
 
 FLOWUI_DEV_REGISTER_ELEMENT(DynamicSeparatorDef, "DynamicSeparator");
+
+FLOWUI_DEV_REGISTER_ELEMENT(NewTemplatePresetPickerDef, "NewTemplatePresetPicker");
 
 FLOWUI_DEV_REGISTER_ELEMENT(TemplateLayerDef, "TemplateLayer");
 

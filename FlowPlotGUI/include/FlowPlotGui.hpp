@@ -212,6 +212,7 @@ struct state {
 	std::vector<AddedFontVariant> fontLibrary{};
 	std::shared_ptr<FlowPlot::ITextEngine> textEngine{};
 	std::filesystem::path lastFontDialogDirectory{};
+	std::filesystem::path lastTemplateDialogDirectory{};
 };
 
 inline void markTemplateChanged(state& guiState)

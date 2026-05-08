@@ -9,7 +9,9 @@ set(OLD_GLOB
   "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/src/PlotViewportScene.cpp"
   "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/src/fontImport.cpp"
   "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/src/iconRegistry.cpp"
+  "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/src/templateExport.cpp"
   "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/src/templateHelper.cpp"
+  "/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/src/templateImport.cpp"
   )
 if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
   message("-- GLOB mismatch!")

@@ -22,11 +22,13 @@ FLOWUI_DEV_REGISTER_STRUCT(
 
 struct dataInputState {
 	std::size_t activeDatasetIndex = 0;
+	int height = 320;
 };
 
 FLOWUI_DEV_REGISTER_STRUCT(
 	dataInputState,
-	FLOWUI_DEV_REFLECT_FIELD(dataInputState, activeDatasetIndex));
+	FLOWUI_DEV_REFLECT_FIELD(dataInputState, activeDatasetIndex),
+	FLOWUI_DEV_REFLECT_FIELD(dataInputState, height));
 
 using DataInputDef = FlowUi::ElementDefinition<dataInputParams, dataInputState, void, FLOW_DEF_ID("DataInput")>;
 

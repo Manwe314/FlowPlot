@@ -9,8 +9,12 @@ file(REMOVE_RECURSE
   "CMakeFiles/FlowPlotGUI.dir/src/fontImport.cpp.o.d"
   "CMakeFiles/FlowPlotGUI.dir/src/iconRegistry.cpp.o"
   "CMakeFiles/FlowPlotGUI.dir/src/iconRegistry.cpp.o.d"
+  "CMakeFiles/FlowPlotGUI.dir/src/templateExport.cpp.o"
+  "CMakeFiles/FlowPlotGUI.dir/src/templateExport.cpp.o.d"
   "CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.o"
   "CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.o.d"
+  "CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o"
+  "CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o.d"
   "FlowPlotGUI"
   "FlowPlotGUI.pdb"
 )

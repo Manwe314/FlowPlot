@@ -3,105 +3,24 @@
   "kind":"params",
   "stats": {
     "patchedDefinitionTargets":0,
-    "patchedInstanceTargets":6,
-    "patchedFiles":2,
+    "patchedInstanceTargets":1,
+    "patchedFiles":1,
     "unresolvedCount":0
   },
   "definitions": [
   ],
   "instances": [
     {
-      "definitionId":679343398651049251,
-      "definitionName":"NavBar",
-      "flowId":679343398651049251,
-      "elementId":"NavBar",
-      "sourceFile":"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/main.cpp",
-      "sourceLine":40,
+      "definitionId":15016254223066541129,
+      "definitionName":"PanelTitle",
+      "flowId":7493861217137655789,
+      "elementId":"PlotViewPort/title",
+      "sourceFile":"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/PlotviewPort.hpp",
+      "sourceLine":54,
       "changes": [
-        {"fieldHash":8844816813640149975,"fieldName":"child2Gap","fieldTypeHash":5516555141030549105,"valueKind":"int64","value":"16"},
-        {"fieldHash":105616063399437942,"fieldName":"padding","fieldTypeHash":15937443097836116563,"valueKind":"edgeu16","value":"Clay_Padding{left=16, right=16, top=0, bottom=8}"},
-        {"fieldHash":15079654541322860862,"fieldName":"spacer1Sizing","fieldTypeHash":9261231445949958612,"valueKind":"composite_struct","value":"Clay_Sizing{width=Clay_SizingAxis{type=CLAY__SIZING_TYPE_GROW (1), minMax={min=22, max=45}}, height=Clay_SizingAxis{type=CLAY__SIZING_TYPE_PERCENT (2), percent=0}}"},
-        {"fieldHash":8095678279659773391,"fieldName":"spacer2Sizing","fieldTypeHash":9261231445949958612,"valueKind":"composite_struct","value":"Clay_Sizing{width=Clay_SizingAxis{type=CLAY__SIZING_TYPE_GROW (1), minMax={min=22, max=45}}, height=Clay_SizingAxis{type=CLAY__SIZING_TYPE_PERCENT (2), percent=1}}"},
-        {"fieldHash":5438041535138635941,"fieldName":"spacerLine1Color","fieldTypeHash":1038404891235700713,"valueKind":"float4","value":"Clay_Color{r=65, g=65, b=67, a=255}"},
-        {"fieldHash":15622888923708339086,"fieldName":"spacerLine2Color","fieldTypeHash":1038404891235700713,"valueKind":"float4","value":"Clay_Color{r=65, g=65, b=67, a=255}"}
-      ]
-    },
-    {
-      "definitionId":2289776721106567471,
-      "definitionName":"BasicTitle",
-      "flowId":15374822536399296877,
-      "elementId":"NavBar/child-1/title",
-      "sourceFile":"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/NavBar.hpp",
-      "sourceLine":123,
-      "changes": [
-        {"fieldHash":12903688170031016727,"fieldName":"childGap","fieldTypeHash":5516555141030549105,"valueKind":"int64","value":"13"},
-        {"fieldHash":11443923114587338057,"fieldName":"contentMode","fieldTypeHash":15474875363081520064,"valueKind":"enum1","value":"basicTitleParams::ContentMode::IconThenText (1)"},
-        {"fieldHash":15729902855269973761,"fieldName":"fontSize","fieldTypeHash":5516555141030549105,"valueKind":"int64","value":"32"},
-        {"fieldHash":15034033970064042952,"fieldName":"iconTintColor","fieldTypeHash":1038404891235700713,"valueKind":"float4","value":"Clay_Color{r=122, g=209, b=230, a=0}"},
-        {"fieldHash":9904783990336490401,"fieldName":"textColor","fieldTypeHash":1038404891235700713,"valueKind":"float4","value":"Clay_Color{r=243, g=243, b=243, a=255}"}
-      ]
-    },
-    {
-      "definitionId":2289776721106567471,
-      "definitionName":"BasicTitle",
-      "flowId":17949185366767607033,
-      "elementId":"NavBar/child-3/status",
-      "sourceFile":"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/NavBar.hpp",
-      "sourceLine":316,
-      "changes": [
-        {"fieldHash":2962551866395559440,"fieldName":"backgroundColor","fieldTypeHash":1038404891235700713,"valueKind":"float4","value":"Clay_Color{r=31, g=46, b=60, a=150}"},
-        {"fieldHash":6991335328569920870,"fieldName":"borderColor","fieldTypeHash":1038404891235700713,"valueKind":"float4","value":"Clay_Color{r=0, g=151, b=137, a=255}"}
-      ]
-    },
-    {
-      "definitionId":7772706737753820503,
-      "definitionName":"BasicButton",
-      "flowId":692368114158380368,
-      "elementId":"NavBar/child-2/new",
-      "sourceFile":"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/NavBar.hpp",
-      "sourceLine":298,
-      "changes": [
-        {"fieldHash":2962551866395559440,"fieldName":"backgroundColor","fieldTypeHash":1038404891235700713,"valueKind":"float4","value":"Clay_Color{r=36, g=36, b=40, a=0}"},
-        {"fieldHash":6991335328569920870,"fieldName":"borderColor","fieldTypeHash":1038404891235700713,"valueKind":"float4","value":"Clay_Color{r=58, g=58, b=64, a=0}"},
-        {"fieldHash":13714777660199686105,"fieldName":"borderWidth","fieldTypeHash":2382670219875931338,"valueKind":"edgeu16","value":"Clay_BorderWidth{left=0, right=0, top=0, bottom=0, betweenChildren=0}"},
-        {"fieldHash":1427344701363501910,"fieldName":"cornerRadius","fieldTypeHash":8940088597787310987,"valueKind":"float4","value":"Clay_CornerRadius{topLeft=10, topRight=10, bottomLeft=10, bottomRight=10}"},
-        {"fieldHash":15729902855269973761,"fieldName":"fontSize","fieldTypeHash":5516555141030549105,"valueKind":"int64","value":"14"},
-        {"fieldHash":736866309111087464,"fieldName":"hoverBackgroundColor","fieldTypeHash":1038404891235700713,"valueKind":"float4","value":"Clay_Color{r=36, g=36, b=40, a=255}"},
-        {"fieldHash":325794865266523609,"fieldName":"iconContainerSizing","fieldTypeHash":9261231445949958612,"valueKind":"composite_struct","value":"Clay_Sizing{width=Clay_SizingAxis{type=CLAY__SIZING_TYPE_FIXED (3), minMax={min=20, max=20}}, height=Clay_SizingAxis{type=CLAY__SIZING_TYPE_FIXED (3), minMax={min=20, max=20}}}"},
-        {"fieldHash":15034033970064042952,"fieldName":"iconTintColor","fieldTypeHash":1038404891235700713,"valueKind":"float4","value":"Clay_Color{r=0, g=0, b=0, a=0}"},
-        {"fieldHash":9904783990336490401,"fieldName":"textColor","fieldTypeHash":1038404891235700713,"valueKind":"float4","value":"Clay_Color{r=243, g=243, b=243, a=255}"}
-      ]
-    },
-    {
-      "definitionId":7772706737753820503,
-      "definitionName":"BasicButton",
-      "flowId":3148432086489161260,
-      "elementId":"NavBar/child-2/export",
-      "sourceFile":"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/NavBar.hpp",
-      "sourceLine":304,
-      "changes": [
-        {"fieldHash":2962551866395559440,"fieldName":"backgroundColor","fieldTypeHash":1038404891235700713,"valueKind":"float4","value":"Clay_Color{r=36, g=36, b=40, a=0}"},
-        {"fieldHash":6991335328569920870,"fieldName":"borderColor","fieldTypeHash":1038404891235700713,"valueKind":"float4","value":"Clay_Color{r=58, g=58, b=64, a=0}"},
-        {"fieldHash":13714777660199686105,"fieldName":"borderWidth","fieldTypeHash":2382670219875931338,"valueKind":"edgeu16","value":"Clay_BorderWidth{left=0, right=0, top=0, bottom=0, betweenChildren=0}"},
-        {"fieldHash":736866309111087464,"fieldName":"hoverBackgroundColor","fieldTypeHash":1038404891235700713,"valueKind":"float4","value":"Clay_Color{r=36, g=36, b=40, a=255}"},
-        {"fieldHash":325794865266523609,"fieldName":"iconContainerSizing","fieldTypeHash":9261231445949958612,"valueKind":"composite_struct","value":"Clay_Sizing{width=Clay_SizingAxis{type=CLAY__SIZING_TYPE_FIXED (3), minMax={min=20, max=20}}, height=Clay_SizingAxis{type=CLAY__SIZING_TYPE_FIXED (3), minMax={min=20, max=20}}}"},
-        {"fieldHash":9904783990336490401,"fieldName":"textColor","fieldTypeHash":1038404891235700713,"valueKind":"float4","value":"Clay_Color{r=243, g=243, b=243, a=255}"}
-      ]
-    },
-    {
-      "definitionId":7772706737753820503,
-      "definitionName":"BasicButton",
-      "flowId":5947058512323325515,
-      "elementId":"NavBar/child-2/import",
-      "sourceFile":"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/NavBar.hpp",
-      "sourceLine":301,
-      "changes": [
-        {"fieldHash":2962551866395559440,"fieldName":"backgroundColor","fieldTypeHash":1038404891235700713,"valueKind":"float4","value":"Clay_Color{r=36, g=36, b=40, a=0}"},
-        {"fieldHash":6991335328569920870,"fieldName":"borderColor","fieldTypeHash":1038404891235700713,"valueKind":"float4","value":"Clay_Color{r=58, g=58, b=64, a=0}"},
-        {"fieldHash":13714777660199686105,"fieldName":"borderWidth","fieldTypeHash":2382670219875931338,"valueKind":"edgeu16","value":"Clay_BorderWidth{left=0, right=0, top=0, bottom=0, betweenChildren=0}"},
-        {"fieldHash":736866309111087464,"fieldName":"hoverBackgroundColor","fieldTypeHash":1038404891235700713,"valueKind":"float4","value":"Clay_Color{r=36, g=36, b=40, a=255}"},
-        {"fieldHash":325794865266523609,"fieldName":"iconContainerSizing","fieldTypeHash":9261231445949958612,"valueKind":"composite_struct","value":"Clay_Sizing{width=Clay_SizingAxis{type=CLAY__SIZING_TYPE_FIXED (3), minMax={min=20, max=20}}, height=Clay_SizingAxis{type=CLAY__SIZING_TYPE_FIXED (3), minMax={min=20, max=20}}}"},
-        {"fieldHash":9904783990336490401,"fieldName":"textColor","fieldTypeHash":1038404891235700713,"valueKind":"float4","value":"Clay_Color{r=243, g=243, b=243, a=255}"}
+        {"fieldHash":6919348209619017416,"fieldName":"minHeight","fieldTypeHash":15867933128970588987,"valueKind":"int64","value":"20"},
+        {"fieldHash":10401417848386307212,"fieldName":"titleColor","fieldTypeHash":1038404891235700713,"valueKind":"float4","value":"Clay_Color{r=244, g=246, b=248, a=89}"},
+        {"fieldHash":744683027222955085,"fieldName":"titleFontSize","fieldTypeHash":5516555141030549105,"valueKind":"int64","value":"12"}
       ]
     }
   ],

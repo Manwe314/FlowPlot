@@ -25,8 +25,7 @@
 
 GUI app:
 
-- wire in Nav bar button functionality
-- add ability to choose pre made template patterns (pair plot)
+- add ability to choose pre made template patterns (pair plot) {Initial plumbing in}
 - add conviniance shortcuts, text copy paste, endite layer duplication property copy paste
 - CSV parsing input as "mock" data?
 
@@ -44,11 +43,15 @@ GUI app:
 - + add row text should not go beyond its box.
 - propertites title for string ID edditing
 
-- wire in the "fonts": [] export with the rest of the export wiring. 
 - pollyline trinagluation can be made better with inner line intersection + normal direction "across point" detection.
 - GPU renderer honoring text box Clip functionalty
 - Text Layout is simply not the same as CPU renderer
 - altering figure size and temporarly setting it to 0 causes: FlowPlotGUI fatal error: resolvePlotIR: figure size/padding/gap leaves negative panel layout space
 - lines falling into subpixel range dissapear
 - reset button at viewport title should rest the camera pos and zoom. 
-- horizontal dynamic separator needed between datasets adn viewport.
+- ? Help with [saved] on the navbar
+- [saved] state stamp functionality (possible hover highlight for errors)
+- data input scrolling not working.
+- MultiThreading ???
+- add graceful error handling (error showing with [saved] stamp?)
+- If FlowUi already has the font loaded from imported tample do no work. 
