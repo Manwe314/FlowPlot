@@ -138,6 +138,8 @@ private:
 	void triangulatePolyline(const FlowPlot::PolylineCommand& cmd);
 	void recordDrawPlan(const FlowUi::ViewPortRenderContext& ctx);
 	void updateDescriptorSet(std::uint32_t frameIndex);
+	void reclaimRetiredBuffers(std::uint32_t frameIndex);
+	void destroyRetiredBuffers();
 
 	VkDevice device_ = VK_NULL_HANDLE;
 	VmaAllocator_T* allocator_ = nullptr;
@@ -156,6 +158,7 @@ private:
 	AllocatedBuffer markerBuffer_{};
 	AllocatedBuffer textGlyphBuffer_{};
 	AllocatedBuffer polylineBuffer_{};
+	std::vector<std::vector<AllocatedBuffer>> retiredBuffersByFrame_{};
 
 	PlotRendererInput input_{};
 	CacheKey cacheKey_{};

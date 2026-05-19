@@ -241,14 +241,8 @@ external/FlowUi/CMakeFiles/flowui.dir/src/managers/FontManager.cpp.o: \
   /home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_av1std_encode.h \
   /home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_vp9std.h \
   /home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_vp9std_decode.h \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/PublicStructs.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/clay.h \
-  /usr/lib/llvm-12/lib/clang/12.0.1/include/stdbool.h \
-  /usr/lib/llvm-12/lib/clang/12.0.1/include/emmintrin.h \
-  /usr/lib/llvm-12/lib/clang/12.0.1/include/xmmintrin.h \
-  /usr/lib/llvm-12/lib/clang/12.0.1/include/mmintrin.h \
-  /usr/lib/llvm-12/lib/clang/12.0.1/include/mm_malloc.h \
-  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/stdlib.h \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/FontResources.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/FontManagerStructs.hpp \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/algorithm \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/stl_algo.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/algorithmfwd.h \
@@ -421,6 +415,14 @@ external/FlowUi/CMakeFiles/flowui.dir/src/managers/FontManager.cpp.o: \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/json-export.h \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/msdf-atlas-gen/msdf-atlas-gen/shadron-preview-generator.h \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/Vulkan/Vk_Context.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/PublicStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/clay.h \
+  /usr/lib/llvm-12/lib/clang/12.0.1/include/stdbool.h \
+  /usr/lib/llvm-12/lib/clang/12.0.1/include/emmintrin.h \
+  /usr/lib/llvm-12/lib/clang/12.0.1/include/xmmintrin.h \
+  /usr/lib/llvm-12/lib/clang/12.0.1/include/mmintrin.h \
+  /usr/lib/llvm-12/lib/clang/12.0.1/include/mm_malloc.h \
+  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/stdlib.h \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/IWindow.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/stb_image.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/math.h \

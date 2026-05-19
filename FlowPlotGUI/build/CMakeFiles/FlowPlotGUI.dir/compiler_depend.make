@@ -42,6 +42,7 @@ CMakeFiles/FlowPlotGUI.dir/main.cpp.o: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/clay.h \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/App.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/Flow.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/FontResources.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/PublicStructs.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/Vulkan/Vk_Context.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devApi.hpp \
@@ -54,8 +55,11 @@ CMakeFiles/FlowPlotGUI.dir/main.cpp.o: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devFloat2.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devFloat4.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devTaggedUnion.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/elementDevCapture.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/registry.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementSystem.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/internal/FlowUiElementBridge.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/internal/InputFieldRenderOverrides.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementBuilder.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FontManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/IconManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ImageManager.hpp \
@@ -63,8 +67,13 @@ CMakeFiles/FlowPlotGUI.dir/main.cpp.o: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ShortcutManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/UiManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ViewPortManager.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/FlowUiElementStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/FontManagerStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/InputFieldManagerStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/InputStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/ShortcutManagerStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/ViewPortManagerStructs.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/IWindow.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/Inputs.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/BasicButton.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/BasicInputField.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/BasicTitle.hpp \
@@ -516,6 +525,7 @@ CMakeFiles/FlowPlotGUI.dir/src/PlotRenderer.cpp.o: /home/lkukhale/kodi/FlowPlot/
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/vk_mem_alloc.h \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/App.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/Flow.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/FontResources.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/PublicStructs.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/Vulkan/Vk_Context.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devRuntime.hpp \
@@ -527,9 +537,12 @@ CMakeFiles/FlowPlotGUI.dir/src/PlotRenderer.cpp.o: /home/lkukhale/kodi/FlowPlot/
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devFloat2.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devFloat4.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devTaggedUnion.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/elementDevCapture.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/registry.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/internal/FlowUiElementBridge.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/internal/InputFieldRenderOverrides.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/internal/Vma.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementSystem.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementBuilder.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FontManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/IconManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ImageManager.hpp \
@@ -537,8 +550,13 @@ CMakeFiles/FlowPlotGUI.dir/src/PlotRenderer.cpp.o: /home/lkukhale/kodi/FlowPlot/
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ShortcutManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/UiManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ViewPortManager.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/FlowUiElementStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/FontManagerStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/InputFieldManagerStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/InputStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/ShortcutManagerStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/ViewPortManagerStructs.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/IWindow.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/Inputs.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/FlowPlotGui.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/PlotRenderer.hpp \
   /home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_av1std.h \
@@ -934,6 +952,7 @@ CMakeFiles/FlowPlotGUI.dir/src/PlotViewportScene.cpp.o: /home/lkukhale/kodi/Flow
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/clay.h \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/App.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/Flow.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/FontResources.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/PublicStructs.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/Vulkan/Vk_Context.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devRuntime.hpp \
@@ -945,8 +964,11 @@ CMakeFiles/FlowPlotGUI.dir/src/PlotViewportScene.cpp.o: /home/lkukhale/kodi/Flow
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devFloat2.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devFloat4.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devTaggedUnion.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/elementDevCapture.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/registry.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementSystem.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/internal/FlowUiElementBridge.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/internal/InputFieldRenderOverrides.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementBuilder.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FontManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/IconManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ImageManager.hpp \
@@ -954,8 +976,13 @@ CMakeFiles/FlowPlotGUI.dir/src/PlotViewportScene.cpp.o: /home/lkukhale/kodi/Flow
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ShortcutManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/UiManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ViewPortManager.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/FlowUiElementStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/FontManagerStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/InputFieldManagerStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/InputStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/ShortcutManagerStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/ViewPortManagerStructs.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/IWindow.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/Inputs.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/FlowPlotGui.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/PlotRenderer.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/PlotViewportScene.hpp \
@@ -1351,9 +1378,9 @@ CMakeFiles/FlowPlotGUI.dir/src/fontImport.cpp.o: /home/lkukhale/kodi/FlowPlot/Fl
   /home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/writer.h \
   /home/lkukhale/kodi/FlowPlot/FlowPlot/stb_image_write.h \
   /home/lkukhale/kodi/FlowPlot/FlowPlot/stb_truetype.h \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/clay.h \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/PublicStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/FontResources.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FontManager.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/FontManagerStructs.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/Nfd/src/include/nfd.h \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/Nfd/src/include/nfd_glfw3.h \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/FlowPlotGui.hpp \
@@ -1714,17 +1741,13 @@ CMakeFiles/FlowPlotGUI.dir/src/fontImport.cpp.o: /home/lkukhale/kodi/FlowPlot/Fl
   /usr/include/x86_64-linux-gnu/sys/syscall.h \
   /usr/include/x86_64-linux-gnu/sys/types.h \
   /usr/lib/llvm-12/lib/clang/12.0.1/include/__stddef_max_align_t.h \
-  /usr/lib/llvm-12/lib/clang/12.0.1/include/emmintrin.h \
   /usr/lib/llvm-12/lib/clang/12.0.1/include/inttypes.h \
   /usr/lib/llvm-12/lib/clang/12.0.1/include/limits.h \
-  /usr/lib/llvm-12/lib/clang/12.0.1/include/mm_malloc.h \
-  /usr/lib/llvm-12/lib/clang/12.0.1/include/mmintrin.h \
   /usr/lib/llvm-12/lib/clang/12.0.1/include/sanitizer/tsan_interface.h \
   /usr/lib/llvm-12/lib/clang/12.0.1/include/stdarg.h \
   /usr/lib/llvm-12/lib/clang/12.0.1/include/stdbool.h \
   /usr/lib/llvm-12/lib/clang/12.0.1/include/stddef.h \
-  /usr/lib/llvm-12/lib/clang/12.0.1/include/stdint.h \
-  /usr/lib/llvm-12/lib/clang/12.0.1/include/xmmintrin.h
+  /usr/lib/llvm-12/lib/clang/12.0.1/include/stdint.h
 
 CMakeFiles/FlowPlotGUI.dir/src/iconRegistry.cpp.o: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/src/iconRegistry.cpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlot/FlowPlot.hpp \
@@ -1764,6 +1787,7 @@ CMakeFiles/FlowPlotGUI.dir/src/iconRegistry.cpp.o: /home/lkukhale/kodi/FlowPlot/
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/clay.h \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/App.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/Flow.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/FontResources.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/PublicStructs.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/Vulkan/Vk_Context.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devApi.hpp \
@@ -1776,8 +1800,11 @@ CMakeFiles/FlowPlotGUI.dir/src/iconRegistry.cpp.o: /home/lkukhale/kodi/FlowPlot/
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devFloat2.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devFloat4.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devTaggedUnion.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/elementDevCapture.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/registry.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementSystem.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/internal/FlowUiElementBridge.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/internal/InputFieldRenderOverrides.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementBuilder.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FontManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/IconManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ImageManager.hpp \
@@ -1785,8 +1812,13 @@ CMakeFiles/FlowPlotGUI.dir/src/iconRegistry.cpp.o: /home/lkukhale/kodi/FlowPlot/
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ShortcutManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/UiManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ViewPortManager.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/FlowUiElementStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/FontManagerStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/InputFieldManagerStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/InputStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/ShortcutManagerStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/ViewPortManagerStructs.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/IWindow.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/Inputs.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/BasicButton.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/BasicInputField.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/BasicTitle.hpp \
@@ -2630,6 +2662,7 @@ CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.o: /home/lkukhale/kodi/FlowPlo
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/clay.h \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/App.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/Flow.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/FontResources.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/PublicStructs.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/Vulkan/Vk_Context.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devApi.hpp \
@@ -2642,8 +2675,11 @@ CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.o: /home/lkukhale/kodi/FlowPlo
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devFloat2.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devFloat4.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devTaggedUnion.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/elementDevCapture.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/registry.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementSystem.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/internal/FlowUiElementBridge.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/internal/InputFieldRenderOverrides.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementBuilder.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FontManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/IconManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ImageManager.hpp \
@@ -2651,8 +2687,13 @@ CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.o: /home/lkukhale/kodi/FlowPlo
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ShortcutManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/UiManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ViewPortManager.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/FlowUiElementStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/FontManagerStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/InputFieldManagerStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/InputStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/ShortcutManagerStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/ViewPortManagerStructs.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/IWindow.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/Inputs.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/BasicButton.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/TemplateLayer.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/FlowPlotGui.hpp \
@@ -3425,13 +3466,9 @@ CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o: /home/lkukhale/kodi/FlowPlo
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/src/fontImport.cpp:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/src/PlotViewportScene.cpp:
-
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/external/vk_mem_alloc.h:
 
 /usr/lib/llvm-12/lib/clang/12.0.1/include/xmmintrin.h:
-
-/usr/lib/llvm-12/lib/clang/12.0.1/include/stddef.h:
 
 /usr/lib/llvm-12/lib/clang/12.0.1/include/mm_malloc.h:
 
@@ -3502,10 +3539,6 @@ CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o: /home/lkukhale/kodi/FlowPlo
 /usr/include/x86_64-linux-gnu/bits/types/__FILE.h:
 
 /usr/include/x86_64-linux-gnu/bits/types.h:
-
-/usr/include/x86_64-linux-gnu/bits/timex.h:
-
-/usr/include/x86_64-linux-gnu/bits/timesize.h:
 
 /usr/include/x86_64-linux-gnu/bits/syscall.h:
 
@@ -3599,17 +3632,21 @@ CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o: /home/lkukhale/kodi/FlowPlo
 
 /usr/include/alloca.h:
 
-/usr/include/c++/12/bits/fs_path.h:
+/usr/include/X11/Xutil.h:
 
-/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codecs_common.h:
+/usr/include/x86_64-linux-gnu/c++/12/bits/time_members.h:
 
-/usr/lib/llvm-12/lib/clang/12.0.1/include/__stddef_max_align_t.h:
+/usr/include/x86_64-linux-gnu/c++/12/bits/os_defines.h:
 
-/usr/include/x86_64-linux-gnu/bits/types/FILE.h:
+/usr/include/x86_64-linux-gnu/c++/12/bits/messages_members.h:
 
-/usr/include/c++/12/bits/iterator_concepts.h:
+/usr/include/x86_64-linux-gnu/c++/12/bits/gthr.h:
 
-/usr/include/c++/12/bits/exception_defines.h:
+/usr/include/x86_64-linux-gnu/c++/12/bits/gthr-default.h:
+
+/usr/include/x86_64-linux-gnu/c++/12/bits/error_constants.h:
+
+/usr/include/x86_64-linux-gnu/c++/12/bits/cpu_defines.h:
 
 /usr/include/c++/12/bits/cxxabi_init_exception.h:
 
@@ -3621,15 +3658,13 @@ CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o: /home/lkukhale/kodi/FlowPlo
 
 /usr/include/c++/12/bits/basic_string.h:
 
-/usr/include/c++/12/bits/fs_fwd.h:
-
 /usr/include/c++/12/bits/atomic_base.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/basicInputs/enumPicker.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h:
 
 /usr/include/c++/12/bits/allocator.h:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/DataInputTable.hpp:
 
 /usr/include/c++/12/bits/algorithmfwd.h:
 
@@ -3647,13 +3682,17 @@ CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o: /home/lkukhale/kodi/FlowPlo
 
 /usr/include/c++/12/new:
 
-/usr/include/c++/12/algorithm:
-
 /home/lkukhale/vulkan/1.4.321.1/x86_64/include/vulkan/vk_platform.h:
 
-/usr/include/c++/12/bits/fstream.tcc:
+/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codecs_common.h:
 
-/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_h264std_encode.h:
+/usr/include/c++/12/bits/fs_path.h:
+
+/usr/lib/llvm-12/lib/clang/12.0.1/include/__stddef_max_align_t.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/FILE.h:
+
+/usr/include/c++/12/bits/iterator_concepts.h:
 
 /usr/include/c++/12/bits/codecvt.h:
 
@@ -3676,10 +3715,6 @@ CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o: /home/lkukhale/kodi/FlowPlo
 /usr/include/x86_64-linux-gnu/bits/libc-header-start.h:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/templateImport.hpp:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/encodedstream.h:
-
-/usr/include/x86_64-linux-gnu/c++/12/bits/gthr-default.h:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/elements.hpp:
 
@@ -3707,29 +3742,13 @@ CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o: /home/lkukhale/kodi/FlowPlo
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/ConstructElements/PropsPanel.hpp:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/ConstructElements/MainContentPanel.hpp:
-
-/usr/include/c++/12/locale:
-
-/usr/include/x86_64-linux-gnu/c++/12/bits/os_defines.h:
-
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/variableTypeSettingsEditor.hpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/writer.h:
 
-/usr/include/c++/12/tr1/riemann_zeta.tcc:
-
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/scatterStatsEditor.hpp:
 
 external/FlowUi/include/FlowUi/BuildConfig.hpp:
-
-/usr/include/c++/12/iterator:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/tickSettingsEditor.hpp:
-
-/usr/include/c++/12/bits/stl_pair.h:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/scatterConfigEditor.hpp:
 
 /usr/include/c++/12/pstl/glue_algorithm_defs.h:
 
@@ -3745,29 +3764,33 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/bits/alloc_traits.h:
 
+/usr/include/x86_64-linux-gnu/bits/timex.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/FontManagerStructs.hpp:
+
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/NewTemplatePresetPicker.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/struct_mutex.h:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/error/en.h:
 
+/usr/include/c++/12/bits/allocated_ptr.h:
+
+/usr/include/c++/12/bits/concept_check.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/histogramConfigEditor.hpp:
+
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/histogramStatsEditor.hpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/gridSettingsEditor.hpp:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/istreamwrapper.h:
+/usr/include/X11/Xdefs.h:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/basicInputs/stringInput.hpp:
+/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_h265std_decode.h:
 
-/usr/include/c++/12/bits/invoke.h:
-
-/usr/include/x86_64-linux-gnu/c++/12/bits/messages_members.h:
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/basicInputs/numericInput.hpp:
 
 /usr/include/c++/12/bits/basic_ios.h:
-
-/usr/include/c++/12/bits/fs_dir.h:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/PlotviewPort.hpp:
 
 /usr/include/c++/12/tr1/beta_function.tcc:
 
@@ -3776,6 +3799,18 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_h265std.h:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ViewPortManager.hpp:
+
+/usr/include/linux/close_range.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/basicInputs/doubleEnumPicker.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/prettywriter.h:
+
+/usr/include/c++/12/algorithm:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/encodedstream.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/InputStructs.hpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/internal/clzll.h:
 
@@ -3799,13 +3834,15 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/bits/hashtable_policy.h:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/prettywriter.h:
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/scatterConfigEditor.hpp:
 
-/usr/include/linux/close_range.h:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/basicInputs/doubleEnumPicker.hpp:
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/elementDevCapture.hpp:
 
 /usr/include/c++/12/bits/new_allocator.h:
+
+/usr/include/x86_64-linux-gnu/c++/12/bits/ctype_inline.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/internal/pow10.h:
 
 /usr/include/x86_64-linux-gnu/asm/unistd.h:
 
@@ -3841,13 +3878,29 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/system_error:
 
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/basicInputs/stringInput.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/istreamwrapper.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/DataInputTable.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/PlotviewPort.hpp:
+
+/usr/include/c++/12/bits/fs_dir.h:
+
 /home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/allocators.h:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/internal/dtoa.h:
 
 /usr/include/c++/12/compare:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devEnum1.hpp:
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/ConstructElements/MainContentPanel.hpp:
+
+/usr/include/c++/12/locale:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/src/PlotViewportScene.cpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/FlowUiElementStructs.hpp:
 
 /usr/lib/llvm-12/lib/clang/12.0.1/include/stdint.h:
 
@@ -3856,6 +3909,10 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /usr/include/c++/12/cstring:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlot/FlowPlot_Renderer.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/basicInputs/colorPicker.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/InputFieldManager.hpp:
 
 /usr/include/c++/12/bits/stl_multiset.h:
 
@@ -3876,8 +3933,6 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/main.cpp:
 
 /usr/include/c++/12/vector:
-
-/usr/include/c++/12/bits/fs_ops.h:
 
 /usr/include/KHR/khrplatform.h:
 
@@ -3917,6 +3972,16 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/bits/uses_allocator_args.h:
 
+/usr/include/c++/12/iterator:
+
+/usr/include/c++/12/bits/stl_pair.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/tickSettingsEditor.hpp:
+
+/usr/include/c++/12/tr1/riemann_zeta.tcc:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/rapidjson.h:
+
 /usr/include/c++/12/bits/char_traits.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/__fpos64_t.h:
@@ -3941,6 +4006,8 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/bits/functional_hash.h:
 
+/usr/include/c++/12/bits/invoke.h:
+
 /home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/stringbuffer.h:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/DataInput.hpp:
@@ -3951,8 +4018,6 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/backward/binders.h:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/BasicButton.hpp:
-
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devApi.hpp:
 
 /usr/include/c++/12/bits/uses_allocator.h:
@@ -3960,6 +4025,8 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devRuntime.hpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devEdgeU16.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devEnum1.hpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/scatterSizeMappingSettings.hpp:
 
@@ -3969,6 +4036,10 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlot/FlowPlot_Defaults.hpp:
 
+/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_h264std_encode.h:
+
+/usr/include/c++/12/bits/fstream.tcc:
+
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/UiManager.hpp:
 
 /usr/include/c++/12/bits/basic_ios.tcc:
@@ -3977,21 +4048,23 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devFloat4.hpp:
 
-/usr/include/c++/12/bits/allocated_ptr.h:
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/internal/FlowUiElementBridge.hpp:
 
-/usr/include/c++/12/bits/concept_check.h:
+/usr/include/c++/12/bits/locale_facets.tcc:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/histogramConfigEditor.hpp:
+/usr/include/x86_64-linux-gnu/bits/sched.h:
 
-/usr/include/x86_64-linux-gnu/bits/types/__locale_t.h:
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/TemplatePresets.hpp:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/scatterStyleEditor.hpp:
+/usr/include/c++/12/bits/cpp_type_traits.h:
 
-/usr/include/c++/12/bits/locale_facets_nonio.h:
+/usr/include/c++/12/bits/functexcept.h:
 
-/usr/include/errno.h:
+/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h:
 
-/usr/include/c++/12/utility:
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/Flow.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/NavBar.hpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/TemplateLayer.hpp:
 
@@ -4002,6 +4075,8 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FontManager.hpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devCompositeStruct.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/ViewPortManagerStructs.hpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devFloat2.hpp:
 
@@ -4029,13 +4104,21 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ShortcutManager.hpp:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/basicInputs/enumPicker.hpp:
+/usr/lib/llvm-12/lib/clang/12.0.1/include/stddef.h:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/Inputs.hpp:
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/ShortcutManagerStructs.hpp:
+
+/usr/include/c++/12/ext/aligned_buffer.h:
+
+/usr/include/x86_64-linux-gnu/bits/timesize.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/InputFieldManagerStructs.hpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/PlotRenderer.hpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/ConstructElements/MainContent.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/BasicButton.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/stdint-intn.h:
 
@@ -4049,37 +4132,11 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/Vulkan/Vk_Context.hpp:
 
-/usr/include/x86_64-linux-gnu/bits/sched.h:
+/usr/include/c++/12/bits/exception_defines.h:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/TemplatePresets.hpp:
+/usr/include/c++/12/bits/fs_fwd.h:
 
-/usr/include/c++/12/bits/cpp_type_traits.h:
-
-/usr/include/c++/12/bits/functexcept.h:
-
-/usr/include/x86_64-linux-gnu/bits/thread-shared-types.h:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/Flow.hpp:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/NavBar.hpp:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/rapidjson.h:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/InputFieldManager.hpp:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/basicInputs/colorPicker.hpp:
-
-/usr/include/X11/Xdefs.h:
-
-/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_h265std_decode.h:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/internal/pow10.h:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementSystem.hpp:
-
-/usr/include/x86_64-linux-gnu/c++/12/bits/ctype_inline.h:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/basicInputs/numericInput.hpp:
+/usr/include/c++/12/bits/fs_ops.h:
 
 /usr/include/c++/12/bits/hashtable.h:
 
@@ -4121,7 +4178,15 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/climits:
 
-/usr/include/c++/12/bits/locale_facets.tcc:
+/usr/include/x86_64-linux-gnu/bits/types/__locale_t.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/scatterStyleEditor.hpp:
+
+/usr/include/c++/12/bits/locale_facets_nonio.h:
+
+/usr/include/errno.h:
+
+/usr/include/c++/12/utility:
 
 /usr/include/c++/12/bits/max_size_type.h:
 
@@ -4175,7 +4240,15 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/bits/ptr_traits.h:
 
-/usr/include/x86_64-linux-gnu/c++/12/bits/cpu_defines.h:
+/usr/include/c++/12/bits/stl_tree.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementBuilder.hpp:
+
+/usr/include/c++/12/bits/stl_algo.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/internal/InputFieldRenderOverrides.hpp:
+
+/usr/include/c++/12/tuple:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/BasicTitle.hpp:
 
@@ -4206,12 +4279,6 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/internal/stack.h:
 
 /usr/include/c++/12/numbers:
-
-/usr/include/c++/12/bits/stl_tree.h:
-
-/usr/include/c++/12/tuple:
-
-/usr/include/c++/12/bits/stl_algo.h:
 
 /usr/include/c++/12/bits/stl_construct.h:
 
@@ -4245,6 +4312,10 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/cerrno:
 
+/usr/include/x86_64-linux-gnu/c++/12/bits/ctype_base.h:
+
+/usr/include/c++/12/cmath:
+
 /usr/include/asm-generic/errno.h:
 
 /usr/include/c++/12/concepts:
@@ -4277,11 +4348,11 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/features-time64.h:
 
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/FontResources.hpp:
+
 /usr/include/c++/12/typeinfo:
 
 /usr/include/c++/12/exception:
-
-/usr/include/c++/12/ext/aligned_buffer.h:
 
 /usr/include/inttypes.h:
 
@@ -4394,15 +4465,3 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_vp9std.h:
 
 /usr/include/x86_64-linux-gnu/c++/12/bits/c++io.h:
-
-/usr/include/c++/12/cmath:
-
-/usr/include/x86_64-linux-gnu/c++/12/bits/ctype_base.h:
-
-/usr/include/x86_64-linux-gnu/c++/12/bits/error_constants.h:
-
-/usr/include/x86_64-linux-gnu/c++/12/bits/gthr.h:
-
-/usr/include/X11/Xutil.h:
-
-/usr/include/x86_64-linux-gnu/c++/12/bits/time_members.h:

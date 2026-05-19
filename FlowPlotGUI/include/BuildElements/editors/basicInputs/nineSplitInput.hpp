@@ -111,7 +111,7 @@ struct nineSplitMatrixParams {
 	Clay_CornerRadius slotCornerRadius = CLAY_CORNER_RADIUS(6);
 
 	Clay_Sizing numericSizing = Clay_Sizing{
-		.width = CLAY_SIZING_FIXED(46),
+		.width = CLAY_SIZING_FIXED(48),
 		.height = CLAY_SIZING_FIT(0),
 	};
 	Clay_Padding numericInputPadding = CLAY_PADDING_ALL(5);

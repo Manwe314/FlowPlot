@@ -74,6 +74,7 @@ inline const HistogramMappingSettingsEditorDef kHistogramMappingSettingsEditor =
 			[&]() {
 				mappingSettingsEditorDrawInputRow(context, "row-data-field", context.params.shell, [&](const std::string& rowPath) {
 					stringInputCardParams params = context.params.dataFieldInput;
+					mappingSettingsPrepareStringInputCard(params);
 					params.hintText = "datafield schema name";
 					params.value = context.params.value.dataField;
 					params.fontId = context.params.shell.fontId;
@@ -86,6 +87,7 @@ inline const HistogramMappingSettingsEditorDef kHistogramMappingSettingsEditor =
 
 				mappingSettingsEditorDrawInputRow(context, "row-data-axis", context.params.shell, [&](const std::string& rowPath) {
 					enumPickerCardParams params = context.params.dataAxisInput;
+					mappingSettingsPrepareEnumPickerCard(params);
 					params.hintText = "Data Axis";
 					params.options = histogramDataAxisOptions();
 					params.value = histogramDataAxisToString(context.params.value.axis);
@@ -100,6 +102,7 @@ inline const HistogramMappingSettingsEditorDef kHistogramMappingSettingsEditor =
 
 				mappingSettingsEditorDrawInputRow(context, "row-color-field", context.params.shell, [&](const std::string& rowPath) {
 					stringInputCardParams params = context.params.colorFieldInput;
+					mappingSettingsPrepareStringInputCard(params);
 					params.hintText = "colorfield schema name";
 					params.value = context.params.value.colorField;
 					params.fontId = context.params.shell.fontId;
@@ -112,6 +115,7 @@ inline const HistogramMappingSettingsEditorDef kHistogramMappingSettingsEditor =
 
 				mappingSettingsEditorDrawInputRow(context, "row-color-mapping", context.params.shell, [&](const std::string& rowPath) {
 					histogramColorMappingSettingsParams params = context.params.colorMappingInput;
+					params.shell.cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
 					params.value = context.params.value.colorMapping;
 					params.shell.fontId = context.params.shell.fontId;
 					params.onChange = [value = context.params.value, onChange = context.params.onChange](

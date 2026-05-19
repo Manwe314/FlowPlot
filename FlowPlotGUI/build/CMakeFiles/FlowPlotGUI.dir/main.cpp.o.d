@@ -265,6 +265,7 @@ CMakeFiles/FlowPlotGUI.dir/main.cpp.o: \
   /usr/lib/llvm-12/lib/clang/12.0.1/include/mmintrin.h \
   /usr/lib/llvm-12/lib/clang/12.0.1/include/mm_malloc.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/stdlib.h \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/FontManagerStructs.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FontManager.hpp \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/unordered_map \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/hashtable.h \
@@ -288,7 +289,30 @@ CMakeFiles/FlowPlotGUI.dir/main.cpp.o: \
   /home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_av1std_encode.h \
   /home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_vp9std.h \
   /home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_vp9std_decode.h \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementSystem.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/FontResources.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ImageManager.hpp \
+  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/unordered_set \
+  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/unordered_set.h \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/InputFieldManager.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/internal/InputFieldRenderOverrides.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/InputFieldManagerStructs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/InputStructs.hpp \
+  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/array \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ShortcutManager.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/ShortcutManagerStructs.hpp \
+  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/functional \
+  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/std_function.h \
+  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/stl_algo.h \
+  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/algorithmfwd.h \
+  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/stl_heap.h \
+  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/uniform_int_dist.h \
+  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/move_only_function.h \
+  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/mofunc_impl.h \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/FlowUiElementStructs.hpp \
+  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/optional \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementBuilder.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/internal/FlowUiElementBridge.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/elementDevCapture.hpp \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/cmath \
   /usr/include/math.h /usr/include/x86_64-linux-gnu/bits/math-vector.h \
   /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
@@ -312,49 +336,34 @@ CMakeFiles/FlowPlotGUI.dir/main.cpp.o: \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/tr1/poly_hermite.tcc \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/tr1/poly_laguerre.tcc \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/tr1/riemann_zeta.tcc \
-  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/optional \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/source_location \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devRuntime.hpp \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/variant \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devEnum1.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devCompositeStruct.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devEdgeU16.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/registry.hpp \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/cstring \
   /usr/include/string.h /usr/include/strings.h \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devEnum1.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devEnum2.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devFloat1.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devFloat2.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devFloat4.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devEdgeU16.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devTaggedUnion.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devTypes/devCompositeStruct.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ImageManager.hpp \
-  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/unordered_set \
-  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/unordered_set.h \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/InputFieldManager.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/Inputs.hpp \
-  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/array \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ShortcutManager.hpp \
-  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/functional \
-  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/std_function.h \
-  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/stl_algo.h \
-  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/algorithmfwd.h \
-  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/stl_heap.h \
-  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/uniform_int_dist.h \
-  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/move_only_function.h \
-  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/mofunc_impl.h \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/IconManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/Vulkan/Vk_Context.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/IWindow.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/UiManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ViewPortManager.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/ViewPortManagerStructs.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/elements.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devApi.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/BasicInputField.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/FlowPlotGui.hpp \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/algorithm \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/ranges_algo.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/ranges_util.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/pstl/glue_algorithm_defs.h \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/FlowPlotGui.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/../FlowPlot/FlowPlot_Defaults.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/../FlowPlot/FlowPlot.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/../FlowPlot/rapidjson/document.h \
@@ -439,9 +448,9 @@ CMakeFiles/FlowPlotGUI.dir/main.cpp.o: \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/variableTypeSettingsEditor.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/histogramConfigEditor.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/mappingSettingsEditorCommon.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/basicInputs/twoColumnInput.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/histogramMappingEditor.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/histogramColorMappingSettings.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/basicInputs/twoColumnInput.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/histogramStatsEditor.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/histogramStyleEditor.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/scatterConfigEditor.hpp \

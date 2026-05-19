@@ -120,7 +120,7 @@ inline const DataTabDef kDataTab = {
 			tabState.requestedNameEditThisFrame = true;
 			context.uiManager.inputFields().requestCaret(
 				dataTabNameFieldId(context.elementID),
-				FlowUi::InputFieldManager::CaretRequestKind::SetPrimary);
+				FlowUi::CaretRequestKind::SetPrimary);
 		}
 	},
 	nullptr,

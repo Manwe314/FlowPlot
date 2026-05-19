@@ -173,6 +173,7 @@ inline void variableTypeSettingsEditorDrawInputRow(
 	const std::string rowPath = context.createChildElementId(localId);
 	const Clay_ElementId rowId = context.uiManager.toClayEID(rowPath);
 	const Clay_ElementId insetId = context.uiManager.toClayEID(rowPath + "/inset");
+	const Clay_ElementId contentId = context.uiManager.toClayEID(rowPath + "/content");
 
 	Clay_ElementDeclaration row{};
 	row.layout.layoutDirection = CLAY_LEFT_TO_RIGHT;
@@ -187,10 +188,19 @@ inline void variableTypeSettingsEditorDrawInputRow(
 	inset.layout.sizing = params.insetSizing;
 	inset.backgroundColor = FlowUi::Flow_Color("#00000000");
 
+	Clay_ElementDeclaration content{};
+	content.layout.sizing = {.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
+	content.layout.layoutDirection = CLAY_TOP_TO_BOTTOM;
+	content.layout.childAlignment = {.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_TOP};
+	content.backgroundColor = FlowUi::Flow_Color("#00000000");
+
 	CLAY(rowId, row)
 	{
 		CLAY(insetId, inset) {};
-		drawChild(rowPath);
+		CLAY(contentId, content)
+		{
+			drawChild(rowPath);
+		};
 	};
 }
 

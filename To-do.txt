@@ -29,9 +29,6 @@ GUI app:
 - add conviniance shortcuts, text copy paste, endite layer duplication property copy paste
 - CSV parsing input as "mock" data?
 
-- make toggle actually rounnd with nob beegin a circle
-- enum box dettection vissually off
-- nine split completely disfigured.
 - compund cards toggle button not visible
 - numeric inputs . and - dont write
 - numeric input on clear sets to 0 and removes carat.
@@ -54,4 +51,11 @@ GUI app:
 - data input scrolling not working.
 - MultiThreading ???
 - add graceful error handling (error showing with [saved] stamp?)
-- If FlowUi already has the font loaded from imported tample do no work. 
+- If FlowUi already has the font loaded from imported tample do no work.
+- A lot of buffers in use at destroy request time errors while altering the plot figure.
+- chnage in panels layout in rows / columns gives fatal error: FlowPlotGUI fatal error: resolvePlotIR: panel padding leaves negative layer clip size at 'panels[0]' 
+- props panel hint text hitting th eeditor wierdly
+- chnages to Layer's mappings would do something like:
+	FlowPlotGUI fatal error: buildBoundIR: field 'c' at 'panels[0].layers[0].mapping.label.field' is not declared in dataset schema 'main'
+- chnageing values causes flowplots fatal erros to throw:
+	FlowPlotGUI fatal error: resolvePlotIR: axis role cannot be 'null' at 'panels[0].layers[0].axisData.y'

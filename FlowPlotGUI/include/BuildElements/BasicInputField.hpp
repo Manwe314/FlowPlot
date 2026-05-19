@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <functional>
 #include <string>
 #include <string_view>
@@ -78,7 +79,7 @@ inline const BasicInputFieldDef kBasicInputField = {
 			: std::string_view(context.params.fieldId);
 		context.uiManager.inputFields().requestCaret(
 			fieldId,
-			FlowUi::InputFieldManager::CaretRequestKind::SetPrimary);
+			FlowUi::CaretRequestKind::SetPrimary);
 	},
 	nullptr,
 	nullptr,
@@ -112,11 +113,11 @@ inline const BasicInputFieldDef kBasicInputField = {
 		const std::string textElementPath = context.createChildElementId("text");
 		const Clay_ElementId textId = context.uiManager.toClayEID(textElementPath);
 
-		const FlowUi::InputFieldManager::FieldQueryResult result =
+		const FlowUi::FieldQueryResult result =
 			context.uiManager.inputFields().requestField({
 			.fieldId = fieldId,
 			.initialText = requestedText,
-			.config = FlowUi::InputFieldManager::FieldConfig{
+			.config = FlowUi::FieldConfig{
 				.readOnly = false,
 				.allowNewline = false,
 				.allowArrowNavigation = true,
@@ -144,6 +145,13 @@ inline const BasicInputFieldDef kBasicInputField = {
 		Clay_LayoutConfig rootLayout{};
 		rootLayout.layoutDirection = CLAY_LEFT_TO_RIGHT;
 		rootLayout.sizing = context.params.sizing;
+		if (rootLayout.sizing.height.type == CLAY__SIZING_TYPE_FIT)
+		{
+			const float minTextHeight = static_cast<float>(context.params.fontSize)
+				+ static_cast<float>(context.params.padding.top + context.params.padding.bottom)
+				+ static_cast<float>(context.params.borderWidth.top + context.params.borderWidth.bottom);
+			rootLayout.sizing.height = CLAY_SIZING_FIT(std::max(minTextHeight, 1.0f), 100000.0f);
+		}
 		rootLayout.padding = context.params.padding;
 		rootLayout.childAlignment = context.params.childTextAlignment;
 

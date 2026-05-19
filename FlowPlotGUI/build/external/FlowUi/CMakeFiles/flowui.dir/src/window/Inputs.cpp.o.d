@@ -1,6 +1,6 @@
 external/FlowUi/CMakeFiles/flowui.dir/src/window/Inputs.cpp.o: \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/src/window/Inputs.cpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/window/Inputs.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/internal/InputQueue.hpp \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/array \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/compare \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/concepts \
@@ -40,9 +40,6 @@ external/FlowUi/CMakeFiles/flowui.dir/src/window/Inputs.cpp.o: \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/debug/debug.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/predefined_ops.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/range_access.h \
-  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/cstddef \
-  /usr/lib/llvm-12/lib/clang/12.0.1/include/stddef.h \
-  /usr/lib/llvm-12/lib/clang/12.0.1/include/__stddef_max_align_t.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/vector \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/allocator.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/x86_64-linux-gnu/c++/12/bits/c++allocator.h \
@@ -60,6 +57,10 @@ external/FlowUi/CMakeFiles/flowui.dir/src/window/Inputs.cpp.o: \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/stl_function.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/backward/binders.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/vector.tcc \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/InputStructs.hpp \
+  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/cstddef \
+  /usr/lib/llvm-12/lib/clang/12.0.1/include/stddef.h \
+  /usr/lib/llvm-12/lib/clang/12.0.1/include/__stddef_max_align_t.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/algorithm \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/stl_algo.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/algorithmfwd.h \

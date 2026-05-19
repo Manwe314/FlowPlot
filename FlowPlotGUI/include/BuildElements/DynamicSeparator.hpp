@@ -53,7 +53,7 @@ inline const DynamicSeparatorDef kDynamicSeparator = {
 		dynamicSeparatorState& state = DynamicSeparatorDef::getOrCreateState(FlowUi::toFlowId(context.elementID));
 		state.isPressed = true;
 		state.isDragging = true;
-		const FrameInput& input = context.uiManager.getCurrentFrameInput();
+		const FlowUi::FrameInput& input = context.uiManager.getCurrentFrameInput();
 		state.pressMouseAxis =
 			(context.params.orientation == dynamicSeparatorParams::Orientation::Horizontal)
 			? input.mouseY
@@ -85,8 +85,8 @@ inline const DynamicSeparatorDef kDynamicSeparator = {
 	nullptr,
 	+[](DynamicSeparatorDef::InteractionContext& context) {
 		dynamicSeparatorState& state = DynamicSeparatorDef::getOrCreateState(FlowUi::toFlowId(context.elementID));
-		const FrameInput& input = context.uiManager.getCurrentFrameInput();
-		const FrameInput& previousInput = context.uiManager.getPreviousFrameInput();
+		const FlowUi::FrameInput& input = context.uiManager.getCurrentFrameInput();
+		const FlowUi::FrameInput& previousInput = context.uiManager.getPreviousFrameInput();
 
 		if (!state.isDragging)
 		{

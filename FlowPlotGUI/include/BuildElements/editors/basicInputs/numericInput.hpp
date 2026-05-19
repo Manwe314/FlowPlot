@@ -422,13 +422,16 @@ inline const NumericInputFieldDef kNumericInputField = {
 
 		CLAY(rootId, root)
 		{
-			CLAY(typeHintId, {})
+			if (context.params.typeHintTextColor.a > 0.0f)
 			{
-				CLAY_TEXT(
-					context.uiManager.toClayString(typeHint),
-					CLAY_TEXT_CONFIG(typeHintConfig)
-				);
-			};
+				CLAY(typeHintId, {})
+				{
+					CLAY_TEXT(
+						context.uiManager.toClayString(typeHint),
+						CLAY_TEXT_CONFIG(typeHintConfig)
+					);
+				};
+			}
 
 			context.uiManager.createElement(kBasicInputField, inputPath)
 				.setParameters(std::move(inputParams))

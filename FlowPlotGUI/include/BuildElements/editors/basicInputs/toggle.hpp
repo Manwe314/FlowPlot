@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <cmath>
 #include <functional>
 #include <string>
 
@@ -64,7 +65,7 @@ inline const ToggleSwitchDef kToggleSwitch = {
 	nullptr,
 	+[](ToggleSwitchDef::InteractionContext& context) {
 		toggleSwitchState& state = ToggleSwitchDef::getOrCreateState(FlowUi::toFlowId(context.elementID));
-		const FrameInput& input = context.uiManager.getCurrentFrameInput();
+		const FlowUi::FrameInput& input = context.uiManager.getCurrentFrameInput();
 		if (!input.mouseDown[0])
 		{
 			state.isPressed = false;
@@ -74,11 +75,11 @@ inline const ToggleSwitchDef kToggleSwitch = {
 	+[](ToggleSwitchDef::BuildContext& context) {
 		(void)ToggleSwitchDef::getOrCreateState(FlowUi::toFlowId(context.elementID));
 
-		const float width = std::max(context.params.width, 1.0f);
+		const float width = std::max(std::round(context.params.width), 1.0f);
 		const float aspectRatio = std::max(context.params.aspectRatio, 0.001f);
-		const float height = std::max(width / aspectRatio, 1.0f);
+		const float height = std::max(std::round(width / aspectRatio), 1.0f);
 		const float knobDiameter = std::max(
-			height - static_cast<float>(context.params.togglePadding.top + context.params.togglePadding.bottom),
+			std::round(height - static_cast<float>(context.params.togglePadding.top + context.params.togglePadding.bottom)),
 			1.0f);
 
 		const Clay_ElementId rootId = context.uiManager.toClayEID(context.elementID);

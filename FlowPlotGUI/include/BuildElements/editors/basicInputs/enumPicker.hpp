@@ -21,7 +21,7 @@ struct enumPickerMenuParams {
 	std::string emptyOptionsText = "<no options>";
 	std::function<void(std::string_view)> onChange = nullptr;
 
-	Clay_Sizing sizing = Clay_Sizing{.width = CLAY_SIZING_FIXED(180), .height = CLAY_SIZING_FIT(0)};
+	Clay_Sizing sizing = Clay_Sizing{.width = CLAY_SIZING_FIT(100.0f, 180.0f), .height = CLAY_SIZING_FIT(0)};
 	Clay_Padding padding = Clay_Padding{8, 8, 6, 6};
 	Clay_Color backgroundColor = FlowUi::Flow_Color("#171a1fff");
 	Clay_Color hoverBackgroundColor = FlowUi::Flow_Color("#20252dff");
@@ -167,6 +167,163 @@ inline basicButtonParams enumPickerTransparentButtonParams(
 	return params;
 }
 
+struct enumPickerTriggerParams {
+	std::string valueText = "";
+	bool hasValueText = false;
+	FlowUi::TextureRef disclosureIcon = FlowUi::TextureRef{};
+	std::function<void()> onPressed = nullptr;
+
+	Clay_Sizing sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
+	Clay_Padding padding = Clay_Padding{2, 0, 0, 0};
+	Clay_Color backgroundColor = FlowUi::Flow_Color("#00000000");
+	Clay_Color hoverBackgroundColor = FlowUi::Flow_Color("#20252dff");
+	Clay_CornerRadius cornerRadius = CLAY_CORNER_RADIUS(0);
+	uint16_t childGap = 8;
+
+	uint16_t fontId = 0;
+	uint16_t fontSize = 14;
+	Clay_Color valueTextColor = FlowUi::Flow_Color("#f4f6f8ff");
+	Clay_TextElementConfigWrapMode valueTextWrapMode = CLAY_TEXT_WRAP_NONE;
+	Clay_TextAlignment valueTextAlignment = CLAY_TEXT_ALIGN_LEFT;
+
+	Clay_Sizing arrowButtonSizing = Clay_Sizing{.width = CLAY_SIZING_FIXED(22), .height = CLAY_SIZING_FIXED(22)};
+	Clay_Padding arrowButtonPadding = CLAY_PADDING_ALL(3);
+	Clay_Color arrowButtonBackgroundColor = FlowUi::Flow_Color("#00000000");
+	Clay_CornerRadius arrowButtonCornerRadius = CLAY_CORNER_RADIUS(4);
+	Clay_Color arrowButtonBorderColor = FlowUi::Flow_Color("#00000000");
+	Clay_BorderWidth arrowButtonBorderWidth = Clay_BorderWidth{0, 0, 0, 0, 0};
+	Clay_Sizing arrowIconContainerSizing = Clay_Sizing{.width = CLAY_SIZING_FIXED(14), .height = CLAY_SIZING_FIXED(14)};
+	Clay_Color arrowIconTintColor = FlowUi::Flow_Color("#ffffffff");
+};
+
+FLOWUI_DEV_REGISTER_STRUCT(
+	enumPickerTriggerParams,
+	FLOWUI_DEV_REFLECT_FIELD(enumPickerTriggerParams, valueText),
+	FLOWUI_DEV_REFLECT_FIELD(enumPickerTriggerParams, hasValueText),
+	FLOWUI_DEV_REFLECT_FIELD(enumPickerTriggerParams, sizing),
+	FLOWUI_DEV_REFLECT_FIELD(enumPickerTriggerParams, padding),
+	FLOWUI_DEV_REFLECT_FIELD(enumPickerTriggerParams, backgroundColor),
+	FLOWUI_DEV_REFLECT_FIELD(enumPickerTriggerParams, hoverBackgroundColor),
+	FLOWUI_DEV_REFLECT_FIELD(enumPickerTriggerParams, cornerRadius),
+	FLOWUI_DEV_REFLECT_FIELD(enumPickerTriggerParams, childGap),
+	FLOWUI_DEV_REFLECT_FIELD(enumPickerTriggerParams, fontId),
+	FLOWUI_DEV_REFLECT_FIELD(enumPickerTriggerParams, fontSize),
+	FLOWUI_DEV_REFLECT_FIELD(enumPickerTriggerParams, valueTextColor),
+	FLOWUI_DEV_REFLECT_FIELD(enumPickerTriggerParams, valueTextWrapMode),
+	FLOWUI_DEV_REFLECT_FIELD(enumPickerTriggerParams, valueTextAlignment),
+	FLOWUI_DEV_REFLECT_FIELD(enumPickerTriggerParams, arrowButtonSizing),
+	FLOWUI_DEV_REFLECT_FIELD(enumPickerTriggerParams, arrowButtonPadding),
+	FLOWUI_DEV_REFLECT_FIELD(enumPickerTriggerParams, arrowButtonBackgroundColor),
+	FLOWUI_DEV_REFLECT_FIELD(enumPickerTriggerParams, arrowButtonCornerRadius),
+	FLOWUI_DEV_REFLECT_FIELD(enumPickerTriggerParams, arrowButtonBorderColor),
+	FLOWUI_DEV_REFLECT_FIELD(enumPickerTriggerParams, arrowButtonBorderWidth),
+	FLOWUI_DEV_REFLECT_FIELD(enumPickerTriggerParams, arrowIconContainerSizing),
+	FLOWUI_DEV_REFLECT_FIELD(enumPickerTriggerParams, arrowIconTintColor));
+
+using EnumPickerTriggerDef = FlowUi::ElementDefinition<
+	enumPickerTriggerParams,
+	void,
+	void,
+	FLOW_DEF_ID("EnumPickerTrigger")>;
+using EnumPickerTriggerInteractionContext = EnumPickerTriggerDef::InteractionContext;
+
+inline const EnumPickerTriggerDef kEnumPickerTrigger = {
+	+[](EnumPickerTriggerInteractionContext& context) {
+		context.params.backgroundColor = context.params.hoverBackgroundColor;
+	},
+	+[](EnumPickerTriggerInteractionContext& context) {
+		if (context.params.onPressed != nullptr)
+		{
+			context.params.onPressed();
+		}
+	},
+	nullptr,
+	nullptr,
+	nullptr,
+	nullptr,
+	+[](EnumPickerTriggerDef::BuildContext& context) {
+		const Clay_ElementId rootId = context.uiManager.toClayEID(context.elementID);
+		const std::string valueButtonPath = context.createChildElementId("value-button");
+		const Clay_ElementId spacerId = context.uiManager.toClayEID(context.createChildElementId("spacer"));
+		const std::string arrowButtonPath = context.createChildElementId("arrow-button");
+
+		Clay_ElementDeclaration root{};
+		root.layout.layoutDirection = CLAY_LEFT_TO_RIGHT;
+		root.layout.sizing = context.params.sizing;
+		root.layout.padding = context.params.padding;
+		root.layout.childAlignment = {.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER};
+		root.layout.childGap = context.params.childGap;
+		root.backgroundColor = context.params.backgroundColor;
+		root.cornerRadius = context.params.cornerRadius;
+		root.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
+
+		Clay_Color valueTextColor = context.params.hasValueText
+			? context.params.valueTextColor
+			: Clay_Color{
+				.r = context.params.valueTextColor.r,
+				.g = context.params.valueTextColor.g,
+				.b = context.params.valueTextColor.b,
+				.a = context.params.valueTextColor.a * 0.62f,
+			};
+
+		basicButtonParams valueButtonParams{};
+		valueButtonParams.text = context.params.valueText;
+		valueButtonParams.contentMode = basicButtonParams::ContentMode::TextOnly;
+			valueButtonParams.padding = CLAY_PADDING_ALL(0);
+			valueButtonParams.sizing = Clay_Sizing{
+				.width = CLAY_SIZING_GROW(0),
+				.height = CLAY_SIZING_FIT(0),
+			};
+		valueButtonParams.backgroundColor = FlowUi::Flow_Color("#00000000");
+		valueButtonParams.hoverBackgroundColor = FlowUi::Flow_Color("#00000000");
+		valueButtonParams.cornerRadius = CLAY_CORNER_RADIUS(0);
+		valueButtonParams.borderColor = FlowUi::Flow_Color("#00000000");
+		valueButtonParams.borderWidth = Clay_BorderWidth{0, 0, 0, 0, 0};
+		valueButtonParams.childAlignment = {.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER};
+		valueButtonParams.textWrapMode = context.params.valueTextWrapMode;
+		valueButtonParams.textAlignment = context.params.valueTextAlignment;
+		valueButtonParams.fontId = context.params.fontId;
+		valueButtonParams.fontSize = context.params.fontSize;
+		valueButtonParams.textColor = valueTextColor;
+
+		basicButtonParams arrowButtonParams{};
+		arrowButtonParams.contentMode = basicButtonParams::ContentMode::IconOnly;
+		arrowButtonParams.icon = context.params.disclosureIcon;
+		arrowButtonParams.padding = context.params.arrowButtonPadding;
+		arrowButtonParams.sizing = context.params.arrowButtonSizing;
+		arrowButtonParams.backgroundColor = context.params.arrowButtonBackgroundColor;
+		arrowButtonParams.hoverBackgroundColor = context.params.arrowButtonBackgroundColor;
+		arrowButtonParams.cornerRadius = context.params.arrowButtonCornerRadius;
+		arrowButtonParams.borderColor = context.params.arrowButtonBorderColor;
+		arrowButtonParams.borderWidth = context.params.arrowButtonBorderWidth;
+			arrowButtonParams.iconContainerSizing = context.params.arrowIconContainerSizing;
+			arrowButtonParams.iconTintColor = context.params.arrowIconTintColor;
+
+			Clay_ElementDeclaration spacer{};
+			spacer.layout.sizing = {
+				.width = CLAY_SIZING_GROW(0),
+				.height = CLAY_SIZING_PERCENT(1.0f),
+			};
+
+			const FlowUi::ElementDrawOptions passiveDraw =
+				FlowUi::ElementDrawOptions::SkipEventCallbacks |
+				FlowUi::ElementDrawOptions::SkipLogicCallback;
+
+		CLAY(rootId, root)
+		{
+				context.uiManager.createElement(kBasicButton, valueButtonPath)
+					.setParameters(std::move(valueButtonParams))
+					.draw(passiveDraw);
+
+				CLAY(spacerId, spacer){};
+
+				context.uiManager.createElement(kBasicButton, arrowButtonPath)
+					.setParameters(std::move(arrowButtonParams))
+					.draw(passiveDraw);
+		};
+	},
+};
+
 inline const EnumPickerMenuDef kEnumPickerMenu = {
 	nullptr,
 	nullptr,
@@ -191,8 +348,7 @@ inline const EnumPickerMenuDef kEnumPickerMenu = {
 		}
 
 		const Clay_ElementId rootId = context.uiManager.toClayEID(context.elementID);
-		const std::string valueButtonPath = context.createChildElementId("value-button");
-		const std::string arrowButtonPath = context.createChildElementId("arrow-button");
+		const std::string triggerPath = context.createChildElementId("trigger");
 
 		Clay_ElementDeclaration root{};
 		root.layout.layoutDirection = CLAY_LEFT_TO_RIGHT;
@@ -204,75 +360,34 @@ inline const EnumPickerMenuDef kEnumPickerMenu = {
 		root.cornerRadius = context.params.cornerRadius;
 		root.border = {.color = context.params.borderColor, .width = context.params.borderWidth};
 
-		Clay_TextElementConfig valueTextConfig{};
-		valueTextConfig.textColor = hasValueText
-			? context.params.valueTextColor
-			: Clay_Color{
-				.r = context.params.valueTextColor.r,
-				.g = context.params.valueTextColor.g,
-				.b = context.params.valueTextColor.b,
-				.a = context.params.valueTextColor.a * 0.62f,
-			};
-		valueTextConfig.fontSize = context.params.fontSize;
-		valueTextConfig.wrapMode = context.params.valueTextWrapMode;
-		valueTextConfig.textAlignment = context.params.valueTextAlignment;
-		valueTextConfig.fontId = context.params.fontId;
-
-		basicButtonParams valueButtonParams{};
-		valueButtonParams.text = currentValue;
-		valueButtonParams.contentMode = basicButtonParams::ContentMode::TextOnly;
-		valueButtonParams.onHoveredCallback = [hoverColor = context.params.hoverBackgroundColor](
-			BasicButtonInteractionContext buttonContext) {
-			buttonContext.params.backgroundColor = hoverColor;
-		};
-		valueButtonParams.onPressedCallback = [elementId = context.elementID](BasicButtonInteractionContext) {
+		enumPickerTriggerParams triggerParams{};
+		triggerParams.valueText = currentValue;
+		triggerParams.hasValueText = hasValueText;
+		triggerParams.disclosureIcon = disclosureIcon;
+		triggerParams.onPressed = [elementId = context.elementID]() {
 			enumPickerMenuToggleExpanded(elementId);
 		};
-		valueButtonParams.padding = CLAY_PADDING_ALL(0);
-		valueButtonParams.sizing = Clay_Sizing{
-			.width = CLAY_SIZING_GROW(0),
-			.height = CLAY_SIZING_FIT(0),
-		};
-		valueButtonParams.backgroundColor = FlowUi::Flow_Color("#00000000");
-		valueButtonParams.hoverBackgroundColor = context.params.hoverBackgroundColor;
-		valueButtonParams.cornerRadius = CLAY_CORNER_RADIUS(0);
-		valueButtonParams.borderColor = FlowUi::Flow_Color("#00000000");
-		valueButtonParams.borderWidth = Clay_BorderWidth{0, 0, 0, 0, 0};
-		valueButtonParams.childAlignment = {.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER};
-		valueButtonParams.textWrapMode = context.params.valueTextWrapMode;
-		valueButtonParams.textAlignment = context.params.valueTextAlignment;
-		valueButtonParams.fontId = context.params.fontId;
-		valueButtonParams.fontSize = context.params.fontSize;
-		valueButtonParams.textColor = valueTextConfig.textColor;
-
-		basicButtonParams arrowButtonParams{};
-		arrowButtonParams.contentMode = basicButtonParams::ContentMode::IconOnly;
-		arrowButtonParams.icon = disclosureIcon;
-		arrowButtonParams.onHoveredCallback = [hoverColor = context.params.arrowButtonHoverBackgroundColor](
-			BasicButtonInteractionContext buttonContext) {
-			buttonContext.params.backgroundColor = hoverColor;
-		};
-		arrowButtonParams.onPressedCallback = [elementId = context.elementID](BasicButtonInteractionContext) {
-			enumPickerMenuToggleExpanded(elementId);
-		};
-		arrowButtonParams.padding = context.params.arrowButtonPadding;
-		arrowButtonParams.sizing = context.params.arrowButtonSizing;
-		arrowButtonParams.backgroundColor = context.params.arrowButtonBackgroundColor;
-		arrowButtonParams.hoverBackgroundColor = context.params.arrowButtonHoverBackgroundColor;
-		arrowButtonParams.cornerRadius = context.params.arrowButtonCornerRadius;
-		arrowButtonParams.borderColor = context.params.arrowButtonBorderColor;
-		arrowButtonParams.borderWidth = context.params.arrowButtonBorderWidth;
-		arrowButtonParams.iconContainerSizing = context.params.arrowIconContainerSizing;
-		arrowButtonParams.iconTintColor = context.params.arrowIconTintColor;
+		triggerParams.backgroundColor = FlowUi::Flow_Color("#00000000");
+		triggerParams.hoverBackgroundColor = context.params.hoverBackgroundColor;
+		triggerParams.childGap = context.params.childGap;
+		triggerParams.fontId = context.params.fontId;
+		triggerParams.fontSize = context.params.fontSize;
+		triggerParams.valueTextColor = context.params.valueTextColor;
+		triggerParams.valueTextWrapMode = context.params.valueTextWrapMode;
+		triggerParams.valueTextAlignment = context.params.valueTextAlignment;
+		triggerParams.arrowButtonSizing = context.params.arrowButtonSizing;
+		triggerParams.arrowButtonPadding = context.params.arrowButtonPadding;
+		triggerParams.arrowButtonBackgroundColor = context.params.arrowButtonBackgroundColor;
+		triggerParams.arrowButtonCornerRadius = context.params.arrowButtonCornerRadius;
+		triggerParams.arrowButtonBorderColor = context.params.arrowButtonBorderColor;
+		triggerParams.arrowButtonBorderWidth = context.params.arrowButtonBorderWidth;
+		triggerParams.arrowIconContainerSizing = context.params.arrowIconContainerSizing;
+		triggerParams.arrowIconTintColor = context.params.arrowIconTintColor;
 
 		CLAY(rootId, root)
 		{
-			context.uiManager.createElement(kBasicButton, valueButtonPath)
-				.setParameters(std::move(valueButtonParams))
-				.draw();
-
-			context.uiManager.createElement(kBasicButton, arrowButtonPath)
-				.setParameters(std::move(arrowButtonParams))
+			context.uiManager.createElement(kEnumPickerTrigger, triggerPath)
+				.setParameters(std::move(triggerParams))
 				.draw();
 
 			if (state.isExpanded)

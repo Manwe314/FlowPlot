@@ -108,7 +108,7 @@ inline const PlotviewPortDef kPlotviewPort = {
 		plotviewPortState& state = PlotviewPortDef::getOrCreateState(FlowUi::toFlowId(context.elementID));
 		plotviewPortEnsureCameraInitialized(state, context.params.guiState);
 
-		const FrameInput& input = context.uiManager.getCurrentFrameInput();
+		const FlowUi::FrameInput& input = context.uiManager.getCurrentFrameInput();
 		const bool middleMouseDown = input.mouseDown[2];
 		if (middleMouseDown)
 		{

@@ -75,6 +75,7 @@ inline const ScatterColorMappingSettingsDef kScatterColorMappingSettings = {
 			[&]() {
 				mappingSettingsEditorDrawInputRow(context, "row-type", context.params.shell, [&](const std::string& rowPath) {
 					enumPickerCardParams params = context.params.typeInput;
+					mappingSettingsPrepareEnumPickerCard(params);
 					params.hintText = "Type";
 					params.options = mappingSettingsTypeOptions();
 					params.value = context.params.value.type;
@@ -93,6 +94,7 @@ inline const ScatterColorMappingSettingsDef kScatterColorMappingSettings = {
 				{
 					mappingSettingsEditorDrawInputRow(context, "row-bins", context.params.shell, [&](const std::string& rowPath) {
 						twoColumnInputCardParams params = context.params.binsInput;
+						mappingSettingsPrepareTwoColumnInputCard(params);
 						params.hintText = "Bins";
 						params.fontId = context.params.shell.fontId;
 						params.table.categories = context.params.value.categories;
@@ -155,6 +157,7 @@ inline const ScatterColorMappingSettingsDef kScatterColorMappingSettings = {
 				{
 					mappingSettingsEditorDrawInputRow(context, "row-min-value", context.params.shell, [&](const std::string& rowPath) {
 						colorPickerCardParams params = context.params.minValueInput;
+						mappingSettingsPrepareColorPickerCard(params);
 						params.hintText = "Min Value";
 						params.value = context.params.value.minValue;
 						params.fontId = context.params.shell.fontId;
@@ -169,6 +172,7 @@ inline const ScatterColorMappingSettingsDef kScatterColorMappingSettings = {
 
 					mappingSettingsEditorDrawInputRow(context, "row-max-value", context.params.shell, [&](const std::string& rowPath) {
 						colorPickerCardParams params = context.params.maxValueInput;
+						mappingSettingsPrepareColorPickerCard(params);
 						params.hintText = "Max Value";
 						params.value = context.params.value.maxValue;
 						params.fontId = context.params.shell.fontId;

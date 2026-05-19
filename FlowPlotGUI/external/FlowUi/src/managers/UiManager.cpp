@@ -157,7 +157,7 @@ namespace FlowUi
 				return Clay_Dimensions{ 0.0f, 0.0f };
 			}
 
-		const FontManager::FontFaceData* fontFace = FlowUi::detail::ResolveFontFace(fontManager_, config->fontId);
+		const FlowUi::Font::FontFaceData* fontFace = FlowUi::detail::ResolveFontFace(fontManager_, config->fontId);
 		if (!fontFace) {
 			const float fallbackEmPixels = static_cast<float>(std::max<uint16_t>(1u, config->fontSize)) * pointsToPixelsScale_;
 			return Clay_Dimensions{
@@ -362,24 +362,24 @@ namespace FlowUi
 
 
 
-	Clay_ElementId flowUiToClayElementId(UiManager& uiManager, std::string_view elementID) {
+namespace detail {
+
+	Clay_ElementId toClayElementId(UiManager& uiManager, std::string_view elementID) {
 		return uiManager.toClayEID(elementID);
 	}
 
-	const InteractionSnapshot& flowUiPreviousInteraction(const UiManager& uiManager) {
+	const InteractionSnapshot& previousInteraction(const UiManager& uiManager) {
 		return uiManager.getPreviousFramesInteraction();
 	}
 
-	void flowUiPushConstructedElement(UiManager& uiManager, Clay_ElementId elementId) {
+	void pushConstructedElement(UiManager& uiManager, Clay_ElementId elementId) {
 		uiManager.pushConstructedElement(elementId);
 	}
 
 #if FLOW_UI_DEV_MODE
-	devMode::DevRuntime& flowUiDevRuntime(UiManager& uiManager) {
-		return uiManager.devRuntime();
-	}
+namespace devModeBridge {
 
-	std::size_t flowUiDevBeginCapturedFlowElement(
+	std::size_t beginCapturedFlowElement(
 		UiManager& uiManager,
 		uint64_t definitionId,
 		uint64_t definitionTypeHash,
@@ -431,9 +431,23 @@ namespace FlowUi
 		return captureIndex;
 	}
 
-	bool flowUiDevEndCapturedFlowElement(UiManager& uiManager) {
+	bool endCapturedFlowElement(UiManager& uiManager) {
 		return uiManager.devRuntime().endCapturedElement();
 	}
+
+} // namespace devModeBridge
+#endif
+
+} // namespace detail
+
+#if FLOW_UI_DEV_MODE
+namespace devMode::elementCapture {
+
+	DevRuntime& runtime(UiManager& uiManager) {
+		return uiManager.devRuntime();
+	}
+
+} // namespace devMode::elementCapture
 #endif
 
 	void UiManager::drawConstructed() {

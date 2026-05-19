@@ -16,7 +16,11 @@
 #include <devMode/devApi.hpp>
 
 #include "BuildElements/BasicButton.hpp"
+#include "BuildElements/editors/basicInputs/colorPicker.hpp"
+#include "BuildElements/editors/basicInputs/enumPicker.hpp"
 #include "BuildElements/editors/basicInputs/numericInput.hpp"
+#include "BuildElements/editors/basicInputs/stringInput.hpp"
+#include "BuildElements/editors/basicInputs/twoColumnInput.hpp"
 #include "FlowPlot_Defaults.hpp"
 #include "FlowPlotGui.hpp"
 
@@ -102,6 +106,47 @@ inline float mappingSettingsParseFloatOrZero(std::string_view text)
 		-static_cast<double>(std::numeric_limits<float>::max()),
 		static_cast<double>(std::numeric_limits<float>::max()));
 	return static_cast<float>(normalized);
+}
+
+inline void mappingSettingsPrepareStringInputCard(stringInputCardParams& params)
+{
+	params.cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
+	params.cardLayout = CLAY_TOP_TO_BOTTOM;
+	params.textWrapMode = CLAY_TEXT_WRAP_WORDS;
+}
+
+inline void mappingSettingsPrepareEnumPickerCard(enumPickerCardParams& params)
+{
+	params.cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
+	params.cardLayout = CLAY_TOP_TO_BOTTOM;
+	params.textWrapMode = CLAY_TEXT_WRAP_WORDS;
+	params.menu.sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
+}
+
+inline void mappingSettingsPrepareNumericInputCard(numericInputCardParams& params)
+{
+	params.cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
+	params.cardLayout = CLAY_TOP_TO_BOTTOM;
+	params.textWrapMode = CLAY_TEXT_WRAP_WORDS;
+	params.field.sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
+}
+
+inline void mappingSettingsPrepareColorPickerCard(colorPickerCardParams& params)
+{
+	params.cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
+	params.cardLayout = CLAY_TOP_TO_BOTTOM;
+	params.textWrapMode = CLAY_TEXT_WRAP_WORDS;
+	params.swatch.sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
+}
+
+inline void mappingSettingsPrepareTwoColumnInputCard(twoColumnInputCardParams& params)
+{
+	params.cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0, 360)};
+	params.cardLayout = CLAY_TOP_TO_BOTTOM;
+	params.textWrapMode = CLAY_TEXT_WRAP_WORDS;
+	params.table.sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
+	params.table.firstColumnSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
+	params.table.secondColumnSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
 }
 
 struct mappingSettingsEditorShellParams {
@@ -404,6 +449,7 @@ inline void mappingSettingsEditorDrawInputRow(
 	const std::string rowPath = context.createChildElementId(localId);
 	const Clay_ElementId rowId = context.uiManager.toClayEID(rowPath);
 	const Clay_ElementId insetId = context.uiManager.toClayEID(rowPath + "/inset");
+	const Clay_ElementId contentId = context.uiManager.toClayEID(rowPath + "/content");
 
 	Clay_ElementDeclaration row{};
 	row.layout.layoutDirection = CLAY_LEFT_TO_RIGHT;
@@ -418,9 +464,18 @@ inline void mappingSettingsEditorDrawInputRow(
 	inset.layout.sizing = params.insetSizing;
 	inset.backgroundColor = FlowUi::Flow_Color("#00000000");
 
+	Clay_ElementDeclaration content{};
+	content.layout.sizing = {.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
+	content.layout.layoutDirection = CLAY_TOP_TO_BOTTOM;
+	content.layout.childAlignment = {.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_TOP};
+	content.backgroundColor = FlowUi::Flow_Color("#00000000");
+
 	CLAY(rowId, row)
 	{
 		CLAY(insetId, inset) {};
-		drawChild(rowPath);
+		CLAY(contentId, content)
+		{
+			drawChild(rowPath);
+		};
 	};
 }

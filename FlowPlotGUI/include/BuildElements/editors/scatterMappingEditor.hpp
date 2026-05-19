@@ -87,6 +87,7 @@ inline const ScatterMappingSettingsEditorDef kScatterMappingSettingsEditor = {
 				auto drawString = [&](std::string_view rowId, stringInputCardParams inputParams, std::string hint, std::string valueText, auto assign) {
 					mappingSettingsEditorDrawInputRow(context, rowId, context.params.shell, [&](const std::string& rowPath) {
 						stringInputCardParams params = std::move(inputParams);
+						mappingSettingsPrepareStringInputCard(params);
 						params.hintText = std::move(hint);
 						params.value = std::move(valueText);
 						params.fontId = context.params.shell.fontId;
@@ -113,6 +114,7 @@ inline const ScatterMappingSettingsEditorDef kScatterMappingSettingsEditor = {
 
 				mappingSettingsEditorDrawInputRow(context, "row-color-mapping", context.params.shell, [&](const std::string& rowPath) {
 					scatterColorMappingSettingsParams params = context.params.colorMappingInput;
+					params.shell.cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
 					params.value = context.params.value.colorMapping;
 					params.shell.fontId = context.params.shell.fontId;
 					params.onChange = [value = context.params.value, onChange = context.params.onChange](
@@ -131,6 +133,7 @@ inline const ScatterMappingSettingsEditorDef kScatterMappingSettingsEditor = {
 
 				mappingSettingsEditorDrawInputRow(context, "row-size-mapping", context.params.shell, [&](const std::string& rowPath) {
 					scatterSizeMappingSettingsParams params = context.params.sizeMappingInput;
+					params.shell.cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
 					params.value = context.params.value.sizeMapping;
 					params.shell.fontId = context.params.shell.fontId;
 					params.onChange = [value = context.params.value, onChange = context.params.onChange](
@@ -149,6 +152,7 @@ inline const ScatterMappingSettingsEditorDef kScatterMappingSettingsEditor = {
 
 				mappingSettingsEditorDrawInputRow(context, "row-label-mapping", context.params.shell, [&](const std::string& rowPath) {
 					twoColumnInputCardParams params = context.params.labelMappingInput;
+					mappingSettingsPrepareTwoColumnInputCard(params);
 					params.hintText = "Label Mapping";
 					params.fontId = context.params.shell.fontId;
 					params.table.categories = context.params.value.labelMapping.categories;

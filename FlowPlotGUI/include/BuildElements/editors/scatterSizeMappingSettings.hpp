@@ -79,6 +79,7 @@ inline const ScatterSizeMappingSettingsDef kScatterSizeMappingSettings = {
 			[&]() {
 				mappingSettingsEditorDrawInputRow(context, "row-type", context.params.shell, [&](const std::string& rowPath) {
 					enumPickerCardParams params = context.params.typeInput;
+					mappingSettingsPrepareEnumPickerCard(params);
 					params.hintText = "Type";
 					params.options = mappingSettingsTypeOptions();
 					params.value = context.params.value.type;
@@ -97,6 +98,7 @@ inline const ScatterSizeMappingSettingsDef kScatterSizeMappingSettings = {
 				{
 					mappingSettingsEditorDrawInputRow(context, "row-bins", context.params.shell, [&](const std::string& rowPath) {
 						twoColumnInputCardParams params = context.params.binsInput;
+						mappingSettingsPrepareTwoColumnInputCard(params);
 						params.hintText = "Bins";
 						params.fontId = context.params.shell.fontId;
 						params.table.categories = context.params.value.categories;
@@ -160,6 +162,7 @@ inline const ScatterSizeMappingSettingsDef kScatterSizeMappingSettings = {
 				{
 					mappingSettingsEditorDrawInputRow(context, "row-min-value", context.params.shell, [&](const std::string& rowPath) {
 						numericInputCardParams params = context.params.minValueInput;
+						mappingSettingsPrepareNumericInputCard(params);
 						params.hintText = "Min Value";
 						params.valueType = numericInputValueType::Float;
 						params.value = static_cast<double>(context.params.value.minValue);
@@ -177,6 +180,7 @@ inline const ScatterSizeMappingSettingsDef kScatterSizeMappingSettings = {
 
 					mappingSettingsEditorDrawInputRow(context, "row-max-value", context.params.shell, [&](const std::string& rowPath) {
 						numericInputCardParams params = context.params.maxValueInput;
+						mappingSettingsPrepareNumericInputCard(params);
 						params.hintText = "Max Value";
 						params.valueType = numericInputValueType::Float;
 						params.value = static_cast<double>(context.params.value.maxValue);

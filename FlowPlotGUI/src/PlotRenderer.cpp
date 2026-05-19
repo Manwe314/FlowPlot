@@ -357,6 +357,17 @@ void destroyBuffer(VmaAllocator allocator, PlotRenderer::AllocatedBuffer& buffer
 	buffer = {};
 }
 
+void retireBuffer(
+	std::vector<PlotRenderer::AllocatedBuffer>& retiredBuffers,
+	PlotRenderer::AllocatedBuffer& buffer)
+{
+	if (buffer.buffer != VK_NULL_HANDLE)
+	{
+		retiredBuffers.push_back(buffer);
+	}
+	buffer = {};
+}
+
 void createMappedBuffer(
 	VmaAllocator allocator,
 	VkDeviceSize size,
@@ -395,9 +406,14 @@ void createMappedBuffer(
 }
 
 template <typename T>
-void uploadVector(VmaAllocator allocator, PlotRenderer::AllocatedBuffer& buffer, const std::vector<T>& values)
+void uploadVector(
+	VmaAllocator allocator,
+	PlotRenderer::AllocatedBuffer& buffer,
+	const std::vector<T>& values,
+	std::vector<PlotRenderer::AllocatedBuffer>& retiredBuffers)
 {
 	const VkDeviceSize byteSize = static_cast<VkDeviceSize>(values.size() * sizeof(T));
+	retireBuffer(retiredBuffers, buffer);
 	if (byteSize == 0)
 	{
 		return;
@@ -406,11 +422,7 @@ void uploadVector(VmaAllocator allocator, PlotRenderer::AllocatedBuffer& buffer,
 	{
 		throw std::runtime_error("Cannot upload plot renderer buffers without a VMA allocator.");
 	}
-	if (buffer.buffer == VK_NULL_HANDLE || buffer.size < byteSize)
-	{
-		destroyBuffer(allocator, buffer);
-		createMappedBuffer(allocator, byteSize, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, buffer);
-	}
+	createMappedBuffer(allocator, byteSize, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, buffer);
 	if (buffer.mapped == nullptr)
 	{
 		throw std::runtime_error("Plot renderer upload buffer is not mapped.");
@@ -608,6 +620,7 @@ void PlotRenderer::init(const FlowUi::ViewPortVulkanInterop& interop, VkFormat c
 		vkCheck(
 			vkAllocateDescriptorSets(device_, &allocInfo, descriptorSets_.data()),
 			"Failed to allocate plot descriptor sets.");
+		retiredBuffersByFrame_.assign(descriptorFrameCount, {});
 
 		VkPushConstantRange pushConstantRange{};
 		pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
@@ -649,6 +662,10 @@ void PlotRenderer::destroy()
 {
 	if (device_ != VK_NULL_HANDLE)
 	{
+		// Full renderer teardown is rare; wait so pipelines/descriptors are not
+		// destroyed while older submitted viewport command buffers still use them.
+		(void)vkDeviceWaitIdle(device_);
+		destroyRetiredBuffers();
 		if (boxPipeline_ != VK_NULL_HANDLE)
 		{
 			vkDestroyPipeline(device_, boxPipeline_, nullptr);
@@ -686,10 +703,15 @@ void PlotRenderer::destroy()
 			vkDestroyShaderModule(device_, fragmentShader_, nullptr);
 		}
 	}
+	else
+	{
+		destroyRetiredBuffers();
+	}
 	destroyBuffer(allocator_, boxBuffer_);
 	destroyBuffer(allocator_, markerBuffer_);
 	destroyBuffer(allocator_, textGlyphBuffer_);
 	destroyBuffer(allocator_, polylineBuffer_);
+	retiredBuffersByFrame_.clear();
 
 	device_ = VK_NULL_HANDLE;
 	allocator_ = nullptr;
@@ -715,6 +737,12 @@ void PlotRenderer::destroy()
 
 void PlotRenderer::setInput(PlotRendererInput input)
 {
+	const float previousZoom = std::max(input_.camera.zoom, 1.0e-6f);
+	const float nextZoom = std::max(input.camera.zoom, 1.0e-6f);
+	if (std::abs(previousZoom - nextZoom) > 1.0e-6f)
+	{
+		runsDirty_ = true;
+	}
 	input_ = input;
 }
 
@@ -750,6 +778,7 @@ void PlotRenderer::record(const FlowUi::ViewPortRenderContext& ctx)
 		return;
 	}
 
+	reclaimRetiredBuffers(ctx.frameIndex);
 	rebuildIfNeeded(ctx);
 	recordDrawPlan(ctx);
 }
@@ -963,8 +992,8 @@ void PlotRenderer::buildRuns()
 						concreteCommand.fontFamily,
 						concreteCommand.fontWeight,
 						toFlowUiFontStyle(concreteCommand.fontStyle));
-					const FontManager::FontFaceData* fontFace = input_.fontManager->getFontById(fontId);
-					const FontManager::FontVariantData* variant = fontFace != nullptr ? fontFace->defaultVariant() : nullptr;
+					const FlowUi::Font::FontFaceData* fontFace = input_.fontManager->getFontById(fontId);
+					const FlowUi::Font::FontVariantData* variant = fontFace != nullptr ? fontFace->defaultVariant() : nullptr;
 					if (fontFace == nullptr || variant == nullptr)
 					{
 						return;
@@ -997,7 +1026,6 @@ void PlotRenderer::buildRuns()
 					{
 						originY += concreteCommand.box.h - layout.height;
 					}
-					originY += layout.ascent;
 
 					beginRun(RunType::Text);
 					for (const FlowPlot::GlyphPlacement& glyphPlacement : layout.glyphs)
@@ -1007,12 +1035,13 @@ void PlotRenderer::buildRuns()
 						{
 							continue;
 						}
-						const FontManager::GlyphData& glyph = variant->glyphs[glyphIt->second];
+						const FlowUi::Font::GlyphData& glyph = variant->glyphs[glyphIt->second];
 						const float scale = concreteCommand.fontSize / std::max(variant->emSize, 1.0e-6f);
+						const float baselineY = originY + glyphPlacement.y;
 						const float x0 = originX + glyphPlacement.x + glyph.planeLeft * scale;
-						const float y0 = originY - glyphPlacement.y - glyph.planeTop * scale;
+						const float y0 = baselineY - glyph.planeTop * scale;
 						const float x1 = originX + glyphPlacement.x + glyph.planeRight * scale;
-						const float y1 = originY - glyphPlacement.y - glyph.planeBottom * scale;
+						const float y1 = baselineY - glyph.planeBottom * scale;
 						const float invAtlasW = fontFace->atlasWidth > 0 ? 1.0f / static_cast<float>(fontFace->atlasWidth) : 0.0f;
 						const float invAtlasH = fontFace->atlasHeight > 0 ? 1.0f / static_cast<float>(fontFace->atlasHeight) : 0.0f;
 						const float sourceAtlasHeight = static_cast<float>(fontFace->sourceAtlasHeight);
@@ -1045,11 +1074,44 @@ void PlotRenderer::buildRuns()
 
 void PlotRenderer::uploadRuns(const FlowUi::ViewPortRenderContext& ctx)
 {
-	(void)ctx;
-	uploadVector(allocator_, boxBuffer_, drawPlan_.boxes);
-	uploadVector(allocator_, markerBuffer_, drawPlan_.markers);
-	uploadVector(allocator_, textGlyphBuffer_, drawPlan_.textGlyphs);
-	uploadVector(allocator_, polylineBuffer_, drawPlan_.polylineVertices);
+	if (retiredBuffersByFrame_.empty())
+	{
+		retiredBuffersByFrame_.resize(std::max<std::size_t>(descriptorSets_.size(), 1u));
+	}
+	std::vector<AllocatedBuffer>& retiredBuffers =
+		retiredBuffersByFrame_[ctx.frameIndex % retiredBuffersByFrame_.size()];
+	uploadVector(allocator_, boxBuffer_, drawPlan_.boxes, retiredBuffers);
+	uploadVector(allocator_, markerBuffer_, drawPlan_.markers, retiredBuffers);
+	uploadVector(allocator_, textGlyphBuffer_, drawPlan_.textGlyphs, retiredBuffers);
+	uploadVector(allocator_, polylineBuffer_, drawPlan_.polylineVertices, retiredBuffers);
+}
+
+void PlotRenderer::reclaimRetiredBuffers(std::uint32_t frameIndex)
+{
+	if (retiredBuffersByFrame_.empty())
+	{
+		return;
+	}
+
+	std::vector<AllocatedBuffer>& retiredBuffers =
+		retiredBuffersByFrame_[frameIndex % retiredBuffersByFrame_.size()];
+	for (AllocatedBuffer& buffer : retiredBuffers)
+	{
+		destroyBuffer(allocator_, buffer);
+	}
+	retiredBuffers.clear();
+}
+
+void PlotRenderer::destroyRetiredBuffers()
+{
+	for (std::vector<AllocatedBuffer>& retiredBuffers : retiredBuffersByFrame_)
+	{
+		for (AllocatedBuffer& buffer : retiredBuffers)
+		{
+			destroyBuffer(allocator_, buffer);
+		}
+		retiredBuffers.clear();
+	}
 }
 
 void PlotRenderer::updateDescriptorSet(std::uint32_t frameIndex)
@@ -1133,7 +1195,7 @@ void PlotRenderer::updateDescriptorSet(std::uint32_t frameIndex)
 
 	if (input_.fontManager != nullptr)
 	{
-		const FontManager::AtlasArrayResource& atlas = input_.fontManager->getAtlasResource();
+		const FlowUi::Font::AtlasArrayResource& atlas = input_.fontManager->getAtlasResource();
 		if (atlas.view != VK_NULL_HANDLE && atlas.sampler != VK_NULL_HANDLE && atlas.layersUsed > 0u)
 		{
 			imageInfos[0].sampler = atlas.sampler;
@@ -1171,7 +1233,8 @@ void PlotRenderer::triangulatePolyline(const FlowPlot::PolylineCommand& cmd)
 	};
 
 	const PackedColor color = packColor(cmd.color);
-	const float halfWidth = std::max(cmd.width, 0.0f) * 0.5f;
+	const float minWorldWidth = 1.0f / std::max(input_.camera.zoom, 1.0e-6f);
+	const float halfWidth = std::max(cmd.width, minWorldWidth) * 0.5f;
 	constexpr float kJoinEpsilon = 1.0e-4f;
 	constexpr float kMiterLimit = 200.0f;
 	constexpr int kRoundCapSegments = 16;
@@ -1409,7 +1472,7 @@ void PlotRenderer::recordDrawPlan(const FlowUi::ViewPortRenderContext& ctx)
 		{
 			continue;
 		}
-		const FontManager::AtlasArrayResource* atlas = nullptr;
+		const FlowUi::Font::AtlasArrayResource* atlas = nullptr;
 		if (input_.fontManager != nullptr)
 		{
 			atlas = &input_.fontManager->getAtlasResource();
