@@ -173,7 +173,7 @@ std::vector<RunningDataset> makeRunningDatasetsForTemplate(
 
 TemplateImportResult importTemplateFromPath(
 	state& guiState,
-	FontManager* fontManager,
+	FlowUi::FontManager* fontManager,
 	const std::filesystem::path& path)
 {
 	TemplateImportResult result{};
@@ -196,8 +196,8 @@ TemplateImportResult importTemplateFromPath(
 			guiState.lastTemplateDialogDirectory = path.parent_path();
 		}
 
-		markTemplateChanged(guiState);
-		markDatasetsChanged(guiState);
+		++guiState.templateRevision;
+		++guiState.datasetRevision;
 		markViewportChanged(guiState);
 
 		if (!fontPaths.empty())
@@ -206,6 +206,8 @@ TemplateImportResult importTemplateFromPath(
 			result.importedFontCount = fontResult.addedCount;
 			result.errors.insert(result.errors.end(), fontResult.errors.begin(), fontResult.errors.end());
 		}
+
+		resetDocumentSession(guiState);
 	}
 	catch (const std::exception& e)
 	{
@@ -218,7 +220,7 @@ TemplateImportResult importTemplateFromPath(
 
 TemplateImportResult ImportTemplateWithImportDialog(
 	state& guiState,
-	FontManager* fontManager,
+	FlowUi::FontManager* fontManager,
 	void* nativeWindowHandle)
 {
 	TemplateImportResult result{};

@@ -3,24 +3,35 @@
   "kind":"params",
   "stats": {
     "patchedDefinitionTargets":0,
-    "patchedInstanceTargets":1,
-    "patchedFiles":1,
+    "patchedInstanceTargets":2,
+    "patchedFiles":2,
     "unresolvedCount":0
   },
   "definitions": [
   ],
   "instances": [
     {
-      "definitionId":15016254223066541129,
-      "definitionName":"PanelTitle",
-      "flowId":7493861217137655789,
-      "elementId":"PlotViewPort/title",
-      "sourceFile":"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/PlotviewPort.hpp",
-      "sourceLine":54,
+      "definitionId":7772706737753820503,
+      "definitionName":"BasicButton",
+      "flowId":13257753128023119995,
+      "elementId":"DataInput/header/add-row-container/add-row",
+      "sourceFile":"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/DataInputHeader.hpp",
+      "sourceLine":477,
       "changes": [
-        {"fieldHash":6919348209619017416,"fieldName":"minHeight","fieldTypeHash":15867933128970588987,"valueKind":"int64","value":"20"},
-        {"fieldHash":10401417848386307212,"fieldName":"titleColor","fieldTypeHash":1038404891235700713,"valueKind":"float4","value":"Clay_Color{r=244, g=246, b=248, a=89}"},
-        {"fieldHash":744683027222955085,"fieldName":"titleFontSize","fieldTypeHash":5516555141030549105,"valueKind":"int64","value":"12"}
+        {"fieldHash":105616063399437942,"fieldName":"padding","fieldTypeHash":15937443097836116563,"valueKind":"edgeu16","value":"Clay_Padding{left=10, right=12, top=0, bottom=0}"}
+      ]
+    },
+    {
+      "definitionId":11829321979114051994,
+      "definitionName":"DataInputHeader",
+      "flowId":15147870088479614153,
+      "elementId":"DataInput/header",
+      "sourceFile":"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/DataInput.hpp",
+      "sourceLine":74,
+      "changes": [
+        {"fieldHash":10066951237285155332,"fieldName":"addRowContainerPadding","fieldTypeHash":15937443097836116563,"valueKind":"edgeu16","value":"Clay_Padding{left=6, right=0, top=0, bottom=6}"},
+        {"fieldHash":12903688170031016727,"fieldName":"childGap","fieldTypeHash":5516555141030549105,"valueKind":"int64","value":"7"},
+        {"fieldHash":105616063399437942,"fieldName":"padding","fieldTypeHash":15937443097836116563,"valueKind":"edgeu16","value":"Clay_Padding{left=8, right=8, top=6, bottom=0}"}
       ]
     }
   ],

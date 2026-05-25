@@ -8,6 +8,8 @@
 #include <exception>
 #include <filesystem>
 #include <memory>
+#include <optional>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -16,18 +18,313 @@
 #include "iconRegistry.hpp"
 #include "PlotViewportScene.hpp"
 #include "TemplatePresets.hpp"
+#include "templateExport.hpp"
 #include "templateHelper.hpp"
 
 namespace {
 
+constexpr int kKeyY = 89;
+constexpr int kKeyZ = 90;
+constexpr int kDocumentShortcutPriority = 100;
+
 void populateInitialGuiState(FlowPlotGui::state& guiState)
 {
 	FlowPlotGui::replaceWithTemplatePreset(guiState, FlowPlotGui::makeScatterPlotPreset(), false);
+	FlowPlotGui::resetDocumentSession(guiState);
 	guiState.templateRevision = 1;
 	guiState.datasetRevision = 1;
 	guiState.viewportRevision = 1;
 	guiState.textEngine = std::make_shared<FlowPlot::StbTextEngine>(
 		std::filesystem::path(__FILE__).parent_path() / "assets" / "Fonts" / "Inter-VariableFont_opsz,wght.ttf");
+}
+
+std::string selectedTemplateNodeKindText(const FlowPlotGui::state& guiState)
+{
+	if (!guiState.selectedNode.has_value())
+	{
+		return "No selection";
+	}
+
+	switch (guiState.selectedNode->kind)
+	{
+	case FlowPlotGui::TemplateNodeKind::Figure:
+		return "Figure";
+	case FlowPlotGui::TemplateNodeKind::FigureTitle:
+	case FlowPlotGui::TemplateNodeKind::PanelTitle:
+	case FlowPlotGui::TemplateNodeKind::AxisTitle:
+		return "Title";
+	case FlowPlotGui::TemplateNodeKind::PanelsGroup:
+		return "Panels";
+	case FlowPlotGui::TemplateNodeKind::Panel:
+		return "Panel";
+	case FlowPlotGui::TemplateNodeKind::XAxis:
+	case FlowPlotGui::TemplateNodeKind::YAxis:
+	case FlowPlotGui::TemplateNodeKind::XSecondaryAxis:
+	case FlowPlotGui::TemplateNodeKind::YSecondaryAxis:
+		return "Axis";
+	case FlowPlotGui::TemplateNodeKind::LayersGroup:
+		return "Layers";
+	case FlowPlotGui::TemplateNodeKind::Layer:
+		return "Layer";
+	case FlowPlotGui::TemplateNodeKind::LegendsGroup:
+		return "Legends";
+	case FlowPlotGui::TemplateNodeKind::Legend:
+		return "Legend";
+	case FlowPlotGui::TemplateNodeKind::LegendElement:
+		return "Legend element";
+	}
+
+	return "Selection";
+}
+
+std::optional<std::string> selectedTemplateNodeEditableId(const FlowPlotGui::state& guiState)
+{
+	if (!guiState.selectedNode.has_value())
+	{
+		return std::nullopt;
+	}
+
+	const FlowPlotGui::TemplateNodeKey& key = *guiState.selectedNode;
+	switch (key.kind)
+	{
+	case FlowPlotGui::TemplateNodeKind::Panel:
+		for (const FlowPlot::Spec::PanelSpec& panel : guiState.activeTemplate.panels)
+		{
+			if (panel.id == key.outer)
+			{
+				return panel.id;
+			}
+		}
+		break;
+	case FlowPlotGui::TemplateNodeKind::Layer:
+		for (const FlowPlot::Spec::PanelSpec& panel : guiState.activeTemplate.panels)
+		{
+			if (panel.id != key.outer)
+			{
+				continue;
+			}
+			for (const FlowPlot::Spec::LayerSpec& layer : panel.layers)
+			{
+				if (layer.id == key.inner)
+				{
+					return layer.id;
+				}
+			}
+		}
+		break;
+	case FlowPlotGui::TemplateNodeKind::Legend:
+		for (const FlowPlot::Spec::LegendSpec& legend : guiState.activeTemplate.figure.legends)
+		{
+			if (legend.id == key.outer)
+			{
+				return legend.id;
+			}
+		}
+		break;
+	case FlowPlotGui::TemplateNodeKind::LegendElement:
+		for (const FlowPlot::Spec::LegendSpec& legend : guiState.activeTemplate.figure.legends)
+		{
+			if (legend.id != key.outer)
+			{
+				continue;
+			}
+			for (const FlowPlot::Spec::LegendElementSpec& element : legend.legendElements)
+			{
+				if (element.id == key.inner)
+				{
+					return element.id;
+				}
+			}
+		}
+		break;
+	default:
+		break;
+	}
+
+	return std::nullopt;
+}
+
+bool renameSelectedTemplateNodeId(FlowPlotGui::state& guiState, std::string_view nextId)
+{
+	if (!guiState.selectedNode.has_value() || nextId.empty())
+	{
+		return false;
+	}
+
+	FlowPlotGui::TemplateNodeKey& key = *guiState.selectedNode;
+	const std::string next(nextId);
+	switch (key.kind)
+	{
+	case FlowPlotGui::TemplateNodeKind::Panel: {
+		FlowPlot::Spec::PanelSpec* target = nullptr;
+		for (FlowPlot::Spec::PanelSpec& panel : guiState.activeTemplate.panels)
+		{
+			if (panel.id == next && panel.id != key.outer)
+			{
+				return false;
+			}
+			if (panel.id == key.outer)
+			{
+				target = &panel;
+			}
+		}
+		if (target == nullptr || target->id == next)
+		{
+			return false;
+		}
+		target->id = next;
+		key.outer = next;
+		break;
+	}
+	case FlowPlotGui::TemplateNodeKind::Layer: {
+		FlowPlot::Spec::PanelSpec* panel = nullptr;
+		for (FlowPlot::Spec::PanelSpec& candidate : guiState.activeTemplate.panels)
+		{
+			if (candidate.id == key.outer)
+			{
+				panel = &candidate;
+				break;
+			}
+		}
+		if (panel == nullptr)
+		{
+			return false;
+		}
+		FlowPlot::Spec::LayerSpec* target = nullptr;
+		for (FlowPlot::Spec::LayerSpec& layer : panel->layers)
+		{
+			if (layer.id == next && layer.id != key.inner)
+			{
+				return false;
+			}
+			if (layer.id == key.inner)
+			{
+				target = &layer;
+			}
+		}
+		if (target == nullptr || target->id == next)
+		{
+			return false;
+		}
+		target->id = next;
+		key.inner = next;
+		break;
+	}
+	case FlowPlotGui::TemplateNodeKind::Legend: {
+		FlowPlot::Spec::LegendSpec* target = nullptr;
+		for (FlowPlot::Spec::LegendSpec& legend : guiState.activeTemplate.figure.legends)
+		{
+			if (legend.id == next && legend.id != key.outer)
+			{
+				return false;
+			}
+			if (legend.id == key.outer)
+			{
+				target = &legend;
+			}
+		}
+		if (target == nullptr || target->id == next)
+		{
+			return false;
+		}
+		target->id = next;
+		key.outer = next;
+		break;
+	}
+	case FlowPlotGui::TemplateNodeKind::LegendElement: {
+		FlowPlot::Spec::LegendSpec* legend = nullptr;
+		for (FlowPlot::Spec::LegendSpec& candidate : guiState.activeTemplate.figure.legends)
+		{
+			if (candidate.id == key.outer)
+			{
+				legend = &candidate;
+				break;
+			}
+		}
+		if (legend == nullptr)
+		{
+			return false;
+		}
+		FlowPlot::Spec::LegendElementSpec* target = nullptr;
+		for (FlowPlot::Spec::LegendElementSpec& element : legend->legendElements)
+		{
+			if (element.id == next && element.id != key.inner)
+			{
+				return false;
+			}
+			if (element.id == key.inner)
+			{
+				target = &element;
+			}
+		}
+		if (target == nullptr || target->id == next)
+		{
+			return false;
+		}
+		target->id = next;
+		key.inner = next;
+		break;
+	}
+	default:
+		return false;
+	}
+
+	FlowPlotGui::markTemplateChanged(guiState);
+	return true;
+}
+
+panelTitleParams makePropertiesTitleParams(FlowPlotGui::state& guiState)
+{
+	panelTitleParams params{};
+	params.titleText = "Properties";
+	params.showSecondaryTitle = true;
+	params.secondaryTitleParams = {
+		.text = selectedTemplateNodeKindText(guiState),
+		.fontSize = 12,
+		.textColor = FlowUi::Flow_Color("#aeb2b8ff"),
+	};
+
+	const std::optional<std::string> editableId = selectedTemplateNodeEditableId(guiState);
+	if (!editableId.has_value())
+	{
+		params.rightContentMode = panelTitleParams::RightContentMode::None;
+		return params;
+	}
+
+	params.rightContentMode = panelTitleParams::RightContentMode::InputField;
+	params.rightInputFieldParams.fieldId = "PropsTitle/id-input";
+	params.rightInputFieldParams.value = *editableId;
+	params.rightInputFieldParams.syncValueFromParams = true;
+	params.rightInputFieldParams.defaultText = "id";
+	params.rightInputFieldParams.sizing = Clay_Sizing{
+		.width = CLAY_SIZING_FIXED(150),
+		.height = CLAY_SIZING_FIT(0),
+	};
+	params.rightInputFieldParams.padding = Clay_Padding{8, 8, 4, 4};
+	params.rightInputFieldParams.backgroundColor = FlowUi::Flow_Color("#171a1fff");
+	params.rightInputFieldParams.borderColor = FlowUi::Flow_Color("#3d444eff");
+	params.rightInputFieldParams.borderWidth = Clay_BorderWidth{1, 1, 1, 1, 0};
+	params.rightInputFieldParams.cornerRadius = CLAY_CORNER_RADIUS(5);
+	params.rightInputFieldParams.fontSize = 12;
+	params.rightInputFieldParams.textColor = FlowUi::Flow_Color("#f4f6f8ff");
+	params.rightInputFieldParams.onEditBegin = [&guiState]() {
+		FlowPlotGui::beginDeferredDocumentEdit(
+			guiState,
+			FlowPlotGui::makeTemplateEditTarget(
+				"selected-node-id",
+				[](const FlowPlotGui::DocumentSnapshot& before, const FlowPlotGui::state& current) {
+					return !FlowPlotGui::masterTemplateSpecsEqual(before.activeTemplate, current.activeTemplate);
+				}),
+			10.0f);
+	};
+	params.rightInputFieldParams.onEditEnd = [&guiState]() {
+		FlowPlotGui::endDeferredDocumentEdit(guiState);
+	};
+	params.rightInputFieldParams.onTextChangedCallback = [&guiState](std::string_view changed) {
+		renameSelectedTemplateNodeId(guiState, changed);
+	};
+
+	return params;
 }
 
 } // namespace
@@ -66,6 +363,29 @@ int main()
 		FlowUi::UiManager& ui = app.ui();
 		FlowPlotGui::state guiState{};
 		populateInitialGuiState(guiState);
+
+		(void)ui.shortcuts().registerShortcut(
+			FlowUi::ShortcutChord{
+				.key = kKeyZ,
+				.ctrl = true,
+				.trigger = FlowUi::ShortcutTrigger::Press,
+			},
+			FlowUi::ShortcutScope::Global,
+			kDocumentShortcutPriority,
+			[&guiState](FlowUi::ShortcutContext&) {
+				return FlowPlotGui::undoDocument(guiState);
+			});
+		(void)ui.shortcuts().registerShortcut(
+			FlowUi::ShortcutChord{
+				.key = kKeyY,
+				.ctrl = true,
+				.trigger = FlowUi::ShortcutTrigger::Press,
+			},
+			FlowUi::ShortcutScope::Global,
+			kDocumentShortcutPriority,
+			[&guiState](FlowUi::ShortcutContext&) {
+				return FlowPlotGui::redoDocument(guiState);
+			});
 
 
 
@@ -169,11 +489,7 @@ int main()
 					.setParameters({.guiState = &guiState})
 					.construct();
 						ui.createElement(kPanelTitle, "PropsTitle")
-						.setParameters({
-							.titleText = "Properties",
-							.showSecondaryTitle = true,
-							.secondaryTitleParams = {.text = "panel 1", .fontSize = 12}
-						})
+						.setParameters(makePropertiesTitleParams(guiState))
 						.draw();
 						ui.createElement(kPropertiesContent, "PropertiesContent")
 						.setParameters({
@@ -198,6 +514,9 @@ int main()
 			
 			ui.drawConstructed(); // rootBackground
 
+			FlowPlotGui::tickDeferredDocumentEdit(
+				guiState,
+				static_cast<float>(ui.getCurrentFrameInput().dt));
 
 			app.endFrame();
 			app.drawFrame();

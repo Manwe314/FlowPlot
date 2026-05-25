@@ -286,7 +286,8 @@ inline const TemplateLayerDef kTemplateLayer = {
 			context.params.focused ||
 			(context.params.guiState != nullptr &&
 			 context.params.guiState->selectedNode.has_value() &&
-			 context.params.guiState->selectedNode->flowElementId == context.elementID);
+			 (context.params.guiState->selectedNode->flowElementId == context.elementID ||
+			  FlowPlotGui::sameTemplateNodeKey(*context.params.guiState->selectedNode, context.params.nodeKey)));
 		if (showIndicator)
 		{
 			root.backgroundColor = context.params.focusedBackgroundColor;

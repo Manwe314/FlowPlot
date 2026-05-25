@@ -14,6 +14,8 @@ struct stringInputCardParams {
 	std::string hintText = "Text";
 	std::string value = "";
 	std::function<void(std::string_view)> onChange = nullptr;
+	std::function<void()> onEditBegin = nullptr;
+	std::function<void()> onEditEnd = nullptr;
 
 	Clay_Sizing cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
 	Clay_Padding cardPadding = Clay_Padding{8, 8, 6, 6};
@@ -97,6 +99,8 @@ inline const StringInputCardDef kStringInputCard = {
 		inputParams.value = context.params.value;
 		inputParams.syncValueFromParams = true;
 		inputParams.onTextChangedCallback = context.params.onChange;
+		inputParams.onEditBegin = context.params.onEditBegin;
+		inputParams.onEditEnd = context.params.onEditEnd;
 		inputParams.padding = context.params.inputPadding;
 		inputParams.sizing = Clay_Sizing{
 			.width = CLAY_SIZING_GROW(0),

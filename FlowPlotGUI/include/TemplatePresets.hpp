@@ -194,9 +194,10 @@ inline void replaceWithTemplatePreset(state& guiState, TemplatePreset preset, bo
 
 	if (markChanged)
 	{
-		markTemplateChanged(guiState);
-		markDatasetsChanged(guiState);
+		++guiState.templateRevision;
+		++guiState.datasetRevision;
 		markViewportChanged(guiState);
+		resetDocumentSession(guiState);
 	}
 }
 

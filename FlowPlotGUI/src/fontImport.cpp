@@ -344,7 +344,7 @@ FlowPlot::StbTextEngine& ensureTextEngine(state& guiState)
 	return *engine;
 }
 
-void registerImportedFont(state& guiState, FontManager* fontManager, const AddedFontVariant& variant)
+void registerImportedFont(state& guiState, FlowUi::FontManager* fontManager, const AddedFontVariant& variant)
 {
 	ensureTextEngine(guiState).registerFont(
 		variant.family,
@@ -364,8 +364,8 @@ void registerImportedFont(state& guiState, FontManager* fontManager, const Added
 	face.style = toFlowUiFontStyle(variant.style);
 	face.name = variant.family;
 
-	const FontManager::FontFamilyId familyId = fontManager->getFamilyId(variant.family);
-	if (familyId == std::numeric_limits<FontManager::FontFamilyId>::max())
+	const FlowUi::FontManager::FontFamilyId familyId = fontManager->getFamilyId(variant.family);
+	if (familyId == std::numeric_limits<FlowUi::FontManager::FontFamilyId>::max())
 	{
 		FlowUi::FontFamilyCreateInfo family{};
 		family.name = variant.family;
@@ -381,7 +381,7 @@ void registerImportedFont(state& guiState, FontManager* fontManager, const Added
 
 FontImportResult importFontFiles(
 	state& guiState,
-	FontManager* fontManager,
+	FlowUi::FontManager* fontManager,
 	const std::vector<std::filesystem::path>& paths)
 {
 	FontImportResult result{};
@@ -412,7 +412,7 @@ FontImportResult importFontFiles(
 
 FontImportResult openFontImportDialog(
 	state& guiState,
-	FontManager* fontManager,
+	FlowUi::FontManager* fontManager,
 	void* nativeWindowHandle)
 {
 	FontImportResult result{};

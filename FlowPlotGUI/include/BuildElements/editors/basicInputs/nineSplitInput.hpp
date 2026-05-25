@@ -70,6 +70,8 @@ inline void nineSplitSetPaddingSlot(Clay_Padding& padding, std::uint8_t slotId, 
 struct nineSplitMatrixParams {
 	Clay_Padding value = CLAY_PADDING_ALL(0);
 	std::function<void(Clay_Padding)> onChange = nullptr;
+	std::function<void()> onEditBegin = nullptr;
+	std::function<void()> onEditEnd = nullptr;
 
 	bool linkDefaultEnabled = true;
 	Clay_Color linkEnabledBackgroundColor = FlowUi::Flow_Color("#4b8c5aff");
@@ -349,6 +351,8 @@ inline const NineSplitMatrixDef kNineSplitMatrix = {
 									}
 									onChange(nextPadding);
 								};
+								numericParams.onEditBegin = context.params.onEditBegin;
+								numericParams.onEditEnd = context.params.onEditEnd;
 								numericParams.sizing = context.params.numericSizing;
 								numericParams.padding = CLAY_PADDING_ALL(0);
 								numericParams.childGap = 0;
@@ -386,6 +390,8 @@ struct nineSplitCardParams {
 	std::string hintText = "Padding";
 	Clay_Padding value = CLAY_PADDING_ALL(0);
 	std::function<void(Clay_Padding)> onChange = nullptr;
+	std::function<void()> onEditBegin = nullptr;
+	std::function<void()> onEditEnd = nullptr;
 
 	Clay_Sizing cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
 	Clay_LayoutDirection cardLayout = CLAY_LEFT_TO_RIGHT;
@@ -458,6 +464,8 @@ inline const NineSplitCardDef kNineSplitCard = {
 		nineSplitMatrixParams matrixParams = context.params.matrix;
 		matrixParams.value = context.params.value;
 		matrixParams.onChange = context.params.onChange;
+		matrixParams.onEditBegin = context.params.onEditBegin;
+		matrixParams.onEditEnd = context.params.onEditEnd;
 		matrixParams.fontId = context.params.fontId;
 
 		CLAY(rootId, root)

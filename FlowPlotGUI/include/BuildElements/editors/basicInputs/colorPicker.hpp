@@ -129,6 +129,8 @@ struct sliderParams {
 	double maxValue = 1.0;
 	double value = 0.0;
 	std::function<void(double)> onValueChangedCallback = nullptr;
+	std::function<void()> onEditBegin = nullptr;
+	std::function<void()> onEditEnd = nullptr;
 
 	Clay_Sizing sizing = Clay_Sizing{.width = CLAY_SIZING_FIT(0), .height = CLAY_SIZING_FIT(0)};
 	Clay_Padding padding = CLAY_PADDING_ALL(0);
@@ -211,18 +213,32 @@ inline const SliderDef kSlider = {
 		state.dragging = true;
 		state.pressMouseX = context.uiManager.getCurrentFrameInput().mouseX;
 		state.pressValue = std::clamp(state.currentValue, lower, upper);
+		if (context.params.onEditBegin != nullptr)
+		{
+			context.params.onEditBegin();
+		}
 	},
 	nullptr,
 	+[](SliderDef::InteractionContext& context) {
 		sliderState& state = SliderDef::getOrCreateState(FlowUi::toFlowId(context.elementID));
+		const bool wasDragging = state.dragging;
 		state.dragging = false;
+		if (wasDragging && context.params.onEditEnd != nullptr)
+		{
+			context.params.onEditEnd();
+		}
 	},
 	+[](SliderDef::InteractionContext& context) {
 		sliderState& state = SliderDef::getOrCreateState(FlowUi::toFlowId(context.elementID));
 		const FlowUi::FrameInput& input = context.uiManager.getCurrentFrameInput();
 		if (!input.mouseDown[0])
 		{
+			const bool wasDragging = state.dragging;
 			state.dragging = false;
+			if (wasDragging && context.params.onEditEnd != nullptr)
+			{
+				context.params.onEditEnd();
+			}
 			return;
 		}
 		if (!state.dragging)
@@ -441,6 +457,8 @@ inline const ColorPickerPreviewButtonDef kColorPickerPreviewButton = {
 struct colorPickerSwatchParams {
 	std::string value = "#000000";
 	std::function<void(std::string_view)> onChange = nullptr;
+	std::function<void()> onEditBegin = nullptr;
+	std::function<void()> onEditEnd = nullptr;
 
 	Clay_Sizing sizing = Clay_Sizing{.width = CLAY_SIZING_FIT(0), .height = CLAY_SIZING_FIT(0)};
 	Clay_Padding padding = CLAY_PADDING_ALL(0);
@@ -551,7 +569,9 @@ inline void colorPickerSwatchDrawSliderRow(
 	std::string_view label,
 	double value,
 	Clay_Color fillColor,
-	std::function<void(double)> onValueChanged)
+	std::function<void(double)> onValueChanged,
+	std::function<void()> onEditBegin,
+	std::function<void()> onEditEnd)
 {
 	const Clay_ElementId rowId = context.uiManager.toClayEID(context.createChildElementId(std::string("popup/") + std::string(rowName)));
 	const Clay_ElementId labelId = context.uiManager.toClayEID(context.createChildElementId(std::string("popup/") + std::string(rowName) + "/label"));
@@ -576,6 +596,8 @@ inline void colorPickerSwatchDrawSliderRow(
 	params.value = value;
 	params.fillColor = fillColor;
 	params.onValueChangedCallback = onValueChanged;
+	params.onEditBegin = onEditBegin;
+	params.onEditEnd = onEditEnd;
 
 	numericInputFieldParams channelParams = context.params.channelInput;
 	channelParams.valueType = numericInputValueType::UInt8;
@@ -586,6 +608,8 @@ inline void colorPickerSwatchDrawSliderRow(
 	channelParams.fontId = context.params.fontId;
 	channelParams.fontSize = context.params.fontSize;
 	channelParams.onChange = std::move(onValueChanged);
+	channelParams.onEditBegin = onEditBegin;
+	channelParams.onEditEnd = onEditEnd;
 
 	CLAY(rowId, row)
 	{
@@ -776,7 +800,9 @@ inline const ColorPickerSwatchDef kColorPickerSwatch = {
 						context.params.redSliderFillColor,
 						[emitRgb, rgb](double value) {
 							emitRgb(static_cast<std::uint8_t>(std::clamp(std::lround(value), 0l, 255l)), rgb[1], rgb[2]);
-						});
+						},
+						context.params.onEditBegin,
+						context.params.onEditEnd);
 					colorPickerSwatchDrawSliderRow(
 						context,
 						"green",
@@ -785,7 +811,9 @@ inline const ColorPickerSwatchDef kColorPickerSwatch = {
 						context.params.greenSliderFillColor,
 						[emitRgb, rgb](double value) {
 							emitRgb(rgb[0], static_cast<std::uint8_t>(std::clamp(std::lround(value), 0l, 255l)), rgb[2]);
-						});
+						},
+						context.params.onEditBegin,
+						context.params.onEditEnd);
 					colorPickerSwatchDrawSliderRow(
 						context,
 						"blue",
@@ -794,7 +822,9 @@ inline const ColorPickerSwatchDef kColorPickerSwatch = {
 						context.params.blueSliderFillColor,
 						[emitRgb, rgb](double value) {
 							emitRgb(rgb[0], rgb[1], static_cast<std::uint8_t>(std::clamp(std::lround(value), 0l, 255l)));
-						});
+						},
+						context.params.onEditBegin,
+						context.params.onEditEnd);
 				};
 			}
 		};
@@ -805,6 +835,8 @@ struct colorPickerCardParams {
 	std::string hintText = "Color";
 	std::string value = "#000000";
 	std::function<void(std::string_view)> onChange = nullptr;
+	std::function<void()> onEditBegin = nullptr;
+	std::function<void()> onEditEnd = nullptr;
 
 	Clay_Sizing cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
 	Clay_LayoutDirection cardLayout = CLAY_LEFT_TO_RIGHT;
@@ -874,6 +906,8 @@ inline const ColorPickerCardDef kColorPickerCard = {
 		colorPickerSwatchParams swatchParams = context.params.swatch;
 		swatchParams.value = context.params.value;
 		swatchParams.onChange = context.params.onChange;
+		swatchParams.onEditBegin = context.params.onEditBegin;
+		swatchParams.onEditEnd = context.params.onEditEnd;
 		swatchParams.fontId = context.params.fontId;
 		swatchParams.fontSize = context.params.fontSize;
 		swatchParams.textColor = context.params.textColor;

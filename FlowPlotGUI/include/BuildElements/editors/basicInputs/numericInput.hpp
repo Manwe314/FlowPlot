@@ -259,6 +259,8 @@ struct numericInputFieldParams {
 	double minValue = -1000000.0;
 	double maxValue = 1000000.0;
 	std::function<void(double)> onChange = nullptr;
+	std::function<void()> onEditBegin = nullptr;
+	std::function<void()> onEditEnd = nullptr;
 
 	Clay_Sizing sizing = Clay_Sizing{.width = CLAY_SIZING_FIXED(180), .height = CLAY_SIZING_FIT(0)};
 	Clay_Padding padding = CLAY_PADDING_ALL(0);
@@ -402,6 +404,8 @@ inline const NumericInputFieldDef kNumericInputField = {
 				onChange(normalized);
 			}
 		};
+		inputParams.onEditBegin = context.params.onEditBegin;
+		inputParams.onEditEnd = context.params.onEditEnd;
 		inputParams.padding = context.params.inputPadding;
 		inputParams.sizing = Clay_Sizing{
 			.width = CLAY_SIZING_GROW(0),
@@ -447,6 +451,8 @@ struct numericInputCardParams {
 	double minValue = -1000000.0;
 	double maxValue = 1000000.0;
 	std::function<void(double)> onChange = nullptr;
+	std::function<void()> onEditBegin = nullptr;
+	std::function<void()> onEditEnd = nullptr;
 
 	Clay_Sizing cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
 	Clay_LayoutDirection cardLayout = CLAY_LEFT_TO_RIGHT;
@@ -525,6 +531,8 @@ inline const NumericInputCardDef kNumericInputCard = {
 		fieldParams.minValue = context.params.minValue;
 		fieldParams.maxValue = context.params.maxValue;
 		fieldParams.onChange = context.params.onChange;
+		fieldParams.onEditBegin = context.params.onEditBegin;
+		fieldParams.onEditEnd = context.params.onEditEnd;
 		fieldParams.fontId = context.params.fontId;
 
 		CLAY(rootId, root)

@@ -95,6 +95,7 @@ void clearSelectionIfImpacted(FlowPlotGui::state& guiState, const TemplateNodeKe
 
 void addTemplateNodeChild(FlowPlotGui::state& guiState, const TemplateNodeKey& parentKey)
 {
+	FlowPlotGui::prepareImmediateDocumentChange(guiState);
 	bool changed = false;
 	switch (parentKey.kind)
 	{
@@ -146,11 +147,13 @@ void addTemplateNodeChild(FlowPlotGui::state& guiState, const TemplateNodeKey& p
 	if (changed)
 	{
 		FlowPlotGui::markTemplateChanged(guiState);
+		FlowPlotGui::commitImmediateDocumentChange(guiState);
 	}
 }
 
 void deleteTemplateNode(FlowPlotGui::state& guiState, const TemplateNodeKey& key)
 {
+	FlowPlotGui::prepareImmediateDocumentChange(guiState);
 	bool changed = false;
 	switch (key.kind)
 	{
@@ -214,6 +217,7 @@ void deleteTemplateNode(FlowPlotGui::state& guiState, const TemplateNodeKey& key
 	if (changed)
 	{
 		FlowPlotGui::markTemplateChanged(guiState);
+		FlowPlotGui::commitImmediateDocumentChange(guiState);
 	}
 }
 

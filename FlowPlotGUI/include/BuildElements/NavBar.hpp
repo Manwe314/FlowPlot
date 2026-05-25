@@ -38,6 +38,7 @@ struct navBarParams {
 
 	Clay_Color dirtyColor = FlowUi::Flow_Color("#f5b84bff");
 	Clay_Color cleanColor = FlowUi::Flow_Color("#7dd3a8ff");
+	Clay_Color errorColor = FlowUi::Flow_Color("#f87171ff");
 	FlowPlotGui::state* guiState = nullptr;
 	void* nativeWindowHandle = nullptr;
 };
@@ -45,6 +46,7 @@ struct navBarParams {
 struct navBarState {
 	bool isDirty = false;
 	bool newTemplatePresetPickerOpen = false;
+	bool statusTooltipOpen = false;
 };
 
 FLOWUI_DEV_REGISTER_STRUCT(
@@ -67,12 +69,14 @@ FLOWUI_DEV_REGISTER_STRUCT(
 	FLOWUI_DEV_REFLECT_FIELD(navBarParams, child3Padding),
 	FLOWUI_DEV_REFLECT_FIELD(navBarParams, child3Alignment),
 	FLOWUI_DEV_REFLECT_FIELD(navBarParams, dirtyColor),
-	FLOWUI_DEV_REFLECT_FIELD(navBarParams, cleanColor));
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, cleanColor),
+	FLOWUI_DEV_REFLECT_FIELD(navBarParams, errorColor));
 
 FLOWUI_DEV_REGISTER_STRUCT(
 	navBarState,
 	FLOWUI_DEV_REFLECT_FIELD(navBarState, isDirty),
-	FLOWUI_DEV_REFLECT_FIELD(navBarState, newTemplatePresetPickerOpen));
+	FLOWUI_DEV_REFLECT_FIELD(navBarState, newTemplatePresetPickerOpen),
+	FLOWUI_DEV_REFLECT_FIELD(navBarState, statusTooltipOpen));
 
 using BasicTitleBuilder = FlowUi::ElementBuilder<basicTitleParams, void, void, FLOW_DEF_ID("Basic title")>;
 
@@ -93,11 +97,12 @@ struct navBarResources {
 	std::string exportButtonPath{};
 	std::string addFontButtonPath{};
 	std::string statusTitlePath{};
+	std::string statusTooltipPath{};
 	FlowUi::TextureRef newIcon{};
 	FlowUi::TextureRef importIcon{};
 	FlowUi::TextureRef exportIcon{};
 	FlowUi::TextureRef addFontIcon{};
-	FontManager* fontManager = nullptr;
+	FlowUi::FontManager* fontManager = nullptr;
 
 	BasicTitleBuilder child1Builder;
 
@@ -117,6 +122,7 @@ struct navBarResources {
 		exportButtonPath("NavBar/child-2/export"),
 		addFontButtonPath("NavBar/child-2/add-font"),
 		statusTitlePath("NavBar/child-3/status"),
+		statusTooltipPath("NavBar/status-tooltip"),
 		newIcon(app.icons().textureRef("New")),
 		importIcon(app.icons().textureRef("Import")),
 		exportIcon(app.icons().textureRef("Export")),
@@ -276,10 +282,31 @@ inline const NavBarDef kNavBar = {
 		child3.backgroundColor = FlowUi::Flow_Color("#00000000");
 		child3.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
 
+		FlowPlotGui::state* guiState = context.params.guiState;
+		if (guiState != nullptr)
+		{
+			FlowPlotGui::ensureActiveTemplateExportComparisonChecked(*guiState);
+		}
+		const FlowPlotGui::Diagnostic* latestError = guiState != nullptr
+			? FlowPlotGui::latestDiagnosticWithSeverity(*guiState, FlowPlotGui::DiagnosticSeverity::Error)
+			: nullptr;
+		const bool hasErrors = latestError != nullptr;
+		const bool isUnsaved = guiState != nullptr && guiState->activeTemplateDiffersFromLastExport;
+		state.isDirty = isUnsaved;
+
+		const Clay_ElementId statusId = context.uiManager.toClayEID(resources.statusTitlePath);
+		state.statusTooltipOpen = context.uiManager.getPreviousFramesInteraction().isHovered(statusId);
+
 		basicTitleParams statusParams{};
-		statusParams.text = state.isDirty ? "Unsaved" : "Saved";
+		statusParams.text = hasErrors ? "Errors" : (isUnsaved ? "Unsaved" : "Saved");
 		statusParams.contentMode = basicTitleParams::ContentMode::TextOnly;
-		statusParams.textColor = state.isDirty ? context.params.dirtyColor : context.params.cleanColor;
+		statusParams.textColor = hasErrors ? context.params.errorColor : (isUnsaved ? context.params.dirtyColor : context.params.cleanColor);
+		statusParams.onHoveredCallback = [elementFlowId = FlowUi::toFlowId(context.elementID)](BasicTitleInteractionContext) {
+			if (navBarState* latestState = NavBarDef::tryGetState(elementFlowId))
+			{
+				latestState->statusTooltipOpen = true;
+			}
+		};
 		statusParams.fontSize = 13;
 		statusParams.padding = Clay_Padding{8, 8, 4, 4};
 		statusParams.sizing = {.width = CLAY_SIZING_FIT(0), .height = CLAY_SIZING_FIT(0)};
@@ -405,12 +432,55 @@ inline const NavBarDef kNavBar = {
 				context.uiManager.createElement(kBasicTitle, resources.statusTitlePath)
 					.setParameters(std::move(statusParams))
 					/* V1 cant Update parameters made with variables */
-					.mergeParams([](auto& params) {
+					.mergeParams([hasErrors](auto& params) {
 					    params.backgroundColor = Clay_Color{.r = 31.0f, .g = 46.0f, .b = 60.0f, .a = 150.0f};
-					    params.borderColor = Clay_Color{.r = 0.0f, .g = 151.0f, .b = 137.0f, .a = 255.0f};
+					    params.borderColor = hasErrors
+							? Clay_Color{.r = 248.0f, .g = 113.0f, .b = 113.0f, .a = 255.0f}
+							: Clay_Color{.r = 0.0f, .g = 151.0f, .b = 137.0f, .a = 255.0f};
 					})
 					.draw();
 			};
+
+			if (state.statusTooltipOpen && latestError != nullptr)
+			{
+				Clay_ElementDeclaration tooltip{};
+				tooltip.layout.layoutDirection = CLAY_TOP_TO_BOTTOM;
+				tooltip.layout.sizing = {.width = CLAY_SIZING_FIXED(420), .height = CLAY_SIZING_FIT(0)};
+				tooltip.layout.padding = Clay_Padding{12, 12, 10, 10};
+				tooltip.layout.childGap = 0;
+				tooltip.backgroundColor = FlowUi::Flow_Color("#17171bff");
+				tooltip.cornerRadius = CLAY_CORNER_RADIUS(6);
+				tooltip.border = {
+					.color = FlowUi::Flow_Color("#f87171ff"),
+					.width = Clay_BorderWidth{1, 1, 1, 1, 0},
+				};
+				tooltip.floating = {
+					.offset = {.x = 0.0f, .y = 8.0f},
+					.parentId = statusId.id,
+					.zIndex = 30,
+					.attachPoints = {
+						.element = CLAY_ATTACH_POINT_RIGHT_TOP,
+						.parent = CLAY_ATTACH_POINT_RIGHT_BOTTOM,
+					},
+					.pointerCaptureMode = CLAY_POINTER_CAPTURE_MODE_PASSTHROUGH,
+					.attachTo = CLAY_ATTACH_TO_ELEMENT_WITH_ID,
+				};
+
+				basicTitleParams tooltipText{};
+				tooltipText.text = latestError->message;
+				tooltipText.contentMode = basicTitleParams::ContentMode::TextOnly;
+				tooltipText.textColor = FlowUi::Flow_Color("#ffe4e6ff");
+				tooltipText.fontSize = 12;
+				tooltipText.textWrapMode = CLAY_TEXT_WRAP_WORDS;
+				tooltipText.sizing = {.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
+
+				CLAY(context.uiManager.toClayEID(resources.statusTooltipPath), tooltip)
+				{
+					context.uiManager.createElement(kBasicTitle, resources.statusTooltipPath + "/text")
+						.setParameters(std::move(tooltipText))
+						.draw();
+				};
+			}
 		};
 	},
 };

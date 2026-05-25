@@ -785,7 +785,7 @@ void PlotRenderer::record(const FlowUi::ViewPortRenderContext& ctx)
 
 void PlotRenderer::rebuildIfNeeded(const FlowUi::ViewPortRenderContext& ctx)
 {
-	const state* guiState = input_.guiState;
+	state* guiState = input_.guiState;
 	if (guiState == nullptr)
 	{
 		drawPlan_.plot = {};
@@ -828,7 +828,7 @@ FlowPlot::RenderPlot PlotRenderer::buildFlowPlotCommands()
 		return {};
 	}
 
-	const state& guiState = *input_.guiState;
+	state& guiState = *input_.guiState;
 	if (flowCommandsDirty_ || cacheKey_.datasetRevision != guiState.datasetRevision)
 	{
 		DataViewBuildResult dataViews = makeDataViews(guiState.datasets);
@@ -836,10 +836,23 @@ FlowPlot::RenderPlot PlotRenderer::buildFlowPlotCommands()
 		cachedBoolScratch_ = std::move(dataViews.boolScratch);
 	}
 
-	FlowInternal::BoundIR::PlotBoundIR bound = FlowInternal::buildBoundIR(guiState.activeTemplate, cachedDataViews_);
-	FlowInternal::ResolvedIR::PlotResolvedIR resolved =
-		FlowInternal::resolvePlotIR(guiState.activeTemplate, bound, guiState.textEngine.get());
-	return FlowInternal::buildRenderPlot(resolved);
+	try
+	{
+		FlowInternal::BoundIR::PlotBoundIR bound = FlowInternal::buildBoundIR(guiState.activeTemplate, cachedDataViews_);
+		FlowInternal::ResolvedIR::PlotResolvedIR resolved =
+			FlowInternal::resolvePlotIR(guiState.activeTemplate, bound, guiState.textEngine.get());
+		clearDiagnosticsBySource(guiState, "compile");
+		return FlowInternal::buildRenderPlot(resolved);
+	}
+	catch (const std::exception& e)
+	{
+		recordDiagnostic(guiState, Diagnostic{
+			.severity = DiagnosticSeverity::Error,
+			.source = "compile",
+			.message = e.what(),
+		});
+		return drawPlan_.plot;
+	}
 }
 
 void PlotRenderer::buildRuns()
@@ -988,7 +1001,7 @@ void PlotRenderer::buildRuns()
 					{
 						return;
 					}
-					const FontManager::FontId fontId = input_.fontManager->resolveFont(
+					const FlowUi::FontManager::FontId fontId = input_.fontManager->resolveFont(
 						concreteCommand.fontFamily,
 						concreteCommand.fontWeight,
 						toFlowUiFontStyle(concreteCommand.fontStyle));

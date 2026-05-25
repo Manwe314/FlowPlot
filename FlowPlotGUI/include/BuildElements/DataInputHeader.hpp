@@ -476,6 +476,10 @@ inline const DataInputHeaderDef kDataInputHeader = {
 				};
 				context.uiManager.createElement(kBasicButton, context.createChildElementId("add-row-container/add-row"))
 					.setParameters(std::move(addRowButton))
+					/* V1 cant Update parameters made with variables */
+					.mergeParams([](auto& params) {
+					    params.padding = Clay_Padding{.left = 10, .right = 12, .top = 0, .bottom = 0};
+					})
 					.draw();
 			};
 		};

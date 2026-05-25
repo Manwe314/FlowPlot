@@ -31,7 +31,7 @@ FLOWUI_DEV_REGISTER_STRUCT(
 struct plotviewPortResources {
 	PanelTitleBuilder titleBuilder;
 	FlowUi::ViewPortManager* viewPortManager = nullptr;
-	FontManager* fontManager = nullptr;
+	FlowUi::FontManager* fontManager = nullptr;
 	std::string viewportKey = "FlowPlotGUI/PlotPreview";
 	FlowPlotGui::PlotViewportSceneHandle scene{};
 
@@ -88,6 +88,21 @@ inline void plotviewPortEnsureCameraInitialized(
 		state.camera.centerY = static_cast<float>(guiState->activeTemplate.figure.height) * 0.5f;
 	}
 	state.camera.zoom = std::max(state.camera.zoom, 1.0e-6f);
+	state.cameraInitialized = true;
+}
+
+inline void plotviewPortResetCamera(
+	plotviewPortState& state,
+	const FlowPlotGui::state* guiState)
+{
+	state.camera.centerX = guiState == nullptr
+		? 0.0f
+		: static_cast<float>(guiState->activeTemplate.figure.width) * 0.5f;
+	state.camera.centerY = guiState == nullptr
+		? 0.0f
+		: static_cast<float>(guiState->activeTemplate.figure.height) * 0.5f;
+	state.camera.zoom = 1.0f;
+	state.cameraDragging = false;
 	state.cameraInitialized = true;
 }
 
@@ -179,6 +194,19 @@ inline const PlotviewPortDef kPlotviewPort = {
 		plotviewPortResources& resources = *PlotviewPortDef::resources;
 		plotviewPortState& state = PlotviewPortDef::getOrCreateState(FlowUi::toFlowId(context.elementID));
 		plotviewPortEnsureCameraInitialized(state, context.params.guiState);
+
+		resources.titleBuilder.mergeParams([
+			elementFlowId = FlowUi::toFlowId(context.elementID),
+			guiState = context.params.guiState
+		](panelTitleParams& params) {
+			params.rightButtonParams.onPressedCallback = [elementFlowId, guiState](BasicButtonInteractionContext) {
+				plotviewPortState* latestState = PlotviewPortDef::tryGetState(elementFlowId);
+				if (latestState != nullptr)
+				{
+					plotviewPortResetCamera(*latestState, guiState);
+				}
+			};
+		});
 
 		const Clay_ElementId viewportId = context.uiManager.toClayEID(context.createChildElementId("viewport"));
 		const bool viewportHovered = context.uiManager.getPreviousFramesInteraction().isHovered(viewportId);

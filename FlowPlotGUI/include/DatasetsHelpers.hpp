@@ -55,6 +55,7 @@ inline bool addDataset(state& guiState)
 	}
 
 	const std::string datasetName = makeNextDatasetName(guiState);
+	prepareImmediateDocumentChange(guiState);
 
 	RunningDataset runningDataset{};
 	runningDataset.name = datasetName;
@@ -66,6 +67,7 @@ inline bool addDataset(state& guiState)
 
 	markDatasetsChanged(guiState);
 	markTemplateChanged(guiState);
+	commitImmediateDocumentChange(guiState);
 	return true;
 }
 
@@ -80,12 +82,14 @@ inline bool removeDataset(state& guiState, std::size_t datasetIndex)
 		return false;
 	}
 
+	prepareImmediateDocumentChange(guiState);
 	guiState.datasets.erase(guiState.datasets.begin() + static_cast<std::ptrdiff_t>(datasetIndex));
 	guiState.activeTemplate.datasets.erase(
 		guiState.activeTemplate.datasets.begin() + static_cast<std::ptrdiff_t>(datasetIndex));
 
 	markDatasetsChanged(guiState);
 	markTemplateChanged(guiState);
+	commitImmediateDocumentChange(guiState);
 	return true;
 }
 
@@ -182,6 +186,7 @@ inline bool addColumn(state& guiState, std::size_t datasetIndex, DatasetFieldTyp
 	RunningDataset& dataset = guiState.datasets[datasetIndex];
 	const std::string columnName = makeNextColumnName(dataset);
 	const std::size_t rowCount = datasetRowCount(dataset);
+	prepareImmediateDocumentChange(guiState);
 	guiState.activeTemplate.datasets[datasetIndex].schema[columnName] = type;
 
 	switch (type)
@@ -211,6 +216,7 @@ inline bool addColumn(state& guiState, std::size_t datasetIndex, DatasetFieldTyp
 
 	markDatasetsChanged(guiState);
 	markTemplateChanged(guiState);
+	commitImmediateDocumentChange(guiState);
 	return true;
 }
 
@@ -223,6 +229,7 @@ inline bool removeColumn(state& guiState, std::size_t datasetIndex, DatasetField
 
 	RunningDataset& dataset = guiState.datasets[datasetIndex];
 	std::string columnName{};
+	prepareImmediateDocumentChange(guiState);
 	switch (type)
 	{
 	case DatasetFieldType::Number:
@@ -254,6 +261,7 @@ inline bool removeColumn(state& guiState, std::size_t datasetIndex, DatasetField
 	guiState.activeTemplate.datasets[datasetIndex].schema.erase(columnName);
 	markDatasetsChanged(guiState);
 	markTemplateChanged(guiState);
+	commitImmediateDocumentChange(guiState);
 	return true;
 }
 
@@ -314,6 +322,7 @@ inline bool addRow(state& guiState, std::size_t datasetIndex)
 		return false;
 	}
 
+	prepareImmediateDocumentChange(guiState);
 	RunningDataset& dataset = guiState.datasets[datasetIndex];
 	for (numericColumn& column : dataset.numericColumns)
 	{
@@ -329,6 +338,7 @@ inline bool addRow(state& guiState, std::size_t datasetIndex)
 	}
 
 	markDatasetsChanged(guiState);
+	commitImmediateDocumentChange(guiState);
 	return true;
 }
 
@@ -346,6 +356,7 @@ inline bool removeRow(state& guiState, std::size_t datasetIndex, std::size_t row
 		return false;
 	}
 
+	prepareImmediateDocumentChange(guiState);
 	for (numericColumn& column : dataset.numericColumns)
 	{
 		if (rowIndex < column.data.size())
@@ -369,6 +380,7 @@ inline bool removeRow(state& guiState, std::size_t datasetIndex, std::size_t row
 	}
 
 	markDatasetsChanged(guiState);
+	commitImmediateDocumentChange(guiState);
 	return true;
 }
 
@@ -435,6 +447,7 @@ inline bool setBoolCell(
 
 	dataset.boolColumns[typedColumnIndex].data[rowIndex] = value;
 	markDatasetsChanged(guiState);
+	commitImmediateDocumentChangeIfNoDeferredEdit(guiState);
 	return true;
 }
 

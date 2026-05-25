@@ -1,9 +1,15 @@
 #pragma once
 
+#include <functional>
+
 #include <FlowUi/Flow.hpp>
 #include <devMode/devApi.hpp>
 
 #include "FlowPlotGui.hpp"
+
+struct basicTitleParams;
+using BasicTitleDef = FlowUi::ElementDefinition<basicTitleParams, void, void, FLOW_DEF_ID("Basic title")>;
+using BasicTitleInteractionContext = BasicTitleDef::InteractionContext;
 
 struct basicTitleParams {
 	enum class ContentMode : uint8_t {
@@ -14,6 +20,7 @@ struct basicTitleParams {
 
 	std::string text = "Title";
 	FlowUi::TextureRef icon = FlowUi::TextureRef{};
+	std::function<void(BasicTitleInteractionContext)> onHoveredCallback = nullptr;
 	ContentMode contentMode = ContentMode::TextOnly;
 
 	Clay_Padding padding = CLAY_PADDING_ALL(0);
@@ -80,10 +87,13 @@ FLOWUI_DEV_REGISTER_STRUCT(
 	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, iconSizing),
 	FLOWUI_DEV_REFLECT_FIELD(basicTitleParams, iconTintColor));
 
-using BasicTitleDef = FlowUi::ElementDefinition<basicTitleParams, void, void, FLOW_DEF_ID("Basic title")>;
-
 inline const BasicTitleDef kBasicTitle = {
-	nullptr,
+	+[](BasicTitleDef::InteractionContext& context) {
+		if (context.params.onHoveredCallback != nullptr)
+		{
+			context.params.onHoveredCallback(context);
+		}
+	},
 	nullptr,
 	nullptr,
 	nullptr,

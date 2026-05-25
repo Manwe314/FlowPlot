@@ -1006,8 +1006,41 @@ TemplateExportResult exportTemplateToPath(
 	return result;
 }
 
+bool masterTemplateSpecsEqual(
+	const FlowPlot::Spec::MasterTemplateSpec& lhs,
+	const FlowPlot::Spec::MasterTemplateSpec& rhs)
+{
+	return exportTemplateJson(lhs, {}) == exportTemplateJson(rhs, {});
+}
+
+void ensureActiveTemplateExportComparisonChecked(state& guiState)
+{
+	if (guiState.activeTemplateExportComparisonChecked)
+	{
+		return;
+	}
+
+	try
+	{
+		guiState.activeTemplateDiffersFromLastExport =
+			!masterTemplateSpecsEqual(guiState.activeTemplate, guiState.lastExportedTemplate);
+		guiState.activeTemplateExportComparisonChecked = true;
+		clearDiagnosticsBySource(guiState, "export-comparison");
+	}
+	catch (const std::exception& e)
+	{
+		guiState.activeTemplateDiffersFromLastExport = true;
+		guiState.activeTemplateExportComparisonChecked = true;
+		recordDiagnostic(guiState, Diagnostic{
+			.severity = DiagnosticSeverity::Error,
+			.source = "export-comparison",
+			.message = e.what(),
+		});
+	}
+}
+
 TemplateExportResult ExportTemplateWithExportDialog(
-	const state& guiState,
+	state& guiState,
 	void* nativeWindowHandle)
 {
 	TemplateExportResult result{};
@@ -1015,6 +1048,11 @@ TemplateExportResult ExportTemplateWithExportDialog(
 	{
 		const char* error = NFD_GetError();
 		result.errors.emplace_back(error != nullptr ? error : "NFD initialization failed");
+		recordDiagnostic(guiState, Diagnostic{
+			.severity = DiagnosticSeverity::Error,
+			.source = "export",
+			.message = result.errors.back(),
+		});
 		logExportResult(result);
 		return result;
 	}
@@ -1046,6 +1084,11 @@ TemplateExportResult ExportTemplateWithExportDialog(
 	{
 		const char* error = NFD_GetError();
 		result.errors.emplace_back(error != nullptr ? error : "template export dialog failed");
+		recordDiagnostic(guiState, Diagnostic{
+			.severity = DiagnosticSeverity::Error,
+			.source = "export",
+			.message = result.errors.back(),
+		});
 		logExportResult(result);
 		NFD_Quit();
 		return result;
@@ -1054,6 +1097,11 @@ TemplateExportResult ExportTemplateWithExportDialog(
 	if (rawPath == nullptr)
 	{
 		result.errors.emplace_back("template export dialog returned an empty path");
+		recordDiagnostic(guiState, Diagnostic{
+			.severity = DiagnosticSeverity::Error,
+			.source = "export",
+			.message = result.errors.back(),
+		});
 		logExportResult(result);
 		NFD_Quit();
 		return result;
@@ -1064,6 +1112,19 @@ TemplateExportResult ExportTemplateWithExportDialog(
 	NFD_Quit();
 
 	result = exportTemplateToPath(guiState.activeTemplate, guiState.fontLibrary, selectedPath);
+	if (result.errors.empty())
+	{
+		acceptCurrentTemplateAsExported(guiState);
+		clearDiagnosticsBySource(guiState, "export");
+	}
+	else if (!result.errors.empty())
+	{
+		recordDiagnostic(guiState, Diagnostic{
+			.severity = DiagnosticSeverity::Error,
+			.source = "export",
+			.message = result.errors.back(),
+		});
+	}
 	return result;
 }
 

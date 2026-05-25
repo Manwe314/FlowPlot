@@ -16,6 +16,8 @@ struct basicInputFieldParams {
 	std::string value = "";
 	bool syncValueFromParams = false;
 	std::function<void(std::string_view)> onTextChangedCallback = nullptr;
+	std::function<void()> onEditBegin = nullptr;
+	std::function<void()> onEditEnd = nullptr;
 
 	Clay_Padding padding = CLAY_PADDING_ALL(10);
 	Clay_Sizing sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(30, 90), .height = CLAY_SIZING_FIT(0)};
@@ -139,6 +141,14 @@ inline const BasicInputFieldDef kBasicInputField = {
 			{
 				context.params.onTextChangedCallback(resultText);
 			}
+		}
+		if (result.hasPrimaryCaret && !state.hadPrimaryCaretLastFrame && context.params.onEditBegin != nullptr)
+		{
+			context.params.onEditBegin();
+		}
+		else if (!result.hasPrimaryCaret && state.hadPrimaryCaretLastFrame && context.params.onEditEnd != nullptr)
+		{
+			context.params.onEditEnd();
 		}
 		state.hadPrimaryCaretLastFrame = result.hasPrimaryCaret;
 

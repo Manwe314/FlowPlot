@@ -28,8 +28,14 @@ TemplateExportResult exportTemplateToPath(
 	const std::vector<AddedFontVariant>& fontLibrary,
 	const std::filesystem::path& path);
 
+bool masterTemplateSpecsEqual(
+	const FlowPlot::Spec::MasterTemplateSpec& lhs,
+	const FlowPlot::Spec::MasterTemplateSpec& rhs);
+
+void ensureActiveTemplateExportComparisonChecked(state& guiState);
+
 TemplateExportResult ExportTemplateWithExportDialog(
-	const state& guiState,
+	state& guiState,
 	void* nativeWindowHandle);
 
 } // namespace FlowPlotGui

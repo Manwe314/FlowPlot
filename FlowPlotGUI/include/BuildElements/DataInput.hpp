@@ -73,8 +73,11 @@ inline const DataInputDef kDataInput = {
 		CLAY(rootId, root){
 			context.uiManager.createElement(kDataInputHeader, context.createChildElementId("header"))
 				.setParameters({
-					.guiState = context.params.guiState,
-					.activeDatasetIndex = &state.activeDatasetIndex,
+				    .guiState = context.params.guiState,
+				    .activeDatasetIndex = &state.activeDatasetIndex,
+				    .padding = Clay_Padding{.left = 8, .right = 8, .top = 6, .bottom = 0},
+				    .childGap = 7,
+				    .addRowContainerPadding = Clay_Padding{.left = 6, .right = 0, .top = 0, .bottom = 6}
 				})
 				.draw();
 			CLAY(bodyId, body){

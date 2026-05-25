@@ -73,6 +73,8 @@ struct twoColumnInputTableParams {
 	std::function<void(std::size_t)> onDeleteRow = nullptr;
 	std::function<void(std::size_t, std::string_view)> onCategoryChange = nullptr;
 	std::function<void(std::size_t, std::string_view)> onValueChange = nullptr;
+	std::function<void()> onEditBegin = nullptr;
+	std::function<void()> onEditEnd = nullptr;
 
 	twoColumnInputValueKind valueKind = twoColumnInputValueKind::String;
 	std::span<const std::string> enumOptions{};
@@ -234,6 +236,8 @@ inline basicInputFieldParams twoColumnInputBaseTextInputParams(
 	input.fontId = params.fontId;
 	input.fontSize = params.fontSize;
 	input.textColor = params.inputTextColor;
+	input.onEditBegin = params.onEditBegin;
+	input.onEditEnd = params.onEditEnd;
 	return input;
 }
 
@@ -285,6 +289,8 @@ inline void twoColumnInputDrawSecondColumnInput(
 		numericInputFieldParams numericParams = context.params.numericValue;
 		numericParams.value = twoColumnInputParseDoubleOrZero(value);
 		numericParams.sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
+		numericParams.onEditBegin = context.params.onEditBegin;
+		numericParams.onEditEnd = context.params.onEditEnd;
 		numericParams.onChange = [
 			rowIndex,
 			valueType = numericParams.valueType,
@@ -306,7 +312,15 @@ inline void twoColumnInputDrawSecondColumnInput(
 		enumParams.options = context.params.enumOptions;
 		enumParams.value = std::move(value);
 		enumParams.sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
-		enumParams.onChange = [rowIndex, callback = context.params.onValueChange](std::string_view changed) {
+		enumParams.onChange = [
+			rowIndex,
+			callback = context.params.onValueChange,
+			onEditEnd = context.params.onEditEnd
+		](std::string_view changed) {
+			if (onEditEnd != nullptr)
+			{
+				onEditEnd();
+			}
 			if (callback != nullptr)
 			{
 				callback(rowIndex, changed);
@@ -322,6 +336,8 @@ inline void twoColumnInputDrawSecondColumnInput(
 		colorPickerSwatchParams colorParams = context.params.colorValue;
 		colorParams.value = std::move(value);
 		colorParams.sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
+		colorParams.onEditBegin = context.params.onEditBegin;
+		colorParams.onEditEnd = context.params.onEditEnd;
 		colorParams.onChange = [rowIndex, callback = context.params.onValueChange](std::string_view changed) {
 			if (callback != nullptr)
 			{
@@ -457,7 +473,15 @@ inline const TwoColumnInputTableDef kTwoColumnInputTable = {
 								{
 									deleteParams.icon = TwoColumnInputTableDef::resources->trashIcon;
 								}
-								deleteParams.onPressedCallback = [rowIndex, callback = context.params.onDeleteRow](BasicButtonInteractionContext) {
+								deleteParams.onPressedCallback = [
+									rowIndex,
+									callback = context.params.onDeleteRow,
+									onEditEnd = context.params.onEditEnd
+								](BasicButtonInteractionContext) {
+									if (onEditEnd != nullptr)
+									{
+										onEditEnd();
+									}
 									if (callback != nullptr)
 									{
 										callback(rowIndex);
@@ -498,8 +522,13 @@ inline const TwoColumnInputTableDef kTwoColumnInputTable = {
 					addParams.onPressedCallback = [
 						defaultCategory = context.params.defaultCategory,
 						defaultValue = context.params.defaultValue,
-						callback = context.params.onAddRow
+						callback = context.params.onAddRow,
+						onEditEnd = context.params.onEditEnd
 					](BasicButtonInteractionContext) {
+						if (onEditEnd != nullptr)
+						{
+							onEditEnd();
+						}
 						if (callback != nullptr)
 						{
 							callback(defaultCategory, defaultValue);
@@ -525,6 +554,8 @@ inline const TwoColumnInputTableDef kTwoColumnInputTable = {
 
 struct twoColumnInputCardParams {
 	std::string hintText = "Table";
+	std::function<void()> onEditBegin = nullptr;
+	std::function<void()> onEditEnd = nullptr;
 
 	Clay_Sizing cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0, 360)};
 	Clay_LayoutDirection cardLayout = CLAY_LEFT_TO_RIGHT;
@@ -591,6 +622,8 @@ inline const TwoColumnInputCardDef kTwoColumnInputCard = {
 		spacer.layout.sizing = {.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_PERCENT(1.0f)};
 
 		twoColumnInputTableParams tableParams = context.params.table;
+		tableParams.onEditBegin = context.params.onEditBegin;
+		tableParams.onEditEnd = context.params.onEditEnd;
 		tableParams.fontId = context.params.fontId;
 		tableParams.fontSize = context.params.fontSize;
 		tableParams.inputTextColor = context.params.textColor;

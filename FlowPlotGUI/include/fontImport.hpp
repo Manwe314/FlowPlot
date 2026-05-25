@@ -7,7 +7,9 @@
 
 #include "FlowPlotGui.hpp"
 
+namespace FlowUi {
 struct FontManager;
+}
 
 namespace FlowPlotGui {
 
@@ -19,12 +21,12 @@ struct FontImportResult {
 
 FontImportResult importFontFiles(
 	state& guiState,
-	FontManager* fontManager,
+	FlowUi::FontManager* fontManager,
 	const std::vector<std::filesystem::path>& paths);
 
 FontImportResult openFontImportDialog(
 	state& guiState,
-	FontManager* fontManager,
+	FlowUi::FontManager* fontManager,
 	void* nativeWindowHandle);
 
 } // namespace FlowPlotGui

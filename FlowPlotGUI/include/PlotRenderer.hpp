@@ -18,8 +18,8 @@ struct VmaAllocator_T;
 namespace FlowPlotGui {
 
 struct PlotRendererInput {
-	const state* guiState = nullptr;
-	const FontManager* fontManager = nullptr;
+	state* guiState = nullptr;
+	const FlowUi::FontManager* fontManager = nullptr;
 	PlotCamera camera{};
 };
 

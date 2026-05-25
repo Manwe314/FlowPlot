@@ -7,7 +7,9 @@
 
 #include "FlowPlotGui.hpp"
 
+namespace FlowUi {
 struct FontManager;
+}
 
 namespace FlowPlotGui {
 
@@ -23,12 +25,12 @@ std::vector<RunningDataset> makeRunningDatasetsForTemplate(
 
 TemplateImportResult importTemplateFromPath(
 	state& guiState,
-	FontManager* fontManager,
+	FlowUi::FontManager* fontManager,
 	const std::filesystem::path& path);
 
 TemplateImportResult ImportTemplateWithImportDialog(
 	state& guiState,
-	FontManager* fontManager,
+	FlowUi::FontManager* fontManager,
 	void* nativeWindowHandle);
 
 } // namespace FlowPlotGui

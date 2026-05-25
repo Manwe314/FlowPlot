@@ -29,25 +29,21 @@ GUI app:
 - add conviniance shortcuts, text copy paste, endite layer duplication property copy paste
 - CSV parsing input as "mock" data?
 
-- compund cards toggle button not visible
+- 
 - numeric inputs . and - dont write
 - numeric input on clear sets to 0 and removes carat.
 - sting input height is tiny on empty defualt text
 - column input + button not in middle 
-- wire in Properties Title for both Id editing and node selected kind show
 - double check + icons to be icon not text. 
 - dataset + icon should have tint on hover + background color.
-- + add row text should not go beyond its box.
 - propertites title for string ID edditing
 
 - pollyline trinagluation can be made better with inner line intersection + normal direction "across point" detection.
 - GPU renderer honoring text box Clip functionalty
 - Text Layout is simply not the same as CPU renderer
-- altering figure size and temporarly setting it to 0 causes: FlowPlotGUI fatal error: resolvePlotIR: figure size/padding/gap leaves negative panel layout space
-- lines falling into subpixel range dissapear
 - reset button at viewport title should rest the camera pos and zoom. 
 - ? Help with [saved] on the navbar
-- [saved] state stamp functionality (possible hover highlight for errors)
+- 
 - data input scrolling not working.
 - MultiThreading ???
 - add graceful error handling (error showing with [saved] stamp?)
@@ -59,3 +55,25 @@ GUI app:
 	FlowPlotGUI fatal error: buildBoundIR: field 'c' at 'panels[0].layers[0].mapping.label.field' is not declared in dataset schema 'main'
 - chnageing values causes flowplots fatal erros to throw:
 	FlowPlotGUI fatal error: resolvePlotIR: axis role cannot be 'null' at 'panels[0].layers[0].axisData.y'
+
+- add row style container padding for + button
+
+- undo/redo with dataset value changes need an overview
+- undo/redo still compares entire templates instead of specific values.
+- resize min max of both template and props panel
+- error messages can be more descriptive.
+
+
+
+
+
+
+
+1
+2
+3
+4
+5
+0
+
+8

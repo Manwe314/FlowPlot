@@ -27,6 +27,7 @@
 #include "BuildElements/editors/tickSettingsEditor.hpp"
 #include "BuildElements/editors/variableTypeSettingsEditor.hpp"
 #include "FlowPlotGui.hpp"
+#include "templateExport.hpp"
 
 struct propertiesContentParams {
 	Clay_Padding padding = Clay_Padding{12, 12, 12, 12};
@@ -85,6 +86,273 @@ namespace FlowPlotGui
 				.textColor = FlowUi::Flow_Color("#aeb2b8ff"),
 			})
 			.draw();
+	}
+
+	inline DocumentEditComparator propertiesContentTemplateComparator()
+	{
+		return [](const DocumentSnapshot& before, const state& current) {
+			return !masterTemplateSpecsEqual(before.activeTemplate, current.activeTemplate);
+		};
+	}
+
+	inline void propertiesContentWireDeferredTemplateEdit(
+		stringInputCardParams& params,
+		state& guiState,
+		std::string key,
+		float timeoutSeconds = 10.0f)
+	{
+		params.onEditBegin = [&guiState, key = std::move(key), timeoutSeconds]() {
+			beginDeferredDocumentEdit(
+				guiState,
+				makeTemplateEditTarget(key, propertiesContentTemplateComparator()),
+				timeoutSeconds);
+		};
+		params.onEditEnd = [&guiState]() {
+			endDeferredDocumentEdit(guiState);
+		};
+	}
+
+	inline void propertiesContentWireDeferredTemplateEdit(
+		numericInputCardParams& params,
+		state& guiState,
+		std::string key,
+		float timeoutSeconds = 10.0f)
+	{
+		params.onEditBegin = [&guiState, key = std::move(key), timeoutSeconds]() {
+			beginDeferredDocumentEdit(
+				guiState,
+				makeTemplateEditTarget(key, propertiesContentTemplateComparator()),
+				timeoutSeconds);
+		};
+		params.onEditEnd = [&guiState]() {
+			endDeferredDocumentEdit(guiState);
+		};
+	}
+
+	inline void propertiesContentWireDeferredTemplateEdit(
+		colorPickerCardParams& params,
+		state& guiState,
+		std::string key,
+		float timeoutSeconds = 10.0f)
+	{
+		params.onEditBegin = [&guiState, key = std::move(key), timeoutSeconds]() {
+			beginDeferredDocumentEdit(
+				guiState,
+				makeTemplateEditTarget(key, propertiesContentTemplateComparator()),
+				timeoutSeconds);
+		};
+		params.onEditEnd = [&guiState]() {
+			endDeferredDocumentEdit(guiState);
+		};
+	}
+
+	inline void propertiesContentWireDeferredTemplateEdit(
+		nineSplitCardParams& params,
+		state& guiState,
+		std::string key,
+		float timeoutSeconds = 10.0f)
+	{
+		params.onEditBegin = [&guiState, key = std::move(key), timeoutSeconds]() {
+			beginDeferredDocumentEdit(
+				guiState,
+				makeTemplateEditTarget(key, propertiesContentTemplateComparator()),
+				timeoutSeconds);
+		};
+		params.onEditEnd = [&guiState]() {
+			endDeferredDocumentEdit(guiState);
+		};
+	}
+
+	inline void propertiesContentWireDeferredTemplateEdit(
+		twoColumnInputCardParams& params,
+		state& guiState,
+		std::string key,
+		float timeoutSeconds = 10.0f)
+	{
+		params.onEditBegin = [&guiState, key = std::move(key), timeoutSeconds]() {
+			beginDeferredDocumentEdit(
+				guiState,
+				makeTemplateEditTarget(key, propertiesContentTemplateComparator()),
+				timeoutSeconds);
+		};
+		params.onEditEnd = [&guiState]() {
+			endDeferredDocumentEdit(guiState);
+		};
+	}
+
+	inline void propertiesContentWireDeferredTemplateEdit(
+		textSpecEditorParams& params,
+		state& guiState,
+		const std::string& key,
+		float timeoutSeconds = 10.0f)
+	{
+		propertiesContentWireDeferredTemplateEdit(params.textInput, guiState, key + "/text", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.fontSizeInput, guiState, key + "/font-size", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.textColorInput, guiState, key + "/color", timeoutSeconds);
+	}
+
+	inline void propertiesContentWireDeferredTemplateEdit(
+		layoutEditorParams& params,
+		state& guiState,
+		const std::string& key,
+		float timeoutSeconds = 10.0f)
+	{
+		propertiesContentWireDeferredTemplateEdit(params.rowsInput, guiState, key + "/rows", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.columnsInput, guiState, key + "/columns", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.gapInput, guiState, key + "/gap", timeoutSeconds);
+	}
+
+	inline void propertiesContentWireDeferredTemplateEdit(
+		gridSettingsEditorParams& params,
+		state& guiState,
+		const std::string& key,
+		float timeoutSeconds = 10.0f)
+	{
+		propertiesContentWireDeferredTemplateEdit(params.gridColorInput, guiState, key + "/grid-color", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.gridLineWidthInput, guiState, key + "/grid-line-width", timeoutSeconds);
+	}
+
+	inline void propertiesContentWireDeferredTemplateEdit(
+		lineSettingsEditorParams& params,
+		state& guiState,
+		const std::string& key,
+		float timeoutSeconds = 10.0f)
+	{
+		propertiesContentWireDeferredTemplateEdit(params.axisLineColorInput, guiState, key + "/line-color", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.axisLineWidthInput, guiState, key + "/line-width", timeoutSeconds);
+	}
+
+	inline void propertiesContentWireDeferredTemplateEdit(
+		tickSettingsEditorParams& params,
+		state& guiState,
+		const std::string& key,
+		float timeoutSeconds = 10.0f)
+	{
+		propertiesContentWireDeferredTemplateEdit(params.lineColorInput, guiState, key + "/line-color", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.lineWidthInput, guiState, key + "/line-width", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.lineLengthInput, guiState, key + "/line-length", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.countInput, guiState, key + "/tick-count", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.gapToLabelInput, guiState, key + "/tick-label-gap", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.labelFontSizeInput, guiState, key + "/tick-label-font-size", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.labelColorInput, guiState, key + "/tick-label-color", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.minorTickCountInput, guiState, key + "/minor-tick-count", timeoutSeconds);
+	}
+
+	inline void propertiesContentWireDeferredTemplateEdit(
+		scatterMappingEditorParams& params,
+		state& guiState,
+		const std::string& key,
+		float timeoutSeconds = 10.0f)
+	{
+		propertiesContentWireDeferredTemplateEdit(params.xFieldInput, guiState, key + "/x-field", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.yFieldInput, guiState, key + "/y-field", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.colorFieldInput, guiState, key + "/color-field", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.colorMappingInput.minValueInput, guiState, key + "/color-min", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.colorMappingInput.maxValueInput, guiState, key + "/color-max", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.colorMappingInput.binsInput, guiState, key + "/color-bins", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.sizeFieldInput, guiState, key + "/size-field", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.sizeMappingInput.minValueInput, guiState, key + "/size-min", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.sizeMappingInput.maxValueInput, guiState, key + "/size-max", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.sizeMappingInput.binsInput, guiState, key + "/size-bins", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.labelFieldInput, guiState, key + "/label-field", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.labelMappingInput, guiState, key + "/label-mapping", timeoutSeconds);
+	}
+
+	inline void propertiesContentWireDeferredTemplateEdit(
+		histogramMappingEditorParams& params,
+		state& guiState,
+		const std::string& key,
+		float timeoutSeconds = 10.0f)
+	{
+		propertiesContentWireDeferredTemplateEdit(params.dataFieldInput, guiState, key + "/data-field", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.colorFieldInput, guiState, key + "/color-field", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.colorMappingInput.minValueInput, guiState, key + "/color-min", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.colorMappingInput.maxValueInput, guiState, key + "/color-max", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.colorMappingInput.binsInput, guiState, key + "/color-bins", timeoutSeconds);
+	}
+
+	inline void propertiesContentWireDeferredTemplateEdit(
+		scatterStyleEditorParams& params,
+		state& guiState,
+		const std::string& key,
+		float timeoutSeconds = 10.0f)
+	{
+		propertiesContentWireDeferredTemplateEdit(params.fillColorInput, guiState, key + "/fill-color", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.strokeColorInput, guiState, key + "/stroke-color", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.strokeWidthInput, guiState, key + "/stroke-width", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.markerSizeInput, guiState, key + "/marker-size", timeoutSeconds);
+	}
+
+	inline void propertiesContentWireDeferredTemplateEdit(
+		histogramStyleEditorParams& params,
+		state& guiState,
+		const std::string& key,
+		float timeoutSeconds = 10.0f)
+	{
+		propertiesContentWireDeferredTemplateEdit(params.fillColorInput, guiState, key + "/fill-color", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.strokeColorInput, guiState, key + "/stroke-color", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.strokeWidthInput, guiState, key + "/stroke-width", timeoutSeconds);
+	}
+
+	inline void propertiesContentWireDeferredTemplateEdit(
+		scatterStatsEditorParams& params,
+		state& guiState,
+		const std::string& key,
+		float timeoutSeconds = 10.0f)
+	{
+		propertiesContentWireDeferredTemplateEdit(params.meanPointColorInput, guiState, key + "/mean-color", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.meanPointStrokeColorInput, guiState, key + "/mean-stroke-color", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.meanPointStrokeWidthInput, guiState, key + "/mean-stroke-width", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.meanPointSizeInput, guiState, key + "/mean-size", timeoutSeconds);
+	}
+
+	inline void propertiesContentWireDeferredTemplateEdit(
+		histogramStatsEditorParams& params,
+		state& guiState,
+		const std::string& key,
+		float timeoutSeconds = 10.0f)
+	{
+		propertiesContentWireDeferredTemplateEdit(params.meanLineColorInput, guiState, key + "/mean-color", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.meanLineWidthInput, guiState, key + "/mean-width", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.medianLineColorInput, guiState, key + "/median-color", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.medianLineWidthInput, guiState, key + "/median-width", timeoutSeconds);
+	}
+
+	inline void propertiesContentWireDeferredTemplateEdit(
+		scatterConfigEditorParams& params,
+		state& guiState,
+		const std::string& key,
+		float timeoutSeconds = 10.0f)
+	{
+		propertiesContentWireDeferredTemplateEdit(params.jitterXInput, guiState, key + "/jitter-x", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.jitterYInput, guiState, key + "/jitter-y", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.domainPaddingInput, guiState, key + "/domain-padding", timeoutSeconds);
+	}
+
+	inline void propertiesContentWireDeferredTemplateEdit(
+		histogramConfigEditorParams& params,
+		state& guiState,
+		const std::string& key,
+		float timeoutSeconds = 10.0f)
+	{
+		propertiesContentWireDeferredTemplateEdit(params.binCountInput, guiState, key + "/bin-count", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.domainPaddingInput, guiState, key + "/domain-padding", timeoutSeconds);
+	}
+
+	inline void propertiesContentWireDeferredTemplateEdit(
+		variableTypeSettingsEditorParams& params,
+		state& guiState,
+		const std::string& key,
+		float timeoutSeconds = 10.0f)
+	{
+		propertiesContentWireDeferredTemplateEdit(params.scatterMappings, guiState, key + "/scatter-mappings", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.histogramMappings, guiState, key + "/histogram-mappings", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.scatterStyle, guiState, key + "/scatter-style", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.histogramStyle, guiState, key + "/histogram-style", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.scatterStats, guiState, key + "/scatter-stats", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.histogramStats, guiState, key + "/histogram-stats", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.scatterConfig, guiState, key + "/scatter-config", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.histogramConfig, guiState, key + "/histogram-config", timeoutSeconds);
 	}
 
 	inline std::optional<std::size_t> propertiesContentFindPanelIndex(
@@ -354,7 +622,8 @@ namespace FlowPlotGui
 		auto& figure = guiState.activeTemplate.figure;
 
 		ui.createElement(kNumericInputCard, std::string(rootId) + "/figure-width")
-			.setParameters(numericInputCardParams{
+			.setParameters([&]() {
+				numericInputCardParams params{
 				.hintText = "Width",
 				.valueType = numericInputValueType::UInt32,
 				.value = static_cast<double>(figure.width),
@@ -367,12 +636,17 @@ namespace FlowPlotGui
 						1.0,
 						static_cast<double>(std::numeric_limits<std::uint32_t>::max())));
 					markTemplateChanged(guiState);
+					commitImmediateDocumentChangeIfNoDeferredEdit(guiState);
 				},
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "figure/width");
+				return params;
+			}())
 			.draw();
 
 		ui.createElement(kNumericInputCard, std::string(rootId) + "/figure-height")
-			.setParameters(numericInputCardParams{
+			.setParameters([&]() {
+				numericInputCardParams params{
 				.hintText = "Height",
 				.valueType = numericInputValueType::UInt32,
 				.value = static_cast<double>(figure.height),
@@ -385,19 +659,28 @@ namespace FlowPlotGui
 						1.0,
 						static_cast<double>(std::numeric_limits<std::uint32_t>::max())));
 					markTemplateChanged(guiState);
+					commitImmediateDocumentChangeIfNoDeferredEdit(guiState);
 				},
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "figure/height");
+				return params;
+			}())
 			.draw();
 
 		ui.createElement(kColorPickerCard, std::string(rootId) + "/figure-background")
-			.setParameters(colorPickerCardParams{
+			.setParameters([&]() {
+				colorPickerCardParams params{
 				.hintText = "Background",
 				.value = figure.background,
 				.onChange = [&guiState](std::string_view changed) {
 					guiState.activeTemplate.figure.background = std::string(changed);
 					markTemplateChanged(guiState);
+					commitImmediateDocumentChangeIfNoDeferredEdit(guiState);
 				},
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "figure/background");
+				return params;
+			}())
 			.draw();
 
 		const Clay_Padding currentPadding{
@@ -420,7 +703,8 @@ namespace FlowPlotGui
 		};
 
 		ui.createElement(kNineSplitCard, std::string(rootId) + "/figure-padding")
-			.setParameters(nineSplitCardParams{
+			.setParameters([&]() {
+				nineSplitCardParams params{
 				.hintText = "Padding",
 				.value = currentPadding,
 				.onChange = [&guiState](Clay_Padding changed) {
@@ -429,8 +713,12 @@ namespace FlowPlotGui
 					guiState.activeTemplate.figure.padding.top = static_cast<float>(changed.top);
 					guiState.activeTemplate.figure.padding.bottom = static_cast<float>(changed.bottom);
 					markTemplateChanged(guiState);
+					commitImmediateDocumentChangeIfNoDeferredEdit(guiState);
 				},
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "figure/padding");
+				return params;
+			}())
 			.draw();
 	}
 
@@ -442,8 +730,10 @@ namespace FlowPlotGui
 		params.onChange = [&guiState](FlowPlot::Spec::TextSpec changed) {
 			guiState.activeTemplate.figure.title = std::move(changed);
 			markTemplateChanged(guiState);
+					commitImmediateDocumentChangeIfNoDeferredEdit(guiState);
 		};
 		propertiesContentApplyTextFontOptions(params, guiState, params.value);
+		propertiesContentWireDeferredTemplateEdit(params, guiState, "figure/title");
 
 		ui.createElement(kTextSpecEditor, std::string(rootId) + "/figure-title-editor")
 			.setParameters(std::move(params))
@@ -453,14 +743,19 @@ namespace FlowPlotGui
 	inline void drawLayoutEditor(FlowUi::UiManager& ui, state& guiState, std::string_view rootId)
 	{
 		ui.createElement(kLayoutEditor, std::string(rootId) + "/layout-editor")
-			.setParameters(layoutEditorParams{
+			.setParameters([&]() {
+				layoutEditorParams params{
 				.hintText = "Layout",
 				.value = guiState.activeTemplate.layout,
 				.onChange = [&guiState](FlowPlot::Spec::LayoutSpec changed) {
 					guiState.activeTemplate.layout = std::move(changed);
 					markTemplateChanged(guiState);
+					commitImmediateDocumentChangeIfNoDeferredEdit(guiState);
 				},
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "layout");
+				return params;
+			}())
 			.draw();
 	}
 
@@ -480,19 +775,22 @@ namespace FlowPlotGui
 		ui.createElement(kToggleCard, std::string(rootId) + "/panel-visible")
 			.setParameters(toggleCardParams{
 				.hintText = "Visible",
-				.value = panel.visible,
-				.onChange = [&guiState, panelId](bool changed) {
-					if (const auto index = propertiesContentFindPanelIndex(guiState.activeTemplate, panelId))
-					{
+					.value = panel.visible,
+					.onChange = [&guiState, panelId](bool changed) {
+						prepareImmediateDocumentChange(guiState);
+						if (const auto index = propertiesContentFindPanelIndex(guiState.activeTemplate, panelId))
+						{
 						guiState.activeTemplate.panels[*index].visible = changed;
 						markTemplateChanged(guiState);
+					commitImmediateDocumentChangeIfNoDeferredEdit(guiState);
 					}
 				},
 			})
 			.draw();
 
 		ui.createElement(kColorPickerCard, std::string(rootId) + "/panel-background")
-			.setParameters(colorPickerCardParams{
+			.setParameters([&]() {
+				colorPickerCardParams params{
 				.hintText = "Background",
 				.value = panel.background,
 				.onChange = [&guiState, panelId](std::string_view changed) {
@@ -500,13 +798,18 @@ namespace FlowPlotGui
 					{
 						guiState.activeTemplate.panels[*index].background = std::string(changed);
 						markTemplateChanged(guiState);
+					commitImmediateDocumentChangeIfNoDeferredEdit(guiState);
 					}
 				},
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "panel/" + panelId + "/background");
+				return params;
+			}())
 			.draw();
 
 		ui.createElement(kColorPickerCard, std::string(rootId) + "/panel-border-color")
-			.setParameters(colorPickerCardParams{
+			.setParameters([&]() {
+				colorPickerCardParams params{
 				.hintText = "Border Color",
 				.value = panel.borderColor,
 				.onChange = [&guiState, panelId](std::string_view changed) {
@@ -514,13 +817,18 @@ namespace FlowPlotGui
 					{
 						guiState.activeTemplate.panels[*index].borderColor = std::string(changed);
 						markTemplateChanged(guiState);
+					commitImmediateDocumentChangeIfNoDeferredEdit(guiState);
 					}
 				},
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "panel/" + panelId + "/border-color");
+				return params;
+			}())
 			.draw();
 
 		ui.createElement(kNumericInputCard, std::string(rootId) + "/panel-border-width")
-			.setParameters(numericInputCardParams{
+			.setParameters([&]() {
+				numericInputCardParams params{
 				.hintText = "Border Width",
 				.valueType = numericInputValueType::Float,
 				.value = static_cast<double>(panel.borderWidth),
@@ -531,13 +839,18 @@ namespace FlowPlotGui
 					{
 						guiState.activeTemplate.panels[*index].borderWidth = static_cast<float>(changed);
 						markTemplateChanged(guiState);
+					commitImmediateDocumentChangeIfNoDeferredEdit(guiState);
 					}
 				},
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "panel/" + panelId + "/border-width");
+				return params;
+			}())
 			.draw();
 
 		ui.createElement(kNineSplitCard, std::string(rootId) + "/panel-padding")
-			.setParameters(nineSplitCardParams{
+			.setParameters([&]() {
+				nineSplitCardParams params{
 				.hintText = "Padding",
 				.value = propertiesContentPaddingToClay(panel.padding),
 				.onChange = [&guiState, panelId](Clay_Padding changed) {
@@ -549,20 +862,26 @@ namespace FlowPlotGui
 						padding.top = static_cast<float>(changed.top);
 						padding.bottom = static_cast<float>(changed.bottom);
 						markTemplateChanged(guiState);
+					commitImmediateDocumentChangeIfNoDeferredEdit(guiState);
 					}
 				},
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "panel/" + panelId + "/padding");
+				return params;
+			}())
 			.draw();
 
 		ui.createElement(kToggleCard, std::string(rootId) + "/panel-clip-content")
 			.setParameters(toggleCardParams{
 				.hintText = "Clip Content",
-				.value = panel.clipContent,
-				.onChange = [&guiState, panelId](bool changed) {
-					if (const auto index = propertiesContentFindPanelIndex(guiState.activeTemplate, panelId))
-					{
+					.value = panel.clipContent,
+					.onChange = [&guiState, panelId](bool changed) {
+						prepareImmediateDocumentChange(guiState);
+						if (const auto index = propertiesContentFindPanelIndex(guiState.activeTemplate, panelId))
+						{
 						guiState.activeTemplate.panels[*index].clipContent = changed;
 						markTemplateChanged(guiState);
+					commitImmediateDocumentChangeIfNoDeferredEdit(guiState);
 					}
 				},
 			})
@@ -589,9 +908,11 @@ namespace FlowPlotGui
 			{
 				guiState.activeTemplate.panels[*index].title = std::move(changed);
 				markTemplateChanged(guiState);
+					commitImmediateDocumentChangeIfNoDeferredEdit(guiState);
 			}
 		};
 		propertiesContentApplyTextFontOptions(params, guiState, params.value);
+		propertiesContentWireDeferredTemplateEdit(params, guiState, "panel/" + panelId + "/title");
 
 		ui.createElement(kTextSpecEditor, std::string(rootId) + "/panel-title-editor")
 			.setParameters(std::move(params))
@@ -623,13 +944,15 @@ namespace FlowPlotGui
 		const auto emitAxisChange = [&guiState, panelId, axisKind](FlowPlot::Spec::AxisSpec changed) {
 			propertiesContentSetPanelAxis(guiState, panelId, axisKind, std::move(changed));
 			markTemplateChanged(guiState);
+					commitImmediateDocumentChangeIfNoDeferredEdit(guiState);
 		};
 
 		ui.createElement(kToggleCard, std::string(rootId) + "/axis-visible")
 			.setParameters(toggleCardParams{
 				.hintText = "Visible",
 				.value = axis->visible,
-				.onChange = [axisValue = *axis, emitAxisChange](bool changed) mutable {
+				.onChange = [&guiState, axisValue = *axis, emitAxisChange](bool changed) mutable {
+					prepareImmediateDocumentChange(guiState);
 					axisValue.visible = changed;
 					emitAxisChange(std::move(axisValue));
 				},
@@ -642,7 +965,8 @@ namespace FlowPlotGui
 				.options = kAxisScaleOptions,
 				.value = axis->scale,
 				.defaultValue = "linear",
-				.onChange = [axisValue = *axis, emitAxisChange](std::string_view changed) mutable {
+				.onChange = [&guiState, axisValue = *axis, emitAxisChange](std::string_view changed) mutable {
+					prepareImmediateDocumentChange(guiState);
 					axisValue.scale = std::string(changed);
 					emitAxisChange(std::move(axisValue));
 				},
@@ -650,7 +974,8 @@ namespace FlowPlotGui
 			.draw();
 
 		ui.createElement(kNumericInputCard, std::string(rootId) + "/axis-min")
-			.setParameters(numericInputCardParams{
+			.setParameters([&]() {
+				numericInputCardParams params{
 				.hintText = "Min",
 				.valueType = numericInputValueType::Float,
 				.value = axis->min.has_value() ? static_cast<double>(*axis->min) : 0.0,
@@ -660,11 +985,15 @@ namespace FlowPlotGui
 					axisValue.min = static_cast<float>(changed);
 					emitAxisChange(std::move(axisValue));
 				},
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "axis/" + panelId + "/" + std::to_string(static_cast<int>(axisKind)) + "/min");
+				return params;
+			}())
 			.draw();
 
 		ui.createElement(kNumericInputCard, std::string(rootId) + "/axis-max")
-			.setParameters(numericInputCardParams{
+			.setParameters([&]() {
+				numericInputCardParams params{
 				.hintText = "Max",
 				.valueType = numericInputValueType::Float,
 				.value = axis->max.has_value() ? static_cast<double>(*axis->max) : 0.0,
@@ -674,14 +1003,18 @@ namespace FlowPlotGui
 					axisValue.max = static_cast<float>(changed);
 					emitAxisChange(std::move(axisValue));
 				},
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "axis/" + panelId + "/" + std::to_string(static_cast<int>(axisKind)) + "/max");
+				return params;
+			}())
 			.draw();
 
 		ui.createElement(kToggleCard, std::string(rootId) + "/axis-invert")
 			.setParameters(toggleCardParams{
 				.hintText = "Invert",
 				.value = axis->invert,
-				.onChange = [axisValue = *axis, emitAxisChange](bool changed) mutable {
+				.onChange = [&guiState, axisValue = *axis, emitAxisChange](bool changed) mutable {
+					prepareImmediateDocumentChange(guiState);
 					axisValue.invert = changed;
 					emitAxisChange(std::move(axisValue));
 				},
@@ -692,7 +1025,8 @@ namespace FlowPlotGui
 			.setParameters(toggleCardParams{
 				.hintText = "Grid",
 				.value = axis->grid,
-				.onChange = [axisValue = *axis, emitAxisChange](bool changed) mutable {
+				.onChange = [&guiState, axisValue = *axis, emitAxisChange](bool changed) mutable {
+					prepareImmediateDocumentChange(guiState);
 					axisValue.grid = changed;
 					emitAxisChange(std::move(axisValue));
 				},
@@ -700,19 +1034,27 @@ namespace FlowPlotGui
 			.draw();
 
 		ui.createElement(kGridSettingsEditor, std::string(rootId) + "/axis-grid-settings")
-			.setParameters(gridSettingsEditorParams{
+			.setParameters([&]() {
+				gridSettingsEditorParams params{
 				.hintText = "Grid Settings",
 				.value = *axis,
 				.onChange = emitAxisChange,
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "axis/" + panelId + "/" + std::to_string(static_cast<int>(axisKind)) + "/grid");
+				return params;
+			}())
 			.draw();
 
 		ui.createElement(kLineSettingsEditor, std::string(rootId) + "/axis-line-settings")
-			.setParameters(lineSettingsEditorParams{
+			.setParameters([&]() {
+				lineSettingsEditorParams params{
 				.hintText = "Line Settings",
 				.value = *axis,
 				.onChange = emitAxisChange,
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "axis/" + panelId + "/" + std::to_string(static_cast<int>(axisKind)) + "/line");
+				return params;
+			}())
 			.draw();
 
 		ui.createElement(kTickSettingsEditor, std::string(rootId) + "/axis-tick-settings")
@@ -722,6 +1064,7 @@ namespace FlowPlotGui
 				params.value = *axis;
 				params.onChange = emitAxisChange;
 				propertiesContentApplyTickFontOptions(params, guiState, params.value);
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "axis/" + panelId + "/" + std::to_string(static_cast<int>(axisKind)) + "/ticks");
 				return params;
 			}())
 			.draw();
@@ -764,10 +1107,12 @@ namespace FlowPlotGui
 				{
 					axis->title = std::move(changed);
 					markTemplateChanged(guiState);
+					commitImmediateDocumentChangeIfNoDeferredEdit(guiState);
 				}
 			}
 		};
 		propertiesContentApplyTextFontOptions(params, guiState, params.value);
+		propertiesContentWireDeferredTemplateEdit(params, guiState, "axis-title/" + panelId + "/" + std::to_string(static_cast<int>(*axisKind)));
 
 		ui.createElement(kTextSpecEditor, std::string(rootId) + "/axis-title-editor")
 			.setParameters(std::move(params))
@@ -810,6 +1155,7 @@ namespace FlowPlotGui
 			{
 				*target = std::move(changed);
 				markTemplateChanged(guiState);
+					commitImmediateDocumentChangeIfNoDeferredEdit(guiState);
 			}
 		};
 
@@ -819,7 +1165,8 @@ namespace FlowPlotGui
 				.options = kLayerTypeOptions,
 				.value = layer.type,
 				.defaultValue = "scatter",
-				.onChange = [layerValue = layer, emitLayerChange](std::string_view changed) mutable {
+				.onChange = [&guiState, layerValue = layer, emitLayerChange](std::string_view changed) mutable {
+					prepareImmediateDocumentChange(guiState);
 					layerValue.type = std::string(changed);
 					emitLayerChange(std::move(layerValue));
 				},
@@ -830,7 +1177,8 @@ namespace FlowPlotGui
 			.setParameters(toggleCardParams{
 				.hintText = "Visible",
 				.value = layer.visible,
-				.onChange = [layerValue = layer, emitLayerChange](bool changed) mutable {
+				.onChange = [&guiState, layerValue = layer, emitLayerChange](bool changed) mutable {
+					prepareImmediateDocumentChange(guiState);
 					layerValue.visible = changed;
 					emitLayerChange(std::move(layerValue));
 				},
@@ -838,7 +1186,8 @@ namespace FlowPlotGui
 			.draw();
 
 		ui.createElement(kNumericInputCard, std::string(rootId) + "/layer-opacity")
-			.setParameters(numericInputCardParams{
+			.setParameters([&]() {
+				numericInputCardParams params{
 				.hintText = "Opacity",
 				.valueType = numericInputValueType::Float,
 				.value = static_cast<double>(layer.opacity),
@@ -848,11 +1197,15 @@ namespace FlowPlotGui
 					layerValue.opacity = static_cast<float>(changed);
 					emitLayerChange(std::move(layerValue));
 				},
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "layer/" + panelId + "/" + layerId + "/opacity");
+				return params;
+			}())
 			.draw();
 
 		ui.createElement(kNumericInputCard, std::string(rootId) + "/layer-z-index")
-			.setParameters(numericInputCardParams{
+			.setParameters([&]() {
+				numericInputCardParams params{
 				.hintText = "Z Index",
 				.valueType = numericInputValueType::Int32,
 				.value = static_cast<double>(layer.zIndex),
@@ -866,18 +1219,25 @@ namespace FlowPlotGui
 						static_cast<double>(std::numeric_limits<std::int32_t>::max())));
 					emitLayerChange(std::move(layerValue));
 				},
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "layer/" + panelId + "/" + layerId + "/z-index");
+				return params;
+			}())
 			.draw();
 
 		ui.createElement(kStringInputCard, std::string(rootId) + "/layer-dataset")
-			.setParameters(stringInputCardParams{
+			.setParameters([&]() {
+				stringInputCardParams params{
 				.hintText = "Dataset",
 				.value = layer.dataset,
 				.onChange = [layerValue = layer, emitLayerChange](std::string_view changed) mutable {
 					layerValue.dataset = std::string(changed);
 					emitLayerChange(std::move(layerValue));
 				},
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "layer/" + panelId + "/" + layerId + "/dataset");
+				return params;
+			}())
 			.draw();
 
 		ui.createElement(kDoubleEnumPickerCard, std::string(rootId) + "/layer-axis-data")
@@ -891,7 +1251,8 @@ namespace FlowPlotGui
 				.secondOptions = kAxisDataRoleOptions,
 				.secondValue = propertiesContentAxisRoleToString(layer.axisData.y),
 				.secondDefaultValue = "primary",
-				.onChange = [layerValue = layer, emitLayerChange](std::string_view xRole, std::string_view yRole) mutable {
+				.onChange = [&guiState, layerValue = layer, emitLayerChange](std::string_view xRole, std::string_view yRole) mutable {
+					prepareImmediateDocumentChange(guiState);
 					layerValue.axisData.x = propertiesContentAxisRoleFromString(xRole);
 					layerValue.axisData.y = propertiesContentAxisRoleFromString(yRole);
 					emitLayerChange(std::move(layerValue));
@@ -900,12 +1261,16 @@ namespace FlowPlotGui
 			.draw();
 
 		ui.createElement(kVariableTypeSettingsEditor, std::string(rootId) + "/layer-variable-type-settings")
-			.setParameters(variableTypeSettingsEditorParams{
+			.setParameters([&]() {
+				variableTypeSettingsEditorParams params{
 				.hintText = "Variable Type Settings",
 				.layerType = propertiesContentVariableLayerTypeFromString(layer.type),
 				.value = layer,
 				.onChange = emitLayerChange,
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "layer/" + panelId + "/" + layerId + "/variable");
+				return params;
+			}())
 			.draw();
 	}
 
@@ -932,6 +1297,7 @@ namespace FlowPlotGui
 			{
 				*target = std::move(changed);
 				markTemplateChanged(guiState);
+					commitImmediateDocumentChangeIfNoDeferredEdit(guiState);
 			}
 		};
 
@@ -939,7 +1305,8 @@ namespace FlowPlotGui
 			.setParameters(toggleCardParams{
 				.hintText = "Visible",
 				.value = legend.visible,
-				.onChange = [legendValue = legend, emitLegendChange](bool changed) mutable {
+				.onChange = [&guiState, legendValue = legend, emitLegendChange](bool changed) mutable {
+					prepareImmediateDocumentChange(guiState);
 					legendValue.visible = changed;
 					emitLegendChange(std::move(legendValue));
 				},
@@ -947,29 +1314,38 @@ namespace FlowPlotGui
 			.draw();
 
 		ui.createElement(kColorPickerCard, std::string(rootId) + "/legend-background")
-			.setParameters(colorPickerCardParams{
+			.setParameters([&]() {
+				colorPickerCardParams params{
 				.hintText = "Background Color",
 				.value = legend.background,
 				.onChange = [legendValue = legend, emitLegendChange](std::string_view changed) mutable {
 					legendValue.background = std::string(changed);
 					emitLegendChange(std::move(legendValue));
 				},
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "legend/" + legendId + "/background");
+				return params;
+			}())
 			.draw();
 
 		ui.createElement(kColorPickerCard, std::string(rootId) + "/legend-border-color")
-			.setParameters(colorPickerCardParams{
+			.setParameters([&]() {
+				colorPickerCardParams params{
 				.hintText = "Border Color",
 				.value = legend.borderColor,
 				.onChange = [legendValue = legend, emitLegendChange](std::string_view changed) mutable {
 					legendValue.borderColor = std::string(changed);
 					emitLegendChange(std::move(legendValue));
 				},
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "legend/" + legendId + "/border-color");
+				return params;
+			}())
 			.draw();
 
 		ui.createElement(kNumericInputCard, std::string(rootId) + "/legend-border-width")
-			.setParameters(numericInputCardParams{
+			.setParameters([&]() {
+				numericInputCardParams params{
 				.hintText = "Border Width",
 				.valueType = numericInputValueType::Float,
 				.value = static_cast<double>(legend.borderWidth),
@@ -979,11 +1355,15 @@ namespace FlowPlotGui
 					legendValue.borderWidth = static_cast<float>(changed);
 					emitLegendChange(std::move(legendValue));
 				},
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "legend/" + legendId + "/border-width");
+				return params;
+			}())
 			.draw();
 
 		ui.createElement(kNineSplitCard, std::string(rootId) + "/legend-padding")
-			.setParameters(nineSplitCardParams{
+			.setParameters([&]() {
+				nineSplitCardParams params{
 				.hintText = "Padding",
 				.value = propertiesContentPaddingToClay(legend.padding),
 				.onChange = [legendValue = legend, emitLegendChange](Clay_Padding changed) mutable {
@@ -993,11 +1373,15 @@ namespace FlowPlotGui
 					legendValue.padding.bottom = static_cast<float>(changed.bottom);
 					emitLegendChange(std::move(legendValue));
 				},
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "legend/" + legendId + "/padding");
+				return params;
+			}())
 			.draw();
 
 		ui.createElement(kNumericInputCard, std::string(rootId) + "/legend-gap")
-			.setParameters(numericInputCardParams{
+			.setParameters([&]() {
+				numericInputCardParams params{
 				.hintText = "Gap",
 				.valueType = numericInputValueType::Float,
 				.value = static_cast<double>(legend.gap),
@@ -1007,7 +1391,10 @@ namespace FlowPlotGui
 					legendValue.gap = static_cast<float>(changed);
 					emitLegendChange(std::move(legendValue));
 				},
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "legend/" + legendId + "/gap");
+				return params;
+			}())
 			.draw();
 	}
 
@@ -1059,18 +1446,23 @@ namespace FlowPlotGui
 			{
 				*target = std::move(changed);
 				markTemplateChanged(guiState);
+					commitImmediateDocumentChangeIfNoDeferredEdit(guiState);
 			}
 		};
 
 		ui.createElement(kStringInputCard, std::string(rootId) + "/legend-element-text")
-			.setParameters(stringInputCardParams{
+			.setParameters([&]() {
+				stringInputCardParams params{
 				.hintText = "Text",
 				.value = element.text,
 				.onChange = [elementValue = element, emitElementChange](std::string_view changed) mutable {
 					elementValue.text = std::string(changed);
 					emitElementChange(std::move(elementValue));
 				},
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "legend/" + legendId + "/" + elementId + "/text");
+				return params;
+			}())
 			.draw();
 
 		ui.createElement(kEnumPickerCard, std::string(rootId) + "/legend-element-font-family")
@@ -1079,7 +1471,8 @@ namespace FlowPlotGui
 				.options = fontFamilyOptions,
 				.value = element.fontFamily,
 				.defaultValue = "Default",
-				.onChange = [elementValue = element, emitElementChange](std::string_view changed) mutable {
+				.onChange = [&guiState, elementValue = element, emitElementChange](std::string_view changed) mutable {
+					prepareImmediateDocumentChange(guiState);
 					elementValue.fontFamily = std::string(changed);
 					emitElementChange(std::move(elementValue));
 				},
@@ -1087,7 +1480,8 @@ namespace FlowPlotGui
 			.draw();
 
 		ui.createElement(kNumericInputCard, std::string(rootId) + "/legend-element-font-size")
-			.setParameters(numericInputCardParams{
+			.setParameters([&]() {
+				numericInputCardParams params{
 				.hintText = "Font Size",
 				.valueType = numericInputValueType::Float,
 				.value = static_cast<double>(element.fontSize),
@@ -1097,7 +1491,10 @@ namespace FlowPlotGui
 					elementValue.fontSize = static_cast<float>(changed);
 					emitElementChange(std::move(elementValue));
 				},
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "legend/" + legendId + "/" + elementId + "/font-size");
+				return params;
+			}())
 			.draw();
 
 		ui.createElement(kEnumPickerCard, std::string(rootId) + "/legend-element-font-weight")
@@ -1106,7 +1503,8 @@ namespace FlowPlotGui
 				.options = fontWeightOptions,
 				.value = std::to_string(element.fontWeight),
 				.defaultValue = "400",
-				.onChange = [elementValue = element, emitElementChange](std::string_view changed) mutable {
+				.onChange = [&guiState, elementValue = element, emitElementChange](std::string_view changed) mutable {
+					prepareImmediateDocumentChange(guiState);
 					try
 					{
 						const unsigned long parsed = std::stoul(std::string(changed));
@@ -1129,7 +1527,8 @@ namespace FlowPlotGui
 				.options = fontStyleOptions,
 				.value = element.fontStyle,
 				.defaultValue = "normal",
-				.onChange = [elementValue = element, emitElementChange](std::string_view changed) mutable {
+				.onChange = [&guiState, elementValue = element, emitElementChange](std::string_view changed) mutable {
+					prepareImmediateDocumentChange(guiState);
 					elementValue.fontStyle = std::string(changed);
 					emitElementChange(std::move(elementValue));
 				},
@@ -1137,14 +1536,18 @@ namespace FlowPlotGui
 			.draw();
 
 		ui.createElement(kColorPickerCard, std::string(rootId) + "/legend-element-color")
-			.setParameters(colorPickerCardParams{
+			.setParameters([&]() {
+				colorPickerCardParams params{
 				.hintText = "Color",
 				.value = element.color,
 				.onChange = [elementValue = element, emitElementChange](std::string_view changed) mutable {
 					elementValue.color = std::string(changed);
 					emitElementChange(std::move(elementValue));
 				},
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "legend/" + legendId + "/" + elementId + "/color");
+				return params;
+			}())
 			.draw();
 
 		ui.createElement(kEnumPickerCard, std::string(rootId) + "/legend-element-overflow")
@@ -1153,7 +1556,8 @@ namespace FlowPlotGui
 				.options = kOverflowOptions,
 				.value = element.overflow,
 				.defaultValue = "clip",
-				.onChange = [elementValue = element, emitElementChange](std::string_view changed) mutable {
+				.onChange = [&guiState, elementValue = element, emitElementChange](std::string_view changed) mutable {
+					prepareImmediateDocumentChange(guiState);
 					elementValue.overflow = std::string(changed);
 					emitElementChange(std::move(elementValue));
 				},
@@ -1166,7 +1570,8 @@ namespace FlowPlotGui
 				.options = kIconShapeOptions,
 				.value = element.iconShape,
 				.defaultValue = "square",
-				.onChange = [elementValue = element, emitElementChange](std::string_view changed) mutable {
+				.onChange = [&guiState, elementValue = element, emitElementChange](std::string_view changed) mutable {
+					prepareImmediateDocumentChange(guiState);
 					elementValue.iconShape = std::string(changed);
 					emitElementChange(std::move(elementValue));
 				},
@@ -1174,14 +1579,18 @@ namespace FlowPlotGui
 			.draw();
 
 		ui.createElement(kColorPickerCard, std::string(rootId) + "/legend-element-icon-color")
-			.setParameters(colorPickerCardParams{
+			.setParameters([&]() {
+				colorPickerCardParams params{
 				.hintText = "Icon Color",
 				.value = element.iconColor,
 				.onChange = [elementValue = element, emitElementChange](std::string_view changed) mutable {
 					elementValue.iconColor = std::string(changed);
 					emitElementChange(std::move(elementValue));
 				},
-			})
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "legend/" + legendId + "/" + elementId + "/icon-color");
+				return params;
+			}())
 			.draw();
 	}
 
