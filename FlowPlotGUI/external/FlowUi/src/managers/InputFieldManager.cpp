@@ -791,6 +791,31 @@ bool InputFieldManager::insertTextAtPrimaryCaret(std::string_view utf8Text) {
 	return changed;
 }
 
+bool InputFieldManager::replaceFieldTextPreservingCarets(std::string_view fieldId, std::string_view text) {
+	if (fieldId.empty()) {
+		return false;
+	}
+
+	const std::string key(fieldId);
+	const auto it = fieldsById_.find(key);
+	if (it == fieldsById_.end()) {
+		return false;
+	}
+
+	FieldState& field = it->second;
+	if (field.text == text) {
+		return false;
+	}
+
+	field.text = std::string(text);
+	clampCaretsToText(field);
+	if (pointerDrag_.fieldId == key) {
+		pointerDrag_.anchorByteOffset = clampUtf8Boundary(field.text, pointerDrag_.anchorByteOffset);
+	}
+	markCaretBlinkReset();
+	return true;
+}
+
 void InputFieldManager::requestCaret(std::string_view fieldId, CaretRequestKind kind) {
 	if (kind == CaretRequestKind::ClearAll) {
 		for (auto& [_, field] : fieldsById_) {

@@ -194,6 +194,43 @@ inline bool numericInputTryParseDouble(std::string_view text, double& outValue)
 	return true;
 }
 
+inline bool numericInputTextIsPermittedEditingState(
+	std::string_view text,
+	numericInputValueType type,
+	double minValue,
+	double maxValue)
+{
+	if (text.empty())
+	{
+		return true;
+	}
+
+	const bool allowDecimal = numericInputTypeIsFloating(type);
+	const bool allowNegative = numericInputDomainMin(type, minValue, maxValue) < 0.0;
+	bool hasDecimal = false;
+	bool hasMinus = false;
+	for (size_t index = 0; index < text.size(); ++index)
+	{
+		const char c = text[index];
+		if (std::isdigit(static_cast<unsigned char>(c)) != 0)
+		{
+			continue;
+		}
+		if (c == '-' && allowNegative && index == 0 && !hasMinus)
+		{
+			hasMinus = true;
+			continue;
+		}
+		if (c == '.' && allowDecimal && !hasDecimal)
+		{
+			hasDecimal = true;
+			continue;
+		}
+		return false;
+	}
+	return true;
+}
+
 inline double numericInputNormalizeValue(
 	numericInputValueType type,
 	double rawValue,
@@ -346,7 +383,7 @@ inline const NumericInputFieldDef kNumericInputField = {
 		}
 		if (state.pendingFieldReset)
 		{
-			(void)context.uiManager.inputFields().removeField(inputPath);
+			(void)context.uiManager.inputFields().replaceFieldTextPreservingCarets(inputPath, state.normalizedText);
 			state.pendingFieldReset = false;
 		}
 
@@ -388,13 +425,21 @@ inline const NumericInputFieldDef kNumericInputField = {
 
 			double parsed = 0.0;
 			const bool parsedOk = numericInputTryParseDouble(text, parsed);
+			const bool permittedEditingState =
+				numericInputTextIsPermittedEditingState(text, valueType, minValue, maxValue);
+			if (!permittedEditingState)
+			{
+				latestState->pendingFieldReset = true;
+				return;
+			}
+
 			const double normalized = numericInputNormalizeValue(valueType, parsedOk ? parsed : 0.0, minValue, maxValue);
 			const std::string normalizedText = numericInputValueToText(valueType, normalized);
 			const bool changed = !numericInputValuesEqual(valueType, latestState->normalizedValue, normalized);
 
 			latestState->normalizedValue = normalized;
 			latestState->normalizedText = normalizedText;
-			if (!parsedOk || normalizedText != std::string(text))
+			if (parsedOk && !numericInputValuesEqual(valueType, normalized, parsed))
 			{
 				latestState->pendingFieldReset = true;
 			}

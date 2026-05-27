@@ -39,7 +39,7 @@ struct variableTypeSettingsEditorParams {
 	bool defaultExpanded = true;
 
 	Clay_Sizing cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
-	Clay_Padding cardPadding = Clay_Padding{8, 8, 6, 6};
+	Clay_Padding cardPadding = Clay_Padding{0, 8, 6, 6};
 	uint16_t cardChildGap = 4;
 	Clay_Color cardBackgroundColor = FlowUi::Flow_Color("#00000000");
 	Clay_Color cardBorderColor = FlowUi::Flow_Color("#00000000");
@@ -180,7 +180,7 @@ inline void variableTypeSettingsEditorDrawInputRow(
 	row.layout.sizing = params.rowSizing;
 	row.layout.padding = params.rowPadding;
 	row.layout.childGap = params.rowChildGap;
-	row.layout.childAlignment = {.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER};
+	row.layout.childAlignment = {.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_TOP};
 	row.backgroundColor = params.rowBackgroundColor;
 	row.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
 

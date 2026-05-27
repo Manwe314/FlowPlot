@@ -2,43 +2,24 @@
   "schema":"flowui.dev.export.v1",
   "kind":"params",
   "definitions": [
-  ],
-  "instances": [
     {
-      "definitionId":7772706737753820503,
-      "definitionName":"BasicButton",
-      "definitionTypeToken":"std::string_view FlowUi::devMode::typeToken() [T = FlowUi::ElementDefinition<basicButtonParams, void, void, 7772706737753820503, false>]",
-      "flowId":13257753128023119995,
-      "elementId":"DataInput/header/add-row-container/add-row",
-      "authoredInstanceKey":"DataInput/header/add-row-container/add-row",
-      "authoredDefinitionKey":"BasicButton",
-      "sourceFile":"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/DataInputHeader.hpp",
-      "sourceLine":477,
+      "definitionId":28915239130693540,
+      "definitionName":"TemplateLayer",
+      "definitionTypeToken":"std::string_view FlowUi::devMode::typeToken() [T = FlowUi::ElementDefinition<templateLayerParams, templateLayerState, void, 28915239130693540, false>]",
+      "paramsStructTypeHash":2792688088248559431,
+      "paramsStructName":"templateLayerParams",
+      "hasSourceMetadata":true,
+      "sourceFile":"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/TemplateLayer.hpp",
+      "sourceLine":129,
       "sourceColumn":0,
       "sourceFunction":"operator()",
-      "sourceLocationHash":13475212883872588052,
       "changes": [
-        {"fieldHash":105616063399437942,"fieldName":"padding","fieldTypeHash":15937443097836116563,"value":{"kind":"edgeu16","value":{"type":"Clay_Padding","left":10,"right":12,"top":0,"bottom":0}}}
-      ]
-    },
-    {
-      "definitionId":11829321979114051994,
-      "definitionName":"DataInputHeader",
-      "definitionTypeToken":"std::string_view FlowUi::devMode::typeToken() [T = FlowUi::ElementDefinition<dataInputHeaderParams, dataInputHeaderState, dataInputHeaderResources, 11829321979114051994, false>]",
-      "flowId":15147870088479614153,
-      "elementId":"DataInput/header",
-      "authoredInstanceKey":"DataInput/header",
-      "authoredDefinitionKey":"DataInputHeader",
-      "sourceFile":"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/DataInput.hpp",
-      "sourceLine":74,
-      "sourceColumn":0,
-      "sourceFunction":"operator()",
-      "sourceLocationHash":16719179555455269748,
-      "changes": [
-        {"fieldHash":10066951237285155332,"fieldName":"addRowContainerPadding","fieldTypeHash":15937443097836116563,"value":{"kind":"edgeu16","value":{"type":"Clay_Padding","left":6,"right":0,"top":0,"bottom":6}}},
-        {"fieldHash":12903688170031016727,"fieldName":"childGap","fieldTypeHash":5516555141030549105,"value":{"kind":"int64","value":7}},
-        {"fieldHash":105616063399437942,"fieldName":"padding","fieldTypeHash":15937443097836116563,"value":{"kind":"edgeu16","value":{"type":"Clay_Padding","left":8,"right":8,"top":6,"bottom":0}}}
+        {"fieldHash":1403803307528796348,"fieldName":"buttonHoverBackgroundColor","fieldTypeHash":1038404891235700713,"value":{"kind":"float4","value":{"type":"Clay_Color","r":46,"g":48,"b":54,"a":255}}},
+        {"fieldHash":8972802004509636329,"fieldName":"deleterButtonHoverIconTintColor","fieldTypeHash":1038404891235700713,"value":{"kind":"float4","value":{"type":"Clay_Color","r":255,"g":107,"b":107,"a":255}}},
+        {"fieldHash":8000382477625643227,"fieldName":"deleterButtonIconTintColor","fieldTypeHash":1038404891235700713,"value":{"kind":"float4","value":{"type":"Clay_Color","r":175,"g":180,"b":179,"a":255}}}
       ]
     }
+  ],
+  "instances": [
   ]
 }

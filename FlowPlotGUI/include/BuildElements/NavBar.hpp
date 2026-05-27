@@ -342,7 +342,7 @@ inline const NavBarDef kNavBar = {
 			params.fontSize = 14;
 			params.hoverBackgroundColor = Clay_Color{.r = 36.0f, .g = 36.0f, .b = 40.0f, .a = 255.0f};
 			params.iconContainerSizing = Clay_Sizing{.width = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 20.0f, .max = 20.0f}}, .type = CLAY__SIZING_TYPE_FIXED}, .height = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 20.0f, .max = 20.0f}}, .type = CLAY__SIZING_TYPE_FIXED}};
-			params.iconTintColor = Clay_Color{.r = 0.0f, .g = 0.0f, .b = 0.0f, .a = 0.0f};
+			params.iconTintColor = Clay_Color{.r = 0.0f, .g = 144.0f, .b = 143.0f, .a = 255.0f};
 			params.textColor = Clay_Color{.r = 243.0f, .g = 243.0f, .b = 243.0f, .a = 255.0f};
 		};
 

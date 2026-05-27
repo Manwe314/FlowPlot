@@ -47,12 +47,16 @@ struct templateLayerParams {
 	Clay_Sizing buttonSizing = Clay_Sizing{.width = CLAY_SIZING_FIXED(38), .height = CLAY_SIZING_FIXED(38)};
 	Clay_Padding buttonPadding = CLAY_PADDING_ALL(0);
 	Clay_Color buttonBackgroundColor = FlowUi::Flow_Color("#00000000");
-	Clay_Color buttonHoverBackgroundColor = FlowUi::Flow_Color("#242428ff");
+	Clay_Color buttonHoverBackgroundColor = Clay_Color{.r = 46.0f, .g = 48.0f, .b = 54.0f, .a = 255.0f};
 	Clay_CornerRadius buttonCornerRadius = CLAY_CORNER_RADIUS(6);
 	Clay_Color buttonBorderColor = FlowUi::Flow_Color("#00000000");
 	Clay_BorderWidth buttonBorderWidth = Clay_BorderWidth{0, 0, 0, 0, 0};
 	Clay_Sizing buttonIconContainerSizing = Clay_Sizing{.width = CLAY_SIZING_FIXED(18), .height = CLAY_SIZING_FIXED(18)};
 	Clay_Color buttonIconTintColor = FlowUi::Flow_Color("#ffffffff");
+	Clay_Color adderButtonIconTintColor = FlowUi::Flow_Color("#00908fff");
+	Clay_Color adderButtonHoverIconTintColor = FlowUi::Flow_Color("#00c9c7ff");
+	Clay_Color deleterButtonIconTintColor = Clay_Color{.r = 175.0f, .g = 180.0f, .b = 179.0f, .a = 255.0f};
+	Clay_Color deleterButtonHoverIconTintColor = Clay_Color{.r = 255.0f, .g = 107.0f, .b = 107.0f, .a = 255.0f};
 	FlowUi::TextureRef expandedIcon = FlowUi::TextureRef{};
 	FlowUi::TextureRef collapsedIcon = FlowUi::TextureRef{};
 	FlowUi::TextureRef adderIcon = FlowUi::TextureRef{};
@@ -110,6 +114,10 @@ FLOWUI_DEV_REGISTER_STRUCT(
 	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, buttonBorderWidth),
 	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, buttonIconContainerSizing),
 	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, buttonIconTintColor),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, adderButtonIconTintColor),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, adderButtonHoverIconTintColor),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, deleterButtonIconTintColor),
+	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, deleterButtonHoverIconTintColor),
 	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, mainIconContainerSizing),
 	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, mainIconSizing),
 	FLOWUI_DEV_REFLECT_FIELD(templateLayerParams, mainIconTintColor),
@@ -171,9 +179,17 @@ inline void drawTemplateLayerButton(
 		break;
 	case templateLayerButtonType::Adder:
 		params.icon = layerParams.adderIcon;
+		params.iconTintColor = layerParams.adderButtonIconTintColor;
+		params.onHoveredCallback = [hoverColor = layerParams.adderButtonHoverIconTintColor](BasicButtonInteractionContext buttonContext) {
+			buttonContext.params.iconTintColor = hoverColor;
+		};
 		break;
 	case templateLayerButtonType::Deleter:
 		params.icon = layerParams.deleterIcon;
+		params.iconTintColor = layerParams.deleterButtonIconTintColor;
+		params.onHoveredCallback = [hoverColor = layerParams.deleterButtonHoverIconTintColor](BasicButtonInteractionContext buttonContext) {
+			buttonContext.params.iconTintColor = hoverColor;
+		};
 		break;
 	}
 
@@ -202,6 +218,12 @@ inline void drawTemplateLayerButton(
 
 	uiManager.createElement(kBasicButton, path)
 		.setParameters(std::move(params))
+		/* V1 cant Update parameters made with variables */
+		.mergeParams([](auto& params) {
+		    params.iconContainerSizing = Clay_Sizing{.width = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 18.0f, .max = 18.0f}}, .type = CLAY__SIZING_TYPE_FIXED}, .height = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 18.0f, .max = 18.0f}}, .type = CLAY__SIZING_TYPE_FIXED}};
+		    params.padding = Clay_Padding{.left = 3, .right = 3, .top = 3, .bottom = 3};
+		    params.sizing = Clay_Sizing{.width = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 0.0f, .max = 0.0f}}, .type = CLAY__SIZING_TYPE_FIT}, .height = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 0.0f, .max = 0.0f}}, .type = CLAY__SIZING_TYPE_FIT}};
+		})
 		.draw();
 }
 
@@ -288,6 +310,8 @@ inline const TemplateLayerDef kTemplateLayer = {
 			 context.params.guiState->selectedNode.has_value() &&
 			 (context.params.guiState->selectedNode->flowElementId == context.elementID ||
 			  FlowPlotGui::sameTemplateNodeKey(*context.params.guiState->selectedNode, context.params.nodeKey)));
+		const bool rootHovered = context.uiManager.getPreviousFramesInteraction().isHovered(rootId);
+		const bool showNodeActionButtons = showIndicator || rootHovered;
 		if (showIndicator)
 		{
 			root.backgroundColor = context.params.focusedBackgroundColor;
@@ -419,7 +443,7 @@ inline const TemplateLayerDef kTemplateLayer = {
 
 			CLAY(rightSpacerId, rightSpacer){};
 
-			if (context.params.showAdderButton)
+			if (context.params.showAdderButton && showNodeActionButtons)
 			{
 				drawTemplateLayerButton(
 					context.uiManager,
@@ -429,7 +453,7 @@ inline const TemplateLayerDef kTemplateLayer = {
 					context.elementID);
 			}
 
-			if (context.params.showDeleterButton)
+			if (context.params.showDeleterButton && showNodeActionButtons)
 			{
 				drawTemplateLayerButton(
 					context.uiManager,

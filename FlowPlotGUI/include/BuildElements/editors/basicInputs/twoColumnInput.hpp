@@ -619,7 +619,9 @@ inline const TwoColumnInputCardDef kTwoColumnInputCard = {
 		hintTextConfig.fontId = context.params.fontId;
 
 		Clay_ElementDeclaration spacer{};
-		spacer.layout.sizing = {.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_PERCENT(1.0f)};
+		spacer.layout.sizing = context.params.cardLayout == CLAY_TOP_TO_BOTTOM
+			? Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIXED(0)}
+			: Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_PERCENT(1.0f)};
 
 		twoColumnInputTableParams tableParams = context.params.table;
 		tableParams.onEditBegin = context.params.onEditBegin;

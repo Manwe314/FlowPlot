@@ -253,6 +253,10 @@ templateLayerParams makeTemplateLayerParams(
 	params.deleterIcon = app.icons().textureRef("Trash");
 	params.mainIconTintColor = FlowUi::Flow_Color("#ffffffff");
 	params.buttonIconTintColor = FlowUi::Flow_Color("#ffffffff");
+	params.adderButtonIconTintColor = Clay_Color{.r = 0.0f, .g = 144.0f, .b = 143.0f, .a = 255.0f};
+	params.adderButtonHoverIconTintColor = FlowUi::Flow_Color("#00c9c7ff");
+	params.deleterButtonIconTintColor = FlowUi::Flow_Color("#ef4444ff");
+	params.deleterButtonHoverIconTintColor = FlowUi::Flow_Color("#ff6b6bff");
 
 	switch (node.kind)
 	{

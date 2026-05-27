@@ -49,6 +49,7 @@ struct enumPickerMenuParams {
 	int16_t outsideDismissZIndex = 200;
 	int16_t dropdownZIndex = 201;
 	uint16_t dropdownGapPx = 2;
+	Clay_Sizing dropdownSizing = Clay_Sizing{.width = CLAY_SIZING_FIT(100.0f, 220.0f), .height = CLAY_SIZING_FIT(0)};
 	Clay_Color dropdownBackgroundColor = FlowUi::Flow_Color("#171a1fff");
 	Clay_Color dropdownBorderColor = FlowUi::Flow_Color("#3d444eff");
 	Clay_BorderWidth dropdownBorderWidth = Clay_BorderWidth{1, 1, 1, 1, 1};
@@ -91,6 +92,7 @@ FLOWUI_DEV_REGISTER_STRUCT(
 	FLOWUI_DEV_REFLECT_FIELD(enumPickerMenuParams, outsideDismissZIndex),
 	FLOWUI_DEV_REFLECT_FIELD(enumPickerMenuParams, dropdownZIndex),
 	FLOWUI_DEV_REFLECT_FIELD(enumPickerMenuParams, dropdownGapPx),
+	FLOWUI_DEV_REFLECT_FIELD(enumPickerMenuParams, dropdownSizing),
 	FLOWUI_DEV_REFLECT_FIELD(enumPickerMenuParams, dropdownBackgroundColor),
 	FLOWUI_DEV_REFLECT_FIELD(enumPickerMenuParams, dropdownBorderColor),
 	FLOWUI_DEV_REFLECT_FIELD(enumPickerMenuParams, dropdownBorderWidth),
@@ -431,10 +433,7 @@ inline const EnumPickerMenuDef kEnumPickerMenu = {
 
 				Clay_ElementDeclaration dropdown{};
 				const Clay_ElementId dropdownId = context.uiManager.toClayEID(context.createChildElementId("dropdown"));
-				dropdown.layout.sizing = {
-					.width = CLAY_SIZING_PERCENT(1.0f),
-					.height = CLAY_SIZING_FIT(0),
-				};
+				dropdown.layout.sizing = context.params.dropdownSizing;
 				dropdown.layout.layoutDirection = CLAY_TOP_TO_BOTTOM;
 				dropdown.backgroundColor = context.params.dropdownBackgroundColor;
 				dropdown.cornerRadius = context.params.dropdownCornerRadius;
@@ -566,6 +565,7 @@ struct enumPickerCardParams {
 	Clay_Sizing cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
 	Clay_LayoutDirection cardLayout = CLAY_LEFT_TO_RIGHT;
 	Clay_Padding cardPadding = Clay_Padding{8, 8, 6, 6};
+	uint16_t cardChildGap = 0;
 
 	uint16_t fontId = 0;
 	uint16_t fontSize = 14;
@@ -584,6 +584,7 @@ FLOWUI_DEV_REGISTER_STRUCT(
 	FLOWUI_DEV_REFLECT_FIELD(enumPickerCardParams, cardSizing),
 	FLOWUI_DEV_REFLECT_FIELD(enumPickerCardParams, cardLayout),
 	FLOWUI_DEV_REFLECT_FIELD(enumPickerCardParams, cardPadding),
+	FLOWUI_DEV_REFLECT_FIELD(enumPickerCardParams, cardChildGap),
 	FLOWUI_DEV_REFLECT_FIELD(enumPickerCardParams, fontId),
 	FLOWUI_DEV_REFLECT_FIELD(enumPickerCardParams, fontSize),
 	FLOWUI_DEV_REFLECT_FIELD(enumPickerCardParams, textColor),
@@ -615,7 +616,7 @@ inline const EnumPickerCardDef kEnumPickerCard = {
 		root.layout.sizing = context.params.cardSizing;
 		root.layout.padding = context.params.cardPadding;
 		root.layout.childAlignment = {.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER};
-		root.layout.childGap = 0;
+		root.layout.childGap = context.params.cardChildGap;
 		root.backgroundColor = FlowUi::Flow_Color("#00000000");
 		root.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
 

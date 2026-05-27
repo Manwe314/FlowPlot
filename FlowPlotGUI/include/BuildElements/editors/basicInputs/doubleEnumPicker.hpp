@@ -38,13 +38,14 @@ struct doubleEnumPickerCardParams {
 
 	Clay_Sizing pickerRowSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
 	Clay_Padding pickerRowPadding = CLAY_PADDING_ALL(0);
-	uint16_t pickerRowChildGap = 8;
+	uint16_t pickerRowChildGap = 0;
 	Clay_Color pickerRowBackgroundColor = FlowUi::Flow_Color("#00000000");
 	Clay_Color pickerRowBorderColor = FlowUi::Flow_Color("#00000000");
 	Clay_BorderWidth pickerRowBorderWidth = Clay_BorderWidth{0, 0, 0, 0, 0};
 
-	Clay_Sizing firstPickerSizing = Clay_Sizing{.width = CLAY_SIZING_FIXED(220), .height = CLAY_SIZING_FIT(0)};
-	Clay_Sizing secondPickerSizing = Clay_Sizing{.width = CLAY_SIZING_FIXED(220), .height = CLAY_SIZING_FIT(0)};
+	Clay_Sizing firstPickerSizing = Clay_Sizing{.width = CLAY_SIZING_FIT(0), .height = CLAY_SIZING_FIT(0)};
+	Clay_Sizing secondPickerSizing = Clay_Sizing{.width = CLAY_SIZING_FIT(0), .height = CLAY_SIZING_FIT(0)};
+	uint16_t pickerCardChildGap = 8;
 
 	uint16_t fontId = 0;
 	uint16_t fontSize = 14;
@@ -79,6 +80,7 @@ FLOWUI_DEV_REGISTER_STRUCT(
 	FLOWUI_DEV_REFLECT_FIELD(doubleEnumPickerCardParams, pickerRowBorderWidth),
 	FLOWUI_DEV_REFLECT_FIELD(doubleEnumPickerCardParams, firstPickerSizing),
 	FLOWUI_DEV_REFLECT_FIELD(doubleEnumPickerCardParams, secondPickerSizing),
+	FLOWUI_DEV_REFLECT_FIELD(doubleEnumPickerCardParams, pickerCardChildGap),
 	FLOWUI_DEV_REFLECT_FIELD(doubleEnumPickerCardParams, fontId),
 	FLOWUI_DEV_REFLECT_FIELD(doubleEnumPickerCardParams, fontSize),
 	FLOWUI_DEV_REFLECT_FIELD(doubleEnumPickerCardParams, textColor),
@@ -104,8 +106,13 @@ inline const DoubleEnumPickerCardDef kDoubleEnumPickerCard = {
 		const Clay_ElementId rootId = context.uiManager.toClayEID(context.elementID);
 		const Clay_ElementId hintId = context.uiManager.toClayEID(context.createChildElementId("hint-text"));
 		const Clay_ElementId pickerRowId = context.uiManager.toClayEID(context.createChildElementId("picker-row"));
-		const std::string firstPickerPath = context.createChildElementId("picker-row/first-picker");
-		const std::string secondPickerPath = context.createChildElementId("picker-row/second-picker");
+		const Clay_ElementId leadingSpacerId = context.uiManager.toClayEID(context.createChildElementId("picker-row/leading-spacer"));
+		const Clay_ElementId middleSpacerId = context.uiManager.toClayEID(context.createChildElementId("picker-row/middle-spacer"));
+		const Clay_ElementId trailingSpacerId = context.uiManager.toClayEID(context.createChildElementId("picker-row/trailing-spacer"));
+		const Clay_ElementId firstPickerContainerId = context.uiManager.toClayEID(context.createChildElementId("picker-row/first-picker-container"));
+		const Clay_ElementId secondPickerContainerId = context.uiManager.toClayEID(context.createChildElementId("picker-row/second-picker-container"));
+		const std::string firstPickerPath = context.createChildElementId("picker-row/first-picker-container/first-picker");
+		const std::string secondPickerPath = context.createChildElementId("picker-row/second-picker-container/second-picker");
 
 		Clay_ElementDeclaration root{};
 		root.layout.layoutDirection = CLAY_TOP_TO_BOTTOM;
@@ -132,12 +139,25 @@ inline const DoubleEnumPickerCardDef kDoubleEnumPickerCard = {
 		pickerRow.backgroundColor = context.params.pickerRowBackgroundColor;
 		pickerRow.border = {.color = context.params.pickerRowBorderColor, .width = context.params.pickerRowBorderWidth};
 
+		Clay_ElementDeclaration rowSpacer{};
+		rowSpacer.layout.sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIXED(0)};
+		rowSpacer.backgroundColor = FlowUi::Flow_Color("#00000000");
+
+		Clay_ElementDeclaration pickerContainer{};
+		pickerContainer.layout.layoutDirection = CLAY_LEFT_TO_RIGHT;
+		pickerContainer.layout.sizing = Clay_Sizing{.width = CLAY_SIZING_FIT(0), .height = CLAY_SIZING_FIT(0)};
+		pickerContainer.layout.padding = CLAY_PADDING_ALL(0);
+		pickerContainer.layout.childAlignment = {.x = CLAY_ALIGN_X_CENTER, .y = CLAY_ALIGN_Y_CENTER};
+		pickerContainer.backgroundColor = FlowUi::Flow_Color("#00000000");
+		pickerContainer.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
+
 		enumPickerCardParams firstPickerParams = context.params.firstPicker;
 		firstPickerParams.hintText = context.params.firstHintText;
 		firstPickerParams.options = context.params.firstOptions;
 		firstPickerParams.value = context.params.firstValue;
 		firstPickerParams.defaultValue = context.params.firstDefaultValue;
 		firstPickerParams.cardSizing = context.params.firstPickerSizing;
+		firstPickerParams.cardChildGap = context.params.pickerCardChildGap;
 		firstPickerParams.fontId = context.params.fontId;
 		firstPickerParams.fontSize = context.params.fontSize;
 		firstPickerParams.textColor = context.params.textColor;
@@ -164,6 +184,7 @@ inline const DoubleEnumPickerCardDef kDoubleEnumPickerCard = {
 		secondPickerParams.value = context.params.secondValue;
 		secondPickerParams.defaultValue = context.params.secondDefaultValue;
 		secondPickerParams.cardSizing = context.params.secondPickerSizing;
+		secondPickerParams.cardChildGap = context.params.pickerCardChildGap;
 		secondPickerParams.fontId = context.params.fontId;
 		secondPickerParams.fontSize = context.params.fontSize;
 		secondPickerParams.textColor = context.params.textColor;
@@ -196,13 +217,21 @@ inline const DoubleEnumPickerCardDef kDoubleEnumPickerCard = {
 
 			CLAY(pickerRowId, pickerRow)
 			{
-				context.uiManager.createElement(kEnumPickerCard, firstPickerPath)
-					.setParameters(std::move(firstPickerParams))
-					.draw();
-
-				context.uiManager.createElement(kEnumPickerCard, secondPickerPath)
-					.setParameters(std::move(secondPickerParams))
-					.draw();
+				CLAY(leadingSpacerId, rowSpacer){};
+				CLAY(firstPickerContainerId, pickerContainer)
+				{
+					context.uiManager.createElement(kEnumPickerCard, firstPickerPath)
+						.setParameters(std::move(firstPickerParams))
+						.draw();
+				};
+				CLAY(middleSpacerId, rowSpacer){};
+				CLAY(secondPickerContainerId, pickerContainer)
+				{
+					context.uiManager.createElement(kEnumPickerCard, secondPickerPath)
+						.setParameters(std::move(secondPickerParams))
+						.draw();
+				};
+				CLAY(trailingSpacerId, rowSpacer){};
 			};
 		};
 	},

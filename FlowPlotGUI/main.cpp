@@ -427,7 +427,7 @@ int main()
 						.color = FlowUi::Flow_Color("#3f3f41ff"),
 						.hoverColor = FlowUi::Flow_Color("#707074ff"),
 						.activeColor = FlowUi::Flow_Color("#409d97ff"),
-						.minValue = 220,
+						.minValue = 436,
 						.maxValue = 550,
 						.getValue = [leftId](){
 							return TemplatePanelDef::getOrCreateState(FlowUi::toFlowId(leftId)).minWidth;
@@ -476,7 +476,7 @@ int main()
 						.color = FlowUi::Flow_Color("#3f3f41ff"),
 						.hoverColor = FlowUi::Flow_Color("#707074ff"),
 						.activeColor = FlowUi::Flow_Color("#409d97ff"),
-						.minValue = 220,
+						.minValue = 436,
 						.maxValue = 550,
 						.getValue = [rightId](){
 							return PropsPanelDef::getOrCreateState(FlowUi::toFlowId(rightId)).minWidth;

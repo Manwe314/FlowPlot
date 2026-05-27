@@ -6,16 +6,18 @@
 #include "FlowPlotGui.hpp"
 
 struct templatePanelParams {
+	int minWidth = 436;
 	int maxWidth = 520;
 	Clay_Color backgroundColor = FlowUi::Flow_Color("#00000000");
 };
 
 struct templatePanelState {
-	int minWidth = 220;
+	int minWidth = 480;
 };
 
 FLOWUI_DEV_REGISTER_STRUCT(
 	templatePanelParams,
+	FLOWUI_DEV_REFLECT_FIELD(templatePanelParams, minWidth),
 	FLOWUI_DEV_REFLECT_FIELD(templatePanelParams, maxWidth),
 	FLOWUI_DEV_REFLECT_FIELD(templatePanelParams, backgroundColor));
 
@@ -40,11 +42,25 @@ inline const TemplatePanelDef kTemplatePanel = {
 	+[](TemplatePanelDef::BuildContext& context) -> Clay_ElementDeclaration {
 		templatePanelState& state = TemplatePanelDef::getOrCreateState(FlowUi::toFlowId(context.elementID));
 		int width = state.minWidth;
+		int widthMin = context.params.minWidth;
 		int widthMax = context.params.maxWidth;
-		if (widthMax < width)
+		if (widthMin < 0)
+		{
+			widthMin = 0;
+		}
+		if (widthMax < widthMin)
+		{
+			widthMax = widthMin;
+		}
+		if (width < widthMin)
+		{
+			width = widthMin;
+		}
+		else if (width > widthMax)
 		{
 			width = widthMax;
 		}
+		state.minWidth = width;
 
 		Clay_LayoutConfig layout{};
 		layout.layoutDirection = CLAY_TOP_TO_BOTTOM;

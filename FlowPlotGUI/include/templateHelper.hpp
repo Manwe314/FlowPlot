@@ -197,6 +197,10 @@ inline void drawTemplateNode(
 
 	ui.createElement(kTemplateLayer, elementId)
 		.setParameters(makeTemplateLayerParams(app, guiState, node, elementId))
+		/* V1 cant Update parameters made with variables */
+		.mergeParams([](auto& params) {
+		    params.mainIconTintColor = Clay_Color{.r = 0.0f, .g = 144.0f, .b = 143.0f, .a = 255.0f};
+		})
 		.draw();
 
 	const templateLayerState* rowState =

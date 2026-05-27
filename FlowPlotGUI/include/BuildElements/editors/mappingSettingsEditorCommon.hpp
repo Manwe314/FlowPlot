@@ -118,25 +118,26 @@ inline void mappingSettingsPrepareStringInputCard(stringInputCardParams& params)
 inline void mappingSettingsPrepareEnumPickerCard(enumPickerCardParams& params)
 {
 	params.cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
-	params.cardLayout = CLAY_TOP_TO_BOTTOM;
-	params.textWrapMode = CLAY_TEXT_WRAP_WORDS;
-	params.menu.sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
+	params.cardLayout = CLAY_LEFT_TO_RIGHT;
+	params.textWrapMode = CLAY_TEXT_WRAP_NONE;
+	params.menu.sizing = Clay_Sizing{.width = CLAY_SIZING_FIT(100.0f, 180.0f), .height = CLAY_SIZING_FIT(0)};
+	params.menu.dropdownSizing = Clay_Sizing{.width = CLAY_SIZING_FIT(120.0f, 220.0f), .height = CLAY_SIZING_FIT(0)};
 }
 
 inline void mappingSettingsPrepareNumericInputCard(numericInputCardParams& params)
 {
 	params.cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
-	params.cardLayout = CLAY_TOP_TO_BOTTOM;
-	params.textWrapMode = CLAY_TEXT_WRAP_WORDS;
-	params.field.sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
+	params.cardLayout = CLAY_LEFT_TO_RIGHT;
+	params.textWrapMode = CLAY_TEXT_WRAP_NONE;
+	params.field.sizing = Clay_Sizing{.width = CLAY_SIZING_FIT(120.0f, 180.0f), .height = CLAY_SIZING_FIT(0)};
 }
 
 inline void mappingSettingsPrepareColorPickerCard(colorPickerCardParams& params)
 {
 	params.cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
-	params.cardLayout = CLAY_TOP_TO_BOTTOM;
-	params.textWrapMode = CLAY_TEXT_WRAP_WORDS;
-	params.swatch.sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
+	params.cardLayout = CLAY_LEFT_TO_RIGHT;
+	params.textWrapMode = CLAY_TEXT_WRAP_NONE;
+	params.swatch.sizing = Clay_Sizing{.width = CLAY_SIZING_FIT(0), .height = CLAY_SIZING_FIT(0)};
 }
 
 inline void mappingSettingsPrepareTwoColumnInputCard(twoColumnInputCardParams& params)
@@ -145,6 +146,9 @@ inline void mappingSettingsPrepareTwoColumnInputCard(twoColumnInputCardParams& p
 	params.cardLayout = CLAY_TOP_TO_BOTTOM;
 	params.textWrapMode = CLAY_TEXT_WRAP_WORDS;
 	params.table.sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
+	params.table.backgroundColor = FlowUi::Flow_Color("#11161dcc");
+	params.table.borderColor = FlowUi::Flow_Color("#2b3340ff");
+	params.table.borderWidth = Clay_BorderWidth{1, 1, 1, 1, 0};
 	params.table.firstColumnSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
 	params.table.secondColumnSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
 }
@@ -456,7 +460,7 @@ inline void mappingSettingsEditorDrawInputRow(
 	row.layout.sizing = params.rowSizing;
 	row.layout.padding = params.rowPadding;
 	row.layout.childGap = params.rowChildGap;
-	row.layout.childAlignment = {.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER};
+	row.layout.childAlignment = {.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_TOP};
 	row.backgroundColor = params.rowBackgroundColor;
 	row.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
 

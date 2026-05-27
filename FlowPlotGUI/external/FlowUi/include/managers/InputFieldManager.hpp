@@ -252,6 +252,20 @@ public:
 	 */
 	bool insertTextAtPrimaryCaret(std::string_view utf8Text);
 
+	/**
+	 * @brief Replace a managed field's text while preserving focus and carets.
+	 *
+	 * Existing caret and selection offsets are clamped to the new text. This is
+	 * intended for input validators that need to reject or canonicalize text
+	 * without making the user leave editing mode.
+	 *
+	 * @param fieldId Stable id of the field to update.
+	 * @param text Replacement UTF-8 text.
+	 * @retval true the field existed and its text changed.
+	 * @retval false fieldId was empty, the field did not exist, or text was unchanged.
+	 */
+	bool replaceFieldTextPreservingCarets(std::string_view fieldId, std::string_view text);
+
 private:
 	friend class UiManager;
 

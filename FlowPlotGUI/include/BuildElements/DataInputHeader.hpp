@@ -349,6 +349,7 @@ inline const DataInputHeaderDef kDataInputHeader = {
 	+[](DataInputHeaderDef::BuildContext& context) {
 		const Clay_ElementId rootId = context.uiManager.toClayEID(context.elementID);
 		const Clay_ElementId spacerId = context.uiManager.toClayEID(context.createChildElementId("spacer"));
+		const Clay_ElementId addDatasetContainerId = context.uiManager.toClayEID(context.createChildElementId("add-dataset-container"));
 		const Clay_ElementId addRowContainerId = context.uiManager.toClayEID(context.createChildElementId("add-row-container"));
 
 		dataInputHeaderState& headerState = DataInputHeaderDef::getOrCreateState(FlowUi::toFlowId(context.elementID));
@@ -382,6 +383,17 @@ inline const DataInputHeaderDef kDataInputHeader = {
 		spacer.backgroundColor = FlowUi::Flow_Color("#00000000");
 		spacer.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
 
+		Clay_LayoutConfig addDatasetContainerLayout{};
+		addDatasetContainerLayout.layoutDirection = CLAY_LEFT_TO_RIGHT;
+		addDatasetContainerLayout.sizing = Clay_Sizing{.width = CLAY_SIZING_FIT(0), .height = CLAY_SIZING_FIT(0)};
+		addDatasetContainerLayout.padding = CLAY_PADDING_ALL(0);
+		addDatasetContainerLayout.childAlignment = Clay_ChildAlignment{.x = CLAY_ALIGN_X_CENTER, .y = CLAY_ALIGN_Y_CENTER};
+
+		Clay_ElementDeclaration addDatasetContainer{};
+		addDatasetContainer.layout = addDatasetContainerLayout;
+		addDatasetContainer.backgroundColor = FlowUi::Flow_Color("#00000000");
+		addDatasetContainer.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
+
 		Clay_LayoutConfig addRowContainerLayout{};
 		addRowContainerLayout.layoutDirection = CLAY_LEFT_TO_RIGHT;
 		addRowContainerLayout.sizing = context.params.addRowContainerSizing;
@@ -411,41 +423,46 @@ inline const DataInputHeaderDef kDataInputHeader = {
 				}
 			}
 
-			basicButtonParams addDatasetButton{};
-			addDatasetButton.text = "+";
-			addDatasetButton.contentMode = basicButtonParams::ContentMode::TextOnly;
-			addDatasetButton.padding = Clay_Padding{10, 10, 0, 0};
-			addDatasetButton.sizing = Clay_Sizing{.width = CLAY_SIZING_FIXED(34), .height = CLAY_SIZING_GROW(0)};
-			addDatasetButton.backgroundColor = FlowUi::Flow_Color("#2b2b31ff");
-			addDatasetButton.hoverBackgroundColor = FlowUi::Flow_Color("#3a3a42ff");
-			addDatasetButton.borderColor = FlowUi::Flow_Color("#4a4a54ff");
-			addDatasetButton.borderWidth = Clay_BorderWidth{1, 1, 1, 1, 0};
-			addDatasetButton.cornerRadius = CLAY_CORNER_RADIUS(4);
-			addDatasetButton.fontSize = 16;
-			addDatasetButton.textColor = FlowUi::Flow_Color("#f4f4f5ff");
-			addDatasetButton.onPressedCallback = [
-				guiState,
-				headerFlowId = FlowUi::toFlowId(context.elementID)
-			](BasicButtonInteractionContext) {
-				if (guiState == nullptr)
-				{
-					return;
-				}
+			CLAY(addDatasetContainerId, addDatasetContainer){
+				basicButtonParams addDatasetButton{};
+				addDatasetButton.icon = DataInputHeaderDef::resources->plusIcon;
+				addDatasetButton.contentMode = basicButtonParams::ContentMode::IconOnly;
+				addDatasetButton.padding = CLAY_PADDING_ALL(3);
+				addDatasetButton.sizing = Clay_Sizing{.width = CLAY_SIZING_FIT(0), .height = CLAY_SIZING_FIT(0)};
+				addDatasetButton.backgroundColor = FlowUi::Flow_Color("#00000000");
+				addDatasetButton.hoverBackgroundColor = FlowUi::Flow_Color("#00000000");
+				addDatasetButton.borderColor = FlowUi::Flow_Color("#00000000");
+				addDatasetButton.borderWidth = Clay_BorderWidth{0, 0, 0, 0, 0};
+				addDatasetButton.cornerRadius = CLAY_CORNER_RADIUS(4);
+				addDatasetButton.iconContainerSizing = Clay_Sizing{.width = CLAY_SIZING_FIXED(18), .height = CLAY_SIZING_FIXED(18)};
+				addDatasetButton.iconTintColor = FlowUi::Flow_Color("#f4f4f582");
+				addDatasetButton.onHoveredCallback = [](BasicButtonInteractionContext buttonContext) {
+					buttonContext.params.iconTintColor = FlowUi::Flow_Color("#348681ff");
+				};
+				addDatasetButton.onPressedCallback = [
+					guiState,
+					headerFlowId = FlowUi::toFlowId(context.elementID)
+				](BasicButtonInteractionContext) {
+					if (guiState == nullptr)
+					{
+						return;
+					}
 
-				const std::size_t nextIndex = guiState->datasets.size();
-				if (!FlowPlotGui::addDataset(*guiState))
-				{
-					return;
-				}
+					const std::size_t nextIndex = guiState->datasets.size();
+					if (!FlowPlotGui::addDataset(*guiState))
+					{
+						return;
+					}
 
-				if (dataInputHeaderState* latestState = DataInputHeaderDef::tryGetState(headerFlowId))
-				{
-					latestState->activeDatasetIndex = nextIndex;
-				}
+					if (dataInputHeaderState* latestState = DataInputHeaderDef::tryGetState(headerFlowId))
+					{
+						latestState->activeDatasetIndex = nextIndex;
+					}
+				};
+				context.uiManager.createElement(kBasicButton, context.createChildElementId("add-dataset-container/add-dataset"))
+					.setParameters(std::move(addDatasetButton))
+					.draw();
 			};
-			context.uiManager.createElement(kBasicButton, context.createChildElementId("add-dataset"))
-				.setParameters(std::move(addDatasetButton))
-				.draw();
 
 			CLAY(spacerId, spacer){};
 

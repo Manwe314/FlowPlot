@@ -30,18 +30,13 @@ GUI app:
 - CSV parsing input as "mock" data?
 
 - 
-- numeric inputs . and - dont write
-- numeric input on clear sets to 0 and removes carat.
 - sting input height is tiny on empty defualt text
 - column input + button not in middle 
-- double check + icons to be icon not text. 
 - dataset + icon should have tint on hover + background color.
-- propertites title for string ID edditing
 
 - pollyline trinagluation can be made better with inner line intersection + normal direction "across point" detection.
 - GPU renderer honoring text box Clip functionalty
 - Text Layout is simply not the same as CPU renderer
-- reset button at viewport title should rest the camera pos and zoom. 
 - ? Help with [saved] on the navbar
 - 
 - data input scrolling not working.
@@ -49,31 +44,22 @@ GUI app:
 - add graceful error handling (error showing with [saved] stamp?)
 - If FlowUi already has the font loaded from imported tample do no work.
 - A lot of buffers in use at destroy request time errors while altering the plot figure.
-- chnage in panels layout in rows / columns gives fatal error: FlowPlotGUI fatal error: resolvePlotIR: panel padding leaves negative layer clip size at 'panels[0]' 
-- props panel hint text hitting th eeditor wierdly
-- chnages to Layer's mappings would do something like:
-	FlowPlotGUI fatal error: buildBoundIR: field 'c' at 'panels[0].layers[0].mapping.label.field' is not declared in dataset schema 'main'
-- chnageing values causes flowplots fatal erros to throw:
-	FlowPlotGUI fatal error: resolvePlotIR: axis role cannot be 'null' at 'panels[0].layers[0].axisData.y'
+- props panel hint text hitting the editor wierdly
 
-- add row style container padding for + button
 
 - undo/redo with dataset value changes need an overview
 - undo/redo still compares entire templates instead of specific values.
 - resize min max of both template and props panel
 - error messages can be more descriptive.
+- histogram border lines fall in subpixel ranges
+- two column input needs visual overhaul
 
 
+- label field schema mapping Vlaue has no options (circle, star, diamond.. etc)
+- carat movement controlls acros dataset table inputs 
+- tab functionality
+- icon tints
+- border colors
+- + and delee button background color need update
 
 
-
-
-
-1
-2
-3
-4
-5
-0
-
-8
