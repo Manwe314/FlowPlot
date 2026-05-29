@@ -72,6 +72,10 @@ struct nineSplitMatrixParams {
 	std::function<void(Clay_Padding)> onChange = nullptr;
 	std::function<void()> onEditBegin = nullptr;
 	std::function<void()> onEditEnd = nullptr;
+	FlowPlotGui::state* propertyFocusState = nullptr;
+	std::string propertyScrollContainerId{};
+	std::size_t propertyTabOrderBase = 0;
+	bool propertyTabStop = false;
 
 	bool linkDefaultEnabled = true;
 	Clay_Color linkEnabledBackgroundColor = FlowUi::Flow_Color("#4b8c5aff");
@@ -127,6 +131,23 @@ struct nineSplitMatrixParams {
 	Clay_Color typeHintTextColor = FlowUi::Flow_Color("#00000000");
 	Clay_Color valueTextColor = FlowUi::Flow_Color("#ffffffff");
 };
+
+inline std::size_t nineSplitPropertyTabOrderForSlot(std::size_t base, std::uint8_t slotId)
+{
+	switch (slotId)
+	{
+	case 1u:
+		return base;
+	case 5u:
+		return base + 1;
+	case 7u:
+		return base + 2;
+	case 3u:
+		return base + 3;
+	default:
+		return base;
+	}
+}
 
 FLOWUI_DEV_REGISTER_STRUCT(
 	nineSplitMatrixParams,
@@ -371,10 +392,28 @@ inline const NineSplitMatrixDef kNineSplitMatrix = {
 									.y = CLAY_ALIGN_Y_CENTER,
 								};
 
+								const std::string inputElementId =
+									context.createChildElementId("slot-input-" + std::to_string(slotId));
+								const std::string fieldId = inputElementId + "/input";
+								if (context.params.propertyTabStop && context.params.propertyFocusState != nullptr)
+								{
+									context.params.propertyFocusState->propertyInputFocusGrid.registerField(FlowPlotGui::PropertyInputFocus{
+										.fieldId = fieldId,
+										.elementId = fieldId,
+										.scrollContainerId = context.params.propertyScrollContainerId,
+										.order = nineSplitPropertyTabOrderForSlot(context.params.propertyTabOrderBase, slotId),
+									});
+									FlowPlotGui::wirePropertyInputFocusCallbacks(
+										*context.params.propertyFocusState,
+										fieldId,
+										numericParams.onEditBegin,
+										numericParams.onEditEnd);
+								}
+
 								context.uiManager
 									.createElement(
 										kNumericInputField,
-										context.createChildElementId("slot-input-" + std::to_string(slotId)))
+										inputElementId)
 									.setParameters(std::move(numericParams))
 									.draw();
 							}
@@ -392,6 +431,10 @@ struct nineSplitCardParams {
 	std::function<void(Clay_Padding)> onChange = nullptr;
 	std::function<void()> onEditBegin = nullptr;
 	std::function<void()> onEditEnd = nullptr;
+	FlowPlotGui::state* propertyFocusState = nullptr;
+	std::string propertyScrollContainerId{};
+	std::size_t propertyTabOrderBase = 0;
+	bool propertyTabStop = false;
 
 	Clay_Sizing cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
 	Clay_LayoutDirection cardLayout = CLAY_LEFT_TO_RIGHT;
@@ -466,6 +509,10 @@ inline const NineSplitCardDef kNineSplitCard = {
 		matrixParams.onChange = context.params.onChange;
 		matrixParams.onEditBegin = context.params.onEditBegin;
 		matrixParams.onEditEnd = context.params.onEditEnd;
+		matrixParams.propertyFocusState = context.params.propertyFocusState;
+		matrixParams.propertyScrollContainerId = context.params.propertyScrollContainerId;
+		matrixParams.propertyTabOrderBase = context.params.propertyTabOrderBase;
+		matrixParams.propertyTabStop = context.params.propertyTabStop;
 		matrixParams.fontId = context.params.fontId;
 
 		CLAY(rootId, root)

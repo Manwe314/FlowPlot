@@ -498,6 +498,10 @@ struct numericInputCardParams {
 	std::function<void(double)> onChange = nullptr;
 	std::function<void()> onEditBegin = nullptr;
 	std::function<void()> onEditEnd = nullptr;
+	FlowPlotGui::state* propertyFocusState = nullptr;
+	std::string propertyScrollContainerId{};
+	std::size_t propertyTabOrder = 0;
+	bool propertyTabStop = false;
 
 	Clay_Sizing cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
 	Clay_LayoutDirection cardLayout = CLAY_LEFT_TO_RIGHT;
@@ -579,6 +583,21 @@ inline const NumericInputCardDef kNumericInputCard = {
 		fieldParams.onEditBegin = context.params.onEditBegin;
 		fieldParams.onEditEnd = context.params.onEditEnd;
 		fieldParams.fontId = context.params.fontId;
+		if (context.params.propertyTabStop && context.params.propertyFocusState != nullptr)
+		{
+			const std::string inputFieldId = fieldPath + "/input";
+			context.params.propertyFocusState->propertyInputFocusGrid.registerField(FlowPlotGui::PropertyInputFocus{
+				.fieldId = inputFieldId,
+				.elementId = inputFieldId,
+				.scrollContainerId = context.params.propertyScrollContainerId,
+				.order = context.params.propertyTabOrder,
+			});
+			FlowPlotGui::wirePropertyInputFocusCallbacks(
+				*context.params.propertyFocusState,
+				inputFieldId,
+				fieldParams.onEditBegin,
+				fieldParams.onEditEnd);
+		}
 
 		CLAY(rootId, root)
 		{

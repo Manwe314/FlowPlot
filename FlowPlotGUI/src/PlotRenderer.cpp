@@ -849,7 +849,7 @@ FlowPlot::RenderPlot PlotRenderer::buildFlowPlotCommands()
 		recordDiagnostic(guiState, Diagnostic{
 			.severity = DiagnosticSeverity::Error,
 			.source = "compile",
-			.message = e.what(),
+			.message = formatFlowPlotExceptionMessage(guiState.activeTemplate, e.what()),
 		});
 		return drawPlan_.plot;
 	}
@@ -939,6 +939,13 @@ void PlotRenderer::buildRuns()
 	});
 	runBarrier = true;
 
+	auto clampStrokeWidth = [&](float strokeWidth) {
+		if (strokeWidth <= 0.0f)
+			return 0.0f;
+		const float minStrokeWidth = 1.0f / std::max(input_.camera.zoom, 1e-6f);
+		return  std::max(strokeWidth, minStrokeWidth);
+	};
+
 	for (const FlowPlot::RenderCommand& command : drawPlan_.plot.commands)
 	{
 		std::visit(
@@ -967,7 +974,7 @@ void PlotRenderer::buildRuns()
 						.y = concreteCommand.rect.y,
 						.w = concreteCommand.rect.w,
 						.h = concreteCommand.rect.h,
-						.strokeWidth = concreteCommand.strokeWidth,
+						.strokeWidth = clampStrokeWidth(concreteCommand.strokeWidth),
 						.fill = packColor(concreteCommand.fill),
 						.stroke = packColor(concreteCommand.stroke),
 					});

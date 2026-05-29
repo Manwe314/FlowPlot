@@ -79,6 +79,9 @@ inline const ScatterMappingSettingsEditorDef kScatterMappingSettingsEditor = {
 	},
 	nullptr,
 	+[](ScatterMappingSettingsEditorDef::BuildContext& context) {
+		const std::span<const std::string> labelValueOptions = context.params.labelValueOptions.empty()
+			? scatterMarkerShapeOptions()
+			: context.params.labelValueOptions;
 		mappingSettingsEditorDrawShell<ScatterMappingSettingsEditorDef>(
 			context,
 			context.params.shell,
@@ -158,11 +161,11 @@ inline const ScatterMappingSettingsEditorDef kScatterMappingSettingsEditor = {
 					params.table.categories = context.params.value.labelMapping.categories;
 					params.table.values = context.params.value.labelMapping.values;
 					params.table.valueKind = twoColumnInputValueKind::Enum;
-					params.table.enumOptions = context.params.labelValueOptions;
+					params.table.enumOptions = labelValueOptions;
 					params.table.defaultCategory = "";
-					params.table.defaultValue = context.params.labelValueOptions.empty()
+					params.table.defaultValue = labelValueOptions.empty()
 						? ""
-						: context.params.labelValueOptions.front();
+						: labelValueOptions.front();
 					params.table.onAddRow = [value = context.params.value, onChange = context.params.onChange](
 												 std::string_view category,
 												 std::string_view mappedValue) mutable {

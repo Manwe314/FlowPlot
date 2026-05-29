@@ -17,6 +17,19 @@
 #include "BuildElements/BasicInputField.hpp"
 #include "BuildElements/editors/basicInputs/numericInput.hpp"
 
+inline Clay_Vector2 dataInputTableScrollOffsetForElementId(
+	FlowUi::UiManager& uiManager,
+	std::string_view elementId)
+{
+	const Clay_ScrollContainerData data =
+		Clay_GetScrollContainerData(uiManager.toClayEID(elementId));
+	if (!data.found || data.scrollPosition == nullptr)
+	{
+		return Clay_Vector2{0.0f, 0.0f};
+	}
+	return *data.scrollPosition;
+}
+
 struct dataInputColumnView {
 	FlowPlotGui::DatasetFieldType type = FlowPlotGui::DatasetFieldType::Number;
 	std::size_t typedColumnIndex = 0;
@@ -456,7 +469,9 @@ struct dataInputDataRowParams {
 	FlowPlotGui::state* guiState = nullptr;
 	std::size_t datasetIndex = 0;
 	std::size_t rowIndex = 0;
+	std::string rowsContainerId{};
 	float rowHeight = 34.0f;
+	float rowGap = 0.0f;
 	float idColumnWidth = 44.0f;
 	float actionColumnWidth = 40.0f;
 	uint16_t columnGap = 0;
@@ -476,7 +491,9 @@ struct dataInputDataRowParams {
 FLOWUI_DEV_REGISTER_STRUCT(
 	dataInputDataRowParams,
 	FLOWUI_DEV_REFLECT_FIELD(dataInputDataRowParams, rowIndex),
+	FLOWUI_DEV_REFLECT_FIELD(dataInputDataRowParams, rowsContainerId),
 	FLOWUI_DEV_REFLECT_FIELD(dataInputDataRowParams, rowHeight),
+	FLOWUI_DEV_REFLECT_FIELD(dataInputDataRowParams, rowGap),
 	FLOWUI_DEV_REFLECT_FIELD(dataInputDataRowParams, idColumnWidth),
 	FLOWUI_DEV_REFLECT_FIELD(dataInputDataRowParams, actionColumnWidth),
 	FLOWUI_DEV_REFLECT_FIELD(dataInputDataRowParams, columnGap),
@@ -553,94 +570,156 @@ inline const DataInputDataRowDef kDataInputDataRow = {
 		textConfig.textAlignment = CLAY_TEXT_ALIGN_LEFT;
 		textConfig.fontId = context.params.fontId;
 
-		CLAY(rootId, root){
-			CLAY(idCellId, idCell){
-				CLAY_TEXT(context.uiManager.toClayString(std::to_string(context.params.rowIndex)), CLAY_TEXT_CONFIG(textConfig));
-			};
+			CLAY(rootId, root){
+				CLAY(idCellId, idCell){
+					CLAY_TEXT(context.uiManager.toClayString(std::to_string(context.params.rowIndex)), CLAY_TEXT_CONFIG(textConfig));
+				};
 
-			CLAY(columnsAreaId, columnsArea){
-				for (std::size_t columnIndex = 0; columnIndex < columns.size(); ++columnIndex)
-				{
-					const dataInputColumnView& column = columns[columnIndex];
-					const std::string cellPath = context.createChildElementId("columns/column-" + std::to_string(columnIndex));
-					Clay_ElementDeclaration columnCell = makeCell(
-						Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_GROW(0)});
-					columnCell.layout.padding = Clay_Padding{4, 4, 3, 3};
-					const Clay_ElementId cellId = context.uiManager.toClayEID(cellPath);
+				CLAY(columnsAreaId, columnsArea){
+					for (std::size_t columnIndex = 0; columnIndex < columns.size(); ++columnIndex)
+					{
+						const dataInputColumnView& column = columns[columnIndex];
+						const std::string cellPath = context.createChildElementId("columns/column-" + std::to_string(columnIndex));
+						Clay_ElementDeclaration columnCell = makeCell(
+							Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_GROW(0)});
+						columnCell.layout.padding = Clay_Padding{4, 4, 3, 3};
+						const Clay_ElementId cellId = context.uiManager.toClayEID(cellPath);
 
-					CLAY(cellId, columnCell){
-						switch (column.type)
-						{
-						case FlowPlotGui::DatasetFieldType::Number: {
-							if (column.typedColumnIndex >= dataset->numericColumns.size() ||
-								context.params.rowIndex >= dataset->numericColumns[column.typedColumnIndex].data.size())
+						CLAY(cellId, columnCell){
+							switch (column.type)
 							{
+							case FlowPlotGui::DatasetFieldType::Number: {
+								if (column.typedColumnIndex >= dataset->numericColumns.size() ||
+									context.params.rowIndex >= dataset->numericColumns[column.typedColumnIndex].data.size())
+								{
+									break;
+								}
+								const std::string inputPath = cellPath + "/numeric/input";
+								numericInputFieldParams numericParams{};
+								numericParams.valueType = numericInputValueType::Double;
+								numericParams.value = dataset->numericColumns[column.typedColumnIndex].data[context.params.rowIndex];
+								numericParams.minValue = std::numeric_limits<double>::lowest();
+								numericParams.maxValue = std::numeric_limits<double>::max();
+								numericParams.sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_GROW(0)};
+								numericParams.fontId = context.params.fontId;
+								numericParams.fontSize = context.params.fontSize;
+								numericParams.inputTextColor = context.params.textColor;
+								numericParams.inputPadding = Clay_Padding{6, 6, 2, 2};
+								numericParams.inputBorderColor = FlowUi::Flow_Color("#00000000");
+								numericParams.inputBorderWidth = Clay_BorderWidth{0, 0, 0, 0, 0};
+								numericParams.inputBackgroundColor = FlowUi::Flow_Color("#1f1f24ff");
+								numericParams.onEditBegin = [
+									guiState = context.params.guiState,
+									fieldId = inputPath
+								]() {
+									if (guiState != nullptr)
+									{
+										guiState->dataInputFocusGrid.setFocusedField(fieldId);
+									}
+								};
+								numericParams.onEditEnd = [
+									guiState = context.params.guiState,
+									fieldId = inputPath
+								]() {
+									if (guiState != nullptr)
+									{
+										guiState->dataInputFocusGrid.clearFocusedField(fieldId);
+									}
+								};
+								numericParams.onChange = [
+									guiState = context.params.guiState,
+									datasetIndex = context.params.datasetIndex,
+									typedColumnIndex = column.typedColumnIndex,
+									rowIndex = context.params.rowIndex
+								](double changed) {
+									if (guiState != nullptr)
+									{
+										FlowPlotGui::setNumericCell(*guiState, datasetIndex, typedColumnIndex, rowIndex, changed);
+									}
+								};
+								if (context.params.guiState != nullptr)
+								{
+									context.params.guiState->dataInputFocusGrid.registerCell({
+										.fieldId = inputPath,
+										.datasetIndex = context.params.datasetIndex,
+										.row = context.params.rowIndex,
+										.column = columnIndex,
+										.scrollContainerId = context.params.rowsContainerId,
+										.rowHeight = context.params.rowHeight,
+										.rowGap = context.params.rowGap,
+									});
+								}
+								context.uiManager.createElement(kNumericInputField, cellPath + "/numeric")
+									.setParameters(std::move(numericParams))
+									.draw();
 								break;
 							}
-							numericInputFieldParams numericParams{};
-							numericParams.valueType = numericInputValueType::Double;
-							numericParams.value = dataset->numericColumns[column.typedColumnIndex].data[context.params.rowIndex];
-							numericParams.minValue = std::numeric_limits<double>::lowest();
-							numericParams.maxValue = std::numeric_limits<double>::max();
-							numericParams.sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_GROW(0)};
-							numericParams.fontId = context.params.fontId;
-							numericParams.fontSize = context.params.fontSize;
-							numericParams.inputTextColor = context.params.textColor;
-							numericParams.inputPadding = Clay_Padding{6, 6, 2, 2};
-							numericParams.inputBorderColor = FlowUi::Flow_Color("#00000000");
-							numericParams.inputBorderWidth = Clay_BorderWidth{0, 0, 0, 0, 0};
-							numericParams.inputBackgroundColor = FlowUi::Flow_Color("#1f1f24ff");
-							numericParams.onChange = [
-								guiState = context.params.guiState,
-								datasetIndex = context.params.datasetIndex,
-								typedColumnIndex = column.typedColumnIndex,
-								rowIndex = context.params.rowIndex
-							](double changed) {
-								if (guiState != nullptr)
+							case FlowPlotGui::DatasetFieldType::String: {
+								if (column.typedColumnIndex >= dataset->stringColumns.size() ||
+									context.params.rowIndex >= dataset->stringColumns[column.typedColumnIndex].data.size())
 								{
-									FlowPlotGui::setNumericCell(*guiState, datasetIndex, typedColumnIndex, rowIndex, changed);
+									break;
 								}
-							};
-							context.uiManager.createElement(kNumericInputField, cellPath + "/numeric")
-								.setParameters(std::move(numericParams))
-								.draw();
-							break;
-						}
-						case FlowPlotGui::DatasetFieldType::String: {
-							if (column.typedColumnIndex >= dataset->stringColumns.size() ||
-								context.params.rowIndex >= dataset->stringColumns[column.typedColumnIndex].data.size())
-							{
+								const std::string inputPath = cellPath + "/string";
+								basicInputFieldParams stringParams{};
+								stringParams.fieldId = inputPath;
+								stringParams.value = dataset->stringColumns[column.typedColumnIndex].data[context.params.rowIndex];
+								stringParams.syncValueFromParams = true;
+								stringParams.sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_GROW(0)};
+								stringParams.padding = Clay_Padding{6, 6, 2, 2};
+								stringParams.borderColor = FlowUi::Flow_Color("#00000000");
+								stringParams.borderWidth = Clay_BorderWidth{0, 0, 0, 0, 0};
+								stringParams.backgroundColor = FlowUi::Flow_Color("#1f1f24ff");
+								stringParams.cornerRadius = CLAY_CORNER_RADIUS(5);
+								stringParams.fontId = context.params.fontId;
+								stringParams.fontSize = context.params.fontSize;
+								stringParams.textColor = context.params.textColor;
+								stringParams.onEditBegin = [
+									guiState = context.params.guiState,
+									fieldId = inputPath
+								]() {
+									if (guiState != nullptr)
+									{
+										guiState->dataInputFocusGrid.setFocusedField(fieldId);
+									}
+								};
+								stringParams.onEditEnd = [
+									guiState = context.params.guiState,
+									fieldId = inputPath
+								]() {
+									if (guiState != nullptr)
+									{
+										guiState->dataInputFocusGrid.clearFocusedField(fieldId);
+									}
+								};
+								stringParams.onTextChangedCallback = [
+									guiState = context.params.guiState,
+									datasetIndex = context.params.datasetIndex,
+									typedColumnIndex = column.typedColumnIndex,
+									rowIndex = context.params.rowIndex
+								](std::string_view changed) {
+									if (guiState != nullptr)
+									{
+										FlowPlotGui::setStringCell(*guiState, datasetIndex, typedColumnIndex, rowIndex, changed);
+									}
+								};
+								if (context.params.guiState != nullptr)
+								{
+									context.params.guiState->dataInputFocusGrid.registerCell({
+										.fieldId = inputPath,
+										.datasetIndex = context.params.datasetIndex,
+										.row = context.params.rowIndex,
+										.column = columnIndex,
+										.scrollContainerId = context.params.rowsContainerId,
+										.rowHeight = context.params.rowHeight,
+										.rowGap = context.params.rowGap,
+									});
+								}
+								context.uiManager.createElement(kBasicInputField, cellPath + "/string")
+									.setParameters(std::move(stringParams))
+									.draw();
 								break;
 							}
-							basicInputFieldParams stringParams{};
-							stringParams.fieldId = cellPath + "/string";
-							stringParams.value = dataset->stringColumns[column.typedColumnIndex].data[context.params.rowIndex];
-							stringParams.syncValueFromParams = true;
-							stringParams.sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_GROW(0)};
-							stringParams.padding = Clay_Padding{6, 6, 2, 2};
-							stringParams.borderColor = FlowUi::Flow_Color("#00000000");
-							stringParams.borderWidth = Clay_BorderWidth{0, 0, 0, 0, 0};
-							stringParams.backgroundColor = FlowUi::Flow_Color("#1f1f24ff");
-							stringParams.cornerRadius = CLAY_CORNER_RADIUS(5);
-							stringParams.fontId = context.params.fontId;
-							stringParams.fontSize = context.params.fontSize;
-							stringParams.textColor = context.params.textColor;
-							stringParams.onTextChangedCallback = [
-								guiState = context.params.guiState,
-								datasetIndex = context.params.datasetIndex,
-								typedColumnIndex = column.typedColumnIndex,
-								rowIndex = context.params.rowIndex
-							](std::string_view changed) {
-								if (guiState != nullptr)
-								{
-									FlowPlotGui::setStringCell(*guiState, datasetIndex, typedColumnIndex, rowIndex, changed);
-								}
-							};
-							context.uiManager.createElement(kBasicInputField, cellPath + "/string")
-								.setParameters(std::move(stringParams))
-								.draw();
-							break;
-						}
 						case FlowPlotGui::DatasetFieldType::Boolean: {
 							if (column.typedColumnIndex >= dataset->boolColumns.size() ||
 								context.params.rowIndex >= dataset->boolColumns[column.typedColumnIndex].data.size())
@@ -754,14 +833,22 @@ inline const DataInputTableDef kDataInputTable = {
 	nullptr,
 	+[](DataInputTableDef::BuildContext& context) {
 		const Clay_ElementId rootId = context.uiManager.toClayEID(context.elementID);
+		const std::string rowsContainerPath = context.createChildElementId("rows-container");
+		const Clay_ElementId rowsContainerId = context.uiManager.toClayEID(rowsContainerPath);
+		const Clay_Vector2 rowsScrollOffset =
+			dataInputTableScrollOffsetForElementId(context.uiManager, rowsContainerPath);
 		std::size_t activeDatasetIndex = context.params.activeDatasetIndex != nullptr
 			? *context.params.activeDatasetIndex
 			: 0;
-		if (context.params.guiState != nullptr && !context.params.guiState->datasets.empty() &&
-			activeDatasetIndex >= context.params.guiState->datasets.size())
-		{
-			activeDatasetIndex = context.params.guiState->datasets.size() - 1;
-		}
+			if (context.params.guiState != nullptr && !context.params.guiState->datasets.empty() &&
+				activeDatasetIndex >= context.params.guiState->datasets.size())
+			{
+				activeDatasetIndex = context.params.guiState->datasets.size() - 1;
+			}
+			if (context.params.guiState != nullptr)
+			{
+				context.params.guiState->dataInputFocusGrid.clear();
+			}
 
 		Clay_ElementDeclaration root{};
 		root.layout.layoutDirection = CLAY_TOP_TO_BOTTOM;
@@ -770,6 +857,18 @@ inline const DataInputTableDef kDataInputTable = {
 		root.layout.childGap = context.params.rowGap;
 		root.backgroundColor = context.params.backgroundColor;
 		root.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
+
+		Clay_ElementDeclaration rowsContainer{};
+		rowsContainer.layout.layoutDirection = CLAY_TOP_TO_BOTTOM;
+		rowsContainer.layout.sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_GROW(0)};
+		rowsContainer.layout.childGap = context.params.rowGap;
+		rowsContainer.backgroundColor = FlowUi::Flow_Color("#00000000");
+		rowsContainer.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
+		rowsContainer.clip = {
+			.horizontal = false,
+			.vertical = true,
+			.childOffset = rowsScrollOffset,
+		};
 
 		CLAY(rootId, root){
 			context.uiManager.createElement(kDataInputHeaderRow, context.createChildElementId("header-row"))
@@ -783,24 +882,29 @@ inline const DataInputTableDef kDataInputTable = {
 				})
 				.draw();
 
-			if (context.params.guiState != nullptr && activeDatasetIndex < context.params.guiState->datasets.size())
+			CLAY(rowsContainerId, rowsContainer)
 			{
-				const std::size_t rowCount = FlowPlotGui::datasetRowCount(context.params.guiState->datasets[activeDatasetIndex]);
-				for (std::size_t rowIndex = 0; rowIndex < rowCount; ++rowIndex)
+				if (context.params.guiState != nullptr && activeDatasetIndex < context.params.guiState->datasets.size())
 				{
-					context.uiManager.createElement(kDataInputDataRow, context.createChildElementId("rows/row-" + std::to_string(rowIndex)))
-						.setParameters({
-							.guiState = context.params.guiState,
-							.datasetIndex = activeDatasetIndex,
-							.rowIndex = rowIndex,
-							.rowHeight = context.params.dataRowHeight,
-							.idColumnWidth = context.params.idColumnWidth,
-							.actionColumnWidth = context.params.actionColumnWidth,
-							.columnGap = context.params.columnGap,
-						})
-						.draw();
+					const std::size_t rowCount = FlowPlotGui::datasetRowCount(context.params.guiState->datasets[activeDatasetIndex]);
+					for (std::size_t rowIndex = 0; rowIndex < rowCount; ++rowIndex)
+					{
+						context.uiManager.createElement(kDataInputDataRow, context.createChildElementId("rows/row-" + std::to_string(rowIndex)))
+							.setParameters({
+									.guiState = context.params.guiState,
+									.datasetIndex = activeDatasetIndex,
+									.rowIndex = rowIndex,
+									.rowsContainerId = rowsContainerPath,
+									.rowHeight = context.params.dataRowHeight,
+									.rowGap = static_cast<float>(context.params.rowGap),
+									.idColumnWidth = context.params.idColumnWidth,
+								.actionColumnWidth = context.params.actionColumnWidth,
+								.columnGap = context.params.columnGap,
+							})
+							.draw();
+					}
 				}
-			}
+			};
 		};
 	},
 };

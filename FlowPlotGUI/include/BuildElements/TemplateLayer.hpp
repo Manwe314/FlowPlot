@@ -237,6 +237,7 @@ inline const TemplateLayerDef kTemplateLayer = {
 			FlowPlotGui::TemplateNodeKey key = context.params.nodeKey;
 			key.flowElementId = context.elementID;
 			context.params.guiState->selectedNode = std::move(key);
+			context.uiManager.shortcuts().setFocusedElement(context.uiManager.toClayEID(context.elementID));
 		}
 		if (context.params.onPressedCallback != nullptr)
 		{

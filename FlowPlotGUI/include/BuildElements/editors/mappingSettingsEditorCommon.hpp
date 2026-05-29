@@ -32,7 +32,7 @@ inline std::span<const std::string> mappingSettingsTypeOptions()
 
 inline std::span<const std::string> scatterMarkerShapeOptions()
 {
-	static const std::array<std::string, 5> options{"circle", "square", "diamond", "triangle", "cross"};
+	static const std::array<std::string, 4> options{"circle", "square", "diamond", "triangle"};
 	return options;
 }
 

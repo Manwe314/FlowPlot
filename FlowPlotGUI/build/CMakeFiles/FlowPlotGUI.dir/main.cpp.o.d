@@ -356,14 +356,15 @@ CMakeFiles/FlowPlotGUI.dir/main.cpp.o: \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/UiManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/ViewPortManager.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/ViewPortManagerStructs.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/elements.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devApi.hpp \
-  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/BasicInputField.hpp \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/algorithm \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/ranges_algo.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/ranges_util.h \
   /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/pstl/glue_algorithm_defs.h \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/elements.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devApi.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/BasicInputField.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/FlowPlotGui.hpp \
+  /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/charconv \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/../FlowPlot/FlowPlot_Defaults.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/../FlowPlot/FlowPlot.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/../FlowPlot/rapidjson/document.h \
@@ -465,4 +466,5 @@ CMakeFiles/FlowPlotGUI.dir/main.cpp.o: \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/ConstructElements/TemplatePanel.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/ConstructElements/PropsPanel.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/iconRegistry.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/templateClipboard.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/templateHelper.hpp

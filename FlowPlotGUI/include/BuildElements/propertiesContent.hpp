@@ -110,6 +110,10 @@ namespace FlowPlotGui
 		params.onEditEnd = [&guiState]() {
 			endDeferredDocumentEdit(guiState);
 		};
+		params.propertyFocusState = &guiState;
+		params.propertyScrollContainerId = guiState.propertyInputFocusGrid.scrollContainerId;
+		params.propertyTabOrder = guiState.propertyInputFocusGrid.allocateOrder();
+		params.propertyTabStop = true;
 	}
 
 	inline void propertiesContentWireDeferredTemplateEdit(
@@ -127,6 +131,10 @@ namespace FlowPlotGui
 		params.onEditEnd = [&guiState]() {
 			endDeferredDocumentEdit(guiState);
 		};
+		params.propertyFocusState = &guiState;
+		params.propertyScrollContainerId = guiState.propertyInputFocusGrid.scrollContainerId;
+		params.propertyTabOrder = guiState.propertyInputFocusGrid.allocateOrder();
+		params.propertyTabStop = true;
 	}
 
 	inline void propertiesContentWireDeferredTemplateEdit(
@@ -144,6 +152,10 @@ namespace FlowPlotGui
 		params.onEditEnd = [&guiState]() {
 			endDeferredDocumentEdit(guiState);
 		};
+		params.propertyFocusState = &guiState;
+		params.propertyScrollContainerId = guiState.propertyInputFocusGrid.scrollContainerId;
+		params.propertyTabOrder = guiState.propertyInputFocusGrid.allocateOrder();
+		params.propertyTabStop = true;
 	}
 
 	inline void propertiesContentWireDeferredTemplateEdit(
@@ -161,6 +173,11 @@ namespace FlowPlotGui
 		params.onEditEnd = [&guiState]() {
 			endDeferredDocumentEdit(guiState);
 		};
+		params.propertyFocusState = &guiState;
+		params.propertyScrollContainerId = guiState.propertyInputFocusGrid.scrollContainerId;
+		params.propertyTabOrderBase = guiState.propertyInputFocusGrid.nextOrder;
+		guiState.propertyInputFocusGrid.nextOrder += 4;
+		params.propertyTabStop = true;
 	}
 
 	inline void propertiesContentWireDeferredTemplateEdit(
@@ -178,6 +195,10 @@ namespace FlowPlotGui
 		params.onEditEnd = [&guiState]() {
 			endDeferredDocumentEdit(guiState);
 		};
+		params.propertyFocusState = &guiState;
+		params.propertyScrollContainerId = guiState.propertyInputFocusGrid.scrollContainerId;
+		params.propertyTabOrderCursor = &guiState.propertyInputFocusGrid.nextOrder;
+		params.propertyTabStop = true;
 	}
 
 	inline void propertiesContentWireDeferredTemplateEdit(
@@ -1401,7 +1422,7 @@ namespace FlowPlotGui
 	inline void drawLegendElementEditor(FlowUi::UiManager& ui, state& guiState, const TemplateNodeKey& key, std::string_view rootId)
 	{
 		static const std::array<std::string, 3> kOverflowOptions = {"clip", "visible", "ellipsis"};
-		static const std::array<std::string, 5> kIconShapeOptions = {"circle", "square", "diamond", "triangle", "cross"};
+		static const std::array<std::string, 4> kIconShapeOptions = {"circle", "square", "diamond", "triangle"};
 
 		const FlowPlot::Spec::LegendSpec* legend = nullptr;
 		if (const FlowPlot::Spec::LegendSpec* foundLegend =
@@ -1691,6 +1712,7 @@ inline const PropertiesContentDef kPropertiesContent = {
 			}
 			else
 			{
+				context.params.guiState->propertyInputFocusGrid.beginFrame(std::string(context.elementID));
 				FlowPlotGui::drawPropertiesForSelection(
 					context.uiManager,
 					*context.params.guiState,

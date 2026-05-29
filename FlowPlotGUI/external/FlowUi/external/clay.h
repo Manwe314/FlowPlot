@@ -532,6 +532,7 @@ CLAY__WRAPPER_STRUCT(Clay_CustomElementConfig);
 typedef struct Clay_ClipElementConfig {
     bool horizontal; // Clip overflowing elements on the X axis.
     bool vertical; // Clip overflowing elements on the Y axis.
+    bool disableScrollCapture; 
     Clay_Vector2 childOffset; // Offsets the x,y positions of all child elements. Used primarily for scrolling containers.
 } Clay_ClipElementConfig;
 
@@ -4291,10 +4292,12 @@ void Clay_UpdateScrollContainers(bool enableDragScrolling, Clay_Vector2 scrollDe
         }
         scrollData->scrollPosition.y = CLAY__MIN(CLAY__MAX(scrollData->scrollPosition.y, -(CLAY__MAX(scrollData->contentSize.height - scrollData->layoutElement->dimensions.height, 0))), 0);
 
-        for (int32_t j = 0; j < context->pointerOverIds.length; ++j) { // TODO n & m are small here but this being n*m gives me the creeps
-            if (scrollData->layoutElement->id == Clay_ElementIdArray_Get(&context->pointerOverIds, j)->id) {
-                highestPriorityElementIndex = j;
-                highestPriorityScrollData = scrollData;
+        if (!scrollData->layoutElement->config.clip.disableScrollCapture) {
+            for (int32_t j = 0; j < context->pointerOverIds.length; ++j) { // TODO n & m are small here but this being n*m gives me the creeps
+                if (scrollData->layoutElement->id == Clay_ElementIdArray_Get(&context->pointerOverIds, j)->id) {
+                    highestPriorityElementIndex = j;
+                    highestPriorityScrollData = scrollData;
+                }
             }
         }
     }

@@ -459,6 +459,10 @@ struct colorPickerSwatchParams {
 	std::function<void(std::string_view)> onChange = nullptr;
 	std::function<void()> onEditBegin = nullptr;
 	std::function<void()> onEditEnd = nullptr;
+	FlowPlotGui::state* propertyFocusState = nullptr;
+	std::string propertyScrollContainerId{};
+	std::size_t propertyTabOrder = 0;
+	bool propertyTabStop = false;
 
 	Clay_Sizing sizing = Clay_Sizing{.width = CLAY_SIZING_FIT(0), .height = CLAY_SIZING_FIT(0)};
 	Clay_Padding padding = CLAY_PADDING_ALL(0);
@@ -709,6 +713,22 @@ inline const ColorPickerSwatchDef kColorPickerSwatch = {
 		hexInputParams.fontId = context.params.fontId;
 		hexInputParams.fontSize = context.params.fontSize;
 		hexInputParams.textColor = context.params.textColor;
+		hexInputParams.onEditBegin = context.params.onEditBegin;
+		hexInputParams.onEditEnd = context.params.onEditEnd;
+		if (context.params.propertyTabStop && context.params.propertyFocusState != nullptr)
+		{
+			context.params.propertyFocusState->propertyInputFocusGrid.registerField(FlowPlotGui::PropertyInputFocus{
+				.fieldId = hexInputPath,
+				.elementId = hexInputPath,
+				.scrollContainerId = context.params.propertyScrollContainerId,
+				.order = context.params.propertyTabOrder,
+			});
+			FlowPlotGui::wirePropertyInputFocusCallbacks(
+				*context.params.propertyFocusState,
+				hexInputPath,
+				hexInputParams.onEditBegin,
+				hexInputParams.onEditEnd);
+		}
 
 		const std::array<std::uint8_t, 3> rgb = colorPickerRgbFromHex(state.normalizedHex);
 
@@ -837,6 +857,10 @@ struct colorPickerCardParams {
 	std::function<void(std::string_view)> onChange = nullptr;
 	std::function<void()> onEditBegin = nullptr;
 	std::function<void()> onEditEnd = nullptr;
+	FlowPlotGui::state* propertyFocusState = nullptr;
+	std::string propertyScrollContainerId{};
+	std::size_t propertyTabOrder = 0;
+	bool propertyTabStop = false;
 
 	Clay_Sizing cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
 	Clay_LayoutDirection cardLayout = CLAY_LEFT_TO_RIGHT;
@@ -908,6 +932,10 @@ inline const ColorPickerCardDef kColorPickerCard = {
 		swatchParams.onChange = context.params.onChange;
 		swatchParams.onEditBegin = context.params.onEditBegin;
 		swatchParams.onEditEnd = context.params.onEditEnd;
+		swatchParams.propertyFocusState = context.params.propertyFocusState;
+		swatchParams.propertyScrollContainerId = context.params.propertyScrollContainerId;
+		swatchParams.propertyTabOrder = context.params.propertyTabOrder;
+		swatchParams.propertyTabStop = context.params.propertyTabStop;
 		swatchParams.fontId = context.params.fontId;
 		swatchParams.fontSize = context.params.fontSize;
 		swatchParams.textColor = context.params.textColor;

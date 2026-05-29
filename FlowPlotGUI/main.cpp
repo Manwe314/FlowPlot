@@ -3,6 +3,7 @@
 
 #include <FlowUi/Flow.hpp>
 
+#include <algorithm>
 #include <cstddef>
 #include <cstdio>
 #include <exception>
@@ -18,14 +19,162 @@
 #include "iconRegistry.hpp"
 #include "PlotViewportScene.hpp"
 #include "TemplatePresets.hpp"
+#include "templateClipboard.hpp"
 #include "templateExport.hpp"
 #include "templateHelper.hpp"
 
 namespace {
 
+constexpr int kKeyTab = 258;
+constexpr int kKeyRight = 262;
+constexpr int kKeyLeft = 263;
+constexpr int kKeyDown = 264;
+constexpr int kKeyUp = 265;
+constexpr int kKeyC = 67;
+constexpr int kKeyD = 68;
+constexpr int kKeyV = 86;
 constexpr int kKeyY = 89;
 constexpr int kKeyZ = 90;
 constexpr int kDocumentShortcutPriority = 100;
+constexpr int kInputShortcutPriority = 1000;
+
+Clay_Vector2 scrollOffsetForElementId(FlowUi::UiManager& uiManager, std::string_view elementId)
+{
+	const Clay_ScrollContainerData data =
+		Clay_GetScrollContainerData(uiManager.toClayEID(elementId));
+	if (!data.found || data.scrollPosition == nullptr)
+	{
+		return Clay_Vector2{0.0f, 0.0f};
+	}
+	return *data.scrollPosition;
+}
+
+void ensureDataInputCellVisible(FlowUi::UiManager& ui, const FlowPlotGui::DataInputCellFocus& cell)
+{
+	const Clay_ScrollContainerData scrollData =
+		Clay_GetScrollContainerData(ui.toClayEID(cell.scrollContainerId));
+	if (!scrollData.found || scrollData.scrollPosition == nullptr ||
+		scrollData.scrollContainerDimensions.height <= 0.0f)
+	{
+		return;
+	}
+
+	const float rowStride = cell.rowHeight + cell.rowGap;
+	const float rowTop = static_cast<float>(cell.row) * rowStride;
+	const float rowBottom = rowTop + cell.rowHeight;
+	const float margin = 6.0f;
+	const float viewportHeight = scrollData.scrollContainerDimensions.height;
+	float scrollY = -scrollData.scrollPosition->y;
+	const float visibleTop = scrollY;
+	const float visibleBottom = scrollY + viewportHeight;
+
+	if (rowTop < visibleTop + margin)
+	{
+		scrollY = std::max(0.0f, rowTop - margin);
+	}
+	else if (rowBottom > visibleBottom - margin)
+	{
+		scrollY = std::max(0.0f, rowBottom - viewportHeight + margin);
+	}
+	else
+	{
+		return;
+	}
+
+	const float maxScrollY = std::max(0.0f, scrollData.contentDimensions.height - viewportHeight);
+	scrollData.scrollPosition->y = -std::clamp(scrollY, 0.0f, maxScrollY);
+}
+
+void ensurePropertyInputVisible(FlowUi::UiManager& ui, const FlowPlotGui::PropertyInputFocus& field)
+{
+	const Clay_ScrollContainerData scrollData =
+		Clay_GetScrollContainerData(ui.toClayEID(field.scrollContainerId));
+	if (!scrollData.found || scrollData.scrollPosition == nullptr ||
+		scrollData.scrollContainerDimensions.height <= 0.0f)
+	{
+		return;
+	}
+
+	const Clay_ElementData scrollElementData = Clay_GetElementData(ui.toClayEID(field.scrollContainerId));
+	const Clay_ElementData fieldElementData = Clay_GetElementData(ui.toClayEID(field.elementId));
+	if (!scrollElementData.found || !fieldElementData.found)
+	{
+		return;
+	}
+
+	const float margin = 8.0f;
+	const float visibleTop = scrollElementData.boundingBox.y;
+	const float visibleBottom = visibleTop + scrollData.scrollContainerDimensions.height;
+	const float fieldTop = fieldElementData.boundingBox.y;
+	const float fieldBottom = fieldTop + fieldElementData.boundingBox.height;
+	float nextScrollY = scrollData.scrollPosition->y;
+
+	if (fieldTop < visibleTop + margin)
+	{
+		nextScrollY += (visibleTop + margin) - fieldTop;
+	}
+	else if (fieldBottom > visibleBottom - margin)
+	{
+		nextScrollY -= fieldBottom - (visibleBottom - margin);
+	}
+	else
+	{
+		return;
+	}
+
+	const float maxScrollY = std::max(
+		0.0f,
+		scrollData.contentDimensions.height - scrollData.scrollContainerDimensions.height);
+	scrollData.scrollPosition->y = std::clamp(nextScrollY, -maxScrollY, 0.0f);
+}
+
+bool navigateDataInputCell(
+	FlowUi::ShortcutContext& context,
+	FlowPlotGui::state& guiState,
+	FlowPlotGui::DataInputCellNavDirection direction)
+{
+	FlowPlotGui::DataInputFocusGrid& grid = guiState.dataInputFocusGrid;
+	const FlowPlotGui::DataInputCellFocus* current = grid.focusedCell();
+	if (current == nullptr)
+	{
+		return false;
+	}
+
+	const FlowPlotGui::DataInputCellFocus* next = grid.neighbor(*current, direction);
+	if (next == nullptr)
+	{
+		return true;
+	}
+
+	grid.setFocusedField(next->fieldId);
+	context.ui.inputFields().requestCaret(next->fieldId, FlowUi::CaretRequestKind::SetPrimary);
+	ensureDataInputCellVisible(context.ui, *next);
+	return true;
+}
+
+bool navigatePropertyInput(
+	FlowUi::ShortcutContext& context,
+	FlowPlotGui::state& guiState,
+	FlowPlotGui::PropertyInputNavDirection direction)
+{
+	FlowPlotGui::PropertyInputFocusGrid& grid = guiState.propertyInputFocusGrid;
+	const FlowPlotGui::PropertyInputFocus* current = grid.focusedField();
+	if (current == nullptr)
+	{
+		return false;
+	}
+
+	const FlowPlotGui::PropertyInputFocus* next = grid.neighbor(*current, direction);
+	if (next == nullptr)
+	{
+		return true;
+	}
+
+	grid.setFocusedField(next->fieldId);
+	context.ui.inputFields().requestCaret(next->fieldId, FlowUi::CaretRequestKind::SetPrimary);
+	ensurePropertyInputVisible(context.ui, *next);
+	return true;
+}
 
 void populateInitialGuiState(FlowPlotGui::state& guiState)
 {
@@ -366,6 +515,117 @@ int main()
 
 		(void)ui.shortcuts().registerShortcut(
 			FlowUi::ShortcutChord{
+				.key = kKeyC,
+				.ctrl = true,
+				.trigger = FlowUi::ShortcutTrigger::Press,
+			},
+			FlowUi::ShortcutScope::FocusedInput,
+			kInputShortcutPriority,
+				[](FlowUi::ShortcutContext& context) {
+					const std::string selectedText(context.ui.inputFields().getSelectedText());
+					if (selectedText.empty())
+					{
+						return false;
+					}
+					context.ui.setClipboardText(selectedText);
+					return true;
+				});
+		(void)ui.shortcuts().registerShortcut(
+			FlowUi::ShortcutChord{
+				.key = kKeyV,
+				.ctrl = true,
+				.trigger = FlowUi::ShortcutTrigger::Press,
+			},
+			FlowUi::ShortcutScope::FocusedInput,
+			kInputShortcutPriority,
+			[](FlowUi::ShortcutContext& context) {
+				(void)context.ui.inputFields().insertTextAtPrimaryCaret(context.ui.clipboardText());
+				return true;
+			});
+		auto registerTabNavigationShortcut = [&ui, &guiState](
+			FlowPlotGui::DataInputCellNavDirection dataDirection,
+			FlowPlotGui::PropertyInputNavDirection propertyDirection,
+			bool shift = false) {
+			(void)ui.shortcuts().registerShortcut(
+				FlowUi::ShortcutChord{
+					.key = kKeyTab,
+					.shift = shift,
+					.trigger = FlowUi::ShortcutTrigger::Press,
+				},
+				FlowUi::ShortcutScope::FocusedInput,
+				kInputShortcutPriority + 10,
+				[&guiState, dataDirection, propertyDirection](FlowUi::ShortcutContext& context) {
+					if (navigateDataInputCell(context, guiState, dataDirection))
+					{
+						return true;
+					}
+					return navigatePropertyInput(context, guiState, propertyDirection);
+				});
+		};
+		auto registerDataCellNavigationShortcut = [&ui, &guiState](
+			int key,
+			FlowPlotGui::DataInputCellNavDirection direction,
+			bool ctrl = false,
+			bool shift = false) {
+			(void)ui.shortcuts().registerShortcut(
+				FlowUi::ShortcutChord{
+					.key = key,
+					.ctrl = ctrl,
+					.shift = shift,
+					.trigger = FlowUi::ShortcutTrigger::Press,
+				},
+				FlowUi::ShortcutScope::FocusedInput,
+				kInputShortcutPriority + 10,
+				[&guiState, direction](FlowUi::ShortcutContext& context) {
+					return navigateDataInputCell(context, guiState, direction);
+				});
+		};
+		registerTabNavigationShortcut(
+			FlowPlotGui::DataInputCellNavDirection::Next,
+			FlowPlotGui::PropertyInputNavDirection::Next);
+		registerTabNavigationShortcut(
+			FlowPlotGui::DataInputCellNavDirection::Previous,
+			FlowPlotGui::PropertyInputNavDirection::Previous,
+			true);
+		registerDataCellNavigationShortcut(kKeyLeft, FlowPlotGui::DataInputCellNavDirection::Left, true);
+		registerDataCellNavigationShortcut(kKeyRight, FlowPlotGui::DataInputCellNavDirection::Right, true);
+		registerDataCellNavigationShortcut(kKeyUp, FlowPlotGui::DataInputCellNavDirection::Up, true);
+		registerDataCellNavigationShortcut(kKeyDown, FlowPlotGui::DataInputCellNavDirection::Down, true);
+		(void)ui.shortcuts().registerShortcut(
+			FlowUi::ShortcutChord{
+				.key = kKeyC,
+				.ctrl = true,
+				.trigger = FlowUi::ShortcutTrigger::Press,
+			},
+			FlowUi::ShortcutScope::FocusedElement,
+			kDocumentShortcutPriority,
+			[&guiState](FlowUi::ShortcutContext&) {
+				return FlowPlotGui::copySelectedTemplateNode(guiState);
+			});
+		(void)ui.shortcuts().registerShortcut(
+			FlowUi::ShortcutChord{
+				.key = kKeyV,
+				.ctrl = true,
+				.trigger = FlowUi::ShortcutTrigger::Press,
+			},
+			FlowUi::ShortcutScope::FocusedElement,
+			kDocumentShortcutPriority,
+			[&guiState](FlowUi::ShortcutContext&) {
+				return FlowPlotGui::pasteTemplateClipboardIntoSelection(guiState);
+			});
+		(void)ui.shortcuts().registerShortcut(
+			FlowUi::ShortcutChord{
+				.key = kKeyD,
+				.ctrl = true,
+				.trigger = FlowUi::ShortcutTrigger::Press,
+			},
+			FlowUi::ShortcutScope::FocusedElement,
+			kDocumentShortcutPriority,
+			[&guiState](FlowUi::ShortcutContext&) {
+				return FlowPlotGui::duplicateSelectedTemplateNode(guiState);
+			});
+		(void)ui.shortcuts().registerShortcut(
+			FlowUi::ShortcutChord{
 				.key = kKeyZ,
 				.ctrl = true,
 				.trigger = FlowUi::ShortcutTrigger::Press,
@@ -418,9 +678,24 @@ int main()
 							.secondaryTitleParams = {.text = "click to edit properties", .fontSize = 12}
 						})
 						.draw();
-						FlowPlotGui::drawTemplateNode(app, ui, guiState, "TemplatePanel/tree", {
-							.kind = FlowPlotGui::TemplateNodeKind::Figure,
-						});
+						const std::string treeScrollId = "TemplatePanel/tree-scroll";
+						Clay_ElementDeclaration treeScroll{};
+						treeScroll.layout.layoutDirection = CLAY_TOP_TO_BOTTOM;
+						treeScroll.layout.sizing = {
+							.width = CLAY_SIZING_GROW(0),
+							.height = CLAY_SIZING_GROW(0),
+						};
+						treeScroll.clip = {
+							.horizontal = false,
+							.vertical = true,
+							.childOffset = scrollOffsetForElementId(ui, treeScrollId),
+						};
+						CLAY(ui.toClayEID(treeScrollId), treeScroll)
+						{
+							FlowPlotGui::drawTemplateNode(app, ui, guiState, "TemplatePanel/tree", {
+								.kind = FlowPlotGui::TemplateNodeKind::Figure,
+							});
+						};
 					ui.drawConstructed(); // TemplatePanel
 					ui.createElement(kDynamicSeparator, "separator1")
 					.setParameters({

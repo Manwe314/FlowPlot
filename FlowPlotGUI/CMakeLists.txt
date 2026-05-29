@@ -4,8 +4,6 @@ project(FlowPlotGUI LANGUAGES CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Keep a compile database next to sources so IDEs (clangd, etc.) resolve
-# FlowUi include paths instead of falling back to root-level compile_flags.txt.
 if(CMAKE_EXPORT_COMPILE_COMMANDS)
     set(FLOWPLOTGUI_COMPILE_COMMANDS_LINK
         "${CMAKE_CURRENT_SOURCE_DIR}/compile_commands.json")

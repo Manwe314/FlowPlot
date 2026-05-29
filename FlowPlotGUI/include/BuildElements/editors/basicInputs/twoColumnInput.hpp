@@ -75,6 +75,10 @@ struct twoColumnInputTableParams {
 	std::function<void(std::size_t, std::string_view)> onValueChange = nullptr;
 	std::function<void()> onEditBegin = nullptr;
 	std::function<void()> onEditEnd = nullptr;
+	FlowPlotGui::state* propertyFocusState = nullptr;
+	std::string propertyScrollContainerId{};
+	std::size_t* propertyTabOrderCursor = nullptr;
+	bool propertyTabStop = false;
 
 	twoColumnInputValueKind valueKind = twoColumnInputValueKind::String;
 	std::span<const std::string> enumOptions{};
@@ -85,11 +89,12 @@ struct twoColumnInputTableParams {
 	Clay_Color backgroundColor = FlowUi::Flow_Color("#00000000");
 	Clay_Color borderColor = FlowUi::Flow_Color("#00000000");
 	Clay_BorderWidth borderWidth = Clay_BorderWidth{0, 0, 0, 0, 0};
+	Clay_CornerRadius cornerRadius = CLAY_CORNER_RADIUS(8);
 
 	std::string categoryHeaderText = "Category";
 	std::string valueHeaderText = "Value";
 	Clay_Sizing headerSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
-	Clay_Padding headerPadding = CLAY_PADDING_ALL(0);
+	Clay_Padding headerPadding = Clay_Padding{.left = 10, .right = 10, .top = 0, .bottom = 0};
 	uint16_t headerChildGap = 8;
 	Clay_Color headerTextColor = FlowUi::Flow_Color("#aeb2b8ff");
 
@@ -101,7 +106,7 @@ struct twoColumnInputTableParams {
 	Clay_BorderWidth rowsBorderWidth = Clay_BorderWidth{0, 0, 0, 0, 0};
 
 	Clay_Sizing rowSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
-	Clay_Padding rowPadding = CLAY_PADDING_ALL(0);
+	Clay_Padding rowPadding = Clay_Padding{.left = 10, .right = 10, .top = 0, .bottom = 0};
 	uint16_t rowChildGap = 8;
 	Clay_Color rowBackgroundColor = FlowUi::Flow_Color("#00000000");
 	Clay_Color rowHoverBackgroundColor = FlowUi::Flow_Color("#20252dff");
@@ -150,6 +155,7 @@ FLOWUI_DEV_REGISTER_STRUCT(
 	FLOWUI_DEV_REFLECT_FIELD(twoColumnInputTableParams, backgroundColor),
 	FLOWUI_DEV_REFLECT_FIELD(twoColumnInputTableParams, borderColor),
 	FLOWUI_DEV_REFLECT_FIELD(twoColumnInputTableParams, borderWidth),
+	FLOWUI_DEV_REFLECT_FIELD(twoColumnInputTableParams, cornerRadius),
 	FLOWUI_DEV_REFLECT_FIELD(twoColumnInputTableParams, categoryHeaderText),
 	FLOWUI_DEV_REFLECT_FIELD(twoColumnInputTableParams, valueHeaderText),
 	FLOWUI_DEV_REFLECT_FIELD(twoColumnInputTableParams, headerSizing),
@@ -241,17 +247,54 @@ inline basicInputFieldParams twoColumnInputBaseTextInputParams(
 	return input;
 }
 
+inline std::size_t twoColumnInputNextPropertyTabOrder(const twoColumnInputTableParams& params)
+{
+	if (params.propertyTabOrderCursor == nullptr)
+	{
+		return 0;
+	}
+	const std::size_t order = *params.propertyTabOrderCursor;
+	++(*params.propertyTabOrderCursor);
+	return order;
+}
+
+inline void twoColumnInputRegisterPropertyCaretField(
+	const twoColumnInputTableParams& params,
+	const std::string& fieldId,
+	const std::string& elementId,
+	std::function<void()>& onEditBegin,
+	std::function<void()>& onEditEnd)
+{
+	if (!params.propertyTabStop || params.propertyFocusState == nullptr)
+	{
+		return;
+	}
+
+	params.propertyFocusState->propertyInputFocusGrid.registerField(FlowPlotGui::PropertyInputFocus{
+		.fieldId = fieldId,
+		.elementId = elementId,
+		.scrollContainerId = params.propertyScrollContainerId,
+		.order = twoColumnInputNextPropertyTabOrder(params),
+	});
+	FlowPlotGui::wirePropertyInputFocusCallbacks(
+		*params.propertyFocusState,
+		fieldId,
+		onEditBegin,
+		onEditEnd);
+}
+
 inline void twoColumnInputDrawTextCell(
 	TwoColumnInputTableDef::BuildContext& context,
 	std::string_view cellName,
 	Clay_Sizing sizing,
+	Clay_ChildAlignment childAlignment,
 	std::function<void()> drawChild)
 {
 	const Clay_ElementId cellId = context.uiManager.toClayEID(context.createChildElementId(std::string(cellName)));
 	Clay_ElementDeclaration cell{};
 	cell.layout.sizing = sizing;
 	cell.layout.padding = context.params.cellPadding;
-	cell.layout.childAlignment = {.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER};
+	cell.layout.childAlignment = childAlignment;
 	CLAY(cellId, cell)
 	{
 		drawChild();
@@ -268,6 +311,7 @@ inline void twoColumnInputDrawSecondColumnInput(
 	{
 	case twoColumnInputValueKind::String:
 	{
+		const std::string elementId = context.createChildElementId(rowPrefix + "/value");
 		basicInputFieldParams inputParams = twoColumnInputBaseTextInputParams(
 			context.createChildElementId(rowPrefix + "/value-input"),
 			std::move(value),
@@ -279,13 +323,20 @@ inline void twoColumnInputDrawSecondColumnInput(
 					callback(rowIndex, changed);
 				}
 			});
-		context.uiManager.createElement(kBasicInputField, context.createChildElementId(rowPrefix + "/value"))
+		twoColumnInputRegisterPropertyCaretField(
+			context.params,
+			inputParams.fieldId,
+			elementId,
+			inputParams.onEditBegin,
+			inputParams.onEditEnd);
+		context.uiManager.createElement(kBasicInputField, elementId)
 			.setParameters(std::move(inputParams))
 			.draw();
 		break;
 	}
 	case twoColumnInputValueKind::Numeric:
 	{
+		const std::string numericElementId = context.createChildElementId(rowPrefix + "/numeric-value");
 		numericInputFieldParams numericParams = context.params.numericValue;
 		numericParams.value = twoColumnInputParseDoubleOrZero(value);
 		numericParams.sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
@@ -301,7 +352,14 @@ inline void twoColumnInputDrawSecondColumnInput(
 				callback(rowIndex, numericInputValueToText(valueType, changed));
 			}
 		};
-		context.uiManager.createElement(kNumericInputField, context.createChildElementId(rowPrefix + "/numeric-value"))
+		const std::string numericInputFieldId = numericElementId + "/input";
+		twoColumnInputRegisterPropertyCaretField(
+			context.params,
+			numericInputFieldId,
+			numericInputFieldId,
+			numericParams.onEditBegin,
+			numericParams.onEditEnd);
+		context.uiManager.createElement(kNumericInputField, numericElementId)
 			.setParameters(std::move(numericParams))
 			.draw();
 		break;
@@ -375,6 +433,7 @@ inline const TwoColumnInputTableDef kTwoColumnInputTable = {
 		root.layout.childAlignment = {.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_TOP};
 		root.backgroundColor = context.params.backgroundColor;
 		root.border = {.color = context.params.borderColor, .width = context.params.borderWidth};
+		root.cornerRadius = context.params.cornerRadius;
 
 		Clay_ElementDeclaration header{};
 		header.layout.layoutDirection = CLAY_LEFT_TO_RIGHT;
@@ -387,7 +446,7 @@ inline const TwoColumnInputTableDef kTwoColumnInputTable = {
 		headerTextConfig.textColor = context.params.headerTextColor;
 		headerTextConfig.fontSize = context.params.fontSize;
 		headerTextConfig.wrapMode = CLAY_TEXT_WRAP_NONE;
-		headerTextConfig.textAlignment = CLAY_TEXT_ALIGN_LEFT;
+		headerTextConfig.textAlignment = CLAY_TEXT_ALIGN_CENTER;
 		headerTextConfig.fontId = context.params.fontId;
 
 		Clay_ElementDeclaration rowsContainer{};
@@ -406,10 +465,20 @@ inline const TwoColumnInputTableDef kTwoColumnInputTable = {
 		{
 			CLAY(headerId, header)
 			{
-				twoColumnInputDrawTextCell(context, "header/category-cell", context.params.firstColumnSizing, [&]() {
+				twoColumnInputDrawTextCell(
+					context,
+					"header/category-cell",
+					context.params.firstColumnSizing,
+					{.x = CLAY_ALIGN_X_CENTER, .y = CLAY_ALIGN_Y_CENTER},
+					[&]() {
 					CLAY_TEXT(context.uiManager.toClayString(context.params.categoryHeaderText), CLAY_TEXT_CONFIG(headerTextConfig));
 				});
-				twoColumnInputDrawTextCell(context, "header/value-cell", context.params.secondColumnSizing, [&]() {
+				twoColumnInputDrawTextCell(
+					context,
+					"header/value-cell",
+					context.params.secondColumnSizing,
+					{.x = CLAY_ALIGN_X_CENTER, .y = CLAY_ALIGN_Y_CENTER},
+					[&]() {
 					CLAY_TEXT(context.uiManager.toClayString(context.params.valueHeaderText), CLAY_TEXT_CONFIG(headerTextConfig));
 				});
 				CLAY(context.uiManager.toClayEID(context.createChildElementId("header/delete-spacer")), {
@@ -436,7 +505,14 @@ inline const TwoColumnInputTableDef kTwoColumnInputTable = {
 					CLAY(rowId, row)
 					{
 						const std::string category = twoColumnInputSpanValue(context.params.categories, rowIndex);
-						twoColumnInputDrawTextCell(context, "rows/row-" + std::to_string(rowIndex) + "/category-cell", context.params.firstColumnSizing, [&]() {
+						twoColumnInputDrawTextCell(
+							context,
+							"rows/row-" + std::to_string(rowIndex) + "/category-cell",
+							context.params.firstColumnSizing,
+							{.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER},
+							[&]() {
+							const std::string elementId =
+								context.createChildElementId("rows/row-" + std::to_string(rowIndex) + "/category");
 							basicInputFieldParams inputParams = twoColumnInputBaseTextInputParams(
 								context.createChildElementId("rows/row-" + std::to_string(rowIndex) + "/category-input"),
 								category,
@@ -448,13 +524,24 @@ inline const TwoColumnInputTableDef kTwoColumnInputTable = {
 										callback(rowIndex, changed);
 									}
 								});
-							context.uiManager.createElement(kBasicInputField, context.createChildElementId("rows/row-" + std::to_string(rowIndex) + "/category"))
+							twoColumnInputRegisterPropertyCaretField(
+								context.params,
+								inputParams.fieldId,
+								elementId,
+								inputParams.onEditBegin,
+								inputParams.onEditEnd);
+							context.uiManager.createElement(kBasicInputField, elementId)
 								.setParameters(std::move(inputParams))
 								.draw();
 						});
 
 						const std::string value = twoColumnInputSpanValue(context.params.values, rowIndex);
-						twoColumnInputDrawTextCell(context, "rows/row-" + std::to_string(rowIndex) + "/value-cell", context.params.secondColumnSizing, [&]() {
+						twoColumnInputDrawTextCell(
+							context,
+							"rows/row-" + std::to_string(rowIndex) + "/value-cell",
+							context.params.secondColumnSizing,
+							{.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER},
+							[&]() {
 							twoColumnInputDrawSecondColumnInput(context, rowIndex, value);
 						});
 
@@ -509,43 +596,55 @@ inline const TwoColumnInputTableDef kTwoColumnInputTable = {
 				addRow.layout.layoutDirection = CLAY_LEFT_TO_RIGHT;
 				addRow.layout.sizing = context.params.rowSizing;
 				addRow.layout.padding = context.params.rowPadding;
+				addRow.layout.childGap = context.params.rowChildGap;
 				addRow.layout.childAlignment = {.x = CLAY_ALIGN_X_LEFT, .y = CLAY_ALIGN_Y_CENTER};
 
 				CLAY(context.uiManager.toClayEID(context.createChildElementId("rows/add-row")), addRow)
 				{
-					basicButtonParams addParams{};
-					addParams.contentMode = basicButtonParams::ContentMode::IconOnly;
-					if (TwoColumnInputTableDef::resources.has_value())
+					CLAY(context.uiManager.toClayEID(context.createChildElementId("rows/add-content")), {
+						.layout = {
+							.sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)},
+							.childAlignment = {.x = CLAY_ALIGN_X_CENTER, .y = CLAY_ALIGN_Y_CENTER},
+						},
+					})
 					{
-						addParams.icon = TwoColumnInputTableDef::resources->plusIcon;
-					}
-					addParams.onPressedCallback = [
-						defaultCategory = context.params.defaultCategory,
-						defaultValue = context.params.defaultValue,
-						callback = context.params.onAddRow,
-						onEditEnd = context.params.onEditEnd
-					](BasicButtonInteractionContext) {
-						if (onEditEnd != nullptr)
+						basicButtonParams addParams{};
+						addParams.contentMode = basicButtonParams::ContentMode::IconOnly;
+						if (TwoColumnInputTableDef::resources.has_value())
 						{
-							onEditEnd();
+							addParams.icon = TwoColumnInputTableDef::resources->plusIcon;
 						}
-						if (callback != nullptr)
-						{
-							callback(defaultCategory, defaultValue);
-						}
+						addParams.onPressedCallback = [
+							defaultCategory = context.params.defaultCategory,
+							defaultValue = context.params.defaultValue,
+							callback = context.params.onAddRow,
+							onEditEnd = context.params.onEditEnd
+						](BasicButtonInteractionContext) {
+							if (onEditEnd != nullptr)
+							{
+								onEditEnd();
+							}
+							if (callback != nullptr)
+							{
+								callback(defaultCategory, defaultValue);
+							}
+						};
+						addParams.padding = context.params.addButtonPadding;
+						addParams.sizing = context.params.addButtonSizing;
+						addParams.backgroundColor = context.params.addButtonBackgroundColor;
+						addParams.hoverBackgroundColor = context.params.addButtonHoverBackgroundColor;
+						addParams.cornerRadius = context.params.addButtonCornerRadius;
+						addParams.borderColor = context.params.addButtonBorderColor;
+						addParams.borderWidth = context.params.addButtonBorderWidth;
+						addParams.iconContainerSizing = Clay_Sizing{.width = CLAY_SIZING_FIXED(16), .height = CLAY_SIZING_FIXED(16)};
+						addParams.iconTintColor = FlowUi::Flow_Color("#ffffffff");
+						context.uiManager.createElement(kBasicButton, context.createChildElementId("rows/add-button"))
+							.setParameters(std::move(addParams))
+							.draw();
 					};
-					addParams.padding = context.params.addButtonPadding;
-					addParams.sizing = context.params.addButtonSizing;
-					addParams.backgroundColor = context.params.addButtonBackgroundColor;
-					addParams.hoverBackgroundColor = context.params.addButtonHoverBackgroundColor;
-					addParams.cornerRadius = context.params.addButtonCornerRadius;
-					addParams.borderColor = context.params.addButtonBorderColor;
-					addParams.borderWidth = context.params.addButtonBorderWidth;
-					addParams.iconContainerSizing = Clay_Sizing{.width = CLAY_SIZING_FIXED(16), .height = CLAY_SIZING_FIXED(16)};
-					addParams.iconTintColor = FlowUi::Flow_Color("#ffffffff");
-					context.uiManager.createElement(kBasicButton, context.createChildElementId("rows/add-button"))
-						.setParameters(std::move(addParams))
-						.draw();
+					CLAY(context.uiManager.toClayEID(context.createChildElementId("rows/add-delete-spacer")), {
+						.layout = {.sizing = context.params.deleteSlotSizing},
+					}){};
 				};
 			};
 		};
@@ -556,6 +655,10 @@ struct twoColumnInputCardParams {
 	std::string hintText = "Table";
 	std::function<void()> onEditBegin = nullptr;
 	std::function<void()> onEditEnd = nullptr;
+	FlowPlotGui::state* propertyFocusState = nullptr;
+	std::string propertyScrollContainerId{};
+	std::size_t* propertyTabOrderCursor = nullptr;
+	bool propertyTabStop = false;
 
 	Clay_Sizing cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0, 360)};
 	Clay_LayoutDirection cardLayout = CLAY_LEFT_TO_RIGHT;
@@ -626,6 +729,10 @@ inline const TwoColumnInputCardDef kTwoColumnInputCard = {
 		twoColumnInputTableParams tableParams = context.params.table;
 		tableParams.onEditBegin = context.params.onEditBegin;
 		tableParams.onEditEnd = context.params.onEditEnd;
+		tableParams.propertyFocusState = context.params.propertyFocusState;
+		tableParams.propertyScrollContainerId = context.params.propertyScrollContainerId;
+		tableParams.propertyTabOrderCursor = context.params.propertyTabOrderCursor;
+		tableParams.propertyTabStop = context.params.propertyTabStop;
 		tableParams.fontId = context.params.fontId;
 		tableParams.fontSize = context.params.fontSize;
 		tableParams.inputTextColor = context.params.textColor;

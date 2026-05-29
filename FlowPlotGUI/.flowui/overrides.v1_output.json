@@ -9,19 +9,18 @@
   },
   "definitions": [
     {
-      "definitionId":28915239130693540,
-      "definitionName":"TemplateLayer",
-      "paramsStructTypeHash":2792688088248559431,
-      "paramsStructName":"templateLayerParams",
+      "definitionId":2320764222450459691,
+      "definitionName":"TwoColumnInputTable",
+      "paramsStructTypeHash":930227865361312718,
+      "paramsStructName":"twoColumnInputTableParams",
       "hasSourceMetadata":true,
-      "sourceFile":"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/TemplateLayer.hpp",
-      "sourceLine":129,
+      "sourceFile":"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/basicInputs/twoColumnInput.hpp",
+      "sourceLine":198,
       "sourceColumn":0,
       "sourceFunction":"operator()",
       "changes": [
-        {"fieldHash":1403803307528796348,"fieldName":"buttonHoverBackgroundColor","fieldTypeHash":1038404891235700713,"valueKind":"float4","value":"Clay_Color{r=46, g=48, b=54, a=255}"},
-        {"fieldHash":8972802004509636329,"fieldName":"deleterButtonHoverIconTintColor","fieldTypeHash":1038404891235700713,"valueKind":"float4","value":"Clay_Color{r=255, g=107, b=107, a=255}"},
-        {"fieldHash":8000382477625643227,"fieldName":"deleterButtonIconTintColor","fieldTypeHash":1038404891235700713,"valueKind":"float4","value":"Clay_Color{r=175, g=180, b=179, a=255}"}
+        {"fieldHash":8336170734358855973,"fieldName":"headerPadding","fieldTypeHash":15937443097836116563,"valueKind":"edgeu16","value":"Clay_Padding{left=10, right=10, top=0, bottom=0}"},
+        {"fieldHash":6182518615344470848,"fieldName":"rowPadding","fieldTypeHash":15937443097836116563,"valueKind":"edgeu16","value":"Clay_Padding{left=10, right=10, top=0, bottom=0}"}
       ]
     }
   ],

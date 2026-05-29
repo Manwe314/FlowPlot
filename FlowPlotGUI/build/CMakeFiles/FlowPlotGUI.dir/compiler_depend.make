@@ -127,6 +127,7 @@ CMakeFiles/FlowPlotGUI.dir/main.cpp.o: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/elements.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/fontImport.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/iconRegistry.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/templateClipboard.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/templateExport.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/templateHelper.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/templateImport.hpp \
@@ -259,6 +260,7 @@ CMakeFiles/FlowPlotGUI.dir/main.cpp.o: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/
   /usr/include/c++/12/cassert \
   /usr/include/c++/12/cctype \
   /usr/include/c++/12/cerrno \
+  /usr/include/c++/12/charconv \
   /usr/include/c++/12/climits \
   /usr/include/c++/12/clocale \
   /usr/include/c++/12/cmath \
@@ -688,6 +690,7 @@ CMakeFiles/FlowPlotGUI.dir/src/PlotRenderer.cpp.o: /home/lkukhale/kodi/FlowPlot/
   /usr/include/c++/12/cassert \
   /usr/include/c++/12/cctype \
   /usr/include/c++/12/cerrno \
+  /usr/include/c++/12/charconv \
   /usr/include/c++/12/climits \
   /usr/include/c++/12/clocale \
   /usr/include/c++/12/cmath \
@@ -1115,6 +1118,7 @@ CMakeFiles/FlowPlotGUI.dir/src/PlotViewportScene.cpp.o: /home/lkukhale/kodi/Flow
   /usr/include/c++/12/cassert \
   /usr/include/c++/12/cctype \
   /usr/include/c++/12/cerrno \
+  /usr/include/c++/12/charconv \
   /usr/include/c++/12/climits \
   /usr/include/c++/12/clocale \
   /usr/include/c++/12/cmath \
@@ -1514,6 +1518,7 @@ CMakeFiles/FlowPlotGUI.dir/src/fontImport.cpp.o: /home/lkukhale/kodi/FlowPlot/Fl
   /usr/include/c++/12/cassert \
   /usr/include/c++/12/cctype \
   /usr/include/c++/12/cerrno \
+  /usr/include/c++/12/charconv \
   /usr/include/c++/12/climits \
   /usr/include/c++/12/clocale \
   /usr/include/c++/12/cmath \
@@ -2008,6 +2013,7 @@ CMakeFiles/FlowPlotGUI.dir/src/iconRegistry.cpp.o: /home/lkukhale/kodi/FlowPlot/
   /usr/include/c++/12/cassert \
   /usr/include/c++/12/cctype \
   /usr/include/c++/12/cerrno \
+  /usr/include/c++/12/charconv \
   /usr/include/c++/12/climits \
   /usr/include/c++/12/clocale \
   /usr/include/c++/12/cmath \
@@ -2392,6 +2398,7 @@ CMakeFiles/FlowPlotGUI.dir/src/templateExport.cpp.o: /home/lkukhale/kodi/FlowPlo
   /usr/include/c++/12/cassert \
   /usr/include/c++/12/cctype \
   /usr/include/c++/12/cerrno \
+  /usr/include/c++/12/charconv \
   /usr/include/c++/12/climits \
   /usr/include/c++/12/clocale \
   /usr/include/c++/12/cmath \
@@ -2835,6 +2842,7 @@ CMakeFiles/FlowPlotGUI.dir/src/templateHelper.cpp.o: /home/lkukhale/kodi/FlowPlo
   /usr/include/c++/12/cassert \
   /usr/include/c++/12/cctype \
   /usr/include/c++/12/cerrno \
+  /usr/include/c++/12/charconv \
   /usr/include/c++/12/climits \
   /usr/include/c++/12/clocale \
   /usr/include/c++/12/cmath \
@@ -3214,6 +3222,7 @@ CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o: /home/lkukhale/kodi/FlowPlo
   /usr/include/c++/12/cassert \
   /usr/include/c++/12/cctype \
   /usr/include/c++/12/cerrno \
+  /usr/include/c++/12/charconv \
   /usr/include/c++/12/climits \
   /usr/include/c++/12/clocale \
   /usr/include/c++/12/cmath \
@@ -3660,6 +3669,8 @@ CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o: /home/lkukhale/kodi/FlowPlo
 
 /usr/include/x86_64-linux-gnu/c++/12/bits/cpu_defines.h:
 
+/usr/include/x86_64-linux-gnu/c++/12/bits/c++locale.h:
+
 /usr/include/c++/12/bits/cxxabi_init_exception.h:
 
 /usr/include/c++/12/bits/chrono.h:
@@ -3714,8 +3725,6 @@ CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o: /home/lkukhale/kodi/FlowPlo
 
 /home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_av1std_decode.h:
 
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/PublicStructs.hpp:
-
 /home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_h264std.h:
 
 /usr/include/x86_64-linux-gnu/sys/select.h:
@@ -3727,6 +3736,14 @@ CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o: /home/lkukhale/kodi/FlowPlo
 /usr/include/x86_64-linux-gnu/bits/libc-header-start.h:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/templateImport.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/PublicStructs.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/templateClipboard.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/variableTypeSettingsEditor.hpp:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/writer.h:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/elements.hpp:
 
@@ -3753,10 +3770,6 @@ CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o: /home/lkukhale/kodi/FlowPlo
 /usr/include/c++/12/cwctype:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/ConstructElements/PropsPanel.hpp:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/variableTypeSettingsEditor.hpp:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/writer.h:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/scatterStatsEditor.hpp:
 
@@ -3824,6 +3837,10 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/structs/InputStructs.hpp:
 
+/usr/include/x86_64-linux-gnu/c++/12/bits/c++io.h:
+
+/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_vp9std.h:
+
 /home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/internal/clzll.h:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/lineSettingsEditor.hpp:
@@ -3861,10 +3878,6 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/internal/ieee754.h:
 
 /usr/include/c++/12/initializer_list:
-
-/usr/include/c++/12/bits/enable_special_members.h:
-
-/usr/include/c++/12/bits/localefwd.h:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/internal/itoa.h:
 
@@ -3980,8 +3993,6 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/bits/shared_ptr_base.h:
 
-/usr/include/x86_64-linux-gnu/c++/12/bits/c++locale.h:
-
 /usr/include/c++/12/bits/uses_allocator_args.h:
 
 /usr/include/c++/12/iterator:
@@ -4029,6 +4040,8 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/templateExport.hpp:
 
 /usr/include/c++/12/backward/binders.h:
+
+/usr/include/c++/12/charconv:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/devMode/devApi.hpp:
 
@@ -4143,6 +4156,10 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /usr/include/c++/12/tr1/special_function_util.h:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/Vulkan/Vk_Context.hpp:
+
+/usr/include/c++/12/bits/enable_special_members.h:
+
+/usr/include/c++/12/bits/localefwd.h:
 
 /usr/include/c++/12/bits/exception_defines.h:
 
@@ -4473,7 +4490,3 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /usr/lib/llvm-12/lib/clang/12.0.1/include/stdbool.h:
 
 /usr/include/x86_64-linux-gnu/c++/12/bits/c++allocator.h:
-
-/home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_vp9std.h:
-
-/usr/include/x86_64-linux-gnu/c++/12/bits/c++io.h:

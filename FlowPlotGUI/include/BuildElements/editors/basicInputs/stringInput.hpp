@@ -16,6 +16,10 @@ struct stringInputCardParams {
 	std::function<void(std::string_view)> onChange = nullptr;
 	std::function<void()> onEditBegin = nullptr;
 	std::function<void()> onEditEnd = nullptr;
+	FlowPlotGui::state* propertyFocusState = nullptr;
+	std::string propertyScrollContainerId{};
+	std::size_t propertyTabOrder = 0;
+	bool propertyTabStop = false;
 
 	Clay_Sizing cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
 	Clay_Padding cardPadding = Clay_Padding{8, 8, 6, 6};
@@ -101,6 +105,20 @@ inline const StringInputCardDef kStringInputCard = {
 		inputParams.onTextChangedCallback = context.params.onChange;
 		inputParams.onEditBegin = context.params.onEditBegin;
 		inputParams.onEditEnd = context.params.onEditEnd;
+		if (context.params.propertyTabStop && context.params.propertyFocusState != nullptr)
+		{
+			context.params.propertyFocusState->propertyInputFocusGrid.registerField(FlowPlotGui::PropertyInputFocus{
+				.fieldId = inputPath,
+				.elementId = inputPath,
+				.scrollContainerId = context.params.propertyScrollContainerId,
+				.order = context.params.propertyTabOrder,
+			});
+			FlowPlotGui::wirePropertyInputFocusCallbacks(
+				*context.params.propertyFocusState,
+				inputPath,
+				inputParams.onEditBegin,
+				inputParams.onEditEnd);
+		}
 		inputParams.padding = context.params.inputPadding;
 		inputParams.sizing = Clay_Sizing{
 			.width = CLAY_SIZING_GROW(0),

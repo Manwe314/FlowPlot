@@ -35,9 +35,9 @@ float sdEquilateralTriangle(vec2 p, float radius) {
 	return -length(p) * sign(p.y);
 }
 
-vec2 rotate45(vec2 p) {
+float sdDiamond(vec2 p, float radius) {
 	const float invSqrt2 = 0.7071067811865476;
-	return vec2(p.x - p.y, p.x + p.y) * invSqrt2;
+	return (abs(p.x) + abs(p.y) - radius) * invSqrt2;
 }
 
 void main() {
@@ -49,7 +49,7 @@ void main() {
 		d = sdSquare(vLocal, vHalfSize);
 	}
 	else if (vShape == SHAPE_DIAMOND) {
-		d = sdSquare(rotate45(vLocal), vHalfSize);
+		d = sdDiamond(vLocal, vHalfSize);
 	}
 	else {
 		d = sdEquilateralTriangle(vLocal, vHalfSize);

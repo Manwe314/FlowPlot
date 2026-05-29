@@ -25,41 +25,36 @@
 
 GUI app:
 
-- add ability to choose pre made template patterns (pair plot) {Initial plumbing in}
-- add conviniance shortcuts, text copy paste, endite layer duplication property copy paste
+
+Features:
 - CSV parsing input as "mock" data?
-
-- 
-- sting input height is tiny on empty defualt text
-- column input + button not in middle 
-- dataset + icon should have tint on hover + background color.
-
 - pollyline trinagluation can be made better with inner line intersection + normal direction "across point" detection.
-- GPU renderer honoring text box Clip functionalty
-- Text Layout is simply not the same as CPU renderer
-- ? Help with [saved] on the navbar
-- 
-- data input scrolling not working.
 - MultiThreading ???
-- add graceful error handling (error showing with [saved] stamp?)
-- If FlowUi already has the font loaded from imported tample do no work.
-- A lot of buffers in use at destroy request time errors while altering the plot figure.
-- props panel hint text hitting the editor wierdly
+- add pre made template patterns like pair plot constructibale with scatter & historgram
 
-
-- undo/redo with dataset value changes need an overview
-- undo/redo still compares entire templates instead of specific values.
+UI:
+- dataset + icon should have tint on hover + background color.
 - resize min max of both template and props panel
-- error messages can be more descriptive.
-- histogram border lines fall in subpixel ranges
-- two column input needs visual overhaul
-
-
-- label field schema mapping Vlaue has no options (circle, star, diamond.. etc)
-- carat movement controlls acros dataset table inputs 
-- tab functionality
-- icon tints
 - border colors
 - + and delee button background color need update
+
+
+UX:
+- ? Help with [saved] on the navbar
+
+Bugs:
+- sting input height is tiny on empty defualt text
+- GPU renderer honoring text box Clip functionalty
+- Text Layout is simply not the same as CPU renderer
+- If FlowUi already has the font loaded from imported tample do no work.
+- undo/redo with dataset value changes need an overview
+- undo/redo still compares entire templates instead of specific values.
+- Text Layout is not working well compared to FlowUis layout probably is STBEngine 
+
+
+
+
+
+
 
 

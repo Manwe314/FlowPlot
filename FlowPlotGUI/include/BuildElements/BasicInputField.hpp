@@ -169,7 +169,11 @@ inline const BasicInputFieldDef kBasicInputField = {
 		root.layout = rootLayout;
 		root.backgroundColor = context.params.backgroundColor;
 		root.cornerRadius = context.params.cornerRadius;
-		root.clip = {.horizontal = true, .vertical = true};
+		root.clip = {
+			.horizontal = true,
+			.vertical = true,
+			.disableScrollCapture = true,
+		};
 		root.border = {.color = context.params.borderColor, .width = context.params.borderWidth};
 
 		Clay_TextElementConfig textConfig{};

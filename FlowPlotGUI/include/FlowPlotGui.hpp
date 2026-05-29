@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <array>
+#include <charconv>
 #include <cstddef>
 #include <cstdint>
 #include <filesystem>
@@ -11,6 +12,7 @@
 #include <string>
 #include <string_view>
 #include <utility>
+#include <variant>
 #include <vector>
 
 #include "FlowPlot_Defaults.hpp"
@@ -59,6 +61,249 @@ struct TemplateNodeKey {
 	std::string inner{};
 	std::string flowElementId{};
 };
+
+using TemplateClipboardValue = std::variant<
+	FlowPlot::Spec::FigureSpec,
+	FlowPlot::Spec::TextSpec,
+	FlowPlot::Spec::PanelSpec,
+	FlowPlot::Spec::AxisSpec,
+	FlowPlot::Spec::LayerSpec,
+	FlowPlot::Spec::LegendSpec,
+	FlowPlot::Spec::LegendElementSpec>;
+
+struct TemplateClipboard {
+	bool hasValue = false;
+	TemplateNodeKind kind = TemplateNodeKind::Figure;
+	TemplateClipboardValue value = FlowPlot::Spec::FigureSpec{};
+	TemplateNodeKey source{};
+};
+
+struct state;
+
+enum class DataInputCellNavDirection : std::uint8_t {
+	Left,
+	Right,
+	Up,
+	Down,
+	Next,
+	Previous,
+};
+
+struct DataInputCellFocus {
+	std::string fieldId{};
+	std::size_t datasetIndex = 0;
+	std::size_t row = 0;
+	std::size_t column = 0;
+	std::string scrollContainerId{};
+	float rowHeight = 34.0f;
+	float rowGap = 0.0f;
+};
+
+struct DataInputFocusGrid {
+	std::vector<DataInputCellFocus> cells{};
+	std::string focusedFieldId{};
+
+	void clear()
+	{
+		cells.clear();
+	}
+
+	void registerCell(DataInputCellFocus cell)
+	{
+		cells.push_back(std::move(cell));
+	}
+
+	void setFocusedField(std::string fieldId)
+	{
+		focusedFieldId = std::move(fieldId);
+	}
+
+	void clearFocusedField(std::string_view fieldId)
+	{
+		if (focusedFieldId == fieldId)
+		{
+			focusedFieldId.clear();
+		}
+	}
+
+	const DataInputCellFocus* focusedCell() const
+	{
+		for (const DataInputCellFocus& cell : cells)
+		{
+			if (cell.fieldId == focusedFieldId)
+			{
+				return &cell;
+			}
+		}
+		return nullptr;
+	}
+
+	const DataInputCellFocus* neighbor(
+		const DataInputCellFocus& current,
+		DataInputCellNavDirection direction) const
+	{
+		const DataInputCellFocus* best = nullptr;
+		for (const DataInputCellFocus& cell : cells)
+		{
+			if (cell.datasetIndex != current.datasetIndex || cell.fieldId == current.fieldId)
+			{
+				continue;
+			}
+
+			switch (direction)
+			{
+			case DataInputCellNavDirection::Left:
+				if (cell.row == current.row && cell.column < current.column &&
+					(best == nullptr || cell.column > best->column))
+				{
+					best = &cell;
+				}
+				break;
+			case DataInputCellNavDirection::Right:
+				if (cell.row == current.row && cell.column > current.column &&
+					(best == nullptr || cell.column < best->column))
+				{
+					best = &cell;
+				}
+				break;
+			case DataInputCellNavDirection::Up:
+				if (cell.column == current.column && cell.row < current.row &&
+					(best == nullptr || cell.row > best->row))
+				{
+					best = &cell;
+				}
+				break;
+			case DataInputCellNavDirection::Down:
+				if (cell.column == current.column && cell.row > current.row &&
+					(best == nullptr || cell.row < best->row))
+				{
+					best = &cell;
+				}
+				break;
+			case DataInputCellNavDirection::Next:
+				if ((cell.row > current.row || (cell.row == current.row && cell.column > current.column)) &&
+					(best == nullptr || cell.row < best->row || (cell.row == best->row && cell.column < best->column)))
+				{
+					best = &cell;
+				}
+				break;
+			case DataInputCellNavDirection::Previous:
+				if ((cell.row < current.row || (cell.row == current.row && cell.column < current.column)) &&
+					(best == nullptr || cell.row > best->row || (cell.row == best->row && cell.column > best->column)))
+				{
+					best = &cell;
+				}
+				break;
+			}
+		}
+		return best;
+	}
+};
+
+enum class PropertyInputNavDirection : std::uint8_t {
+	Next,
+	Previous,
+};
+
+struct PropertyInputFocus {
+	std::string fieldId{};
+	std::string elementId{};
+	std::string scrollContainerId{};
+	std::size_t order = 0;
+};
+
+struct PropertyInputFocusGrid {
+	std::vector<PropertyInputFocus> fields{};
+	std::string focusedFieldId{};
+	std::string scrollContainerId{};
+	std::size_t nextOrder = 0;
+
+	void beginFrame(std::string scrollContainer)
+	{
+		fields.clear();
+		nextOrder = 0;
+		scrollContainerId = std::move(scrollContainer);
+	}
+
+	std::size_t allocateOrder()
+	{
+		return nextOrder++;
+	}
+
+	void registerField(PropertyInputFocus field)
+	{
+		fields.push_back(std::move(field));
+	}
+
+	void setFocusedField(std::string fieldId)
+	{
+		focusedFieldId = std::move(fieldId);
+	}
+
+	void clearFocusedField(std::string_view fieldId)
+	{
+		if (focusedFieldId == fieldId)
+		{
+			focusedFieldId.clear();
+		}
+	}
+
+	const PropertyInputFocus* focusedField() const
+	{
+		for (const PropertyInputFocus& field : fields)
+		{
+			if (field.fieldId == focusedFieldId)
+			{
+				return &field;
+			}
+		}
+		return nullptr;
+	}
+
+	const PropertyInputFocus* neighbor(const PropertyInputFocus& current, PropertyInputNavDirection direction) const
+	{
+		const PropertyInputFocus* best = nullptr;
+		for (const PropertyInputFocus& field : fields)
+		{
+			if (field.fieldId == current.fieldId)
+			{
+				continue;
+			}
+
+			if (direction == PropertyInputNavDirection::Next)
+			{
+				if (field.order > current.order && (best == nullptr || field.order < best->order))
+				{
+					best = &field;
+				}
+			}
+			else if (field.order < current.order && (best == nullptr || field.order > best->order))
+			{
+				best = &field;
+			}
+		}
+		return best;
+	}
+};
+
+inline void chainVoidCallback(std::function<void()>& callback, std::function<void()> next)
+{
+	if (next == nullptr)
+	{
+		return;
+	}
+	if (callback == nullptr)
+	{
+		callback = std::move(next);
+		return;
+	}
+
+	auto previous = std::move(callback);
+	callback = [previous = std::move(previous), next = std::move(next)]() {
+		previous();
+		next();
+	};
+}
 
 struct numericColumn {
 	numericColumn()
@@ -270,6 +515,9 @@ struct state {
 	std::uint64_t viewportRevision = 1;
 	FlowPlot::Spec::MasterTemplateSpec activeTemplate{};
 	std::optional<TemplateNodeKey> selectedNode{};
+	TemplateClipboard templateClipboard{};
+	DataInputFocusGrid dataInputFocusGrid{};
+	PropertyInputFocusGrid propertyInputFocusGrid{};
 	std::vector<RunningDataset> datasets;
 	std::vector<AddedFontVariant> fontLibrary{};
 	std::shared_ptr<FlowPlot::ITextEngine> textEngine{};
@@ -282,6 +530,20 @@ struct state {
 	std::vector<Diagnostic> diagnostics{};
 	DeferredDocumentEdit deferredEdit{};
 };
+
+inline void wirePropertyInputFocusCallbacks(
+	state& guiState,
+	const std::string& fieldId,
+	std::function<void()>& onEditBegin,
+	std::function<void()>& onEditEnd)
+{
+	chainVoidCallback(onEditBegin, [&guiState, fieldId]() {
+		guiState.propertyInputFocusGrid.setFocusedField(fieldId);
+	});
+	chainVoidCallback(onEditEnd, [&guiState, fieldId]() {
+		guiState.propertyInputFocusGrid.clearFocusedField(fieldId);
+	});
+}
 
 inline std::size_t documentHistoryPhysicalIndex(const DocumentHistory& history, std::size_t cursor)
 {
@@ -641,6 +903,350 @@ inline void recordDiagnostic(state& guiState, Diagnostic diagnostic)
 {
 	clearDiagnosticsBySource(guiState, diagnostic.source);
 	guiState.diagnostics.push_back(std::move(diagnostic));
+}
+
+inline std::string trimDiagnosticText(std::string_view text)
+{
+	while (!text.empty() && (text.front() == ' ' || text.front() == '\t' || text.front() == '\n' || text.front() == '\r'))
+	{
+		text.remove_prefix(1);
+	}
+	while (!text.empty() && (text.back() == ' ' || text.back() == '\t' || text.back() == '\n' || text.back() == '\r'))
+	{
+		text.remove_suffix(1);
+	}
+	return std::string(text);
+}
+
+inline std::string diagnosticThrowerLabel(std::string_view thrower)
+{
+	if (thrower == "buildBoundIR")
+	{
+		return "BoundIR";
+	}
+	if (thrower == "resolvePlotIR")
+	{
+		return "Plot";
+	}
+	if (thrower == "compileTemplateToSpec")
+	{
+		return "Template";
+	}
+	if (thrower.find("Renderer") != std::string_view::npos)
+	{
+		return "Renderer";
+	}
+	if (thrower.empty())
+	{
+		return "FlowPlot";
+	}
+	return std::string(thrower);
+}
+
+inline bool parseDiagnosticIndex(std::string_view text, std::size_t& index)
+{
+	index = 0;
+	const char* begin = text.data();
+	const char* end = text.data() + text.size();
+	const std::from_chars_result result = std::from_chars(begin, end, index);
+	return result.ec == std::errc{} && result.ptr == end;
+}
+
+inline std::string diagnosticPanelId(const FlowPlot::Spec::MasterTemplateSpec& spec, std::size_t index)
+{
+	if (index < spec.panels.size() && !spec.panels[index].id.empty())
+	{
+		return spec.panels[index].id;
+	}
+	return "panel_" + std::to_string(index + 1);
+}
+
+inline std::string diagnosticLayerId(const FlowPlot::Spec::MasterTemplateSpec& spec, std::size_t panelIndex, std::size_t layerIndex)
+{
+	if (panelIndex < spec.panels.size() && layerIndex < spec.panels[panelIndex].layers.size()
+		&& !spec.panels[panelIndex].layers[layerIndex].id.empty())
+	{
+		return spec.panels[panelIndex].layers[layerIndex].id;
+	}
+	return "layer_" + std::to_string(layerIndex + 1);
+}
+
+inline std::string diagnosticLegendId(const FlowPlot::Spec::MasterTemplateSpec& spec, std::size_t index)
+{
+	if (index < spec.figure.legends.size() && !spec.figure.legends[index].id.empty())
+	{
+		return spec.figure.legends[index].id;
+	}
+	return "legend_" + std::to_string(index + 1);
+}
+
+inline std::string diagnosticLegendElementId(
+	const FlowPlot::Spec::MasterTemplateSpec& spec,
+	std::size_t legendIndex,
+	std::size_t elementIndex)
+{
+	if (legendIndex < spec.figure.legends.size()
+		&& elementIndex < spec.figure.legends[legendIndex].legendElements.size()
+		&& !spec.figure.legends[legendIndex].legendElements[elementIndex].id.empty())
+	{
+		return spec.figure.legends[legendIndex].legendElements[elementIndex].id;
+	}
+	return "legend_element_" + std::to_string(elementIndex + 1);
+}
+
+inline std::string diagnosticDatasetName(const FlowPlot::Spec::MasterTemplateSpec& spec, std::size_t index)
+{
+	if (index < spec.datasets.size() && !spec.datasets[index].name.empty())
+	{
+		return spec.datasets[index].name;
+	}
+	return "dataset_" + std::to_string(index + 1);
+}
+
+inline std::string diagnosticHumanSegment(std::string_view segment)
+{
+	if (segment == "xAxis")
+	{
+		return "X axis parameters";
+	}
+	if (segment == "yAxis")
+	{
+		return "Y axis parameters";
+	}
+	if (segment == "xSecondary")
+	{
+		return "secondary X axis parameters";
+	}
+	if (segment == "ySecondary")
+	{
+		return "secondary Y axis parameters";
+	}
+	if (segment == "scatterMapping")
+	{
+		return "scatter mapping parameters";
+	}
+	if (segment == "scatterStyle")
+	{
+		return "scatter style parameters";
+	}
+	if (segment == "scatterStats")
+	{
+		return "scatter stats parameters";
+	}
+	if (segment == "scatterConfig")
+	{
+		return "scatter config parameters";
+	}
+	if (segment == "histogramMapping")
+	{
+		return "histogram mapping parameters";
+	}
+	if (segment == "histogramStyle")
+	{
+		return "histogram style parameters";
+	}
+	if (segment == "histogramStats")
+	{
+		return "histogram stats parameters";
+	}
+	if (segment == "histogramConfig")
+	{
+		return "histogram config parameters";
+	}
+	if (segment == "axisData")
+	{
+		return "axis binding parameters";
+	}
+	if (segment == "title")
+	{
+		return "title parameters";
+	}
+	if (segment == "box")
+	{
+		return "box parameters";
+	}
+	if (segment == "padding")
+	{
+		return "padding parameters";
+	}
+	if (segment == "layout")
+	{
+		return "layout parameters";
+	}
+	return std::string(segment);
+}
+
+inline std::string humanizeDiagnosticPath(const FlowPlot::Spec::MasterTemplateSpec& spec, std::string_view path)
+{
+	std::string phrase{};
+	std::size_t panelIndex = static_cast<std::size_t>(-1);
+	std::size_t legendIndex = static_cast<std::size_t>(-1);
+	bool hasSubject = false;
+	bool hasParameter = false;
+
+	for (std::size_t cursor = 0; cursor < path.size();)
+	{
+		const std::size_t dot = path.find('.', cursor);
+		std::string_view segment = path.substr(cursor, dot == std::string_view::npos ? std::string_view::npos : dot - cursor);
+		cursor = dot == std::string_view::npos ? path.size() : dot + 1;
+
+		const std::size_t bracket = segment.find('[');
+		std::string_view name = bracket == std::string_view::npos ? segment : segment.substr(0, bracket);
+		std::size_t index = 0;
+		bool hasIndex = false;
+		if (bracket != std::string_view::npos && segment.ends_with(']'))
+		{
+			hasIndex = parseDiagnosticIndex(segment.substr(bracket + 1, segment.size() - bracket - 2), index);
+		}
+
+		if (name == "panels" && hasIndex)
+		{
+			panelIndex = index;
+			phrase += hasSubject ? " at " : "at ";
+			phrase += diagnosticPanelId(spec, index);
+			hasSubject = true;
+			continue;
+		}
+		if (name == "layers" && hasIndex)
+		{
+			phrase += hasSubject ? " on " : "at ";
+			phrase += diagnosticLayerId(spec, panelIndex, index);
+			hasSubject = true;
+			continue;
+		}
+		if (name == "legends" && hasIndex)
+		{
+			legendIndex = index;
+			phrase += hasSubject ? " on " : "at ";
+			phrase += diagnosticLegendId(spec, index);
+			hasSubject = true;
+			continue;
+		}
+		if (name == "legendElements" && hasIndex)
+		{
+			phrase += hasSubject ? " on " : "at ";
+			phrase += diagnosticLegendElementId(spec, legendIndex, index);
+			hasSubject = true;
+			continue;
+		}
+		if (name == "datasets" && hasIndex)
+		{
+			phrase += hasSubject ? " on " : "at ";
+			phrase += diagnosticDatasetName(spec, index);
+			hasSubject = true;
+			continue;
+		}
+		if (name == "figure")
+		{
+			phrase += hasSubject ? " in figure" : "at figure";
+			hasSubject = true;
+			continue;
+		}
+
+		if (!segment.empty() && !hasParameter)
+		{
+			phrase += hasSubject ? " in " : "at ";
+			phrase += diagnosticHumanSegment(segment);
+			hasSubject = true;
+			hasParameter = true;
+		}
+	}
+
+	if (phrase.empty())
+	{
+		phrase = "at " + std::string(path);
+	}
+	return phrase;
+}
+
+inline std::string findDiagnosticPath(std::string_view text, std::size_t& removeStart, std::size_t& removeLength)
+{
+	removeStart = std::string_view::npos;
+	removeLength = 0;
+
+	if (const std::size_t atQuoted = text.rfind(" at '"); atQuoted != std::string_view::npos)
+	{
+		const std::size_t pathStart = atQuoted + 5;
+		if (const std::size_t pathEnd = text.find('\'', pathStart); pathEnd != std::string_view::npos)
+		{
+			removeStart = atQuoted;
+			removeLength = pathEnd + 1 - atQuoted;
+			return std::string(text.substr(pathStart, pathEnd - pathStart));
+		}
+	}
+
+	if (const std::size_t atPlain = text.rfind(" at "); atPlain != std::string_view::npos)
+	{
+		std::string path = trimDiagnosticText(text.substr(atPlain + 4));
+		while (!path.empty() && (path.back() == '.' || path.back() == ')' || path.back() == '\'' || path.back() == '"'))
+		{
+			path.pop_back();
+		}
+		if (!path.empty())
+		{
+			removeStart = atPlain;
+			removeLength = text.size() - atPlain;
+			return path;
+		}
+	}
+
+	for (std::size_t quote = text.find('\''); quote != std::string_view::npos; quote = text.find('\'', quote + 1))
+	{
+		const std::size_t end = text.find('\'', quote + 1);
+		if (end == std::string_view::npos)
+		{
+			break;
+		}
+		std::string_view candidate = text.substr(quote + 1, end - quote - 1);
+		if (candidate.find('.') != std::string_view::npos || candidate.find('[') != std::string_view::npos)
+		{
+			removeStart = quote;
+			removeLength = end + 1 - quote;
+			return std::string(candidate);
+		}
+		quote = end;
+	}
+
+	return {};
+}
+
+inline std::string formatFlowPlotExceptionMessage(
+	const FlowPlot::Spec::MasterTemplateSpec& spec,
+	std::string_view rawMessage)
+{
+	std::string_view thrower{};
+	std::string_view detail = rawMessage;
+	if (const std::size_t colon = rawMessage.find(':'); colon != std::string_view::npos)
+	{
+		thrower = rawMessage.substr(0, colon);
+		detail = rawMessage.substr(colon + 1);
+	}
+
+	std::string reason = trimDiagnosticText(detail);
+	std::size_t pathStart = std::string_view::npos;
+	std::size_t pathLength = 0;
+	const std::string path = findDiagnosticPath(reason, pathStart, pathLength);
+	if (pathStart != std::string_view::npos)
+	{
+		reason.erase(pathStart, pathLength);
+		reason = trimDiagnosticText(reason);
+	}
+	if (!reason.empty() && reason.back() == ':')
+	{
+		reason.pop_back();
+		reason = trimDiagnosticText(reason);
+	}
+	if (reason.empty())
+	{
+		reason = trimDiagnosticText(detail);
+	}
+
+	std::string formatted = diagnosticThrowerLabel(trimDiagnosticText(thrower)) + ":\n";
+	formatted += "Where: ";
+	formatted += path.empty() ? "at plot" : humanizeDiagnosticPath(spec, path);
+	formatted += ":\n";
+	formatted += reason;
+	return formatted;
 }
 
 inline const Diagnostic* latestDiagnosticWithSeverity(const state& guiState, DiagnosticSeverity severity)
