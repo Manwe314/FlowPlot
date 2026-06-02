@@ -16,7 +16,7 @@ struct InlineIcon {
 	std::string_view svg;
 };
 
-constexpr std::array<InlineIcon, 18> kInlineIcons{{
+constexpr std::array<InlineIcon, 19> kInlineIcons{{
 	{"DownArrow", kDownArrow},
 	{"UpArrow", kUpArrow},
 	{"RightArrow", kRightArrow},
@@ -34,7 +34,8 @@ constexpr std::array<InlineIcon, 18> kInlineIcons{{
 	{"Import", kImport},
 	{"Axis", kAxis},
 	{"New", kNew},
-	{"Preset", kPresets}
+	{"Preset", kPresets},
+	{"QuestionMark", kquestionMark}
 }};
 
 std::filesystem::path flowPlotIconPath()

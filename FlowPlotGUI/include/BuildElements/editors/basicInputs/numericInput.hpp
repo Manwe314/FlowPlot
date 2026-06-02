@@ -383,7 +383,7 @@ inline const NumericInputFieldDef kNumericInputField = {
 		}
 		if (state.pendingFieldReset)
 		{
-			(void)context.uiManager.inputFields().replaceFieldTextPreservingCarets(inputPath, state.normalizedText);
+			(void)context.uiManager.inputFields().replaceText(inputPath, state.normalizedText);
 			state.pendingFieldReset = false;
 		}
 

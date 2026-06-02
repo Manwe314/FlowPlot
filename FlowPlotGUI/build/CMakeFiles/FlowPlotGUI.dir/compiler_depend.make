@@ -86,6 +86,8 @@ CMakeFiles/FlowPlotGUI.dir/main.cpp.o: /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/NewTemplatePresetPicker.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/PanelTitle.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/PlotviewPort.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/QuitConfirmationDialog.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/ShortcutHelpOverlay.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/TemplateLayer.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/basicInputs/colorPicker.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/basicInputs/doubleEnumPicker.hpp \
@@ -1840,6 +1842,8 @@ CMakeFiles/FlowPlotGUI.dir/src/iconRegistry.cpp.o: /home/lkukhale/kodi/FlowPlot/
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/NewTemplatePresetPicker.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/PanelTitle.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/PlotviewPort.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/QuitConfirmationDialog.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/ShortcutHelpOverlay.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/TemplateLayer.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/basicInputs/colorPicker.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/basicInputs/doubleEnumPicker.hpp \
@@ -3553,8 +3557,6 @@ CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o: /home/lkukhale/kodi/FlowPlo
 
 /usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h:
 
-/usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:
-
 /usr/include/x86_64-linux-gnu/bits/types/__fpos_t.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/__FILE.h:
@@ -3635,8 +3637,6 @@ CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o: /home/lkukhale/kodi/FlowPlo
 
 /usr/include/stdc-predef.h:
 
-/usr/include/sched.h:
-
 /usr/include/math.h:
 
 /usr/include/linux/limits.h:
@@ -3671,7 +3671,11 @@ CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o: /home/lkukhale/kodi/FlowPlo
 
 /usr/include/x86_64-linux-gnu/c++/12/bits/c++locale.h:
 
-/usr/include/c++/12/bits/cxxabi_init_exception.h:
+/usr/include/x86_64-linux-gnu/c++/12/bits/c++config.h:
+
+/usr/lib/llvm-12/lib/clang/12.0.1/include/stdbool.h:
+
+/usr/include/x86_64-linux-gnu/c++/12/bits/c++allocator.h:
 
 /usr/include/c++/12/bits/chrono.h:
 
@@ -3696,14 +3700,6 @@ CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o: /home/lkukhale/kodi/FlowPlo
 /usr/include/c++/12/bit:
 
 /usr/include/c++/12/variant:
-
-/usr/include/c++/12/bits/charconv.h:
-
-/usr/include/c++/12/backward/auto_ptr.h:
-
-/usr/lib/llvm-12/lib/clang/12.0.1/include/mmintrin.h:
-
-/usr/include/c++/12/new:
 
 /home/lkukhale/vulkan/1.4.321.1/x86_64/include/vulkan/vk_platform.h:
 
@@ -3753,11 +3749,11 @@ CMakeFiles/FlowPlotGUI.dir/src/templateImport.cpp.o: /home/lkukhale/kodi/FlowPlo
 
 /usr/include/c++/12/bits/predefined_ops.h:
 
-/usr/include/c++/12/bits/cxxabi_forced.h:
-
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/iconRegistry.hpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/templateHelper.hpp:
+
+/usr/include/c++/12/bits/cxxabi_forced.h:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/DatasetsHelpers.hpp:
 
@@ -3809,11 +3805,27 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/gridSettingsEditor.hpp:
 
+/usr/include/c++/12/bits/charconv.h:
+
+/usr/include/c++/12/backward/auto_ptr.h:
+
+/usr/lib/llvm-12/lib/clang/12.0.1/include/mmintrin.h:
+
+/usr/include/c++/12/new:
+
+/usr/include/sched.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/ShortcutHelpOverlay.hpp:
+
 /usr/include/X11/Xdefs.h:
 
 /home/lkukhale/vulkan/1.4.321.1/x86_64/include/vk_video/vulkan_video_codec_h265std_decode.h:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/basicInputs/numericInput.hpp:
+
+/usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/QuitConfirmationDialog.hpp:
 
 /usr/include/c++/12/bits/basic_ios.h:
 
@@ -3862,6 +3874,12 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/internal/strtod.h:
 
 /usr/include/c++/12/bits/hashtable_policy.h:
+
+/usr/include/x86_64-linux-gnu/bits/setjmp.h:
+
+/usr/include/c++/12/cerrno:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/basicInputs/toggle.hpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/scatterConfigEditor.hpp:
 
@@ -3959,17 +3977,19 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/vector:
 
-/usr/include/KHR/khrplatform.h:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/App.hpp:
-
-/usr/include/x86_64-linux-gnu/c++/12/bits/atomic_word.h:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/error/error.h:
-
 /usr/include/x86_64-linux-gnu/bits/confname.h:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/histogramMappingEditor.hpp:
+
+/usr/include/c++/12/bits/stl_tree.h:
+
+/usr/include/c++/12/tuple:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementBuilder.hpp:
+
+/usr/include/c++/12/bits/stl_algo.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/internal/InputFieldRenderOverrides.hpp:
 
 /usr/include/c++/12/bits/move_only_function.h:
 
@@ -3993,6 +4013,16 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/bits/shared_ptr_base.h:
 
+/usr/include/KHR/khrplatform.h:
+
+/usr/include/x86_64-linux-gnu/c++/12/bits/atomic_word.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/error/error.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/FlowUi/App.hpp:
+
+/usr/include/c++/12/bits/cxxabi_init_exception.h:
+
 /usr/include/c++/12/bits/uses_allocator_args.h:
 
 /usr/include/c++/12/iterator:
@@ -4002,6 +4032,12 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/tickSettingsEditor.hpp:
 
 /usr/include/c++/12/tr1/riemann_zeta.tcc:
+
+/usr/include/x86_64-linux-gnu/bits/time.h:
+
+/usr/include/c++/12/bits/ptr_traits.h:
+
+/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/PanelTitle.hpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlot/rapidjson/rapidjson.h:
 
@@ -4092,8 +4128,6 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/NavBar.hpp:
 
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/TemplateLayer.hpp:
-
-/usr/include/x86_64-linux-gnu/c++/12/bits/c++config.h:
 
 /usr/include/X11/extensions/Xrandr.h:
 
@@ -4263,22 +4297,6 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 
 /usr/include/c++/12/bits/postypes.h:
 
-/usr/include/x86_64-linux-gnu/bits/time.h:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/PanelTitle.hpp:
-
-/usr/include/c++/12/bits/ptr_traits.h:
-
-/usr/include/c++/12/bits/stl_tree.h:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/managers/FlowUiElementBuilder.hpp:
-
-/usr/include/c++/12/bits/stl_algo.h:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/external/FlowUi/include/internal/InputFieldRenderOverrides.hpp:
-
-/usr/include/c++/12/tuple:
-
 /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/BasicTitle.hpp:
 
 /usr/include/c++/12/bits/quoted_string.h:
@@ -4334,12 +4352,6 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /usr/include/c++/12/bits/unordered_set.h:
 
 /usr/include/c++/12/cctype:
-
-/usr/include/x86_64-linux-gnu/bits/setjmp.h:
-
-/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/basicInputs/toggle.hpp:
-
-/usr/include/c++/12/cerrno:
 
 /usr/include/x86_64-linux-gnu/c++/12/bits/ctype_base.h:
 
@@ -4486,7 +4498,3 @@ external/FlowUi/include/FlowUi/BuildConfig.hpp:
 /usr/include/c++/12/unordered_map:
 
 /usr/include/x86_64-linux-gnu/c++/12/bits/basic_file.h:
-
-/usr/lib/llvm-12/lib/clang/12.0.1/include/stdbool.h:
-
-/usr/include/x86_64-linux-gnu/c++/12/bits/c++allocator.h:

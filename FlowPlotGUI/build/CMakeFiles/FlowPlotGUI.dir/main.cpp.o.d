@@ -429,6 +429,8 @@ CMakeFiles/FlowPlotGUI.dir/main.cpp.o: \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/DynamicSeparator.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/NewTemplatePresetPicker.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/TemplatePresets.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/QuitConfirmationDialog.hpp \
+  /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/ShortcutHelpOverlay.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/TemplateLayer.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/NavBar.hpp \
   /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/fontImport.hpp \

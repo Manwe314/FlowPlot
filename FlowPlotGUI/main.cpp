@@ -32,6 +32,7 @@ constexpr int kKeyDown = 264;
 constexpr int kKeyUp = 265;
 constexpr int kKeyC = 67;
 constexpr int kKeyD = 68;
+constexpr int kKeyQ = 81;
 constexpr int kKeyV = 86;
 constexpr int kKeyY = 89;
 constexpr int kKeyZ = 90;
@@ -646,13 +647,35 @@ int main()
 			[&guiState](FlowUi::ShortcutContext&) {
 				return FlowPlotGui::redoDocument(guiState);
 			});
+		(void)ui.shortcuts().registerShortcut(
+			FlowUi::ShortcutChord{
+				.key = kKeyQ,
+				.ctrl = true,
+				.trigger = FlowUi::ShortcutTrigger::Press,
+			},
+			FlowUi::ShortcutScope::Global,
+			kDocumentShortcutPriority,
+			[&app](FlowUi::ShortcutContext&) {
+				app.setShouldClose(1);
+				return true;
+			});
 
 
 
 
-		while (!app.shouldClose())
+		while (!guiState.shouldClose)
 		{
 			app.beginFrame();
+			FlowPlotGui::ensureActiveTemplateExportComparisonChecked(guiState);
+			const bool closeRequested = app.shouldClose();
+			const bool needsCloseConfirmation =
+				closeRequested &&
+				(FlowPlotGui::hasDiagnosticError(guiState) || guiState.activeTemplateDiffersFromLastExport);
+			if (closeRequested && !needsCloseConfirmation)
+			{
+				guiState.shouldClose = true;
+			}
+
 			ui.createElement(kRootBackground, "rootBackground")
 			.setParameters({.backgroundColor = FlowUi::Flow_Color("#18181aff")})
 			.construct(FlowUi::ElementDrawOptions::SkipEventCallbacks);
@@ -783,6 +806,23 @@ int main()
 					.setParameters({
 						.guiState = &guiState,
 						.isOpen = &navState.newTemplatePresetPickerOpen,
+					})
+					.draw();
+				}
+				if (navState.shortcutHelpOpen)
+				{
+					ui.createElement(kShortcutHelpOverlay, "ShortcutHelpOverlay")
+					.setParameters({
+						.isOpen = &navState.shortcutHelpOpen,
+					})
+					.draw();
+				}
+				if (needsCloseConfirmation)
+				{
+					ui.createElement(kQuitConfirmationDialog, "QuitConfirmationDialog")
+					.setParameters({
+						.guiState = &guiState,
+						.app = &app,
 					})
 					.draw();
 				}

@@ -259,7 +259,7 @@ namespace FlowInternal
 		struct LegendResolved
 		{
 			ResolvedBox frame{};
-			std::vector<ResolvedBox> iconBoxes{};
+			std::vector<ResolvedMarkers> icons{};
 			std::vector<ResolvedText> labels{};
 		};
 
@@ -1382,6 +1382,8 @@ namespace FlowInternal
 
 	namespace ResolveCompiler
 	{
+		inline FlowPlot::MarkerShape parseMarkerShape(std::string_view rawShape, const std::string& path);
+
 		inline std::uint64_t makePanelLayerKey(std::uint32_t panelIndex, std::uint32_t layerIndex) noexcept
 		{
 			return (static_cast<std::uint64_t>(panelIndex) << 32U) | static_cast<std::uint64_t>(layerIndex);
@@ -1577,7 +1579,8 @@ namespace FlowInternal
 
 		struct LegendElementLayoutCache
 		{
-			ResolvedIR::ResolvedBox icon{};
+			ResolvedIR::ResolvedMarkers icon{};
+			float iconSize = 0.0f;
 			ResolvedIR::ResolvedText label{};
 			float width = 0.0f;
 			float height = 0.0f;
@@ -1613,11 +1616,13 @@ namespace FlowInternal
 				throw std::runtime_error("resolvePlotIR: '" + path + ".box' width/height must be non-negative");
 
 			LegendElementLayoutCache cache{};
-			cache.icon.fill = parseColor(elementSpec.iconColor, path + ".iconColor");
-			cache.icon.stroke = cache.icon.fill;
+			const FlowPlot::Color iconColor = parseColor(elementSpec.iconColor, path + ".iconColor");
+			cache.icon.shape = parseMarkerShape(elementSpec.iconShape, path + ".iconShape");
+			cache.icon.fills = {iconColor};
+			cache.icon.stroke = iconColor;
 			cache.icon.strokeWidth = 0.0f;
-			cache.icon.rect.w = elementSpec.fontSize;
-			cache.icon.rect.h = elementSpec.fontSize;
+			cache.icon.sizes = {elementSpec.fontSize};
+			cache.iconSize = elementSpec.fontSize;
 
 			cache.label.text = elementSpec.text;
 			cache.label.fontFamily = elementSpec.fontFamily;
@@ -1695,7 +1700,7 @@ namespace FlowInternal
 
 			resolved.frame.rect = resolveLegendFrameRect(legendSpec, elementCaches, figureSpec, layoutSpec);
 
-			resolved.iconBoxes.reserve(elementCaches.size());
+			resolved.icons.reserve(elementCaches.size());
 			resolved.labels.reserve(elementCaches.size());
 
 			float rowY = resolved.frame.rect.y + legendSpec.padding.top;
@@ -1706,15 +1711,16 @@ namespace FlowInternal
 
 				const float defaultIconX = resolved.frame.rect.x + legendSpec.padding.left;
 				const float defaultIconY = rowY;
-				cache.icon.rect.x = defaultIconX;
-				cache.icon.rect.y = defaultIconY;
+				cache.icon.positions = {FlowPlot::PointF{
+					defaultIconX + (cache.iconSize * 0.5f),
+					defaultIconY + (cache.iconSize * 0.5f)}};
 
-				const float defaultTextX = defaultIconX + cache.icon.rect.w + (cache.icon.rect.w * 0.5f);
+				const float defaultTextX = defaultIconX + cache.iconSize + (cache.iconSize * 0.5f);
 				const float defaultTextY = rowY;
 				cache.label.box.x = elementSpec.box.x.value_or(defaultTextX);
 				cache.label.box.y = elementSpec.box.y.value_or(defaultTextY);
 
-				resolved.iconBoxes.push_back(std::move(cache.icon));
+				resolved.icons.push_back(std::move(cache.icon));
 				resolved.labels.push_back(std::move(cache.label));
 
 				rowY += cache.height + legendSpec.gap;
@@ -4256,7 +4262,7 @@ namespace FlowInternal
 		for (const ResolvedIR::LegendResolved& legend : resolved.figure.legends)
 		{
 			render.commands.push_back(legend.frame);
-			for (const ResolvedIR::ResolvedBox& icon : legend.iconBoxes)
+			for (const ResolvedIR::ResolvedMarkers& icon : legend.icons)
 				render.commands.push_back(icon);
 			for (const ResolvedIR::ResolvedText& label : legend.labels)
 				render.commands.push_back(label);

@@ -614,6 +614,12 @@ inline const DataInputDataRowDef kDataInputDataRow = {
 								]() {
 									if (guiState != nullptr)
 									{
+										FlowPlotGui::beginDeferredDocumentEdit(
+											*guiState,
+											FlowPlotGui::makeDatasetEditTarget(
+												"data-cell/" + fieldId,
+												FlowPlotGui::makeDatasetsEditComparator()),
+											10.0f);
 										guiState->dataInputFocusGrid.setFocusedField(fieldId);
 									}
 								};
@@ -624,6 +630,7 @@ inline const DataInputDataRowDef kDataInputDataRow = {
 									if (guiState != nullptr)
 									{
 										guiState->dataInputFocusGrid.clearFocusedField(fieldId);
+										FlowPlotGui::endDeferredDocumentEdit(*guiState);
 									}
 								};
 								numericParams.onChange = [
@@ -680,6 +687,12 @@ inline const DataInputDataRowDef kDataInputDataRow = {
 								]() {
 									if (guiState != nullptr)
 									{
+										FlowPlotGui::beginDeferredDocumentEdit(
+											*guiState,
+											FlowPlotGui::makeDatasetEditTarget(
+												"data-cell/" + fieldId,
+												FlowPlotGui::makeDatasetsEditComparator()),
+											10.0f);
 										guiState->dataInputFocusGrid.setFocusedField(fieldId);
 									}
 								};
@@ -690,6 +703,7 @@ inline const DataInputDataRowDef kDataInputDataRow = {
 									if (guiState != nullptr)
 									{
 										guiState->dataInputFocusGrid.clearFocusedField(fieldId);
+										FlowPlotGui::endDeferredDocumentEdit(*guiState);
 									}
 								};
 								stringParams.onTextChangedCallback = [

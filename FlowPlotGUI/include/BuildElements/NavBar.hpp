@@ -46,6 +46,7 @@ struct navBarParams {
 struct navBarState {
 	bool isDirty = false;
 	bool newTemplatePresetPickerOpen = false;
+	bool shortcutHelpOpen = false;
 	bool statusTooltipOpen = false;
 };
 
@@ -76,6 +77,7 @@ FLOWUI_DEV_REGISTER_STRUCT(
 	navBarState,
 	FLOWUI_DEV_REFLECT_FIELD(navBarState, isDirty),
 	FLOWUI_DEV_REFLECT_FIELD(navBarState, newTemplatePresetPickerOpen),
+	FLOWUI_DEV_REFLECT_FIELD(navBarState, shortcutHelpOpen),
 	FLOWUI_DEV_REFLECT_FIELD(navBarState, statusTooltipOpen));
 
 using BasicTitleBuilder = FlowUi::ElementBuilder<basicTitleParams, void, void, FLOW_DEF_ID("Basic title")>;
@@ -96,12 +98,14 @@ struct navBarResources {
 	std::string importButtonPath{};
 	std::string exportButtonPath{};
 	std::string addFontButtonPath{};
+	std::string helpButtonPath{};
 	std::string statusTitlePath{};
 	std::string statusTooltipPath{};
 	FlowUi::TextureRef newIcon{};
 	FlowUi::TextureRef importIcon{};
 	FlowUi::TextureRef exportIcon{};
 	FlowUi::TextureRef addFontIcon{};
+	FlowUi::TextureRef helpIcon{};
 	FlowUi::FontManager* fontManager = nullptr;
 
 	BasicTitleBuilder child1Builder;
@@ -121,12 +125,14 @@ struct navBarResources {
 		importButtonPath("NavBar/child-2/import"),
 		exportButtonPath("NavBar/child-2/export"),
 		addFontButtonPath("NavBar/child-2/add-font"),
+		helpButtonPath("NavBar/child-2/help"),
 		statusTitlePath("NavBar/child-3/status"),
 		statusTooltipPath("NavBar/status-tooltip"),
 		newIcon(app.icons().textureRef("New")),
 		importIcon(app.icons().textureRef("Import")),
 		exportIcon(app.icons().textureRef("Export")),
 		addFontIcon(app.icons().textureRef("T")),
+		helpIcon(app.icons().textureRef("QuestionMark")),
 		fontManager(&app.fonts()),
 		child1Builder(makeChild1Builder(app, child1TitlePath)) {}
 
@@ -417,6 +423,18 @@ inline const NavBarDef kNavBar = {
 				};
 				context.uiManager.createElement(kBasicButton, resources.addFontButtonPath)
 					.setParameters(std::move(addFontParams))
+					/* V1 cant Update parameters made with variables */
+					.mergeParams(applyNavButtonVisuals)
+					.draw();
+				basicButtonParams helpParams = makeButtonParams("Help", resources.helpIcon);
+				helpParams.onPressedCallback = [elementFlowId = FlowUi::toFlowId(context.elementID)](BasicButtonInteractionContext) {
+					if (navBarState* latestState = NavBarDef::tryGetState(elementFlowId))
+					{
+						latestState->shortcutHelpOpen = true;
+					}
+				};
+				context.uiManager.createElement(kBasicButton, resources.helpButtonPath)
+					.setParameters(std::move(helpParams))
 					/* V1 cant Update parameters made with variables */
 					.mergeParams(applyNavButtonVisuals)
 					.draw();

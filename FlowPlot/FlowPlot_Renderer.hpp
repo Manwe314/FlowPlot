@@ -168,7 +168,7 @@ namespace FlowPlot
 				throw std::invalid_argument("StbTextEngine::layoutText: fontSizePx must be positive");
 
 			const FontFace& face = resolveFontWithFallback(familyName, weight, style);
-			const float scale = stbtt_ScaleForPixelHeight(&face.fontInfo, fontSizePx);
+			const float scale = stbtt_ScaleForMappingEmToPixels(&face.fontInfo, fontSizePx);
 			const float ascentPx = static_cast<float>(face.ascent) * scale;
 			const float descentPx = static_cast<float>(face.descent) * scale;
 			const float lineGapPx = static_cast<float>(face.lineGap) * scale;
@@ -257,7 +257,7 @@ namespace FlowPlot
 				throw std::invalid_argument("StbTextEngine::rasterizeGlyph: fontSizePx must be positive");
 
 			const FontFace& face = resolveFontWithFallback(familyName, weight, style);
-			const float scale = stbtt_ScaleForPixelHeight(&face.fontInfo, fontSizePx);
+			const float scale = stbtt_ScaleForMappingEmToPixels(&face.fontInfo, fontSizePx);
 
 			GlyphBitmap bitmap{};
 			int advanceWidth = 0;

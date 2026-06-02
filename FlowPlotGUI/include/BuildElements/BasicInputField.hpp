@@ -111,7 +111,9 @@ inline const BasicInputFieldDef kBasicInputField = {
 			state.lastObservedText.clear();
 		}
 
-		const Clay_ElementId contentId = context.uiManager.toClayEID(context.elementID);
+		const Clay_ElementId rootId = context.uiManager.toClayEID(context.elementID);
+		const std::string contentElementPath = context.createChildElementId("content");
+		const Clay_ElementId contentId = context.uiManager.toClayEID(contentElementPath);
 		const std::string textElementPath = context.createChildElementId("text");
 		const Clay_ElementId textId = context.uiManager.toClayEID(textElementPath);
 
@@ -183,12 +185,14 @@ inline const BasicInputFieldDef kBasicInputField = {
 		textConfig.textAlignment = context.params.textAlignment;
 		textConfig.fontId = context.params.fontId;
 
-		CLAY(contentId, root){
-			CLAY(textId, {}){
-				CLAY_TEXT(
-					context.uiManager.toClayString(result.text),
-					CLAY_TEXT_CONFIG(textConfig)
-				);
+		CLAY(rootId, root){
+			CLAY(contentId, context.uiManager.inputContentElement(textConfig)){
+				CLAY(textId, {}){
+					CLAY_TEXT(
+						context.uiManager.toClayString(result.text),
+						CLAY_TEXT_CONFIG(textConfig)
+					);
+				};
 			};
 		};
 	},

@@ -400,9 +400,14 @@ inline bool setNumericCell(
 	{
 		return false;
 	}
+	if (dataset.numericColumns[typedColumnIndex].data[rowIndex] == value)
+	{
+		return false;
+	}
 
 	dataset.numericColumns[typedColumnIndex].data[rowIndex] = value;
 	markDatasetsChanged(guiState);
+	commitImmediateDocumentChangeIfNoDeferredEdit(guiState);
 	return true;
 }
 
@@ -422,9 +427,14 @@ inline bool setStringCell(
 	{
 		return false;
 	}
+	if (std::string_view(dataset.stringColumns[typedColumnIndex].data[rowIndex]) == value)
+	{
+		return false;
+	}
 
 	dataset.stringColumns[typedColumnIndex].data[rowIndex] = std::string(value);
 	markDatasetsChanged(guiState);
+	commitImmediateDocumentChangeIfNoDeferredEdit(guiState);
 	return true;
 }
 
@@ -441,6 +451,10 @@ inline bool setBoolCell(
 	}
 	RunningDataset& dataset = guiState.datasets[datasetIndex];
 	if (typedColumnIndex >= dataset.boolColumns.size() || rowIndex >= dataset.boolColumns[typedColumnIndex].data.size())
+	{
+		return false;
+	}
+	if (dataset.boolColumns[typedColumnIndex].data[rowIndex] == value)
 	{
 		return false;
 	}

@@ -179,7 +179,13 @@ class IconManager;
 class ViewPortManager;
 #endif
 
-/** @brief Main FlowUi application object and owner of runtime managers. */
+/**
+ * @brief Main FlowUi application object and owner of runtime managers.
+ *
+ * @see @ref md_docs_2tutorials_2quick__start "Quick Start"
+ * @see @ref md_docs_2concepts_2frame__lifecycle "Frame Lifecycle"
+ * @see @ref md_docs_2concepts_2managers "Managers"
+ */
 class App {
 public:
 	/** @brief Construct an empty app handle.
@@ -216,6 +222,23 @@ public:
 	 */
 	bool shouldClose() const;
 
+	/** @brief Set whether the window backend should request shutdown.
+	 *
+	 * Use this function to set or clear the window close flag.
+	 *
+	 * @param value Value passed to the GLFW built-in window backend. A value of 0 clears
+	 * the GLFW window close flag; a non-zero value sets the GLFW window close flag.
+	 * 
+	 * Example:
+	 * @code{.cpp}
+	 * while (!application.shouldClose()) {
+	 * 	if (error()) {
+	 * 		application.setShouldClose(1);
+	 * 	}
+	 * }
+	 */
+	void setShouldClose(int value);
+
 	/** @brief Begin a frame and prepare input/UI state.
 	 *
 	 * Polls the window backend and prepares per-frame UI resources and state.
@@ -233,6 +256,8 @@ public:
 	 * @pre The FlowUi::App instance is initialized and its window/UI systems are valid.
 	 * @post The current frame is active and input/UI state is ready for frame logic/building.
 	 * @note This function should be called exactly once per frame.
+	 * @see @ref md_docs_2concepts_2frame__lifecycle "Frame Lifecycle"
+	 * @see @ref md_docs_2tutorials_2quick__start "Quick Start"
 	 */
 	void beginFrame();
 	/** @brief End UI construction and produce render commands.
@@ -466,6 +491,14 @@ public:
 	 * @return std::string containing the current clipboard text.
 	 */
 	std::string clipboardText() const;
+	/** @brief Replace managed text for an input field without removing its field state.
+	 *
+	 * @param fieldId Stable input field id to update.
+	 * @param text Replacement text to store for the field.
+	 * @param preserveCaret Whether to preserve and clamp existing caret state.
+	 * @return true when the field existed and its text changed.
+	 */
+	bool replaceText(std::string_view fieldId, std::string_view text, bool preserveCaret = true);
 
 private:
 	struct Impl;

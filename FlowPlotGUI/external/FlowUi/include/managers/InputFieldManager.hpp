@@ -85,6 +85,9 @@ struct FontManager;
  *     },      // buildElement
  * };
  * @endcode
+ *
+ * @see @ref md_docs_2tutorials_2input__fields__and__shortcuts "Input Fields and Shortcuts"
+ * @see @ref md_docs_2tutorials_2custom__elements "Custom Elements"
  */
 class InputFieldManager {
 public:
@@ -121,6 +124,8 @@ public:
 	 *         .contentElementId = context.uiManager.toClayEID(contentId),
 	 *     });
 	 * @endcode
+	 *
+	 * @see @ref md_docs_2tutorials_2input__fields__and__shortcuts "Input Fields and Shortcuts"
 	 */
 	FieldQueryResult requestField(const FieldRequest& request);
 
@@ -173,6 +178,35 @@ public:
 	 * @endcode
 	 */
 	bool removeField(std::string_view fieldId);
+
+	/**
+	 * @brief Replace the managed text for an existing input field.
+	 *
+	 * replaceText() updates a field without removing its config, Clay element
+	 * ids, or frame presence state. By default, existing carets and selections
+	 * are preserved and clamped to valid UTF-8 boundaries in the replacement
+	 * text. Pass false to clear any active carets from the field after updating
+	 * the text.
+	 *
+	 * @param fieldId Stable id of the field state to update.
+	 * @param text Replacement text to store for the field.
+	 * @param preserveCaret Whether to preserve and clamp existing caret state.
+	 * Defaults to true.
+	 * @retval true the field existed and its stored text changed.
+	 * @retval false fieldId is empty, no matching field exists, or text already
+	 * matches the stored field text.
+	 *
+	 * @throws std::bad_alloc if copying replacement text requires allocation
+	 * and allocation fails.
+	 *
+	 * @code{.cpp}
+	 * const bool changed = app.ui().inputFields().replaceText(
+	 *     "settings/name",
+	 *     externalName,
+	 *     false);
+	 * @endcode
+	 */
+	bool replaceText(std::string_view fieldId, std::string_view text, bool preserveCaret = true);
 
 	/**
 	 * @brief Clear all managed input field state.
@@ -252,20 +286,6 @@ public:
 	 */
 	bool insertTextAtPrimaryCaret(std::string_view utf8Text);
 
-	/**
-	 * @brief Replace a managed field's text while preserving focus and carets.
-	 *
-	 * Existing caret and selection offsets are clamped to the new text. This is
-	 * intended for input validators that need to reject or canonicalize text
-	 * without making the user leave editing mode.
-	 *
-	 * @param fieldId Stable id of the field to update.
-	 * @param text Replacement UTF-8 text.
-	 * @retval true the field existed and its text changed.
-	 * @retval false fieldId was empty, the field did not exist, or text was unchanged.
-	 */
-	bool replaceFieldTextPreservingCarets(std::string_view fieldId, std::string_view text);
-
 private:
 	friend class UiManager;
 
@@ -274,12 +294,18 @@ private:
 		size_t headByteOffset = 0u;
 	};
 
+	struct CaretFallbackMetrics {
+		bool valid = false;
+		float height = 0.0f;
+	};
+
 	struct FieldState {
 		std::string text{};
 		FieldConfig config{};
 		std::vector<CaretState> carets{};
 		Clay_ElementId textElementId{};
 		Clay_ElementId contentElementId{};
+		CaretFallbackMetrics fallbackMetrics{};
 		bool touchedThisFrame = false;
 	};
 

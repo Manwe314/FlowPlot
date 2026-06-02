@@ -739,6 +739,12 @@ bool App::shouldClose() const {
 	return impl_->window->shouldClose();
 }
 
+void App::setShouldClose(int value) {
+	if (impl_ && impl_->window) {
+		impl_->window->setShouldClose(value);
+	}
+}
+
 void App::beginFrame() {
 	if (impl_) {
 		impl_->beginFrame();
@@ -877,6 +883,13 @@ std::string App::clipboardText() const {
 		return {};
 	}
 	return impl_->window->getClipboardText();
+}
+
+bool App::replaceText(std::string_view fieldId, std::string_view text, bool preserveCaret) {
+	if (!impl_) {
+		return false;
+	}
+	return impl_->ui.inputFields().replaceText(fieldId, text, preserveCaret);
 }
 
 std::pair<int, int> App::windowSize() const {

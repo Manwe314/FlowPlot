@@ -55,6 +55,10 @@ struct FontManager;
  *     .setParameters(ButtonParams{.label = "Save"})
  *     .draw();
  * @endcode
+ *
+ * @see @ref md_docs_2concepts_2mental__model "Core Mental Model"
+ * @see @ref md_docs_2concepts_2element__system "Element System"
+ * @see @ref md_docs_2tutorials_2custom__elements "Custom Elements"
  */
 class UiManager {
 public:
@@ -102,6 +106,32 @@ public:
 	 * @endcode
 	 */
 	TextureRef* storeTexture(const TextureRef& textureRef);
+
+	/**
+	 * @brief Create a stable inner input-field content element declaration.
+	 *
+	 * This helper returns a Clay element declaration intended for the inner
+	 * content node of an input field. The width grows to available space and the
+	 * height is fixed to the resolved font line height for textConfig. Use it
+	 * between the visual/padded outer input box and the Clay text element so an
+	 * empty field keeps a stable layout area for caret rendering.
+	 *
+	 * @param textConfig Clay text configuration that will be used for the field text.
+	 * @return Clay element declaration with grow width and fixed line-height height.
+	 *
+	 * @code{.cpp}
+	 * CLAY(outerId, outer) {
+	 *     CLAY(contentId, context.uiManager.inputContentElement(textConfig)) {
+	 *         CLAY(textId, {}) {
+	 *             CLAY_TEXT(
+	 *                 context.uiManager.toClayString(field.text),
+	 *                 CLAY_TEXT_CONFIG(textConfig));
+	 *         }
+	 *     }
+	 * }
+	 * @endcode
+	 */
+	Clay_ElementDeclaration inputContentElement(const Clay_TextElementConfig& textConfig) const;
 
 	/**
 	 * @brief Convert a string id to a Clay string id.
@@ -156,6 +186,8 @@ public:
 	 * @tparam IsDevInternal Whether the definition is internal to dev tooling.
 	 * @param elementDefinition Element definition to invoke.
 	 * @param elementID Stable Flow element id for this invocation.
+	 * @param sourceLocation Source location captured for developer-mode
+	 * inspection when FLOW_UI_DEV_MODE is enabled.
 	 * @return ElementBuilder configured for the passed definition and element id.
 	 *
 	 * @throws std::bad_alloc if copying elementID into the builder fails.
@@ -166,6 +198,9 @@ public:
 	 *     .setParameters(ButtonParams{.label = "Save"})
 	 *     .draw();
 	 * @endcode
+	 *
+	 * @see @ref md_docs_2tutorials_2custom__elements "Custom Elements"
+	 * @see @ref md_docs_2tutorials_2developer__mode "Developer Mode"
 	 */
 	template <typename Parameters, typename State, typename Resources, uint64_t DefinitionId, bool IsDevInternal>
 	ElementBuilder<Parameters, State, Resources, DefinitionId, IsDevInternal> createElement(

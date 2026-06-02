@@ -25,11 +25,15 @@
 
 GUI app:
 
+Future optimizations:
+- undo/redo still compares entire templates instead of specific values.
+- better caching for frame work
+- MultiThreading / could be something FlowUi needs to adopt first.
+
 
 Features:
 - CSV parsing input as "mock" data?
 - pollyline trinagluation can be made better with inner line intersection + normal direction "across point" detection.
-- MultiThreading ???
 - add pre made template patterns like pair plot constructibale with scatter & historgram
 
 UI:
@@ -38,18 +42,10 @@ UI:
 - border colors
 - + and delee button background color need update
 
-
 UX:
-- ? Help with [saved] on the navbar
 
 Bugs:
-- sting input height is tiny on empty defualt text
-- GPU renderer honoring text box Clip functionalty
-- Text Layout is simply not the same as CPU renderer
-- If FlowUi already has the font loaded from imported tample do no work.
-- undo/redo with dataset value changes need an overview
-- undo/redo still compares entire templates instead of specific values.
-- Text Layout is not working well compared to FlowUis layout probably is STBEngine 
+- If FlowUi already has the font loaded from imported tample do no work. ???
 
 
 

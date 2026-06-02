@@ -527,6 +527,7 @@ struct state {
 	FlowPlot::Spec::MasterTemplateSpec lastExportedTemplate{};
 	bool activeTemplateExportComparisonChecked = true;
 	bool activeTemplateDiffersFromLastExport = false;
+	bool shouldClose = false;
 	std::vector<Diagnostic> diagnostics{};
 	DeferredDocumentEdit deferredEdit{};
 };
@@ -558,6 +559,57 @@ inline DocumentSnapshot makeDocumentSnapshot(const state& guiState)
 	};
 }
 
+inline bool runningDatasetsEqual(const std::vector<RunningDataset>& lhs, const std::vector<RunningDataset>& rhs)
+{
+	if (lhs.size() != rhs.size())
+	{
+		return false;
+	}
+
+	for (std::size_t datasetIndex = 0; datasetIndex < lhs.size(); ++datasetIndex)
+	{
+		const RunningDataset& leftDataset = lhs[datasetIndex];
+		const RunningDataset& rightDataset = rhs[datasetIndex];
+		if (leftDataset.name != rightDataset.name ||
+			leftDataset.numericColumns.size() != rightDataset.numericColumns.size() ||
+			leftDataset.stringColumns.size() != rightDataset.stringColumns.size() ||
+			leftDataset.boolColumns.size() != rightDataset.boolColumns.size())
+		{
+			return false;
+		}
+
+		for (std::size_t columnIndex = 0; columnIndex < leftDataset.numericColumns.size(); ++columnIndex)
+		{
+			const numericColumn& leftColumn = leftDataset.numericColumns[columnIndex];
+			const numericColumn& rightColumn = rightDataset.numericColumns[columnIndex];
+			if (leftColumn.name != rightColumn.name || leftColumn.data != rightColumn.data)
+			{
+				return false;
+			}
+		}
+		for (std::size_t columnIndex = 0; columnIndex < leftDataset.stringColumns.size(); ++columnIndex)
+		{
+			const stringColumn& leftColumn = leftDataset.stringColumns[columnIndex];
+			const stringColumn& rightColumn = rightDataset.stringColumns[columnIndex];
+			if (leftColumn.name != rightColumn.name || leftColumn.data != rightColumn.data)
+			{
+				return false;
+			}
+		}
+		for (std::size_t columnIndex = 0; columnIndex < leftDataset.boolColumns.size(); ++columnIndex)
+		{
+			const boolColumn& leftColumn = leftDataset.boolColumns[columnIndex];
+			const boolColumn& rightColumn = rightDataset.boolColumns[columnIndex];
+			if (leftColumn.name != rightColumn.name || leftColumn.data != rightColumn.data)
+			{
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+
 inline DocumentEditTarget makeTemplateEditTarget(std::string key, DocumentEditComparator changed = nullptr)
 {
 	return DocumentEditTarget{
@@ -573,6 +625,13 @@ inline DocumentEditTarget makeDatasetEditTarget(std::string key, DocumentEditCom
 		.kind = DocumentEditTargetKind::Dataset,
 		.key = std::move(key),
 		.changed = std::move(changed),
+	};
+}
+
+inline DocumentEditComparator makeDatasetsEditComparator()
+{
+	return [](const DocumentSnapshot& before, const state& current) {
+		return !runningDatasetsEqual(before.datasets, current.datasets);
 	};
 }
 
