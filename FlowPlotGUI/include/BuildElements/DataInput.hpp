@@ -77,14 +77,17 @@ inline const DataInputDef kDataInput = {
 				    .activeDatasetIndex = &state.activeDatasetIndex,
 				    .padding = Clay_Padding{.left = 8, .right = 8, .top = 6, .bottom = 0},
 				    .childGap = 7,
+				    .backgroundColor = Clay_Color{.r = 39.0f, .g = 39.0f, .b = 42.0f, .a = 255.0f},
+				    .borderWidth = Clay_BorderWidth{.left = 0, .right = 0, .top = 0, .bottom = 0, .betweenChildren = 0},
 				    .addRowContainerPadding = Clay_Padding{.left = 6, .right = 0, .top = 0, .bottom = 6}
 				})
 				.draw();
 			CLAY(bodyId, body){
 				context.uiManager.createElement(kDataInputTable, context.createChildElementId("table"))
 					.setParameters({
-						.guiState = context.params.guiState,
-						.activeDatasetIndex = &state.activeDatasetIndex,
+					    .guiState = context.params.guiState,
+					    .activeDatasetIndex = &state.activeDatasetIndex,
+					    .backgroundColor = Clay_Color{.r = 39.0f, .g = 39.0f, .b = 42.0f, .a = 255.0f}
 					})
 					.draw();
 			};

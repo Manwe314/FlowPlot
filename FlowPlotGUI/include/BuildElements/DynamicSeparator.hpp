@@ -18,7 +18,7 @@ struct dynamicSeparatorParams {
 	bool reverseDrag = false;
 	int width = 4;
 	int height = 4;
-	Clay_Color color = FlowUi::Flow_Color("#5e646eff");
+	Clay_Color color = Clay_Color{.r = 94.0f, .g = 100.0f, .b = 110.0f, .a = 255.0f};
 	Clay_Color hoverColor = FlowUi::Flow_Color("#7a828fff");
 	Clay_Color activeColor = FlowUi::Flow_Color("#9aa2aeff");
 

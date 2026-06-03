@@ -220,6 +220,10 @@ inline const PanelTitleDef kPanelTitle = {
 							.setParameters(context.params.rightButtonParams)
 							/* V1 cant Update parameters made with variables */
 							.mergeParams([](auto& params) {
+							    params.padding = Clay_Padding{.left = 5, .right = 5, .top = 0, .bottom = 0};
+							})
+							/* V1 cant Update parameters made with variables */
+							.mergeParams([](auto& params) {
 							    params.backgroundColor = Clay_Color{.r = 207.0f, .g = 207.0f, .b = 207.0f, .a = 0.0f};
 							    params.borderColor = Clay_Color{.r = 143.0f, .g = 141.0f, .b = 141.0f, .a = 0.0f};
 							    params.borderWidth = Clay_BorderWidth{.left = 0, .right = 0, .top = 0, .bottom = 0, .betweenChildren = 0};

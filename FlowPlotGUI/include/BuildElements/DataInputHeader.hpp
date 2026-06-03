@@ -36,7 +36,7 @@ struct dataTabParams {
 	Clay_Color activeBackgroundColor = FlowUi::Flow_Color("#34343aff");
 	Clay_Color borderColor = FlowUi::Flow_Color("#3f3f46ff");
 	Clay_Color activeBorderColor = FlowUi::Flow_Color("#68c4c0ff");
-	Clay_BorderWidth borderWidth = Clay_BorderWidth{1, 1, 1, 1, 0};
+	Clay_BorderWidth borderWidth = Clay_BorderWidth{2, 2, 2, 1, 0};
 	Clay_CornerRadius cornerRadius = Clay_CornerRadius{12.0f, 12.0f, 0.0f, 0.0f};
 
 	Clay_Sizing nameSizing = Clay_Sizing{.width = CLAY_SIZING_FIT(54, 180), .height = CLAY_SIZING_GROW(0)};
@@ -419,6 +419,10 @@ inline const DataInputHeaderDef kDataInputHeader = {
 					tabParams.active = datasetIndex == activeDatasetIndex;
 					context.uiManager.createElement(kDataTab, context.createChildElementId("tabs/" + std::to_string(datasetIndex)))
 						.setParameters(std::move(tabParams))
+						/* V1 cant Update parameters made with variables */
+						.mergeParams([](auto& params) {
+						    params.backgroundColor = Clay_Color{.r = 39.0f, .g = 39.0f, .b = 41.0f, .a = 255.0f};
+						})
 						.draw();
 				}
 			}
@@ -430,7 +434,7 @@ inline const DataInputHeaderDef kDataInputHeader = {
 				addDatasetButton.padding = CLAY_PADDING_ALL(3);
 				addDatasetButton.sizing = Clay_Sizing{.width = CLAY_SIZING_FIT(0), .height = CLAY_SIZING_FIT(0)};
 				addDatasetButton.backgroundColor = FlowUi::Flow_Color("#00000000");
-				addDatasetButton.hoverBackgroundColor = FlowUi::Flow_Color("#00000000");
+				addDatasetButton.hoverBackgroundColor = FlowUi::Flow_Color("#14b8a61a");
 				addDatasetButton.borderColor = FlowUi::Flow_Color("#00000000");
 				addDatasetButton.borderWidth = Clay_BorderWidth{0, 0, 0, 0, 0};
 				addDatasetButton.cornerRadius = CLAY_CORNER_RADIUS(4);

@@ -6,7 +6,7 @@
 #include "FlowPlotGui.hpp"
 
 struct templatePanelParams {
-	int minWidth = 436;
+	int minWidth = 360;
 	int maxWidth = 520;
 	Clay_Color backgroundColor = FlowUi::Flow_Color("#00000000");
 };

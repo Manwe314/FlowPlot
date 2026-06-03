@@ -37,10 +37,6 @@ Features:
 - add pre made template patterns like pair plot constructibale with scatter & historgram
 
 UI:
-- dataset + icon should have tint on hover + background color.
-- resize min max of both template and props panel
-- border colors
-- + and delee button background color need update
 
 UX:
 

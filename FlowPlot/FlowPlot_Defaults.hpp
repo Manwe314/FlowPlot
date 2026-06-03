@@ -329,7 +329,7 @@ namespace FlowPlot
 			std::string background = "#f8f8f8";
 			std::string borderColor = "#cccccc";
 			float borderWidth = 1.0f;
-			PaddingSpec padding{56.0f, 24.0f, 24.0f, 56.0f};
+			PaddingSpec padding{12.0f, 12.0f, 12.0f, 12.0f};
 			bool clipContent = true;
 			TextSpec title = makePanelTitleTextSpec();
 			AxisSpec xAxis = makeXAxisSpec();

@@ -9,18 +9,17 @@
   },
   "definitions": [
     {
-      "definitionId":2320764222450459691,
-      "definitionName":"TwoColumnInputTable",
-      "paramsStructTypeHash":930227865361312718,
-      "paramsStructName":"twoColumnInputTableParams",
+      "definitionId":13879490736734260317,
+      "definitionName":"DataInputTable",
+      "paramsStructTypeHash":5566531700545421588,
+      "paramsStructName":"dataInputTableParams",
       "hasSourceMetadata":true,
-      "sourceFile":"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/editors/basicInputs/twoColumnInput.hpp",
-      "sourceLine":198,
+      "sourceFile":"/home/lkukhale/kodi/FlowPlot/FlowPlotGUI/include/BuildElements/DataInputTable.hpp",
+      "sourceLine":847,
       "sourceColumn":0,
       "sourceFunction":"operator()",
       "changes": [
-        {"fieldHash":8336170734358855973,"fieldName":"headerPadding","fieldTypeHash":15937443097836116563,"valueKind":"edgeu16","value":"Clay_Padding{left=10, right=10, top=0, bottom=0}"},
-        {"fieldHash":6182518615344470848,"fieldName":"rowPadding","fieldTypeHash":15937443097836116563,"valueKind":"edgeu16","value":"Clay_Padding{left=10, right=10, top=0, bottom=0}"}
+        {"fieldHash":13714777660199686105,"fieldName":"borderWidth","fieldTypeHash":2382670219875931338,"valueKind":"edgeu16","value":"Clay_BorderWidth{left=2, right=2, top=2, bottom=2, betweenChildren=0}"}
       ]
     }
   ],

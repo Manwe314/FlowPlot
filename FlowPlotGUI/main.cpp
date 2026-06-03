@@ -677,11 +677,15 @@ int main()
 			}
 
 			ui.createElement(kRootBackground, "rootBackground")
-			.setParameters({.backgroundColor = FlowUi::Flow_Color("#18181aff")})
+			.setParameters({
+			    .backgroundColor = Clay_Color{.r = 22.0f, .g = 22.0f, .b = 24.0f, .a = 255.0f}
+			})
 			.construct(FlowUi::ElementDrawOptions::SkipEventCallbacks);
 				navBarState& navState = NavBarDef::getOrCreateState(FlowUi::toFlowId("NavBar"));
 				ui.createElement(kNavBar, "NavBar")
 				.setParameters({
+				    .borderColor = Clay_Color{.r = 94.0f, .g = 100.0f, .b = 110.0f, .a = 255.0f},
+				    .borderWidth = Clay_BorderWidth{.left = 0, .right = 0, .top = 0, .bottom = 2, .betweenChildren = 0},
 				    .padding = Clay_Padding{.left = 16, .right = 16, .top = 0, .bottom = 8},
 				    .spacer1Sizing = Clay_Sizing{.width = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 22.0f, .max = 45.0f}}, .type = CLAY__SIZING_TYPE_GROW}, .height = Clay_SizingAxis{.size = {.percent = 0.0f}, .type = CLAY__SIZING_TYPE_PERCENT}},
 				    .spacer2Sizing = Clay_Sizing{.width = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 22.0f, .max = 45.0f}}, .type = CLAY__SIZING_TYPE_GROW}, .height = Clay_SizingAxis{.size = {.percent = 1.0f}, .type = CLAY__SIZING_TYPE_PERCENT}},
@@ -722,10 +726,9 @@ int main()
 					ui.drawConstructed(); // TemplatePanel
 					ui.createElement(kDynamicSeparator, "separator1")
 					.setParameters({
-						.color = FlowUi::Flow_Color("#3f3f41ff"),
 						.hoverColor = FlowUi::Flow_Color("#707074ff"),
 						.activeColor = FlowUi::Flow_Color("#409d97ff"),
-						.minValue = 436,
+						.minValue = 360,
 						.maxValue = 550,
 						.getValue = [leftId](){
 							return TemplatePanelDef::getOrCreateState(FlowUi::toFlowId(leftId)).minWidth;
@@ -771,7 +774,6 @@ int main()
 					ui.createElement(kDynamicSeparator, "separator2")
 					.setParameters({
 						.reverseDrag = true,
-						.color = FlowUi::Flow_Color("#3f3f41ff"),
 						.hoverColor = FlowUi::Flow_Color("#707074ff"),
 						.activeColor = FlowUi::Flow_Color("#409d97ff"),
 						.minValue = 436,

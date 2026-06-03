@@ -245,7 +245,7 @@ templateLayerParams makeTemplateLayerParams(
 	params.mainTextFontSize = 14;
 	params.backgroundColor = FlowUi::Flow_Color("#00000000");
 	params.hoverBackgroundColor = FlowUi::Flow_Color("#242428ff");
-	params.focusedBackgroundColor = FlowUi::Flow_Color("#1f3a4cff");
+	params.focusedBackgroundColor = Clay_Color{.r = 55.0f, .g = 162.0f, .b = 148.0f, .a = 26.0f};
 	params.buttonHoverBackgroundColor = FlowUi::Flow_Color("#303036ff");
 	params.expandedIcon = app.icons().textureRef("DownArrow");
 	params.collapsedIcon = app.icons().textureRef("RightArrow");
@@ -254,9 +254,11 @@ templateLayerParams makeTemplateLayerParams(
 	params.mainIconTintColor = FlowUi::Flow_Color("#ffffffff");
 	params.buttonIconTintColor = FlowUi::Flow_Color("#ffffffff");
 	params.adderButtonIconTintColor = Clay_Color{.r = 0.0f, .g = 144.0f, .b = 143.0f, .a = 255.0f};
+	params.adderButtonHoverBackgroundColor = FlowUi::Flow_Color("#14b8a673");
 	params.adderButtonHoverIconTintColor = FlowUi::Flow_Color("#00c9c7ff");
-	params.deleterButtonIconTintColor = FlowUi::Flow_Color("#ef4444ff");
-	params.deleterButtonHoverIconTintColor = FlowUi::Flow_Color("#ff6b6bff");
+	params.deleterButtonIconTintColor = FlowUi::Flow_Color("#f4f4f580");
+	params.deleterButtonHoverBackgroundColor = FlowUi::Flow_Color("#ef444415");
+	params.deleterButtonHoverIconTintColor = FlowUi::Flow_Color("#b41919ff");
 
 	switch (node.kind)
 	{

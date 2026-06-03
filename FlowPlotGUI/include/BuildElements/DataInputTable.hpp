@@ -67,7 +67,7 @@ struct dataInputHeaderRowParams {
 
 	Clay_Padding cellPadding = Clay_Padding{8, 8, 0, 0};
 	Clay_Color backgroundColor = FlowUi::Flow_Color("#202126ff");
-	Clay_Color cellBorderColor = FlowUi::Flow_Color("#363943ff");
+	Clay_Color cellBorderColor = Clay_Color{.r = 94.0f, .g = 100.0f, .b = 110.0f, .a = 255.0f};
 	Clay_BorderWidth cellBorderWidth = Clay_BorderWidth{0, 1, 0, 1, 0};
 	uint16_t fontId = 0;
 	uint16_t fontSize = 13;
@@ -244,10 +244,14 @@ inline const DataInputHeaderRowDef kDataInputHeaderRow = {
 		columnsArea.layout.sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_GROW(0)};
 		columnsArea.layout.childGap = context.params.columnGap;
 		columnsArea.backgroundColor = FlowUi::Flow_Color("#00000000");
-		columnsArea.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
+		columnsArea.border = {
+			.color = context.params.cellBorderColor,
+			.width = Clay_BorderWidth{.left = 0, .right = 0, .top = 0, .bottom = context.params.cellBorderWidth.bottom, .betweenChildren = 0},
+		};
 		Clay_ElementDeclaration actionCell = makeCell(
 			Clay_Sizing{.width = CLAY_SIZING_FIXED(context.params.actionColumnWidth), .height = CLAY_SIZING_GROW(0)});
 		actionCell.layout.childAlignment = Clay_ChildAlignment{.x = CLAY_ALIGN_X_CENTER, .y = CLAY_ALIGN_Y_CENTER};
+		actionCell.border.width.left = context.params.cellBorderWidth.right;
 
 		Clay_TextElementConfig textConfig{};
 		textConfig.textColor = context.params.textColor;
@@ -476,9 +480,9 @@ struct dataInputDataRowParams {
 	float actionColumnWidth = 40.0f;
 	uint16_t columnGap = 0;
 	Clay_Padding cellPadding = Clay_Padding{8, 8, 4, 4};
-	Clay_Color backgroundColor = FlowUi::Flow_Color("#2d2d32ff");
+	Clay_Color backgroundColor = Clay_Color{.r = 39.0f, .g = 39.0f, .b = 42.0f, .a = 255.0f};
 	Clay_Color hoverBackgroundColor = FlowUi::Flow_Color("#33333aff");
-	Clay_Color cellBorderColor = FlowUi::Flow_Color("#3a3a40ff");
+	Clay_Color cellBorderColor = Clay_Color{.r = 94.0f, .g = 100.0f, .b = 110.0f, .a = 255.0f};
 	Clay_BorderWidth cellBorderWidth = Clay_BorderWidth{0, 1, 0, 1, 0};
 	uint16_t fontId = 0;
 	uint16_t fontSize = 13;
@@ -742,6 +746,8 @@ inline const DataInputDataRowDef kDataInputDataRow = {
 							}
 							boolToggleParams toggleParams{};
 							toggleParams.value = dataset->boolColumns[column.typedColumnIndex].data[context.params.rowIndex];
+							toggleParams.sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_GROW(0)};
+							toggleParams.padding = Clay_Padding{.left = 6, .right = 6, .top = 2, .bottom = 2};
 							toggleParams.fontId = context.params.fontId;
 							toggleParams.fontSize = context.params.fontSize;
 							toggleParams.onChange = [
@@ -822,6 +828,8 @@ struct dataInputTableParams {
 	float actionColumnWidth = 40.0f;
 	uint16_t columnGap = 0;
 	Clay_Color backgroundColor = FlowUi::Flow_Color("#26262bff");
+	Clay_Color borderColor = Clay_Color{.r = 104.0f, .g = 196.0f, .b = 192.0f, .a = 255.0f};
+	Clay_BorderWidth borderWidth = Clay_BorderWidth{.left = 2, .right = 2, .top = 2, .bottom = 2, .betweenChildren = 0};
 };
 
 FLOWUI_DEV_REGISTER_STRUCT(
@@ -834,7 +842,9 @@ FLOWUI_DEV_REGISTER_STRUCT(
 	FLOWUI_DEV_REFLECT_FIELD(dataInputTableParams, idColumnWidth),
 	FLOWUI_DEV_REFLECT_FIELD(dataInputTableParams, actionColumnWidth),
 	FLOWUI_DEV_REFLECT_FIELD(dataInputTableParams, columnGap),
-	FLOWUI_DEV_REFLECT_FIELD(dataInputTableParams, backgroundColor));
+	FLOWUI_DEV_REFLECT_FIELD(dataInputTableParams, backgroundColor),
+	FLOWUI_DEV_REFLECT_FIELD(dataInputTableParams, borderColor),
+	FLOWUI_DEV_REFLECT_FIELD(dataInputTableParams, borderWidth));
 
 using DataInputTableDef = FlowUi::ElementDefinition<dataInputTableParams, void, void, FLOW_DEF_ID("DataInputTable")>;
 
@@ -870,7 +880,7 @@ inline const DataInputTableDef kDataInputTable = {
 		root.layout.padding = context.params.padding;
 		root.layout.childGap = context.params.rowGap;
 		root.backgroundColor = context.params.backgroundColor;
-		root.border = {.color = FlowUi::Flow_Color("#00000000"), .width = Clay_BorderWidth{0, 0, 0, 0, 0}};
+		root.border = {.color = context.params.borderColor, .width = context.params.borderWidth};
 
 		Clay_ElementDeclaration rowsContainer{};
 		rowsContainer.layout.layoutDirection = CLAY_TOP_TO_BOTTOM;
@@ -887,12 +897,13 @@ inline const DataInputTableDef kDataInputTable = {
 		CLAY(rootId, root){
 			context.uiManager.createElement(kDataInputHeaderRow, context.createChildElementId("header-row"))
 				.setParameters({
-					.guiState = context.params.guiState,
-					.datasetIndex = activeDatasetIndex,
-					.rowHeight = context.params.headerRowHeight,
-					.idColumnWidth = context.params.idColumnWidth,
-					.actionColumnWidth = context.params.actionColumnWidth,
-					.columnGap = context.params.columnGap,
+				    .guiState = context.params.guiState,
+				    .datasetIndex = activeDatasetIndex,
+				    .rowHeight = context.params.headerRowHeight,
+				    .idColumnWidth = context.params.idColumnWidth,
+				    .actionColumnWidth = context.params.actionColumnWidth,
+				    .columnGap = context.params.columnGap,
+				    .backgroundColor = Clay_Color{.r = 39.0f, .g = 39.0f, .b = 42.0f, .a = 255.0f}
 				})
 				.draw();
 

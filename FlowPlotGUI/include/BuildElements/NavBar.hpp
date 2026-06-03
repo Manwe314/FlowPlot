@@ -150,14 +150,14 @@ private:
 		params.icon = app.icons().textureRef("FlowPlotIcon");
 
 		BasicTitleBuilder builder = app.ui().createElement(kBasicTitle, path)
-			.setParameters({
-			    .contentMode = basicTitleParams::ContentMode::IconThenText,
-			    .childGap = 13,
-			    .fontSize = 32,
-			    .textColor = Clay_Color{.r = 243.0f, .g = 243.0f, .b = 243.0f, .a = 255.0f},
-			    .iconTintColor = Clay_Color{.r = 122.0f, .g = 209.0f, .b = 230.0f, .a = 0.0f}
+			.setParameters(std::move(params))
+			.mergeParams([](auto& params){
+			    params.childGap = 13;
+			    params.fontSize = 32;
+			    params.textColor = Clay_Color{.r = 243.0f, .g = 243.0f, .b = 243.0f, .a = 255.0f};
+			    params.iconContainerSizing = Clay_Sizing{.width = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 52.0f, .max = 52.0f}}, .type = CLAY__SIZING_TYPE_FIXED}, .height = Clay_SizingAxis{.size = {.minMax = Clay_SizingMinMax{.min = 52.0f, .max = 52.0f}}, .type = CLAY__SIZING_TYPE_FIXED}};
+			    params.iconTintColor = Clay_Color{.r = 122.0f, .g = 209.0f, .b = 230.0f, .a = 0.0f};
 			});
-		builder.setParameters(std::move(params));
 		return builder;
 	}
 };

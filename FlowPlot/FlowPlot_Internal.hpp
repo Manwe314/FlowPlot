@@ -2663,6 +2663,268 @@ namespace FlowInternal
 				return computed;
 			}
 
+			struct AxisDecorationMeasure
+			{
+				float outward = 0.0f;
+				float spillStart = 0.0f;
+				float spillEnd = 0.0f;
+			};
+
+			struct PanelAxisDecorationInsets
+			{
+				float left = 0.0f;
+				float right = 0.0f;
+				float top = 0.0f;
+				float bottom = 0.0f;
+			};
+
+			inline FlowPlot::RectF insetRect(
+				const FlowPlot::RectF& rect,
+				float left,
+				float right,
+				float top,
+				float bottom)
+			{
+				return FlowPlot::RectF{
+					rect.x + left,
+					rect.y + top,
+					rect.w - left - right,
+					rect.h - top - bottom,
+				};
+			}
+
+			inline FlowPlot::RectF insetRect(
+				const FlowPlot::RectF& rect,
+				const FlowPlot::Spec::PaddingSpec& padding)
+			{
+				return insetRect(rect, padding.left, padding.right, padding.top, padding.bottom);
+			}
+
+			inline FlowPlot::RectF insetRect(
+				const FlowPlot::RectF& rect,
+				const PanelAxisDecorationInsets& insets)
+			{
+				return insetRect(rect, insets.left, insets.right, insets.top, insets.bottom);
+			}
+
+			inline void validatePositiveRect(
+				const FlowPlot::RectF& rect,
+				const std::string& message)
+			{
+				if (rect.w <= 0.0f || rect.h <= 0.0f)
+					throw std::runtime_error(message);
+			}
+
+			inline AxisDecorationMeasure measureAxisDecoration(
+				const FlowPlot::Spec::AxisSpec& axisSpec,
+				bool isXAxis,
+				bool isSecondaryAxis,
+				const FlowPlot::RectF& candidateAxisRect,
+				const AxisDomain& axisDomain,
+				const FlowPlot::ITextEngine* textEngine,
+				const std::string& path)
+			{
+				AxisDecorationMeasure measure{};
+				if (!axisSpec.visible)
+					return measure;
+
+				const std::string scale = canonicalizeToken(axisSpec.scale);
+				if (scale != "linear")
+					throw std::runtime_error("resolvePlotIR: unsupported axis scale '" + axisSpec.scale + "' at '" + path + ".scale'");
+
+				if (axisSpec.lineWidth < 0.0f || axisSpec.tickWidth < 0.0f || axisSpec.tickLength < 0.0f || axisSpec.gridWidth < 0.0f)
+					throw std::runtime_error("resolvePlotIR: negative axis widths/lengths are not allowed at '" + path + "'");
+
+				const float axisLength = isXAxis ? candidateAxisRect.w : candidateAxisRect.h;
+				if (axisLength < 0.0f)
+					throw std::runtime_error("resolvePlotIR: negative candidate axis length at '" + path + "'");
+
+				const std::vector<float> majorOffsets = computeMajorTickOffsets(axisLength, axisSpec.tickWidth, axisSpec.tickCount);
+				const double resolvedMin = axisDomain.min;
+				const double resolvedMax = axisDomain.max;
+
+				float largestTickLabelHeight = 0.0f;
+				float largestTickLabelWidth = 0.0f;
+
+				for (std::size_t majorIdx = 0; majorIdx < majorOffsets.size(); ++majorIdx)
+				{
+					double t = 0.0;
+					if (majorOffsets.size() == 1U)
+						t = 0.5;
+					else if (majorOffsets.size() > 1U)
+						t = static_cast<double>(majorIdx) / static_cast<double>(majorOffsets.size() - 1U);
+
+					const double tickValue = resolvedMin + (resolvedMax - resolvedMin) * t;
+					const std::string tickText = formatTickValue(tickValue, axisSpec, path);
+					const FlowPlot::TextMeasurement measured = measureTextForAutoSizing(
+						textEngine,
+						axisSpec.tickLabelFontFamily,
+						axisSpec.tickLabelFontWeight,
+						FlowPlot::parseFontStyle(axisSpec.tickLabelFontStyle),
+						axisSpec.tickLabelFontSize,
+						tickText,
+						path + ".tickLabels[" + std::to_string(majorIdx) + "]");
+					if (measured.width < 0.0f || measured.height < 0.0f)
+						throw std::runtime_error("resolvePlotIR: measured tick label size is negative at '" + path + "'");
+
+					largestTickLabelHeight = std::max(largestTickLabelHeight, measured.height);
+					largestTickLabelWidth = std::max(largestTickLabelWidth, measured.width);
+
+					const float offset = majorOffsets[majorIdx];
+					if (isXAxis)
+					{
+						const float labelStart = offset - (measured.width * 0.5f);
+						const float labelEnd = offset + (measured.width * 0.5f);
+						measure.spillStart = std::max(measure.spillStart, -labelStart);
+						measure.spillEnd = std::max(measure.spillEnd, labelEnd - axisLength);
+					}
+					else
+					{
+						const float tickCenterFromTop = axisLength - offset;
+						const float labelStart = tickCenterFromTop - (measured.height * 0.5f);
+						const float labelEnd = tickCenterFromTop + (measured.height * 0.5f);
+						measure.spillStart = std::max(measure.spillStart, -labelStart);
+						measure.spillEnd = std::max(measure.spillEnd, labelEnd - axisLength);
+					}
+				}
+
+				float titleWidth = 0.0f;
+				float titleHeight = 0.0f;
+				if (axisSpec.title.visible)
+				{
+					const FlowPlot::Spec::TextSpec& titleSpec = axisSpec.title;
+					const bool missingWidth = !titleSpec.box.width.has_value();
+					const bool missingHeight = !titleSpec.box.height.has_value();
+					FlowPlot::TextMeasurement measuredTitle{};
+					if (missingWidth || missingHeight)
+					{
+						measuredTitle = measureTextForAutoSizing(
+							textEngine,
+							titleSpec.fontFamily,
+							titleSpec.fontWeight,
+							FlowPlot::parseFontStyle(titleSpec.fontStyle),
+							titleSpec.fontSize,
+							titleSpec.text,
+							path + ".title.box");
+					}
+
+					titleWidth = titleSpec.box.width.value_or(measuredTitle.width);
+					titleHeight = titleSpec.box.height.value_or(measuredTitle.height);
+					if (titleWidth < 0.0f || titleHeight < 0.0f)
+						throw std::runtime_error("resolvePlotIR: axis title box width/height must be non-negative at '" + path + ".title.box'");
+
+					if (isXAxis)
+					{
+						const float titleSpill = (titleWidth - axisLength) * 0.5f;
+						measure.spillStart = std::max(measure.spillStart, titleSpill);
+						measure.spillEnd = std::max(measure.spillEnd, titleSpill);
+					}
+					else
+					{
+						measure.spillStart = std::max(measure.spillStart, titleHeight);
+					}
+				}
+
+				const float tickLabelOutward = majorOffsets.empty()
+					? 0.0f
+					: axisSpec.tickLength + axisSpec.tickValueGap + (isXAxis ? largestTickLabelHeight : largestTickLabelWidth);
+				const float titleOutward = axisSpec.title.visible
+					? (axisSpec.lineWidth * 0.5f + axisSpec.tickLength + axisSpec.tickValueGap + (isXAxis ? largestTickLabelHeight + titleHeight : largestTickLabelWidth + titleWidth))
+					: 0.0f;
+				measure.outward = std::max({
+					axisSpec.lineWidth * 0.5f,
+					tickLabelOutward,
+					titleOutward,
+				});
+				measure.spillStart = std::max(0.0f, measure.spillStart);
+				measure.spillEnd = std::max(0.0f, measure.spillEnd);
+				(void)isSecondaryAxis;
+				return measure;
+			}
+
+			inline PanelAxisDecorationInsets measurePanelAxisDecorationInsets(
+				const FlowPlot::Spec::PanelSpec& panelSpec,
+				std::size_t panelIndex,
+				const PanelAxisComputation& axisComputation,
+				const FlowPlot::RectF& candidateAxisRect,
+				const FlowPlot::ITextEngine* textEngine)
+			{
+				const AxisDecorationMeasure xPrimary = measureAxisDecoration(
+					panelSpec.xAxis,
+					true,
+					false,
+					candidateAxisRect,
+					axisComputation.xPrimary,
+					textEngine,
+					"panels[" + std::to_string(panelIndex) + "].xAxis");
+				const AxisDecorationMeasure xSecondary = measureAxisDecoration(
+					panelSpec.xSecondary,
+					true,
+					true,
+					candidateAxisRect,
+					axisComputation.xSecondary,
+					textEngine,
+					"panels[" + std::to_string(panelIndex) + "].xSecondary");
+				const AxisDecorationMeasure yPrimary = measureAxisDecoration(
+					panelSpec.yAxis,
+					false,
+					false,
+					candidateAxisRect,
+					axisComputation.yPrimary,
+					textEngine,
+					"panels[" + std::to_string(panelIndex) + "].yAxis");
+				const AxisDecorationMeasure ySecondary = measureAxisDecoration(
+					panelSpec.ySecondary,
+					false,
+					true,
+					candidateAxisRect,
+					axisComputation.ySecondary,
+					textEngine,
+					"panels[" + std::to_string(panelIndex) + "].ySecondary");
+
+				PanelAxisDecorationInsets insets{};
+				insets.left = std::max({yPrimary.outward, xPrimary.spillStart, xSecondary.spillStart});
+				insets.right = std::max({ySecondary.outward, xPrimary.spillEnd, xSecondary.spillEnd});
+				insets.top = std::max({xSecondary.outward, yPrimary.spillStart, ySecondary.spillStart});
+				insets.bottom = std::max({xPrimary.outward, yPrimary.spillEnd, ySecondary.spillEnd});
+				return insets;
+			}
+
+			inline FlowPlot::RectF resolveAxisRectWithDecorations(
+				const FlowPlot::Spec::PanelSpec& panelSpec,
+				std::size_t panelIndex,
+				const PanelAxisComputation& axisComputation,
+				const FlowPlot::RectF& contentRect,
+				const FlowPlot::ITextEngine* textEngine)
+			{
+				validatePositiveRect(
+					contentRect,
+					"resolvePlotIR: panel padding leaves no content space at 'panels[" + std::to_string(panelIndex) + "]'");
+
+				const PanelAxisDecorationInsets firstInsets = measurePanelAxisDecorationInsets(
+					panelSpec,
+					panelIndex,
+					axisComputation,
+					contentRect,
+					textEngine);
+				FlowPlot::RectF axisRect = insetRect(contentRect, firstInsets);
+				validatePositiveRect(
+					axisRect,
+					"resolvePlotIR: axis decorations leave no data space at 'panels[" + std::to_string(panelIndex) + "]'");
+
+				const PanelAxisDecorationInsets secondInsets = measurePanelAxisDecorationInsets(
+					panelSpec,
+					panelIndex,
+					axisComputation,
+					axisRect,
+					textEngine);
+				axisRect = insetRect(contentRect, secondInsets);
+				validatePositiveRect(
+					axisRect,
+					"resolvePlotIR: axis decorations leave no data space at 'panels[" + std::to_string(panelIndex) + "]'");
+				return axisRect;
+			}
+
 			inline ResolvedIR::AxisResolved resolveAxis(
 				const FlowPlot::Spec::AxisSpec& axisSpec,
 				bool isXAxis,
@@ -3895,14 +4157,9 @@ namespace FlowInternal
 				resolved.frame.rect = resolvePanelFrameRect(figureSpec, layoutSpec, panelRow, panelCol);
 				resolved.clipRectPanel = resolved.frame.rect;
 
-			const FlowPlot::RectF axisRect = FlowPlot::RectF{
-				resolved.frame.rect.x + panelSpec.padding.left,
-				resolved.frame.rect.y + panelSpec.padding.top,
-				resolved.frame.rect.w - panelSpec.padding.left - panelSpec.padding.right,
-				resolved.frame.rect.h - panelSpec.padding.top - panelSpec.padding.bottom
-			};
-			if (axisRect.w < 0.0f || axisRect.h < 0.0f)
-				throw std::runtime_error("resolvePlotIR: panel padding leaves negative layer clip size at 'panels[" + std::to_string(panelIndex) + "]'");
+			const FlowPlot::RectF contentRect = insetRect(resolved.frame.rect, panelSpec.padding);
+			if (contentRect.w <= 0.0f || contentRect.h <= 0.0f)
+				throw std::runtime_error("resolvePlotIR: panel padding leaves no content space at 'panels[" + std::to_string(panelIndex) + "]'");
 
 				if (panelSpec.title.visible)
 					resolved.title = resolvePanelTitle(panelSpec, resolved.frame.rect, panelIndex, textEngine);
@@ -3932,6 +4189,12 @@ namespace FlowInternal
 					panelIndex,
 					orderedBoundLayers,
 					datasets);
+				const FlowPlot::RectF axisRect = resolveAxisRectWithDecorations(
+					panelSpec,
+					panelIndex,
+					axisComputation,
+					contentRect,
+					textEngine);
 
 				resolved.xAxis = resolveAxis(
 					panelSpec.xAxis,
