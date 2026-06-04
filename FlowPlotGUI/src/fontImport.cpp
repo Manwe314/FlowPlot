@@ -1,3 +1,12 @@
+#if defined(_WIN32)
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#endif
+
 #define FLOW_PLOT_RENDERER
 #define FLOW_PLOT_IMPLEMENTATION
 #include "fontImport.hpp"
@@ -226,7 +235,7 @@ std::vector<ParsedFontFace> parseFontFile(const std::filesystem::path& path)
 		throw std::runtime_error("file is empty");
 	}
 
-	const int fontCount = std::max(1, stbtt_GetNumberOfFonts(bytes.data()));
+	const int fontCount = (std::max)(1, stbtt_GetNumberOfFonts(bytes.data()));
 	std::vector<ParsedFontFace> faces{};
 	faces.reserve(static_cast<std::size_t>(fontCount));
 
@@ -365,7 +374,7 @@ void registerImportedFont(state& guiState, FlowUi::FontManager* fontManager, con
 	face.name = variant.family;
 
 	const FlowUi::FontManager::FontFamilyId familyId = fontManager->getFamilyId(variant.family);
-	if (familyId == std::numeric_limits<FlowUi::FontManager::FontFamilyId>::max())
+	if (familyId == (std::numeric_limits<FlowUi::FontManager::FontFamilyId>::max)())
 	{
 		FlowUi::FontFamilyCreateInfo family{};
 		family.name = variant.family;
