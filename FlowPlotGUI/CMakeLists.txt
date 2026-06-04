@@ -26,6 +26,12 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+if(MSVC)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+    set(MSDF_ATLAS_DYNAMIC_RUNTIME ON CACHE BOOL "Link msdf-atlas-gen with the dynamic MSVC runtime" FORCE)
+    set(MSDFGEN_DYNAMIC_RUNTIME ON CACHE BOOL "Link msdfgen with the dynamic MSVC runtime" FORCE)
+endif()
+
 # FlowUi options
 option(FLOWPLOTGUI_ENABLE_DEV_MODE "Enable FlowUi developer mode in FlowPlotGUI" OFF)
 
