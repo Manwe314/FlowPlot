@@ -8,6 +8,7 @@
 #include <cstdio>
 #include <exception>
 #include <filesystem>
+#include <initializer_list>
 #include <memory>
 #include <optional>
 #include <string>
@@ -24,6 +25,52 @@
 #include "templateHelper.hpp"
 
 namespace {
+
+#ifndef FLOWPLOTGUI_DEV_MODE
+#define FLOWPLOTGUI_DEV_MODE 0
+#endif
+
+std::filesystem::path packagedAssetPath(std::initializer_list<std::filesystem::path> parts)
+{
+	std::filesystem::path path = std::filesystem::current_path() / "assets";
+	for (const std::filesystem::path& part : parts)
+		path /= part;
+	return path;
+}
+
+std::filesystem::path packagedParentAssetPath(std::initializer_list<std::filesystem::path> parts)
+{
+	std::filesystem::path path = std::filesystem::current_path() / ".." / "assets";
+	for (const std::filesystem::path& part : parts)
+		path /= part;
+	return path;
+}
+
+std::filesystem::path sourceAssetPath(std::initializer_list<std::filesystem::path> parts)
+{
+#ifdef FLOWPLOTGUI_SOURCE_ASSET_DIR
+	std::filesystem::path path = std::filesystem::path(FLOWPLOTGUI_SOURCE_ASSET_DIR);
+#else
+	std::filesystem::path path = std::filesystem::path(__FILE__).parent_path() / "assets";
+#endif
+	for (const std::filesystem::path& part : parts)
+		path /= part;
+	return path;
+}
+
+std::filesystem::path assetPath(std::initializer_list<std::filesystem::path> parts)
+{
+	std::error_code ec;
+	const std::filesystem::path packaged = packagedAssetPath(parts);
+	if (std::filesystem::exists(packaged, ec) && !ec)
+		return packaged;
+
+	const std::filesystem::path packagedParent = packagedParentAssetPath(parts);
+	if (std::filesystem::exists(packagedParent, ec) && !ec)
+		return packagedParent;
+
+	return sourceAssetPath(parts);
+}
 
 constexpr int kKeyTab = 258;
 constexpr int kKeyRight = 262;
@@ -185,7 +232,7 @@ void populateInitialGuiState(FlowPlotGui::state& guiState)
 	guiState.datasetRevision = 1;
 	guiState.viewportRevision = 1;
 	guiState.textEngine = std::make_shared<FlowPlot::StbTextEngine>(
-		std::filesystem::path(__FILE__).parent_path() / "assets" / "Fonts" / "Inter-VariableFont_opsz,wght.ttf");
+		assetPath({"Fonts", "Inter-VariableFont_opsz,wght.ttf"}));
 }
 
 std::string selectedTemplateNodeKindText(const FlowPlotGui::state& guiState)
@@ -490,15 +537,15 @@ int main()
 		config.window.maximized = true;
 		config.window.width = 1920;
 		config.window.height = 1080;
-		config.dev.enabled = true;
-		config.dev.panelOpenByDefault = true;
-		config.dev.useShortcutManagerForPanelToggle = true;
+		config.dev.enabled = FLOWPLOTGUI_DEV_MODE != 0;
+		config.dev.panelOpenByDefault = FLOWPLOTGUI_DEV_MODE != 0;
+		config.dev.useShortcutManagerForPanelToggle = FLOWPLOTGUI_DEV_MODE != 0;
 		config.ui.stringArenaSize = 2 * 1024 * 1024;
 		config.ui.defaultFontFamily = FlowUi::FontFamilyCreateInfo{
 			.name = "Inter",
 			.faces = {
 				FlowUi::FontFaceCreateInfo{
-					.path = std::filesystem::path(__FILE__).parent_path() / "assets" / "Fonts" / "Inter.arfont",
+					.path = assetPath({"Fonts", "Inter.arfont"}),
 					.pixelSize = 18.0f,
 					.weight = 400,
 					.style = FlowUi::FontStyle::Normal,

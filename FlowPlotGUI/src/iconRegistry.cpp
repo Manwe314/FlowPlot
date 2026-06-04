@@ -40,8 +40,25 @@ constexpr std::array<InlineIcon, 19> kInlineIcons{{
 
 std::filesystem::path flowPlotIconPath()
 {
+#ifdef FLOWPLOTGUI_SOURCE_ASSET_DIR
+	const std::filesystem::path sourceAssetDir(FLOWPLOTGUI_SOURCE_ASSET_DIR);
+#else
 	const std::filesystem::path sourceFilePath(__FILE__);
-	return sourceFilePath.parent_path().parent_path() / "assets" / "Svgs" / "FlowPlotIcon.svg";
+	const std::filesystem::path sourceAssetDir = sourceFilePath.parent_path().parent_path() / "assets";
+#endif
+
+	std::error_code ec;
+	const std::filesystem::path packagedPath =
+		std::filesystem::current_path() / "assets" / "Svgs" / "FlowPlotIcon.svg";
+	if (std::filesystem::exists(packagedPath, ec) && !ec)
+		return packagedPath;
+
+	const std::filesystem::path packagedParentPath =
+		std::filesystem::current_path() / ".." / "assets" / "Svgs" / "FlowPlotIcon.svg";
+	if (std::filesystem::exists(packagedParentPath, ec) && !ec)
+		return packagedParentPath;
+
+	return sourceAssetDir / "Svgs" / "FlowPlotIcon.svg";
 }
 
 

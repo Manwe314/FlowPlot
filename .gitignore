@@ -61,6 +61,37 @@ build
 *.log
 
 # -----------------------------
+# Python packaging / caches
+# -----------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.coverage
+htmlcov/
+/Python/build/
+/Python/dist/
+/Python/*.egg-info/
+
+# -----------------------------
+# Release package artifacts
+# -----------------------------
+/_CPack_Packages/
+/FlowPlotGUI-*.zip
+/FlowPlotGUI-*.tar.gz
+/FlowPlotGUI-*.dmg
+/FlowPlotGUI-*.exe
+/FlowPlotGUI-*.msi
+/FlowPlotGUI-*.deb
+/FlowPlotGUI-*.rpm
+
+# -----------------------------
 # Editor / IDE files
 # -----------------------------
 .vscode/

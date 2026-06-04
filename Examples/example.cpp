@@ -10,6 +10,6 @@ int main()
 	std::vector<int> x{1, 2, 3, 4, 5};
 	std::vector<int> y{3, 4, 1, 4, 6};
 
-	FlowPlot::plot("./ScatterTemplate.json").withData("main.x", x).withData("main.y", y).writePng("./myPng.png");
+	FlowPlot::plot("./ScatterTemplate.json").withData("main.x", x).withData("main.y", y).writePng("./CppPlot.png");
 	return 0;
 }

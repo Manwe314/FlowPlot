@@ -218,6 +218,14 @@ std::vector<char> readShaderFile(const char* fileName)
 		return readFile(relativePath);
 	}
 
+	const std::string parentRelativePath = std::string("../shaders/") + fileName;
+	std::ifstream parentRelativeProbe(parentRelativePath, std::ios::binary);
+	if (parentRelativeProbe.good())
+	{
+		parentRelativeProbe.close();
+		return readFile(parentRelativePath);
+	}
+
 #ifdef FLOWPLOTGUI_SHADER_OUTPUT_DIR
 	const std::string buildPath = std::string(FLOWPLOTGUI_SHADER_OUTPUT_DIR) + "/" + fileName;
 	std::ifstream buildProbe(buildPath, std::ios::binary);

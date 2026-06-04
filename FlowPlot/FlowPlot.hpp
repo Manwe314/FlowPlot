@@ -328,6 +328,7 @@ namespace FlowPlot
 	class PlotBuilder
 	{
 	public:
+		friend PlotBuilder makePlot(const std::filesystem::path& path);
 		friend PlotBuilder& plot(const std::filesystem::path& path);
 
 		PlotBuilder& set(std::string_view property, value valueArg)
@@ -584,6 +585,11 @@ namespace FlowPlot
 			return *this;
 		}
 
+		void registerTemplateFonts(ITextEngine& textEngine) const
+		{
+			registerFonts(textEngine, template_);
+		}
+
 		RenderPlot getCommands() const;
 
 #ifdef FLOW_PLOT_RENDERER
@@ -596,7 +602,7 @@ namespace FlowPlot
 		const ITextEngine* textEngine_ = nullptr;
 	};
 
-	inline PlotBuilder& plot(const std::filesystem::path& path)
+	inline PlotBuilder makePlot(const std::filesystem::path& path)
 	{
 		std::filesystem::path jsonPath = path;
 		if (jsonPath.extension() != ".json")
@@ -623,10 +629,17 @@ namespace FlowPlot
 		if (!parsedTemplate.IsObject())
 			throw std::runtime_error("plot: template root must be a JSON object");
 
-		static thread_local PlotBuilder builder;
+		PlotBuilder builder;
 		builder.template_.Swap(parsedTemplate);
 		builder.data_.clear();
 		builder.textEngine_ = nullptr;
+		return builder;
+	}
+
+	inline PlotBuilder& plot(const std::filesystem::path& path)
+	{
+		static thread_local PlotBuilder builder;
+		builder = makePlot(path);
 		return builder;
 	}
 
