@@ -331,7 +331,7 @@ struct boolColumn {
 		data.reserve(kInitialRowsCapacity);
 	}
 
-	std::vector<bool> data;
+	std::vector<std::uint8_t> data;
 	std::string name;
 };
 

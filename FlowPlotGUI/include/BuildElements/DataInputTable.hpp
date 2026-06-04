@@ -745,7 +745,7 @@ inline const DataInputDataRowDef kDataInputDataRow = {
 								break;
 							}
 							boolToggleParams toggleParams{};
-							toggleParams.value = dataset->boolColumns[column.typedColumnIndex].data[context.params.rowIndex];
+							toggleParams.value = dataset->boolColumns[column.typedColumnIndex].data[context.params.rowIndex] != 0U;
 							toggleParams.sizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_GROW(0)};
 							toggleParams.padding = Clay_Padding{.left = 6, .right = 6, .top = 2, .bottom = 2};
 							toggleParams.fontId = context.params.fontId;

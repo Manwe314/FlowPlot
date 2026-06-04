@@ -454,12 +454,13 @@ inline bool setBoolCell(
 	{
 		return false;
 	}
-	if (dataset.boolColumns[typedColumnIndex].data[rowIndex] == value)
+	const std::uint8_t storedValue = value ? 1U : 0U;
+	if (dataset.boolColumns[typedColumnIndex].data[rowIndex] == storedValue)
 	{
 		return false;
 	}
 
-	dataset.boolColumns[typedColumnIndex].data[rowIndex] = value;
+	dataset.boolColumns[typedColumnIndex].data[rowIndex] = storedValue;
 	markDatasetsChanged(guiState);
 	commitImmediateDocumentChangeIfNoDeferredEdit(guiState);
 	return true;

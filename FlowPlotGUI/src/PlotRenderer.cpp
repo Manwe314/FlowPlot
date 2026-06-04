@@ -509,7 +509,7 @@ DataViewBuildResult makeDataViews(const std::vector<RunningDataset>& datasets)
 			std::unique_ptr<bool[]> scratch = std::make_unique<bool[]>(column.data.size());
 			for (std::size_t i = 0; i < column.data.size(); ++i)
 			{
-				scratch[i] = column.data[i];
+				scratch[i] = column.data[i] != 0U;
 			}
 			const bool* scratchData = scratch.get();
 			result.boolScratch.push_back(std::move(scratch));
