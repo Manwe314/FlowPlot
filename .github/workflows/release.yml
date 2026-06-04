@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - "v*"
+      - "py-v*"
+      - "gui-v*"
 
 permissions:
   contents: write
@@ -11,6 +13,7 @@ permissions:
 jobs:
   python-wheels:
     name: Python wheels (${{ matrix.os }})
+    if: startsWith(github.ref_name, 'v') || startsWith(github.ref_name, 'py-v')
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -42,6 +45,7 @@ jobs:
 
   python-sdist:
     name: Python sdist
+    if: startsWith(github.ref_name, 'v') || startsWith(github.ref_name, 'py-v')
     runs-on: ubuntu-latest
 
     steps:
@@ -62,6 +66,7 @@ jobs:
 
   gui:
     name: FlowPlotGUI (${{ matrix.name }})
+    if: startsWith(github.ref_name, 'v') || startsWith(github.ref_name, 'gui-v')
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -81,7 +86,7 @@ jobs:
           - name: macOS
             os: macos-latest
             artifact_name: macos
-            cpack_generator: DragNDrop
+            cpack_generator: ZIP
 
     steps:
       - name: Checkout source
@@ -91,13 +96,27 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y glslang-tools libvulkan-dev libglfw3-dev
+          sudo apt-get install -y \
+            glslang-tools \
+            libvulkan-dev \
+            libglfw3-dev \
+            libgtk-3-dev \
+            libfreetype6-dev \
+            zlib1g-dev \
+            libpng-dev
 
       - name: Install macOS dependencies
         if: runner.os == 'macOS'
         run: |
           brew update
-          brew install glfw glslang vulkan-headers vulkan-loader
+          brew install glfw glslang freetype libpng zlib
+
+      - name: Install Vulkan SDK
+        if: runner.os == 'Windows'
+        uses: humbletim/install-vulkan-sdk@v1.2
+        with:
+          version: 1.4.309.0
+          cache: true
 
       - name: Install Windows dependencies
         if: runner.os == 'Windows'
@@ -145,6 +164,7 @@ jobs:
   github-release:
     name: Create GitHub Release
     needs: [python-wheels, python-sdist, gui]
+    if: always() && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled')
     runs-on: ubuntu-latest
 
     steps:
@@ -162,11 +182,12 @@ jobs:
   pypi:
     name: Publish Python package to PyPI
     needs: [python-wheels, python-sdist]
+    if: startsWith(github.ref_name, 'v') || startsWith(github.ref_name, 'py-v')
     runs-on: ubuntu-latest
 
     environment:
       name: pypi
-      url: https://pypi.org/p/flowplot
+      url: https://pypi.org/p/FlowPlotPy
 
     permissions:
       id-token: write
