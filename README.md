@@ -1,79 +1,50 @@
 # FlowPlot
 
-FlowPlot is a header-only plotting library that:
+FlowPlot is a prerelease plotting library for C++ and Python. It renders plots from reusable JSON templates and runtime data, with a small chaining API for changing template values, binding data, and writing images.
 
-- compiles a JSON template into an internal spec
-- binds runtime data (`withData("dataset.field", ...)`)
-- resolves layout/axes/layers into a render command stream
-- optionally rasterizes to PNG with the built-in CPU renderer
+The project is currently focused on scatter and histogram-style plots, template-driven layout, reusable visual defaults, and a GUI workflow for authoring templates.
 
-It supports scatter and histogram layers, automatic axis-domain inference, legends/titles, and pluggable text measurement/layout through `ITextEngine`.
-Text styling supports font family, numeric weight, and style (`normal`, `italic`, `oblique`).
+## What Is FlowPlot?
+
+FlowPlot is a plotting system built from a few programmatic parts rather than a single monolithic plotting call.
+
+At the core is a compiler pipeline. It takes a plot template plus runtime data, normalizes the template with defaults, binds the supplied data fields, resolves layout and axes, and outputs renderer-independent drawing commands. Those commands can be consumed directly by an application, or passed to FlowPlot's built-in CPU renderer to produce a final image such as a PNG.
+
+For C++, FlowPlot is header-only. You can include the modular headers or use one of the generated single-header `FlowPlot_Mega*.hpp` variants. For Python, FlowPlot is packaged as a native extension module built from the same C++ core.
+
+FlowPlot also comes with FlowPlotGUI, a desktop app for visually authoring templates. The GUI is intended to make templates reusable and composable: instead of hard-coding every plot from scratch, users can build pluggable template blocks and feed them new data from C++ or Python. As a prerelease, customization is still limited in places, but the scaffolding for that template-first workflow is already in the project.
 
 ## Quick Start
 
-### 1. Create a template (`ScatterTemplate.json`)
+### Python
 
-```json
-{
-  "version": "1.0",
-  "fonts": [
-    {
-      "family": "Inter",
-      "weight": 400,
-      "style": "normal",
-      "path": "/absolute/path/to/Inter-Regular.ttf"
-    },
-    {
-      "family": "Inter",
-      "weight": 700,
-      "style": "normal",
-      "path": "/absolute/path/to/Inter-Bold.ttf"
-    }
-  ],
-  "figure": {
-    "width": 1200,
-    "height": 800,
-    "title": {
-      "visible": true,
-      "text": "Scatter Plot",
-      "fontFamily": "Inter",
-      "fontWeight": 700,
-      "fontStyle": "normal"
-    }
-  },
-  "datasets": [
-    {
-      "name": "main",
-      "schema": {
-        "x": "number",
-        "y": "number"
-      }
-    }
-  ],
-  "panels": [
-    {
-      "layers": [
-        {
-          "type": "scatter",
-          "dataset": "main",
-          "mapping": {
-            "x": { "field": "x" },
-            "y": { "field": "y" }
-          }
-        }
-      ]
-    }
-  ]
-}
+Install the Python package:
+
+```bash
+pip install FlowPlotPy
 ```
 
-### 2. Render from C++
+Create or export a template, then bind data and write a PNG:
+
+```python
+import flowplot
+
+plot = flowplot.plot("./ScatterTemplate")
+plot.with_data("main.x", [1, 2, 3, 4, 5])
+plot.with_data("main.y", [3, 4, 1, 4, 6])
+plot.write_png("pythonPlot.png")
+```
+
+The Python package includes a default font, so basic PNG rendering works without manually registering one. NumPy arrays are recommended for larger data, but normal Python lists are supported.
+
+### C++
+
+Use the full single-header build when you want the simplest include path:
 
 ```cpp
 #define FLOW_PLOT_RENDERER
 #define FLOW_PLOT_IMPLEMENTATION
-#define FLOW_PLOT_DEFAULT_FONT_PATH "./FacultyGlyphic-Regular.ttf"
+#define FLOW_PLOT_DEFAULT_FONT_PATH "./Inter.ttf"
 #include "FlowPlot_Mega.hpp"
 
 #include <vector>
@@ -83,211 +54,77 @@ int main()
     std::vector<int> x{1, 2, 3, 4, 5};
     std::vector<int> y{3, 4, 1, 4, 6};
 
-    FlowPlot::plot("./ScatterTemplate.json")
+    FlowPlot::plot("./ScatterTemplate")
         .withData("main.x", x)
         .withData("main.y", y)
-        .writePng("./out.png");
+        .writePng("./CppPlot.png");
 }
 ```
 
-### 3. Compile
+Compile:
 
 ```bash
-g++ -std=c++20 -I. -IFlowPlot main.cpp -o plot
+g++ -std=c++20 -I. main.cpp -o plot
 ```
 
-## Public API
+For modular headers, include `FlowPlot/FlowPlot.hpp` and add the needed include paths for bundled dependencies.
 
-- `FlowPlot::plot(path)` loads template JSON (`.json` extension optional).
-- `PlotBuilder::set("path.to.prop", value)` mutates template JSON before compile.
-  - `value` supports: `int`, `float`, `double`, `bool`, `const char*`, `std::string`, `std::string_view`.
-- `PlotBuilder::setJsonRaw("path.to.prop", jsonText)` sets a property from raw JSON text (object/array/primitive).
-- `PlotBuilder::withData("dataset.field", std::span<const T>)`
-- `PlotBuilder::withData("dataset.field", const std::vector<T>&)`
-- `PlotBuilder::useTextEngine(engine)` injects a custom text engine.
-- `PlotBuilder::getCommands()` returns `RenderPlot` (resolved command stream).
-- `PlotBuilder::writePng(path)` (only when `FLOW_PLOT_RENDERER` is enabled).
-- `FlowPlot::registerFonts(textEngine, templateJsonText)` registers every root-level `fonts[]` entry with an `ITextEngine`.
-- `FlowPlot::getCompleteJson(templateJsonText, pretty = true)` (only when `FLOW_PLOT_COMPLETE_JSON` is enabled).
+## Tech Stack
 
-## Defines
+FlowPlot is written in modern C++ and uses:
 
-### Required in specific modes
+- RapidJSON for template parsing and normalization.
+- stb libraries for the built-in CPU image/font path.
+- pybind11, scikit-build-core, and CMake for the Python extension build.
+- FlowUi, Vulkan, GLFW, and Native File Dialog for FlowPlotGUI.
+- Doxygen for generated C++ API documentation.
 
-- `FLOW_PLOT_RENDERER`
-  - Enables renderer integration (`CpuRenderer`, `StbTextEngine`, `PlotBuilder::writePng`).
-  - Define before including headers (or pass as compiler define).
-
-- `FLOW_PLOT_IMPLEMENTATION`
-  - Required in exactly one translation unit if you use built-in stb implementations.
-  - Without this (and without external stb implementation), renderer builds can compile but will fail to link when stb symbols are needed.
-
-### Optional
-
-- `FLOW_PLOT_DEFAULT_FONT_PATH`
-  - String literal path to a default TTF file auto-registered by `StbTextEngine`.
-  - `PlotBuilder::writePng` and renderer-enabled `PlotBuilder::getCommands` auto-create a fallback `StbTextEngine` if none is set; this default font path makes that work out of the box.
-
-- `FLOW_PLOT_COMPLETE_JSON`
-  - Enables full-template normalization helper: `getCompleteJson(templateJsonText, pretty)`.
-
-- `FLOW_PLOT_STB_EXTERNAL_IMPLEMENTATION`
-  - Use when you provide stb implementations externally.
-  - Disables FlowPlot’s internal stb implementation emission.
-
-### Internal (do not set manually)
-
-Examples: `FLOW_PLOT_HPP_INCLUDED`, `FLOW_PLOT_RENDERER_HPP_INCLUDED`, `FLOW_PLOT_DEFINED_STBTT_IMPLEMENTATION`, etc.
-
-## Template Schema (Overview)
-
-Root object:
-
-- `version` (`"1.0"`)
-- `fonts` optional array of font variants
-- `figure`
-- `datasets`
-- `layout`
-- `panels`
-
-### `fonts`
-
-Optional root-level font manifest. Each entry describes one concrete font face:
-
-```json
-{
-  "family": "Inter",
-  "weight": 400,
-  "style": "normal",
-  "path": "/absolute/path/to/Inter-Regular.ttf"
-}
-```
-
-- `family`: family name referenced by text specs.
-- `weight`: numeric font weight, usually `100..900`.
-- `style`: `normal`, `italic`, or `oblique`.
-- `path`: absolute path to a `.ttf`/`.ttc` font file.
-
-The built-in fallback `StbTextEngine` automatically registers these entries for `writePng()` and renderer-enabled `getCommands()`. Custom text engines can opt in by calling `FlowPlot::registerFonts(engine, templateJsonText)`.
-
-### `figure`
-
-Includes width/height/dpi/background/padding/title/legends.
-
-### `datasets`
-
-Each dataset has:
-
-- `name`
-- `schema` map where values are `number`, `string`, or `boolean`
-
-Runtime data binding uses:
-
-- `withData("datasetName.fieldName", data)`
-
-### `panels`
-
-Each panel has:
-
-- style/frame/title
-- axes: `xAxis`, `yAxis`, `xSecondary`, `ySecondary`
-- `layers`
-
-### `layers`
-
-Common layer fields:
-
-- `type`: `scatter` or `histogram`
-- `dataset`: dataset name
-- `axisData`: `{ "x": "primary|secondary|null", "y": "primary|secondary|null" }`
-- `mapping`, `style`, `stats`, `config`
-
-Scatter mapping (important fields):
-
-- `mapping.x.field` (required)
-- `mapping.y.field` (required)
-- optional: `mapping.color.field`, `mapping.size.field`, `mapping.label.field`
-
-Histogram mapping (important fields):
-
-- `mapping.data.field` (required)
-- `mapping.data.axis`: `"x"` or `"y"` (which axis receives input data)
-- optional color field/mapping
-
-Notes:
-
-- If no layer contributes data to an axis and no explicit `min/max` is provided, axis domain falls back to `0..1`.
-- You must define panels/layers/mappings if you want automatic domain inference from data.
-
-## Renderer Pipeline
-
-High-level flow:
-
-1. Template JSON -> compiled spec
-2. Spec + data views -> bound IR
-3. Bound IR + text metrics -> resolved IR
-4. Resolved IR -> `RenderPlot` command stream
-5. `CpuRenderer` rasterizes commands to RGBA8 image / PNG
-
-Command variants include:
-
-- `BoxCommand`
-- `PolylineCommand`
-- `TextCommand`
-- `MarkersCommand`
-- clip stack commands (`PushClipRectCommand`, `PopClipRectCommand`)
-
-## Text Engine Pluggability
-
-`ITextEngine` is pluggable for text metrics/layout:
-
-- `registerFont(...)`
-- `hasFont(...)`
-- `measureText(...)`
-- `layoutText(...)`
-
-Built-in `StbTextEngine` provides UTF-8 layout and glyph bitmap raster support used by the CPU renderer.
-
-Important current behavior:
-
-- `resolvePlotIR` needs a text engine for auto-sized text boxes.
-- `PlotBuilder::writePng` and renderer-enabled `PlotBuilder::getCommands` auto-fall back to `StbTextEngine` when no engine is explicitly set.
-- The fallback `StbTextEngine` automatically registers root `fonts[]` entries before resolving text.
-- If no default font is available, `writePng` throws with guidance (`useTextEngine(...)` or set `FLOW_PLOT_DEFAULT_FONT_PATH`).
-- Font lookup uses `family + weight + style`, with fallback to normal style/default weight/default family where possible.
-- Non-`StbTextEngine` custom engines can drive measurement/layout, but glyph rasterization in the built-in renderer is currently specialized for `StbTextEngine`.
-
-## Header Options
-
-You can use modular headers (`FlowPlot/FlowPlot.hpp`) or one of four generated amalgamated headers.
-
-Regenerate all amalgamated variants with:
+The C++ library can be used as modular headers or as generated amalgamated headers. Regenerate the mega headers with:
 
 ```bash
 python3 tools/generate_flowplot_mega.py
 ```
 
-Generated outputs:
+Available generated headers:
 
-- `FlowPlot_Mega_Core.hpp`
-  - Inlines FlowPlot headers only.
-  - Leaves RapidJSON and stb external (`-IFlowPlot` needed for bundled deps).
-- `FlowPlot_Mega_Stb.hpp`
-  - Inlines FlowPlot + stb headers.
-  - Leaves RapidJSON external (`-IFlowPlot` needed for bundled deps).
-- `FlowPlot_Mega_Json.hpp`
-  - Inlines FlowPlot + used RapidJSON subset.
-  - Leaves stb external (`-IFlowPlot` needed only if renderer/stb paths are used).
-- `FlowPlot_Mega.hpp`
-  - Inlines FlowPlot + used RapidJSON subset + stb.
-  - Fully self-contained single header (copy one file and include it).
+- `FlowPlot_Mega_Core.hpp`: FlowPlot headers only.
+- `FlowPlot_Mega_Stb.hpp`: FlowPlot plus stb headers.
+- `FlowPlot_Mega_Json.hpp`: FlowPlot plus the used RapidJSON subset.
+- `FlowPlot_Mega.hpp`: FlowPlot plus RapidJSON subset plus stb, intended as the most self-contained option.
 
-All variants support the same feature macros and runtime API.
+## Template Overview
 
-## JSON Backend
+FlowPlot templates are JSON documents that describe the static structure of a plot. Runtime code supplies data and may override selected template properties before rendering.
 
-FlowPlot uses RapidJSON. The JSON-inlined mega variants include only the RapidJSON subset reachable from FlowPlot's actual include usage.
+A typical template contains:
 
-## Documentation Status
+- `version`: template format version.
+- `fonts`: optional font manifest for C++ rendering.
+- `figure`: image size, background, padding, title, and figure-level layout.
+- `datasets`: named dataset schemas.
+- `panels`: plot panels with axes, titles, styles, and layers.
+- `layers`: visual layers such as scatter or histogram mappings.
 
-This is a temporary README. FlowPlot will get full documentation and a pre-v1.0.0 release soon.
+Runtime data is bound by dataset and field name:
+
+```cpp
+plot.withData("main.x", xValues);
+plot.withData("main.y", yValues);
+```
+
+```python
+plot.with_data("main.x", x_values)
+plot.with_data("main.y", y_values)
+```
+
+Templates are meant to be reusable. You can author a template once, then use it with different data or small property overrides:
+
+```cpp
+FlowPlot::plot("./ScatterTemplate")
+    .set("figure.title.text", "Experiment 12")
+    .withData("main.x", x)
+    .withData("main.y", y)
+    .writePng("experiment-12.png");
+```
+
+Detailed API, schema, packaging, and GUI documentation will live in separate docs as the prerelease stabilizes.

@@ -119,25 +119,58 @@ namespace FlowPlot
 		float lineGap = 0.0f;
 	};
 
+	/**
+	 * @brief Interface used by FlowPlot to register, measure, and lay out fonts.
+	 *
+	 * Applications that render plots to commands or images can provide an implementation
+	 * with PlotBuilder::useTextEngine. The renderer-specific STB engine is one such
+	 * implementation when FLOW_PLOT_RENDERER is enabled.
+	 */
 	class ITextEngine
 	{
 	public:
 		virtual ~ITextEngine() = default;
+
+		/**
+		 * @brief Register a TrueType font face under a FlowPlot font family.
+		 * @param familyName Family name used by templates, for example "Default".
+		 * @param ttfPath Path to a .ttf file.
+		 * @param weight Numeric font weight, normally 400 for regular or 700 for bold.
+		 * @param style Font style for this face.
+		 */
 		virtual void registerFont(
 			std::string_view familyName,
 			const std::filesystem::path& ttfPath,
 			std::uint16_t weight = 400,
 			FontStyle style = FontStyle::Normal) = 0;
+
+		/**
+		 * @brief Return whether a registered face exists for the requested font attributes.
+		 */
 		virtual bool hasFont(
 			std::string_view familyName,
 			std::uint16_t weight = 400,
 			FontStyle style = FontStyle::Normal) const = 0;
+
+		/**
+		 * @brief Measure text without producing glyph positions.
+		 */
 		virtual TextMeasurement measureText(
 			std::string_view familyName,
 			std::uint16_t weight,
 			FontStyle style,
 			float fontSizePx,
 			std::string_view text) const = 0;
+
+		/**
+		 * @brief Lay out text and return glyph placements for rendering.
+		 * @param familyName Font family requested by the template.
+		 * @param weight Numeric font weight requested by the template.
+		 * @param style Font style requested by the template.
+		 * @param fontSizePx Font size in pixels.
+		 * @param text UTF-8 text to lay out.
+		 * @param maxWidth Maximum layout width in pixels, or infinity for unbounded text.
+		 */
 		virtual LaidOutText layoutText(
 			std::string_view familyName,
 			std::uint16_t weight,
@@ -222,6 +255,10 @@ namespace FlowPlot
 
 namespace FlowPlot
 {
+	/**
+	 * @brief Parse a JSON/template font style name into a FlowPlot font style.
+	 * @throws std::invalid_argument if the style is not normal, italic, or oblique.
+	 */
 	inline FontStyle parseFontStyle(std::string_view rawStyle)
 	{
 		std::string style;
@@ -244,6 +281,9 @@ namespace FlowPlot
 		throw std::invalid_argument("parseFontStyle: unsupported font style '" + std::string(rawStyle) + "'");
 	}
 
+	/**
+	 * @brief Return the JSON/template spelling for a FlowPlot font style.
+	 */
 	inline const char* fontStyleName(FontStyle style) noexcept
 	{
 		switch (style)
@@ -258,6 +298,12 @@ namespace FlowPlot
 		}
 	}
 
+	/**
+	 * @brief Register every font listed in a parsed FlowPlot template.
+	 * @param textEngine Text engine that will receive the registered font faces.
+	 * @param templateJson Parsed template JSON object containing an optional fonts array.
+	 * @throws std::runtime_error if the fonts array is malformed.
+	 */
 	inline void registerFonts(ITextEngine& textEngine, const rapidjson::Value& templateJson)
 	{
 		if (!templateJson.IsObject())
@@ -308,6 +354,10 @@ namespace FlowPlot
 		}
 	}
 
+	/**
+	 * @brief Parse a template JSON string and register every font listed in it.
+	 * @throws std::runtime_error if the JSON cannot be parsed or the fonts array is malformed.
+	 */
 	inline void registerFonts(ITextEngine& textEngine, std::string_view templateJsonText)
 	{
 		rapidjson::Document templateJson;
@@ -331,6 +381,15 @@ namespace FlowPlot
 		friend PlotBuilder makePlot(const std::filesystem::path& path);
 		friend PlotBuilder& plot(const std::filesystem::path& path);
 
+		/**
+		 * @brief Set one template property to a scalar value.
+		 *
+		 * Property paths use dotted JSON paths and optional array indexes, for example
+		 * "figure.width" or "panels[0].axes.x.label".
+		 *
+		 * @return This builder, so calls can be chained.
+		 * @throws std::invalid_argument if the property path is empty or invalid.
+		 */
 		PlotBuilder& set(std::string_view property, value valueArg)
 		{
 			if (property.empty())
@@ -379,6 +438,15 @@ namespace FlowPlot
 			return setJsonValue(property, std::move(normalizedValue));
 		}
 
+		/**
+		 * @brief Set one template property from a raw JSON value.
+		 *
+		 * Use this for arrays or objects that cannot be represented by FlowPlot::value.
+		 *
+		 * @return This builder, so calls can be chained.
+		 * @throws std::invalid_argument if the property path is empty or invalid.
+		 * @throws std::runtime_error if jsonText is not a valid JSON value.
+		 */
 		PlotBuilder& setJsonRaw(std::string_view property, std::string_view jsonText)
 		{
 			if (property.empty())
@@ -542,6 +610,15 @@ namespace FlowPlot
 
 	public:
 
+		/**
+		 * @brief Bind an external contiguous data span to a template dataset field.
+		 *
+		 * datasetField must use the form "dataset.field". The caller owns the data and
+		 * must keep it alive until getCommands() or writePng() has finished.
+		 *
+		 * @return This builder, so calls can be chained.
+		 * @throws std::invalid_argument if the field path or element type is unsupported.
+		 */
 		template<typename T>
 		PlotBuilder& withData(std::string_view datasetField, std::span<const T> data)
 		{
@@ -573,26 +650,56 @@ namespace FlowPlot
 			return *this;
 		}
 
+		/**
+		 * @brief Bind a std::vector to a template dataset field.
+		 *
+		 * This is a convenience overload for withData(datasetField, std::span<const T>).
+		 * The vector must stay alive until getCommands() or writePng() has finished.
+		 */
 		template<typename T, typename Allocator>
 		PlotBuilder& withData(std::string_view datasetField, const std::vector<T, Allocator>& data)
 		{
 			return withData<T>(datasetField, std::span<const T>(data.data(), data.size()));
 		}
 
+		/**
+		 * @brief Set the text engine used for font registration, text measurement, and rendering.
+		 *
+		 * The text engine is referenced, not copied, and must outlive calls to getCommands()
+		 * or writePng().
+		 *
+		 * @return This builder, so calls can be chained.
+		 */
 		PlotBuilder& useTextEngine(const ITextEngine& textEngine)
 		{
 			textEngine_ = &textEngine;
 			return *this;
 		}
 
+		/**
+		 * @brief Register this template's fonts into the supplied text engine.
+		 *
+		 * This is useful when the application owns the text engine and wants FlowPlot to
+		 * load the template's fonts before rendering.
+		 */
 		void registerTemplateFonts(ITextEngine& textEngine) const
 		{
 			registerFonts(textEngine, template_);
 		}
 
+		/**
+		 * @brief Compile the current template and bound data into renderer-independent commands.
+		 * @return A RenderPlot containing plot dimensions, background, and drawing commands.
+		 * @throws std::runtime_error if the template, data bindings, or text setup are invalid.
+		 */
 		RenderPlot getCommands() const;
 
 #ifdef FLOW_PLOT_RENDERER
+		/**
+		 * @brief Render the current plot directly to a PNG file.
+		 * @param outputPath Destination .png path.
+		 * @throws std::runtime_error if rendering, font setup, or file writing fails.
+		 */
 		void writePng(const std::filesystem::path& outputPath) const;
 #endif
 
@@ -602,6 +709,14 @@ namespace FlowPlot
 		const ITextEngine* textEngine_ = nullptr;
 	};
 
+	/**
+	 * @brief Load a JSON template and return an independent PlotBuilder by value.
+	 *
+	 * If path has no .json extension, ".json" is appended. Use this form when you want
+	 * multiple independent builders or when wrapping FlowPlot from another language.
+	 *
+	 * @throws std::runtime_error if the template file cannot be opened or parsed.
+	 */
 	inline PlotBuilder makePlot(const std::filesystem::path& path)
 	{
 		std::filesystem::path jsonPath = path;
@@ -636,6 +751,14 @@ namespace FlowPlot
 		return builder;
 	}
 
+	/**
+	 * @brief Load a JSON template into a thread-local builder and return it by reference.
+	 *
+	 * This supports compact chaining such as FlowPlot::plot("Scatter").withData(...).
+	 * Each call replaces the previous thread-local builder for the current thread.
+	 *
+	 * @throws std::runtime_error if the template file cannot be opened or parsed.
+	 */
 	inline PlotBuilder& plot(const std::filesystem::path& path)
 	{
 		static thread_local PlotBuilder builder;
@@ -655,6 +778,13 @@ namespace FlowPlot
 #endif
 
 #ifdef FLOW_PLOT_COMPLETE_JSON
+	/**
+	 * @brief Expand a template JSON string with FlowPlot defaults.
+	 * @param templateJsonText Template JSON document.
+	 * @param pretty Whether to format the returned JSON with indentation.
+	 * @return A complete JSON template string with defaults filled in.
+	 * @throws std::runtime_error if the input JSON cannot be parsed.
+	 */
 	inline std::string getCompleteJson(std::string_view templateJsonText, bool pretty = true)
 	{
 		rapidjson::Document templateJson;

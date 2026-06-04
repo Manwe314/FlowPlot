@@ -1,0 +1,31 @@
+PROJECT_NAME           = "FlowPlot"
+PROJECT_BRIEF          = "Header-only C++ plotting library"
+OUTPUT_DIRECTORY       = docs
+
+INPUT                  = README.md FlowPlot/FlowPlot.hpp
+USE_MDFILE_AS_MAINPAGE = README.md
+FILE_PATTERNS          = *.hpp
+RECURSIVE              = NO
+
+EXTRACT_ALL            = NO
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = NO
+HIDE_UNDOC_MEMBERS     = YES
+HIDE_UNDOC_CLASSES     = YES
+
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+GENERATE_XML           = NO
+
+MARKDOWN_SUPPORT       = YES
+AUTOLINK_SUPPORT       = YES
+JAVADOC_AUTOBRIEF      = YES
+QT_AUTOBRIEF           = NO
+
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = YES
+PREDEFINED             = FLOW_PLOT_RENDERER FLOW_PLOT_COMPLETE_JSON
+
+QUIET                  = NO
+WARN_IF_UNDOCUMENTED   = NO
+WARN_AS_ERROR          = NO

@@ -79,7 +79,7 @@ jobs:
             cpack_generator: ZIP
 
           - name: Linux
-            os: ubuntu-latest
+            os: ubuntu-22.04
             artifact_name: linux
             cpack_generator: TGZ
 
