@@ -490,7 +490,7 @@ namespace FlowPlot
 			throw std::runtime_error(
 				"StbTextEngine: no registered font for family '" + std::string(familyName) +
 				"', weight " + std::to_string(weight) +
-				", style '" + fontStyleName(style) +
+				", style '" + FlowInternal::fontStyleName(style) +
 				"', and no registered 'Default' fallback");
 		}
 

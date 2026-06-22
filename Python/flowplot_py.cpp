@@ -163,7 +163,7 @@ namespace
 		out["font_family"] = command.fontFamily;
 		out["font_size"] = command.fontSize;
 		out["font_weight"] = command.fontWeight;
-		out["font_style"] = FlowPlot::fontStyleName(command.fontStyle);
+		out["font_style"] = FlowInternal::fontStyleName(command.fontStyle);
 		out["h_align"] = horizontalAlignName(command.hAlign);
 		out["v_align"] = verticalAlignName(command.vAlign);
 		out["clip_to_box"] = command.clipToBox;

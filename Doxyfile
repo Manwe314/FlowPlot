@@ -1,11 +1,11 @@
 PROJECT_NAME           = "FlowPlot"
-PROJECT_BRIEF          = "Header-only C++ plotting library"
-OUTPUT_DIRECTORY       = docs
+PROJECT_BRIEF          = "Template-driven plotting for C++ and Python"
+OUTPUT_DIRECTORY       = docs/build
 
-INPUT                  = README.md FlowPlot/FlowPlot.hpp
-USE_MDFILE_AS_MAINPAGE = README.md
-FILE_PATTERNS          = *.hpp
-RECURSIVE              = NO
+INPUT                  = docs FlowPlot/FlowPlot.hpp
+USE_MDFILE_AS_MAINPAGE = docs/index.md
+FILE_PATTERNS          = *.md *.hpp
+RECURSIVE              = YES
 
 EXTRACT_ALL            = NO
 EXTRACT_PRIVATE        = NO

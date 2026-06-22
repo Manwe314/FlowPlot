@@ -811,7 +811,7 @@ std::optional<FlowPlot::FontStyle> tryParseFontStyle(std::string_view rawStyle)
 {
 	try
 	{
-		return FlowPlot::parseFontStyle(rawStyle);
+		return FlowInternal::parseFontStyle(rawStyle);
 	}
 	catch (...)
 	{
@@ -881,7 +881,7 @@ JsonValue writeFonts(
 		JsonValue font(rapidjson::kObjectType);
 		addString(font, "family", match->family, allocator);
 		addUint(font, "weight", match->weight, allocator);
-		addString(font, "style", FlowPlot::fontStyleName(match->style), allocator);
+		addString(font, "style", FlowInternal::fontStyleName(match->style), allocator);
 		addString(font, "path", std::filesystem::absolute(match->path).string(), allocator);
 		fonts.PushBack(std::move(font), allocator);
 	}

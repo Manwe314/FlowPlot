@@ -69,6 +69,23 @@ g++ -std=c++20 -I. main.cpp -o plot
 
 For modular headers, include `FlowPlot/FlowPlot.hpp` and add the needed include paths for bundled dependencies.
 
+### Templates
+
+FlowPlotGUI is the visual template editor for FlowPlot. While templates are JSON files and can be written by hand, the library is designed with the GUI workflow in mind: build the layout and styling visually, export the completed template, then bind runtime data to it from C++ or Python. This keeps application code focused on data while the template owns the plot's reusable presentation.
+
+Download the GUI package for your platform:
+
+| Platform | Package | Download | Installation / use |
+| --- | --- | --- | --- |
+| 🍎 **macOS** | ZIP archive | [Download for macOS](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.6/FlowPlotGUI-0.1.0-Darwin-Runtime.zip) | Unzip the archive, then run the included application. |
+| 🪟 **Windows** | Installer (recommended) | [Download installer](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.6/FlowPlotGUI-0.1.0-Windows.exe) | Run the installer. |
+| 🪟 **Windows** | Runtime ZIP | [Download ZIP](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.6/FlowPlotGUI-0.1.0-Windows-Runtime.zip) | Unzip and run the included executable. |
+| 🐧 **Linux** | AppImage (recommended) | [Download AppImage](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.6/FlowPlotGUI-0.9.6-x86_64.AppImage) | Make it executable, then run it. |
+| 🐧 **Linux** | Debian package | [Download `.deb`](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.6/flowplotgui_0.1.0_amd64.deb) | Install with your distribution's package installer. |
+| 🐧 **Linux** | Tarball | [Download `.tar.gz`](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.6/FlowPlotGUI-0.1.0-Linux.tar.gz) | Extract the archive and run the included executable. |
+
+See the [FlowPlotGUI usage guide](docs/gui-usage.md) for the template-authoring workflow. Simple default templates will also be provided for common cases, so using the GUI will not be required for every plot.
+
 ## Tech Stack
 
 FlowPlot is written in modern C++ and uses:

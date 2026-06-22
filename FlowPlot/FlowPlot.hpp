@@ -122,9 +122,14 @@ namespace FlowPlot
 	/**
 	 * @brief Interface used by FlowPlot to register, measure, and lay out fonts.
 	 *
-	 * Applications that render plots to commands or images can provide an implementation
-	 * with PlotBuilder::useTextEngine. The renderer-specific STB engine is one such
-	 * implementation when FLOW_PLOT_RENDERER is enabled.
+	 * FlowPlot resolves text sizes while compiling a template and stores the resulting
+	 * glyph positions in its render commands. Applications that need their own text
+	 * backend can supply an implementation with PlotBuilder::useTextEngine.
+	 *
+	 * When FLOW_PLOT_RENDERER is enabled, FlowPlot provides StbTextEngine and creates a
+	 * temporary instance automatically when no engine was supplied. It registers the
+	 * template's fonts before rendering. Supply an engine when font state must be shared,
+	 * cached, or implemented by another rendering backend.
 	 */
 	class ITextEngine
 	{
@@ -133,6 +138,9 @@ namespace FlowPlot
 
 		/**
 		 * @brief Register a TrueType font face under a FlowPlot font family.
+		 *
+		 * FlowPlot calls this for every entry in a template's @c fonts array. Implementations
+		 * should retain enough font data to serve later measurement and layout requests.
 		 * @param familyName Family name used by templates, for example "Default".
 		 * @param ttfPath Path to a .ttf file.
 		 * @param weight Numeric font weight, normally 400 for regular or 700 for bold.
@@ -146,6 +154,10 @@ namespace FlowPlot
 
 		/**
 		 * @brief Return whether a registered face exists for the requested font attributes.
+		 *
+		 * This query lets callers inspect an engine before a template is compiled. The exact
+		 * fallback policy is implementation-defined; StbTextEngine falls back to its
+		 * @c Default regular face when an exact match is unavailable.
 		 */
 		virtual bool hasFont(
 			std::string_view familyName,
@@ -154,6 +166,9 @@ namespace FlowPlot
 
 		/**
 		 * @brief Measure text without producing glyph positions.
+		 *
+		 * FlowPlot uses these metrics when resolving automatically sized text boxes. Return
+		 * dimensions in the same pixel coordinate system used by @ref layoutText.
 		 */
 		virtual TextMeasurement measureText(
 			std::string_view familyName,
@@ -164,6 +179,9 @@ namespace FlowPlot
 
 		/**
 		 * @brief Lay out text and return glyph placements for rendering.
+		 *
+		 * Each placement is relative to the text origin. FlowPlot consumes the returned
+		 * metrics and placements directly when it constructs a TextCommand.
 		 * @param familyName Font family requested by the template.
 		 * @param weight Numeric font weight requested by the template.
 		 * @param style Font style requested by the template.
@@ -246,20 +264,11 @@ namespace FlowPlot
 		std::vector<RenderCommand> commands{};
 	};
 
-	inline FontStyle parseFontStyle(std::string_view rawStyle);
-	inline const char* fontStyleName(FontStyle style) noexcept;
-
 } // namespace FlowPlot
 
-#include "FlowPlot_Internal.hpp"
-
-namespace FlowPlot
+namespace FlowInternal
 {
-	/**
-	 * @brief Parse a JSON/template font style name into a FlowPlot font style.
-	 * @throws std::invalid_argument if the style is not normal, italic, or oblique.
-	 */
-	inline FontStyle parseFontStyle(std::string_view rawStyle)
+	inline FlowPlot::FontStyle parseFontStyle(std::string_view rawStyle)
 	{
 		std::string style;
 		style.reserve(rawStyle.size());
@@ -272,34 +281,47 @@ namespace FlowPlot
 		}
 
 		if (style.empty() || style == "normal")
-			return FontStyle::Normal;
+			return FlowPlot::FontStyle::Normal;
 		if (style == "italic")
-			return FontStyle::Italic;
+			return FlowPlot::FontStyle::Italic;
 		if (style == "oblique")
-			return FontStyle::Oblique;
+			return FlowPlot::FontStyle::Oblique;
 
 		throw std::invalid_argument("parseFontStyle: unsupported font style '" + std::string(rawStyle) + "'");
 	}
 
-	/**
-	 * @brief Return the JSON/template spelling for a FlowPlot font style.
-	 */
-	inline const char* fontStyleName(FontStyle style) noexcept
+	inline const char* fontStyleName(FlowPlot::FontStyle style) noexcept
 	{
 		switch (style)
 		{
-		case FontStyle::Italic:
+		case FlowPlot::FontStyle::Italic:
 			return "italic";
-		case FontStyle::Oblique:
+		case FlowPlot::FontStyle::Oblique:
 			return "oblique";
-		case FontStyle::Normal:
+		case FlowPlot::FontStyle::Normal:
 		default:
 			return "normal";
 		}
 	}
+} // namespace FlowInternal
 
+#include "FlowPlot_Internal.hpp"
+
+namespace FlowPlot
+{
 	/**
 	 * @brief Register every font listed in a parsed FlowPlot template.
+	 *
+	 * Reads the optional top-level @c fonts array and registers each face with
+	 * @p textEngine. This is useful when an application manages an ITextEngine itself
+	 * rather than using the renderer-provided default.
+	 *
+	 * @code{.cpp}
+	 * FlowPlot::StbTextEngine fonts;
+	 * rapidjson::Document templateJson;
+	 * templateJson.Parse(R"({"fonts":[]})");
+	 * FlowPlot::registerFonts(fonts, templateJson);
+	 * @endcode
 	 * @param textEngine Text engine that will receive the registered font faces.
 	 * @param templateJson Parsed template JSON object containing an optional fonts array.
 	 * @throws std::runtime_error if the fonts array is malformed.
@@ -350,12 +372,15 @@ namespace FlowPlot
 				family,
 				std::filesystem::path(fontPath),
 				static_cast<std::uint16_t>(rawWeight),
-				parseFontStyle(style));
+				FlowInternal::parseFontStyle(style));
 		}
 	}
 
 	/**
 	 * @brief Parse a template JSON string and register every font listed in it.
+	 *
+	 * This overload parses @p templateJsonText and then behaves exactly like the
+	 * RapidJSON-value overload. Use it when the template has not already been parsed.
 	 * @throws std::runtime_error if the JSON cannot be parsed or the fonts array is malformed.
 	 */
 	inline void registerFonts(ITextEngine& textEngine, std::string_view templateJsonText)
@@ -386,6 +411,14 @@ namespace FlowPlot
 		 *
 		 * Property paths use dotted JSON paths and optional array indexes, for example
 		 * "figure.width" or "panels[0].axes.x.label".
+		 * The value is copied into the builder's template, so string arguments do not need
+		 * to outlive this call.
+		 *
+		 * @code{.cpp}
+		 * auto builder = FlowPlot::plot("Scatter")
+		 *     .set("figure.width", 1280)
+		 *     .set("panels[0].title.text", "Quarterly results");
+		 * @endcode
 		 *
 		 * @return This builder, so calls can be chained.
 		 * @throws std::invalid_argument if the property path is empty or invalid.
@@ -442,6 +475,12 @@ namespace FlowPlot
 		 * @brief Set one template property from a raw JSON value.
 		 *
 		 * Use this for arrays or objects that cannot be represented by FlowPlot::value.
+		 * FlowPlot parses and copies the value into its template; @p jsonText may therefore
+		 * be a temporary string.
+		 *
+		 * @code{.cpp}
+		 * builder.setJsonRaw("panels[0].axes.x.range", "[0.0, 100.0]");
+		 * @endcode
 		 *
 		 * @return This builder, so calls can be chained.
 		 * @throws std::invalid_argument if the property path is empty or invalid.
@@ -614,7 +653,26 @@ namespace FlowPlot
 		 * @brief Bind an external contiguous data span to a template dataset field.
 		 *
 		 * datasetField must use the form "dataset.field". The caller owns the data and
-		 * must keep it alive until getCommands() or writePng() has finished.
+		 * FlowPlot stores only a non-owning view of it.
+		 *
+		 * @warning @p data must remain valid and must not be reallocated until
+		 * getCommands() or writePng() has completed. Destroying, resizing, or moving its
+		 * backing storage first leaves the builder with a dangling view and causes invalid
+		 * plot execution.
+		 *
+		 * @code{.cpp}
+		 * std::vector<double> x{1.0, 2.0, 3.0};
+		 * auto builder = FlowPlot::makePlot("Scatter").withData("series.x", x);
+		 * FlowPlot::RenderPlot commands = builder.getCommands(); // x is still alive
+		 * @endcode
+		 *
+		 * or more commonly:
+		 *
+		 * @code{.cpp}
+		 * std::vector<double> x{1.0, 2.0, 3.0};
+		 * std::vector<double> y{4.0, 5.0, 6.0};
+		 * FlowPlot::plot("Scatter").withData("main.x", x).withData("main.y", y).writePng("out.png");
+		 * @endcode
 		 *
 		 * @return This builder, so calls can be chained.
 		 * @throws std::invalid_argument if the field path or element type is unsupported.
@@ -654,7 +712,11 @@ namespace FlowPlot
 		 * @brief Bind a std::vector to a template dataset field.
 		 *
 		 * This is a convenience overload for withData(datasetField, std::span<const T>).
-		 * The vector must stay alive until getCommands() or writePng() has finished.
+		 * It does not copy the vector's elements.
+		 *
+		 * @warning @p data must outlive getCommands() or writePng(), and it must not be
+		 * resized or otherwise reallocated before that operation completes. The builder
+		 * retains only @c data.data() and its element count.
 		 */
 		template<typename T, typename Allocator>
 		PlotBuilder& withData(std::string_view datasetField, const std::vector<T, Allocator>& data)
@@ -666,7 +728,21 @@ namespace FlowPlot
 		 * @brief Set the text engine used for font registration, text measurement, and rendering.
 		 *
 		 * The text engine is referenced, not copied, and must outlive calls to getCommands()
-		 * or writePng().
+		 * or writePng(). With FLOW_PLOT_RENDERER enabled, omitting this call selects a
+		 * temporary default StbTextEngine and automatically registers template fonts.
+		 * Provide an engine explicitly to reuse registered fonts or use a custom backend.
+		 *
+		 * @warning @p textEngine must remain alive until getCommands() or writePng() has
+		 * completed. The builder stores a non-owning pointer; destroying the engine first
+		 * leaves it dangling and causes invalid plot execution.
+		 *
+		 * @note In most cases, the default StbTextEngine is sufficient.
+		 *
+		 * @code{.cpp}
+		 * FlowPlot::StbTextEngine fonts{"/path/to/default.ttf"};
+		 * auto builder = FlowPlot::makePlot("Report").useTextEngine(fonts);
+		 * auto commands = builder.getCommands();
+		 * @endcode
 		 *
 		 * @return This builder, so calls can be chained.
 		 */
@@ -680,7 +756,8 @@ namespace FlowPlot
 		 * @brief Register this template's fonts into the supplied text engine.
 		 *
 		 * This is useful when the application owns the text engine and wants FlowPlot to
-		 * load the template's fonts before rendering.
+		 * load the template's fonts before rendering. It is not necessary when using the
+		 * default renderer text engine, because that registration happens automatically.
 		 */
 		void registerTemplateFonts(ITextEngine& textEngine) const
 		{
@@ -689,6 +766,10 @@ namespace FlowPlot
 
 		/**
 		 * @brief Compile the current template and bound data into renderer-independent commands.
+		 *
+		 * This resolves template defaults, data bindings, plot geometry, and text layout.
+		 * Use the returned commands with a custom renderer, or call writePng() when the
+		 * built-in renderer is enabled.
 		 * @return A RenderPlot containing plot dimensions, background, and drawing commands.
 		 * @throws std::runtime_error if the template, data bindings, or text setup are invalid.
 		 */
@@ -697,6 +778,10 @@ namespace FlowPlot
 #ifdef FLOW_PLOT_RENDERER
 		/**
 		 * @brief Render the current plot directly to a PNG file.
+		 *
+		 * This performs the same compilation as getCommands() and rasterizes the result with
+		 * the built-in renderer. If no text engine was supplied, it uses the temporary
+		 * StbTextEngine described in @ref ITextEngine.
 		 * @param outputPath Destination .png path.
 		 * @throws std::runtime_error if rendering, font setup, or file writing fails.
 		 */
@@ -713,7 +798,16 @@ namespace FlowPlot
 	 * @brief Load a JSON template and return an independent PlotBuilder by value.
 	 *
 	 * If path has no .json extension, ".json" is appended. Use this form when you want
-	 * multiple independent builders or when wrapping FlowPlot from another language.
+	 * multiple independent builders, need to keep a builder beyond another plot request,
+	 * or wrap FlowPlot from another language. The returned builder owns its template and
+	 * can be moved or stored normally.
+	 *
+	 * @code{.cpp}
+	 * auto left = FlowPlot::makePlot("Scatter");
+	 * auto right = FlowPlot::makePlot("Histogram");
+	 * left.withData("series.x", leftData);
+	 * right.withData("bins.values", rightData);
+	 * @endcode
 	 *
 	 * @throws std::runtime_error if the template file cannot be opened or parsed.
 	 */
@@ -755,7 +849,20 @@ namespace FlowPlot
 	 * @brief Load a JSON template into a thread-local builder and return it by reference.
 	 *
 	 * This supports compact chaining such as FlowPlot::plot("Scatter").withData(...).
-	 * Each call replaces the previous thread-local builder for the current thread.
+	 * Each call replaces the previous thread-local builder for the current thread. It is
+	 * convenient for one immediate build operation, but references and pointers to a
+	 * previous result become invalid after the next plot() call on that thread.
+	 *
+	 * The builder is thread-local: different threads receive different builders and do not
+	 * overwrite each other. Use makePlot() instead when two builders must coexist on the
+	 * same thread, when a builder must be retained, or when explicit ownership is clearer.
+	 *
+	 * @code{.cpp}
+	 * const auto commands = FlowPlot::plot("Scatter")
+	 *     .withData("series.x", x)
+	 *     .withData("series.y", y)
+	 *     .getCommands();
+	 * @endcode
 	 *
 	 * @throws std::runtime_error if the template file cannot be opened or parsed.
 	 */
@@ -780,6 +887,14 @@ namespace FlowPlot
 #ifdef FLOW_PLOT_COMPLETE_JSON
 	/**
 	 * @brief Expand a template JSON string with FlowPlot defaults.
+	 *
+	 * The input is normalized using the same defaulting rules applied during plot
+	 * compilation. This is useful for inspecting the effective template or persisting a
+	 * fully specified template.
+	 *
+	 * @code{.cpp}
+	 * std::string complete = FlowPlot::getCompleteJson(R"({"figure":{"width":800}})");
+	 * @endcode
 	 * @param templateJsonText Template JSON document.
 	 * @param pretty Whether to format the returned JSON with indentation.
 	 * @return A complete JSON template string with defaults filled in.

@@ -491,7 +491,7 @@ inline std::vector<std::string> availableStylesForFamilyWeight(
 	options.reserve(styles.size());
 	for (const FlowPlot::FontStyle style : styles)
 	{
-		options.emplace_back(FlowPlot::fontStyleName(style));
+		options.emplace_back(FlowInternal::fontStyleName(style));
 	}
 	return options;
 }
