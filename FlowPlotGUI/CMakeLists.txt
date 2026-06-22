@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.21)
 
+if(POLICY CMP0207)
+    cmake_policy(SET CMP0207 NEW)
+endif()
+
 project(FlowPlotGUI VERSION 0.1.0 LANGUAGES CXX)
 
 include(GNUInstallDirs)
@@ -143,6 +147,33 @@ target_compile_definitions(FlowPlotGUI
 )
 
 if(WIN32)
+    set(FLOWPLOTGUI_WINDOWS_RUNTIME_PRE_EXCLUDE_REGEXES
+        "api-ms-.*"
+        "ext-ms-.*"
+        "[Aa][Dd][Vv][Aa][Pp][Ii]32\\.dll"
+        "[Aa][Zz][Uu][Rr][Ee][Aa][Tt][Tt][Ee][Ss][Tt].*\\.dll"
+        "[Cc][Oo][Mm][Cc][Tt][Ll]32\\.dll"
+        "[Cc][Oo][Mm][Dd][Ll][Gg]32\\.dll"
+        "[Cc][Rr][Yy][Pp][Tt]32\\.dll"
+        "[Gg][Dd][Ii]32\\.dll"
+        "[Hh][Vv][Ss][Ii][Ff][Ii][Ll][Ee][Tt][Rr][Uu][Ss][Tt]\\.dll"
+        "[Ii][Mm][Mm]32\\.dll"
+        "[Kk][Ee][Rr][Nn][Ee][Ll]32\\.dll"
+        "[Mm][Ss][Vv][Cc][Pp]140.*\\.dll"
+        "[Oo][Ll][Ee]32\\.dll"
+        "[Oo][Ll][Ee][Aa][Uu][Tt]32\\.dll"
+        "[Pp][Dd][Mm][Uu][Tt][Ii][Ll][Ii][Tt][Ii][Ee][Ss]\\.dll"
+        "[Rr][Pp][Cc][Rr][Tt]4\\.dll"
+        "[Ss][Ee][Cc][Uu][Rr][Ee]32\\.dll"
+        "[Ss][Hh][Ee][Ll][Ll]32\\.dll"
+        "[Ss][Hh][Ll][Ww][Aa][Pp][Ii]\\.dll"
+        "[Uu][Ss][Ee][Rr]32\\.dll"
+        "[Vv][Cc][Rr][Uu][Nn][Tt][Ii][Mm][Ee]140.*\\.dll"
+        "[Vv][Uu][Ll][Kk][Aa][Nn]-1\\.dll"
+        "[Ww][Pp][Aa][Xx][Hh][Oo][Ll][Dd][Ee][Rr]\\.dll"
+        "[Ww][Tt][Dd].*\\.dll"
+    )
+
     install(TARGETS FlowPlotGUI
         RUNTIME_DEPENDENCY_SET FlowPlotGUIRuntimeDeps
         RUNTIME DESTINATION ${FLOWPLOTGUI_RUNTIME_INSTALL_DIR} COMPONENT Runtime
@@ -152,9 +183,7 @@ if(WIN32)
     install(RUNTIME_DEPENDENCY_SET FlowPlotGUIRuntimeDeps
         DESTINATION ${FLOWPLOTGUI_RUNTIME_INSTALL_DIR}
         COMPONENT Runtime
-        PRE_EXCLUDE_REGEXES
-            "api-ms-.*"
-            "ext-ms-.*"
+        PRE_EXCLUDE_REGEXES ${FLOWPLOTGUI_WINDOWS_RUNTIME_PRE_EXCLUDE_REGEXES}
         POST_EXCLUDE_REGEXES
             ".*[Ww][Ii][Nn][Dd][Oo][Ww][Ss][/\\\\][Ss][Tt][Ee][Mm]32[/\\\\].*"
     )

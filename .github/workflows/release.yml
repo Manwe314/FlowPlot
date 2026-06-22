@@ -34,6 +34,9 @@ jobs:
           CIBW_ARCHS_LINUX: "x86_64"
           CIBW_ARCHS_WINDOWS: "AMD64"
           CIBW_ARCHS_MACOS: "x86_64 arm64"
+          CIBW_ENVIRONMENT_MACOS: >
+            MACOSX_DEPLOYMENT_TARGET=10.15
+            CMAKE_ARGS="-DCMAKE_OSX_DEPLOYMENT_TARGET=10.15"
           CIBW_TEST_COMMAND: >
             python -c "import flowplot; print(flowplot.get_complete_json('{\"version\":\"1.0\"}', False)[:20])"
         with:
