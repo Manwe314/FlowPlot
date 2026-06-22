@@ -19,6 +19,7 @@
 #include "FlowPlotGui.hpp"
 #include "iconRegistry.hpp"
 #include "PlotViewportScene.hpp"
+#include "runtimePaths.hpp"
 #include "TemplatePresets.hpp"
 #include "templateClipboard.hpp"
 #include "templateExport.hpp"
@@ -29,22 +30,6 @@ namespace {
 #ifndef FLOWPLOTGUI_DEV_MODE
 #define FLOWPLOTGUI_DEV_MODE 0
 #endif
-
-std::filesystem::path packagedAssetPath(std::initializer_list<std::filesystem::path> parts)
-{
-	std::filesystem::path path = std::filesystem::current_path() / "assets";
-	for (const std::filesystem::path& part : parts)
-		path /= part;
-	return path;
-}
-
-std::filesystem::path packagedParentAssetPath(std::initializer_list<std::filesystem::path> parts)
-{
-	std::filesystem::path path = std::filesystem::current_path() / ".." / "assets";
-	for (const std::filesystem::path& part : parts)
-		path /= part;
-	return path;
-}
 
 std::filesystem::path sourceAssetPath(std::initializer_list<std::filesystem::path> parts)
 {
@@ -60,16 +45,10 @@ std::filesystem::path sourceAssetPath(std::initializer_list<std::filesystem::pat
 
 std::filesystem::path assetPath(std::initializer_list<std::filesystem::path> parts)
 {
-	std::error_code ec;
-	const std::filesystem::path packaged = packagedAssetPath(parts);
-	if (std::filesystem::exists(packaged, ec) && !ec)
-		return packaged;
-
-	const std::filesystem::path packagedParent = packagedParentAssetPath(parts);
-	if (std::filesystem::exists(packagedParent, ec) && !ec)
-		return packagedParent;
-
-	return sourceAssetPath(parts);
+	std::filesystem::path relative = "assets";
+	for (const std::filesystem::path& part : parts)
+		relative /= part;
+	return FlowPlotGui::resourcePathOrSource(relative, sourceAssetPath(parts));
 }
 
 constexpr int kKeyTab = 258;

@@ -8,13 +8,20 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <cstdlib>
 #include <cstring>
 #include <filesystem>
 #include <fstream>
 #include <limits>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <vector>
+
+#if defined(__linux__)
+#include <limits.h>
+#include <unistd.h>
+#endif
 
 #include "internal/Vma.hpp"
 
@@ -86,26 +93,73 @@ static std::vector<char> readFile(const std::string& path) {
 	return buffer;
 }
 
+static std::optional<std::filesystem::path> executableDirectory() {
+#if defined(__linux__)
+	char buffer[PATH_MAX]{};
+	const ssize_t length = readlink("/proc/self/exe", buffer, sizeof(buffer) - 1);
+	if (length > 0) {
+		buffer[length] = '\0';
+		return std::filesystem::path(buffer).parent_path();
+	}
+#endif
+	return std::nullopt;
+}
+
+static std::vector<std::filesystem::path> shaderRoots() {
+	std::vector<std::filesystem::path> roots{};
+
+#if defined(__linux__)
+	if (const char* appDir = std::getenv("APPDIR"); appDir != nullptr && appDir[0] != '\0') {
+		const std::filesystem::path appDirPath(appDir);
+		roots.push_back(appDirPath / "usr" / "share" / "FlowPlotGUI");
+		roots.push_back(appDirPath);
+	}
+
+	roots.emplace_back("/usr/share/FlowPlotGUI");
+#endif
+
+	if (const std::optional<std::filesystem::path> exeDir = executableDirectory()) {
+		roots.push_back(*exeDir);
+		roots.push_back(*exeDir / "..");
+		roots.push_back(*exeDir / ".." / "share" / "FlowPlotGUI");
+	}
+
+	roots.push_back(std::filesystem::current_path());
+	roots.push_back(std::filesystem::current_path() / "..");
+	roots.push_back(std::filesystem::current_path() / "share" / "FlowPlotGUI");
+	roots.push_back(std::filesystem::current_path() / ".." / "share" / "FlowPlotGUI");
+
+	return roots;
+}
+
+static std::optional<std::filesystem::path> findShaderFile(const char* fileName) {
+	std::error_code ec;
+	const std::filesystem::path relativePath = std::filesystem::path("shaders") / fileName;
+	for (const std::filesystem::path& root : shaderRoots()) {
+		const std::filesystem::path candidate = root / relativePath;
+		if (std::filesystem::exists(candidate, ec) && !ec)
+			return candidate;
+		ec.clear();
+	}
+	return std::nullopt;
+}
+
 static std::vector<char> readShaderFile(const char* fileName) {
-	const std::string relativePath = std::string("shaders/") + fileName;
 #if defined(FLOWUI_SHADER_OUTPUT_DIR)
 	const std::string configuredPath = std::string(FLOWUI_SHADER_OUTPUT_DIR) + "/" + fileName;
 	if (std::filesystem::exists(configuredPath)) {
 		return readFile(configuredPath);
 	}
 #endif
-	if (std::filesystem::exists(relativePath)) {
-		return readFile(relativePath);
-	}
+	if (const std::optional<std::filesystem::path> path = findShaderFile(fileName))
+		return readFile(path->string());
 
 #if defined(FLOWUI_SHADER_OUTPUT_DIR)
 	throw std::runtime_error(
 		"Failed to open shader file: " + std::string(fileName) +
-		" (looked in '" + configuredPath + "' and '" + relativePath + "')");
+		" (looked in '" + configuredPath + "' and packaged shader roots)");
 #else
-	throw std::runtime_error(
-		"Failed to open shader file: " + std::string(fileName) +
-		" (looked in '" + relativePath + "')");
+	throw std::runtime_error("Failed to open shader file: " + std::string(fileName));
 #endif
 }
 

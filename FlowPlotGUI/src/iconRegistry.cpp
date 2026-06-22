@@ -6,6 +6,7 @@
 
 #include "Icons.hpp"
 #include "elements.hpp"
+#include "runtimePaths.hpp"
 
 namespace FlowPlotGui {
 
@@ -47,18 +48,7 @@ std::filesystem::path flowPlotIconPath()
 	const std::filesystem::path sourceAssetDir = sourceFilePath.parent_path().parent_path() / "assets";
 #endif
 
-	std::error_code ec;
-	const std::filesystem::path packagedPath =
-		std::filesystem::current_path() / "assets" / "Svgs" / "FlowPlotIcon.svg";
-	if (std::filesystem::exists(packagedPath, ec) && !ec)
-		return packagedPath;
-
-	const std::filesystem::path packagedParentPath =
-		std::filesystem::current_path() / ".." / "assets" / "Svgs" / "FlowPlotIcon.svg";
-	if (std::filesystem::exists(packagedParentPath, ec) && !ec)
-		return packagedParentPath;
-
-	return sourceAssetDir / "Svgs" / "FlowPlotIcon.svg";
+	return resourcePathOrSource("assets/Svgs/FlowPlotIcon.svg", sourceAssetDir / "Svgs" / "FlowPlotIcon.svg");
 }
 
 

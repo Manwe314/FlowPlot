@@ -7,10 +7,12 @@ option(FLOWUI_BUILD_FONT_BAKER "Build FlowUi offline font baker tool" ON)
 option(FLOWUI_ENABLE_RUNTIME_FONT_BAKING "Enable runtime TTF->MSDF atlas generation" OFF)
 option(FLOWUI_PUBLIC_VULKAN_INTEROP "Expose viewport Vulkan interop API in public headers" ON)
 option(FLOWUI_INCLUDE_ICON_MANAGER "Enable IconManager support (PlutoSVG)." ON)
+option(FLOWUI_INSTALL_RUNTIME_ASSETS "Install FlowUi runtime assets such as compiled shaders" ${FLOWUI_INSTALL})
 option(FLOW_UI_DEV_MODE "Enable FlowUi developer mode scaffolding and APIs." OFF)
 set(FLOWUI_INCLUDE_ICON_MANAGER "${FLOWUI_INCLUDE_ICON_MANAGER}")
 set(FLOWUI_GLFW_PROVIDER "auto" CACHE STRING "GLFW provider: auto, system, vendored")
 set_property(CACHE FLOWUI_GLFW_PROVIDER PROPERTY STRINGS auto system vendored)
+set(FLOWUI_RUNTIME_ASSET_INSTALL_DIR "shaders" CACHE PATH "Install destination for FlowUi runtime assets")
 
 include(GNUInstallDirs)
 
@@ -287,6 +289,14 @@ target_compile_definitions(flowui
 )
 
 target_compile_features(flowui PUBLIC cxx_std_23)
+
+if(FLOWUI_INSTALL_RUNTIME_ASSETS)
+    install(DIRECTORY "${FLOWUI_SHADER_OUTPUT_DIR}/"
+        DESTINATION "${FLOWUI_RUNTIME_ASSET_INSTALL_DIR}"
+        COMPONENT Runtime
+        FILES_MATCHING PATTERN "*.spv"
+    )
+endif()
 
 if(FLOWUI_INSTALL)
     include(CMakePackageConfigHelpers)

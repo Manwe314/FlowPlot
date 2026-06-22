@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=FlowPlotGUI
+Comment=FlowPlot graphical template editor
+Exec=FlowPlotGUI
+Icon=FlowPlotGUI
+Terminal=false
+Categories=Science;Graphics;

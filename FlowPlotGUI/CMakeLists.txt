@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.21)
 
 project(FlowPlotGUI VERSION 0.1.0 LANGUAGES CXX)
 
@@ -35,10 +35,22 @@ endif()
 # FlowUi options
 option(FLOWPLOTGUI_ENABLE_DEV_MODE "Enable FlowUi developer mode in FlowPlotGUI" OFF)
 
+if(WIN32)
+    set(FLOWPLOTGUI_RUNTIME_INSTALL_DIR ".")
+    set(FLOWPLOTGUI_RESOURCE_INSTALL_DIR ".")
+    set(FLOWPLOTGUI_SHADER_INSTALL_DIR "shaders")
+else()
+    set(FLOWPLOTGUI_RUNTIME_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}")
+    set(FLOWPLOTGUI_RESOURCE_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/FlowPlotGUI")
+    set(FLOWPLOTGUI_SHADER_INSTALL_DIR "${FLOWPLOTGUI_RESOURCE_INSTALL_DIR}/shaders")
+endif()
+
 set(FLOWUI_INCLUDE_ICON_MANAGER ON CACHE BOOL "Enable FlowUi Icon manager" FORCE)
 set(FLOWUI_PUBLIC_VULKAN_INTEROP ON CACHE BOOL "Enable FlowUi Vulkan interop API" FORCE)
 set(FLOWUI_ENABLE_RUNTIME_FONT_BAKING ON CACHE BOOL "Enable FlowUi runtime font baking" FORCE)
 set(FLOWUI_INSTALL OFF CACHE BOOL "Disable FlowUi install rules for FlowPlotGUI app packages" FORCE)
+set(FLOWUI_INSTALL_RUNTIME_ASSETS ON CACHE BOOL "Install FlowUi runtime assets for FlowPlotGUI app packages" FORCE)
+set(FLOWUI_RUNTIME_ASSET_INSTALL_DIR "${FLOWPLOTGUI_SHADER_INSTALL_DIR}" CACHE PATH "FlowUi runtime asset install destination" FORCE)
 set(FLOWUI_BUILD_FONT_BAKER OFF CACHE BOOL "Disable FlowUi font baker tool for FlowPlotGUI app packages" FORCE)
 set(FLOW_UI_DEV_MODE ${FLOWPLOTGUI_ENABLE_DEV_MODE} CACHE BOOL "Enable FlowUi developer mode APIs/UI" FORCE)
 
@@ -123,27 +135,59 @@ target_link_libraries(FlowPlotGUI
 target_compile_definitions(FlowPlotGUI
     PRIVATE
         FLOWPLOTGUI_SHADER_OUTPUT_DIR="${FLOWPLOTGUI_SHADER_OUTPUT_DIR}"
+        FLOWPLOTGUI_SOURCE_ROOT="${CMAKE_CURRENT_SOURCE_DIR}"
         FLOWPLOTGUI_SOURCE_ASSET_DIR="${CMAKE_CURRENT_SOURCE_DIR}/assets"
         FLOWPLOTGUI_DEV_MODE=$<BOOL:${FLOWPLOTGUI_ENABLE_DEV_MODE}>
         $<$<PLATFORM_ID:Windows>:NOMINMAX>
         $<$<PLATFORM_ID:Windows>:WIN32_LEAN_AND_MEAN>
 )
 
-install(TARGETS FlowPlotGUI
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT Runtime
-    BUNDLE DESTINATION . COMPONENT Runtime
-)
+if(WIN32)
+    install(TARGETS FlowPlotGUI
+        RUNTIME_DEPENDENCY_SET FlowPlotGUIRuntimeDeps
+        RUNTIME DESTINATION ${FLOWPLOTGUI_RUNTIME_INSTALL_DIR} COMPONENT Runtime
+        BUNDLE DESTINATION . COMPONENT Runtime
+    )
+
+    install(RUNTIME_DEPENDENCY_SET FlowPlotGUIRuntimeDeps
+        DESTINATION ${FLOWPLOTGUI_RUNTIME_INSTALL_DIR}
+        COMPONENT Runtime
+        PRE_EXCLUDE_REGEXES
+            "api-ms-.*"
+            "ext-ms-.*"
+        POST_EXCLUDE_REGEXES
+            ".*[Ww][Ii][Nn][Dd][Oo][Ww][Ss][/\\\\][Ss][Tt][Ee][Mm]32[/\\\\].*"
+    )
+else()
+    install(TARGETS FlowPlotGUI
+        RUNTIME DESTINATION ${FLOWPLOTGUI_RUNTIME_INSTALL_DIR} COMPONENT Runtime
+        BUNDLE DESTINATION . COMPONENT Runtime
+    )
+endif()
 
 install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/assets"
-    DESTINATION .
+    DESTINATION ${FLOWPLOTGUI_RESOURCE_INSTALL_DIR}
     COMPONENT Runtime
 )
 
 install(DIRECTORY "${FLOWPLOTGUI_SHADER_OUTPUT_DIR}/"
-    DESTINATION shaders
+    DESTINATION ${FLOWPLOTGUI_SHADER_INSTALL_DIR}
     COMPONENT Runtime
     FILES_MATCHING PATTERN "*.spv"
 )
+
+if(UNIX AND NOT APPLE)
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/packaging/io.github.flowplot.FlowPlotGUI.desktop"
+        DESTINATION "${CMAKE_INSTALL_DATADIR}/applications"
+        COMPONENT Runtime
+    )
+
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/assets/Svgs/favicon/android-chrome-512x512.png"
+        DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/hicolor/512x512/apps"
+        RENAME FlowPlotGUI.png
+        COMPONENT Runtime
+    )
+endif()
 
 set(CPACK_PACKAGE_NAME "FlowPlotGUI")
 set(CPACK_PACKAGE_VENDOR "FlowPlot")
@@ -154,6 +198,38 @@ set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY ON)
 set(CPACK_COMPONENTS_ALL Runtime)
 set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 set(CPACK_COMPONENT_RUNTIME_DISPLAY_NAME "FlowPlotGUI Runtime")
+set(CPACK_VERBATIM_VARIABLES ON)
+
+if(UNIX AND NOT APPLE)
+    set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
+    set(CPACK_COMPONENTS_GROUPING ALL_COMPONENTS_IN_ONE)
+    set(CPACK_DEB_COMPONENT_INSTALL ON)
+    set(CPACK_DEBIAN_PACKAGE_MAINTAINER "FlowPlot")
+    set(CPACK_DEBIAN_PACKAGE_SECTION "science")
+    set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
+    set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS
+        "libc6 (>= 2.35), libstdc++6, libgcc-s1, libvulkan1, libglfw3, libgtk-3-0, libfreetype6, libpng16-16, zlib1g")
+    set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
+    set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "FlowPlotGUI graphical template editor")
+endif()
+
+if(WIN32)
+    set(CMAKE_INSTALL_SYSTEM_RUNTIME_COMPONENT Runtime)
+    set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION "${FLOWPLOTGUI_RUNTIME_INSTALL_DIR}")
+    set(CMAKE_INSTALL_UCRT_LIBRARIES TRUE)
+    include(InstallRequiredSystemLibraries)
+
+    set(CPACK_PACKAGE_FILE_NAME "FlowPlotGUI-${PROJECT_VERSION}-Windows")
+    set(CPACK_NSIS_DISPLAY_NAME "FlowPlotGUI")
+    set(CPACK_NSIS_PACKAGE_NAME "FlowPlotGUI")
+    set(CPACK_NSIS_INSTALL_ROOT "$PROGRAMFILES64")
+    set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
+    set(CPACK_NSIS_MUI_ICON "${CMAKE_CURRENT_SOURCE_DIR}/assets/Svgs/favicon/favicon.ico")
+    set(CPACK_NSIS_MUI_UNIICON "${CMAKE_CURRENT_SOURCE_DIR}/assets/Svgs/favicon/favicon.ico")
+    set(CPACK_NSIS_INSTALLED_ICON_NAME "FlowPlotGUI.exe")
+    set(CPACK_NSIS_MODIFY_PATH OFF)
+endif()
 
 if(APPLE)
     set(CPACK_DMG_VOLUME_NAME "FlowPlotGUI")

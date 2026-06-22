@@ -31,6 +31,9 @@ jobs:
           CIBW_PROJECT_REQUIRES_PYTHON: ">=3.10"
           CIBW_BUILD: "cp310-* cp311-* cp312-* cp313-*"
           CIBW_SKIP: "*-musllinux_*"
+          CIBW_ARCHS_LINUX: "x86_64"
+          CIBW_ARCHS_WINDOWS: "AMD64"
+          CIBW_ARCHS_MACOS: "x86_64 arm64"
           CIBW_TEST_COMMAND: >
             python -c "import flowplot; print(flowplot.get_complete_json('{\"version\":\"1.0\"}', False)[:20])"
         with:
@@ -76,12 +79,12 @@ jobs:
           - name: Windows
             os: windows-latest
             artifact_name: windows
-            cpack_generator: ZIP
+            cpack_generator: "ZIP;NSIS"
 
           - name: Linux
             os: ubuntu-22.04
             artifact_name: linux
-            cpack_generator: TGZ
+            cpack_generator: "TGZ;DEB"
 
           - name: macOS
             os: macos-latest
@@ -103,7 +106,12 @@ jobs:
             libgtk-3-dev \
             libfreetype6-dev \
             zlib1g-dev \
-            libpng-dev
+            libpng-dev \
+            dpkg-dev \
+            fakeroot \
+            file \
+            libfuse2 \
+            wget
 
       - name: Install macOS dependencies
         if: runner.os == 'macOS'
@@ -122,6 +130,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
+          choco install nsis -y --no-progress
           vcpkg install glfw3:x64-windows freetype:x64-windows libpng:x64-windows zlib:x64-windows
           echo "CMAKE_TOOLCHAIN_FILE=$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake" >> $env:GITHUB_ENV
 
@@ -143,7 +152,28 @@ jobs:
         run: cmake --build build-gui --config Release
 
       - name: Package
-        run: cpack --config build-gui/CPackConfig.cmake
+        run: cpack -C Release --config build-gui/CPackConfig.cmake
+
+      - name: Build Linux AppImage
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          cmake --install build-gui --config Release --component Runtime --prefix AppDir/usr
+
+          wget -q https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+          chmod +x linuxdeploy-x86_64.AppImage
+
+          VERSION="${GITHUB_REF_NAME#gui-v}"
+          VERSION="${VERSION#v}"
+          export VERSION
+          export APPIMAGE_EXTRACT_AND_RUN=1
+
+          ./linuxdeploy-x86_64.AppImage \
+            --appdir AppDir \
+            --executable AppDir/usr/bin/FlowPlotGUI \
+            --desktop-file AppDir/usr/share/applications/io.github.flowplot.FlowPlotGUI.desktop \
+            --icon-file AppDir/usr/share/icons/hicolor/512x512/apps/FlowPlotGUI.png \
+            --output appimage
 
       - name: Collect GUI packages
         shell: bash
@@ -151,7 +181,10 @@ jobs:
           mkdir -p gui-dist
           find . -maxdepth 2 \( \
             -name "*.zip" -o \
+            -name "*.exe" -o \
             -name "*.tar.gz" -o \
+            -name "*.deb" -o \
+            -name "*.AppImage" -o \
             -name "*.dmg" \
           \) -exec cp {} gui-dist/ \;
 

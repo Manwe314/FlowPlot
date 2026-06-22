@@ -6,9 +6,11 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
+#include <filesystem>
 #include <fstream>
 #include <limits>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <type_traits>
@@ -18,6 +20,7 @@
 #include <vector>
 
 #include "internal/Vma.hpp"
+#include "runtimePaths.hpp"
 
 namespace FlowPlotGui {
 namespace {
@@ -210,21 +213,9 @@ std::vector<char> readFile(const std::string& path)
 
 std::vector<char> readShaderFile(const char* fileName)
 {
-	const std::string relativePath = std::string("shaders/") + fileName;
-	std::ifstream relativeProbe(relativePath, std::ios::binary);
-	if (relativeProbe.good())
-	{
-		relativeProbe.close();
-		return readFile(relativePath);
-	}
-
-	const std::string parentRelativePath = std::string("../shaders/") + fileName;
-	std::ifstream parentRelativeProbe(parentRelativePath, std::ios::binary);
-	if (parentRelativeProbe.good())
-	{
-		parentRelativeProbe.close();
-		return readFile(parentRelativePath);
-	}
+	const std::filesystem::path relativePath = std::filesystem::path("shaders") / fileName;
+	if (const std::optional<std::filesystem::path> packagedPath = FlowPlotGui::findResourcePath(relativePath))
+		return readFile(packagedPath->string());
 
 #ifdef FLOWPLOTGUI_SHADER_OUTPUT_DIR
 	const std::string buildPath = std::string(FLOWPLOTGUI_SHADER_OUTPUT_DIR) + "/" + fileName;
@@ -236,7 +227,7 @@ std::vector<char> readShaderFile(const char* fileName)
 	}
 #endif
 
-	throw std::runtime_error("Failed to locate shader file: " + std::string(fileName));
+	throw std::runtime_error("Failed to locate shader file: " + relativePath.string());
 }
 
 VkShaderModule createShaderModule(VkDevice device, const std::vector<char>& code)
