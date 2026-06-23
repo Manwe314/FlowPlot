@@ -4,7 +4,7 @@ if(POLICY CMP0207)
     cmake_policy(SET CMP0207 NEW)
 endif()
 
-project(FlowPlotGUI VERSION 0.9.10 LANGUAGES CXX)
+project(FlowPlotGUI VERSION 0.9.11 LANGUAGES CXX)
 
 include(GNUInstallDirs)
 
@@ -359,6 +359,10 @@ endif()
 
 if(APPLE)
     set(CPACK_PACKAGE_FILE_NAME "FlowPlotGUI-${PROJECT_VERSION}-macOS")
+    # DragNDrop places the Applications alias at the DMG root. The app must be
+    # installed at that same root rather than below CPack's top-level directory.
+    set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY OFF)
+    set(CPACK_COMPONENT_INCLUDE_TOPLEVEL_DIRECTORY OFF)
     set(CPACK_DMG_VOLUME_NAME "FlowPlotGUI")
     set(CPACK_DMG_FORMAT "UDBZ")
 endif()
