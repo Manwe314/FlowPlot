@@ -77,12 +77,16 @@ Download the GUI package for your platform:
 
 | Platform | Package | Download | Installation / use |
 | --- | --- | --- | --- |
-| 🍎 **macOS** | ZIP archive | [Download for macOS](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.6/FlowPlotGUI-0.1.0-Darwin-Runtime.zip) | Unzip the archive, then run the included application. |
-| 🪟 **Windows** | Installer (recommended) | [Download installer](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.6/FlowPlotGUI-0.1.0-Windows.exe) | Run the installer. |
-| 🪟 **Windows** | Runtime ZIP | [Download ZIP](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.6/FlowPlotGUI-0.1.0-Windows-Runtime.zip) | Unzip and run the included executable. |
-| 🐧 **Linux** | AppImage (recommended) | [Download AppImage](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.6/FlowPlotGUI-0.9.6-x86_64.AppImage) | Make it executable, then run it. |
-| 🐧 **Linux** | Debian package | [Download `.deb`](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.6/flowplotgui_0.1.0_amd64.deb) | Install with your distribution's package installer. |
-| 🐧 **Linux** | Tarball | [Download `.tar.gz`](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.6/FlowPlotGUI-0.1.0-Linux.tar.gz) | Extract the archive and run the included executable. |
+| 🍎 **macOS** | DMG | [Download for macOS](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.7/FlowPlotGUI-0.9.7-macOS.dmg) | Open the DMG and drag `FlowPlotGUI.app` to Applications. See the macOS note below. |
+| 🪟 **Windows** | Installer (recommended) | [Download installer](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.7/FlowPlotGUI-0.9.7-Windows.exe) | Run the installer. |
+| 🪟 **Windows** | Runtime ZIP | [Download ZIP](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.7/FlowPlotGUI-0.9.7-Windows-Runtime.zip) | Unzip and run the included executable. |
+| 🐧 **Linux** | AppImage (recommended) | [Download AppImage](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.7/FlowPlotGUI-0.9.7-x86_64.AppImage) | Make it executable, then run it. |
+| 🐧 **Linux** | Debian package | [Download `.deb`](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.7/flowplotgui_0.9.7_amd64.deb) | Install it with your distribution's package installer. |
+| 🐧 **Linux** | Tarball | [Download `.tar.gz`](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.7/FlowPlotGUI-0.9.7-Linux.tar.gz) | Extract it and run the included executable. |
+
+### macOS security notice
+
+The macOS release is currently unsigned and not notarized. After moving `FlowPlotGUI.app` to Applications, macOS may block its first launch. In Finder, Control-click the app, choose **Open**, then confirm **Open**. If macOS still blocks it, go to **System Settings → Privacy & Security** and select **Open Anyway** for FlowPlotGUI. This creates an exception for this app only; do not disable Gatekeeper globally.
 
 See the [FlowPlotGUI usage guide](docs/gui-usage.md) for the template-authoring workflow. Simple default templates will also be provided for common cases, so using the GUI will not be required for every plot.
 

@@ -15,6 +15,10 @@
 #include <utility>
 #include <vector>
 
+#if defined(_WIN32)
+#include <windows.h>
+#endif
+
 #include "elements.hpp"
 #include "FlowPlotGui.hpp"
 #include "iconRegistry.hpp"
@@ -505,7 +509,7 @@ panelTitleParams makePropertiesTitleParams(FlowPlotGui::state& guiState)
 
 } // namespace
 
-int main()
+int runApplication()
 {
 
 
@@ -516,6 +520,8 @@ int main()
 		config.window.maximized = true;
 		config.window.width = 1920;
 		config.window.height = 1080;
+		config.vk.enableValidation = false;
+		config.vk.enableDebugUtils = false;
 		config.dev.enabled = FLOWPLOTGUI_DEV_MODE != 0;
 		config.dev.panelOpenByDefault = FLOWPLOTGUI_DEV_MODE != 0;
 		config.dev.useShortcutManagerForPanelToggle = FLOWPLOTGUI_DEV_MODE != 0;
@@ -873,3 +879,15 @@ int main()
 		return 1;
 	}
 }
+
+#if defined(_WIN32)
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+{
+	return runApplication();
+}
+#else
+int main()
+{
+	return runApplication();
+}
+#endif

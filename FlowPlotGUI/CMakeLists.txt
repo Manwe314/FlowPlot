@@ -4,7 +4,7 @@ if(POLICY CMP0207)
     cmake_policy(SET CMP0207 NEW)
 endif()
 
-project(FlowPlotGUI VERSION 0.1.0 LANGUAGES CXX)
+project(FlowPlotGUI VERSION 0.9.7 LANGUAGES CXX)
 
 include(GNUInstallDirs)
 
@@ -43,6 +43,11 @@ if(WIN32)
     set(FLOWPLOTGUI_RUNTIME_INSTALL_DIR ".")
     set(FLOWPLOTGUI_RESOURCE_INSTALL_DIR ".")
     set(FLOWPLOTGUI_SHADER_INSTALL_DIR "shaders")
+elseif(APPLE)
+    set(FLOWPLOTGUI_RUNTIME_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}")
+    set(FLOWPLOTGUI_RESOURCE_INSTALL_DIR "FlowPlotGUI.app/Contents/Resources")
+    set(FLOWPLOTGUI_SHADER_INSTALL_DIR "${FLOWPLOTGUI_RESOURCE_INSTALL_DIR}/shaders")
+    set(FLOWPLOTGUI_FRAMEWORK_INSTALL_DIR "FlowPlotGUI.app/Contents/Frameworks")
 else()
     set(FLOWPLOTGUI_RUNTIME_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}")
     set(FLOWPLOTGUI_RESOURCE_INSTALL_DIR "${CMAKE_INSTALL_DATADIR}/FlowPlotGUI")
@@ -121,6 +126,52 @@ add_executable(FlowPlotGUI
     ${FLOWPLOTGUI_SOURCES}
 )
 
+# Use the Windows GUI subsystem so launching FlowPlotGUI does not create a
+# console window. main.cpp provides WinMain on Windows and main elsewhere.
+if(WIN32)
+    set_target_properties(FlowPlotGUI PROPERTIES WIN32_EXECUTABLE TRUE)
+endif()
+
+if(APPLE)
+    set(FLOWPLOTGUI_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_BINARY_DIR}/Info.plist")
+    configure_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/packaging/Info.plist.in"
+        "${FLOWPLOTGUI_BUNDLE_INFO_PLIST}"
+        @ONLY)
+
+    set(FLOWPLOTGUI_BUNDLE_ICON "${CMAKE_CURRENT_BINARY_DIR}/FlowPlotGUI.icns")
+    set(FLOWPLOTGUI_ICONSET_DIR "${CMAKE_CURRENT_BINARY_DIR}/FlowPlotGUI.iconset")
+    set(FLOWPLOTGUI_ICON_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/assets/Svgs/favicon/android-chrome-512x512.png")
+    add_custom_command(
+        OUTPUT "${FLOWPLOTGUI_BUNDLE_ICON}"
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${FLOWPLOTGUI_ICONSET_DIR}"
+        COMMAND sips -z 16 16 "${FLOWPLOTGUI_ICON_SOURCE}" --out "${FLOWPLOTGUI_ICONSET_DIR}/icon_16x16.png"
+        COMMAND sips -z 32 32 "${FLOWPLOTGUI_ICON_SOURCE}" --out "${FLOWPLOTGUI_ICONSET_DIR}/icon_16x16@2x.png"
+        COMMAND sips -z 32 32 "${FLOWPLOTGUI_ICON_SOURCE}" --out "${FLOWPLOTGUI_ICONSET_DIR}/icon_32x32.png"
+        COMMAND sips -z 64 64 "${FLOWPLOTGUI_ICON_SOURCE}" --out "${FLOWPLOTGUI_ICONSET_DIR}/icon_32x32@2x.png"
+        COMMAND sips -z 128 128 "${FLOWPLOTGUI_ICON_SOURCE}" --out "${FLOWPLOTGUI_ICONSET_DIR}/icon_128x128.png"
+        COMMAND sips -z 256 256 "${FLOWPLOTGUI_ICON_SOURCE}" --out "${FLOWPLOTGUI_ICONSET_DIR}/icon_128x128@2x.png"
+        COMMAND sips -z 256 256 "${FLOWPLOTGUI_ICON_SOURCE}" --out "${FLOWPLOTGUI_ICONSET_DIR}/icon_256x256.png"
+        COMMAND sips -z 512 512 "${FLOWPLOTGUI_ICON_SOURCE}" --out "${FLOWPLOTGUI_ICONSET_DIR}/icon_256x256@2x.png"
+        COMMAND sips -z 512 512 "${FLOWPLOTGUI_ICON_SOURCE}" --out "${FLOWPLOTGUI_ICONSET_DIR}/icon_512x512.png"
+        COMMAND sips -z 1024 1024 "${FLOWPLOTGUI_ICON_SOURCE}" --out "${FLOWPLOTGUI_ICONSET_DIR}/icon_512x512@2x.png"
+        COMMAND iconutil -c icns "${FLOWPLOTGUI_ICONSET_DIR}" -o "${FLOWPLOTGUI_BUNDLE_ICON}"
+        DEPENDS "${FLOWPLOTGUI_ICON_SOURCE}"
+        COMMENT "Creating FlowPlotGUI macOS application icon"
+        VERBATIM)
+    add_custom_target(flowplotgui_bundle_icon DEPENDS "${FLOWPLOTGUI_BUNDLE_ICON}")
+    add_dependencies(FlowPlotGUI flowplotgui_bundle_icon)
+    set_source_files_properties("${FLOWPLOTGUI_BUNDLE_ICON}" PROPERTIES
+        GENERATED TRUE
+        MACOSX_PACKAGE_LOCATION "Resources")
+    target_sources(FlowPlotGUI PRIVATE "${FLOWPLOTGUI_BUNDLE_ICON}")
+    set_target_properties(FlowPlotGUI PROPERTIES
+        MACOSX_BUNDLE TRUE
+        MACOSX_BUNDLE_INFO_PLIST "${FLOWPLOTGUI_BUNDLE_INFO_PLIST}"
+        MACOSX_BUNDLE_ICON_FILE "FlowPlotGUI.icns"
+        INSTALL_RPATH "@executable_path/../Frameworks")
+endif()
+
 add_dependencies(FlowPlotGUI flowplotgui_shaders)
 
 target_include_directories(FlowPlotGUI
@@ -187,6 +238,52 @@ if(WIN32)
         POST_EXCLUDE_REGEXES
             ".*[Ww][Ii][Nn][Dd][Oo][Ww][Ss][/\\\\][Ss][Tt][Ee][Mm]32[/\\\\].*"
     )
+elseif(APPLE)
+    install(TARGETS FlowPlotGUI
+        RUNTIME_DEPENDENCY_SET FlowPlotGUIRuntimeDeps
+        BUNDLE DESTINATION . COMPONENT Runtime
+    )
+
+    install(RUNTIME_DEPENDENCY_SET FlowPlotGUIRuntimeDeps
+        DESTINATION "${FLOWPLOTGUI_FRAMEWORK_INSTALL_DIR}"
+        COMPONENT Runtime
+        POST_EXCLUDE_REGEXES
+            "^/System/Library/.*"
+            "^/usr/lib/.*")
+
+    get_filename_component(FLOWPLOTGUI_VULKAN_LIBRARY_DIR "${Vulkan_LIBRARY}" DIRECTORY)
+    find_file(FLOWPLOTGUI_MOLTENVK_LIBRARY
+        NAMES libMoltenVK.dylib
+        HINTS "${FLOWPLOTGUI_VULKAN_LIBRARY_DIR}")
+    find_file(FLOWPLOTGUI_MOLTENVK_ICD_MANIFEST
+        NAMES MoltenVK_icd.json
+        HINTS "${FLOWPLOTGUI_VULKAN_LIBRARY_DIR}/../share/vulkan/icd.d")
+    if(NOT FLOWPLOTGUI_MOLTENVK_LIBRARY OR NOT FLOWPLOTGUI_MOLTENVK_ICD_MANIFEST)
+        message(FATAL_ERROR "The macOS Vulkan SDK must provide libMoltenVK.dylib and MoltenVK_icd.json.")
+    endif()
+
+    file(READ "${FLOWPLOTGUI_MOLTENVK_ICD_MANIFEST}" FLOWPLOTGUI_MOLTENVK_ICD_CONTENTS)
+    string(REGEX REPLACE
+        "\\\"library_path\\\"[ \\t\\r\\n]*:[ \\t\\r\\n]*\\\"[^\\\"]*\\\""
+        "\\\"library_path\\\": \\\"../../../Frameworks/libMoltenVK.dylib\\\""
+        FLOWPLOTGUI_MOLTENVK_ICD_CONTENTS
+        "${FLOWPLOTGUI_MOLTENVK_ICD_CONTENTS}")
+    set(FLOWPLOTGUI_BUNDLED_ICD_MANIFEST "${CMAKE_CURRENT_BINARY_DIR}/MoltenVK_icd.json")
+    file(WRITE "${FLOWPLOTGUI_BUNDLED_ICD_MANIFEST}" "${FLOWPLOTGUI_MOLTENVK_ICD_CONTENTS}")
+    install(FILES "${Vulkan_LIBRARY}" "${FLOWPLOTGUI_MOLTENVK_LIBRARY}"
+        DESTINATION "${FLOWPLOTGUI_FRAMEWORK_INSTALL_DIR}"
+        COMPONENT Runtime)
+    install(FILES "${FLOWPLOTGUI_BUNDLED_ICD_MANIFEST}"
+        DESTINATION "${FLOWPLOTGUI_RESOURCE_INSTALL_DIR}/vulkan/icd.d"
+        COMPONENT Runtime)
+
+    set(FLOWPLOTGUI_BUNDLE_SEARCH_DIRS
+        "${FLOWPLOTGUI_VULKAN_LIBRARY_DIR};/opt/homebrew/lib;/usr/local/lib")
+    configure_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/packaging/FixupBundle.cmake.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/FixupBundle.cmake"
+        @ONLY)
+    install(SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/FixupBundle.cmake" COMPONENT Runtime)
 else()
     install(TARGETS FlowPlotGUI
         RUNTIME DESTINATION ${FLOWPLOTGUI_RUNTIME_INSTALL_DIR} COMPONENT Runtime
@@ -257,11 +354,14 @@ if(WIN32)
     set(CPACK_NSIS_MUI_ICON "${CMAKE_CURRENT_SOURCE_DIR}/assets/Svgs/favicon/favicon.ico")
     set(CPACK_NSIS_MUI_UNIICON "${CMAKE_CURRENT_SOURCE_DIR}/assets/Svgs/favicon/favicon.ico")
     set(CPACK_NSIS_INSTALLED_ICON_NAME "FlowPlotGUI.exe")
+    set(CPACK_NSIS_MENU_LINKS "FlowPlotGUI.exe" "FlowPlotGUI")
     set(CPACK_NSIS_MODIFY_PATH OFF)
 endif()
 
 if(APPLE)
+    set(CPACK_PACKAGE_FILE_NAME "FlowPlotGUI-${PROJECT_VERSION}-macOS")
     set(CPACK_DMG_VOLUME_NAME "FlowPlotGUI")
+    set(CPACK_DMG_FORMAT "UDBZ")
 endif()
 
 include(CPack)

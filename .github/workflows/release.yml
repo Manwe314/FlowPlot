@@ -92,7 +92,7 @@ jobs:
           - name: macOS
             os: macos-latest
             artifact_name: macos
-            cpack_generator: ZIP
+            cpack_generator: DMG
 
     steps:
       - name: Checkout source
@@ -145,14 +145,33 @@ jobs:
             EXTRA_ARGS+=("-DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}")
           fi
 
+          MACOS_ARGS=()
+          if [ "$RUNNER_OS" = "macOS" ]; then
+            MACOS_ARGS+=("-DCMAKE_OSX_DEPLOYMENT_TARGET=11.0")
+          fi
+
           cmake -S FlowPlotGUI -B build-gui \
             -DCMAKE_BUILD_TYPE=Release \
             -DFLOWPLOTGUI_ENABLE_DEV_MODE=OFF \
             -DCPACK_GENERATOR="${{ matrix.cpack_generator }}" \
+            "${MACOS_ARGS[@]}" \
             "${EXTRA_ARGS[@]}"
 
       - name: Build
         run: cmake --build build-gui --config Release
+
+      - name: Verify macOS app bundle
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          cmake --install build-gui --config Release --component Runtime --prefix bundle-test
+          APP="bundle-test/FlowPlotGUI.app"
+          test -x "$APP/Contents/MacOS/FlowPlotGUI"
+          test -f "$APP/Contents/Resources/assets/Fonts/Inter.arfont"
+          test -f "$APP/Contents/Resources/shaders/flowui_ui_solid.vert.spv"
+          test -f "$APP/Contents/Resources/vulkan/icd.d/MoltenVK_icd.json"
+          test -f "$APP/Contents/Frameworks/libMoltenVK.dylib"
+          otool -L "$APP/Contents/MacOS/FlowPlotGUI"
 
       - name: Package
         run: cpack -C Release --config build-gui/CPackConfig.cmake

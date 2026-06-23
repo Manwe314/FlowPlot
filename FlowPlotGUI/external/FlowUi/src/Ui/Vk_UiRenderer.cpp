@@ -21,6 +21,8 @@
 #if defined(__linux__)
 #include <limits.h>
 #include <unistd.h>
+#elif defined(__APPLE__)
+#include <mach-o/dyld.h>
 #endif
 
 #include "internal/Vma.hpp"
@@ -101,6 +103,17 @@ static std::optional<std::filesystem::path> executableDirectory() {
 		buffer[length] = '\0';
 		return std::filesystem::path(buffer).parent_path();
 	}
+#elif defined(__APPLE__)
+	uint32_t size = 0;
+	(void)_NSGetExecutablePath(nullptr, &size);
+	if (size == 0) {
+		return std::nullopt;
+	}
+
+	std::vector<char> buffer(size);
+	if (_NSGetExecutablePath(buffer.data(), &size) == 0) {
+		return std::filesystem::path(buffer.data()).parent_path();
+	}
 #endif
 	return std::nullopt;
 }
@@ -116,6 +129,10 @@ static std::vector<std::filesystem::path> shaderRoots() {
 	}
 
 	roots.emplace_back("/usr/share/FlowPlotGUI");
+#elif defined(__APPLE__)
+	if (const std::optional<std::filesystem::path> exeDir = executableDirectory()) {
+		roots.push_back(*exeDir / ".." / "Resources");
+	}
 #endif
 
 	if (const std::optional<std::filesystem::path> exeDir = executableDirectory()) {
