@@ -1,7 +1,10 @@
 include(BundleUtilities)
 
 set(BU_CHMOD_BUNDLE_ITEMS TRUE)
-fixup_bundle(
+get_filename_component(FLOWPLOTGUI_BUNDLE_PATH
     "${CMAKE_INSTALL_PREFIX}/FlowPlotGUI.app"
+    ABSOLUTE)
+fixup_bundle(
+    "${FLOWPLOTGUI_BUNDLE_PATH}"
     ""
     "@FLOWPLOTGUI_BUNDLE_SEARCH_DIRS@")

@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "FlowPlotPy"
-version = "0.9.8"
+version = "0.9.9"
 description = "Python bindings for the FlowPlot plotting library"
 readme = "README.md"
 requires-python = ">=3.10"
