@@ -4,12 +4,12 @@ FlowPlotGUI is the visual editor for FlowPlot templates. Download the package ap
 
 | Platform | Package | Download | Use |
 | --- | --- | --- | --- |
-| macOS | DMG | [Download DMG](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.7/FlowPlotGUI-0.9.7-macOS.dmg) | Open the DMG and drag `FlowPlotGUI.app` to Applications. See the macOS note below. |
-| Windows | Installer | [Download installer](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.7/FlowPlotGUI-0.9.7-Windows.exe) | Run the installer. |
-| Windows | Runtime ZIP | [Download ZIP](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.7/FlowPlotGUI-0.9.7-Windows-Runtime.zip) | Unzip and run the included executable. |
-| Linux | AppImage | [Download AppImage](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.7/FlowPlotGUI-0.9.7-x86_64.AppImage) | Mark it executable, then run it. |
-| Linux | Debian package | [Download `.deb`](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.7/flowplotgui_0.9.7_amd64.deb) | Install it with your package installer. |
-| Linux | Tarball | [Download `.tar.gz`](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.7/FlowPlotGUI-0.9.7-Linux.tar.gz) | Extract it and run the included executable. |
+| macOS | DMG | [Download DMG](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.8/FlowPlotGUI-0.9.8-macOS.dmg) | Open the DMG and drag `FlowPlotGUI.app` to Applications. See the macOS note below. |
+| Windows | Installer | [Download installer](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.8/FlowPlotGUI-0.9.8-Windows.exe) | Run the installer. |
+| Windows | Runtime ZIP | [Download ZIP](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.8/FlowPlotGUI-0.9.8-Windows-Runtime.zip) | Unzip and run the included executable. |
+| Linux | AppImage | [Download AppImage](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.8/FlowPlotGUI-0.9.8-x86_64.AppImage) | Mark it executable, then run it. |
+| Linux | Debian package | [Download `.deb`](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.8/flowplotgui_0.9.8_amd64.deb) | Install it with your package installer. |
+| Linux | Tarball | [Download `.tar.gz`](https://github.com/Manwe314/FlowPlot/releases/download/v0.9.8/FlowPlotGUI-0.9.8-Linux.tar.gz) | Extract it and run the included executable. |
 
 ## macOS security notice
 
