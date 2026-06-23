@@ -126,8 +126,7 @@ add_executable(FlowPlotGUI
     ${FLOWPLOTGUI_SOURCES}
 )
 
-# Use the Windows GUI subsystem so launching FlowPlotGUI does not create a
-# console window. main.cpp provides WinMain on Windows and main elsewhere.
+
 if(WIN32)
     set_target_properties(FlowPlotGUI PROPERTIES WIN32_EXECUTABLE TRUE)
 endif()
@@ -264,8 +263,8 @@ elseif(APPLE)
 
     file(READ "${FLOWPLOTGUI_MOLTENVK_ICD_MANIFEST}" FLOWPLOTGUI_MOLTENVK_ICD_CONTENTS)
     string(REGEX REPLACE
-        "\\\"library_path\\\"[ \\t\\r\\n]*:[ \\t\\r\\n]*\\\"[^\\\"]*\\\""
-        "\\\"library_path\\\": \\\"../../../Frameworks/libMoltenVK.dylib\\\""
+        "\"library_path\"[ \\t\\r\\n]*:[ \\t\\r\\n]*\"[^\"]*\""
+        "\"library_path\": \"../../../Frameworks/libMoltenVK.dylib\""
         FLOWPLOTGUI_MOLTENVK_ICD_CONTENTS
         "${FLOWPLOTGUI_MOLTENVK_ICD_CONTENTS}")
     set(FLOWPLOTGUI_BUNDLED_ICD_MANIFEST "${CMAKE_CURRENT_BINARY_DIR}/MoltenVK_icd.json")
