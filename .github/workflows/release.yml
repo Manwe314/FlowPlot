@@ -92,7 +92,7 @@ jobs:
           - name: macOS
             os: macos-latest
             artifact_name: macos
-            cpack_generator: DMG
+            cpack_generator: DragNDrop
 
     steps:
       - name: Checkout source

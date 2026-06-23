@@ -4,7 +4,7 @@ if(POLICY CMP0207)
     cmake_policy(SET CMP0207 NEW)
 endif()
 
-project(FlowPlotGUI VERSION 0.9.9 LANGUAGES CXX)
+project(FlowPlotGUI VERSION 0.9.10 LANGUAGES CXX)
 
 include(GNUInstallDirs)
 
