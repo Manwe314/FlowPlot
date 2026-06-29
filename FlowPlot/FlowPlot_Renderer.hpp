@@ -146,7 +146,7 @@ namespace FlowPlot
 			float fontSizePx,
 			std::string_view text) const override
 		{
-			const LaidOutText layout = layoutText(familyName, weight, style, fontSizePx, text);
+			const LaidOutText layout = layoutText(familyName, weight, style, fontSizePx, text, TextLayoutOptions{});
 			TextMeasurement measurement;
 			measurement.width = layout.width;
 			measurement.height = layout.height;
@@ -164,6 +164,21 @@ namespace FlowPlot
 			std::string_view text,
 			float maxWidth = std::numeric_limits<float>::infinity()) const override
 		{
+			const Spec::TextWrapMode wrapMode =
+				(std::isfinite(maxWidth) && maxWidth > 0.0f)
+				? Spec::TextWrapMode::Character
+				: Spec::TextWrapMode::None;
+			return layoutText(familyName, weight, style, fontSizePx, text, TextLayoutOptions{maxWidth, wrapMode});
+		}
+
+		LaidOutText layoutText(
+			std::string_view familyName,
+			std::uint16_t weight,
+			FontStyle style,
+			float fontSizePx,
+			std::string_view text,
+			const TextLayoutOptions& options) const override
+		{
 			if (fontSizePx <= 0.0f)
 				throw std::invalid_argument("StbTextEngine::layoutText: fontSizePx must be positive");
 
@@ -173,76 +188,42 @@ namespace FlowPlot
 			const float descentPx = static_cast<float>(face.descent) * scale;
 			const float lineGapPx = static_cast<float>(face.lineGap) * scale;
 			const float lineHeightPx = static_cast<float>(face.ascent - face.descent + face.lineGap) * scale;
-			const bool wrapEnabled = std::isfinite(maxWidth) && maxWidth > 0.0f;
+			const bool wrapEnabled =
+				options.wrapMode != Spec::TextWrapMode::None
+				&& std::isfinite(options.maxWidth)
+				&& options.maxWidth > 0.0f;
 
 			LaidOutText layout;
 			layout.ascent = ascentPx;
 			layout.descent = descentPx;
 			layout.lineGap = lineGapPx;
 
-			float lineWidthPx = 0.0f;
+			const std::vector<std::uint32_t> codepoints = decodeUtf8(text);
+			std::vector<std::vector<std::uint32_t>> lines;
+			if (wrapEnabled && options.wrapMode == Spec::TextWrapMode::Word)
+				lines = wrapCodepointsByWord(face, scale, codepoints, options.maxWidth);
+			else
+				lines = wrapCodepointsByCharacter(face, scale, codepoints, wrapEnabled ? options.maxWidth : std::numeric_limits<float>::infinity());
+			if (lines.empty())
+				lines.emplace_back();
+
 			float maxLineWidthPx = 0.0f;
 			float baselineY = ascentPx;
-			std::size_t lineCount = 1;
-			std::uint32_t previousCodepoint = 0;
-			bool lineHasGlyph = false;
-
-			const std::vector<std::uint32_t> codepoints = decodeUtf8(text);
-			for (const std::uint32_t codepoint : codepoints)
+			for (const std::vector<std::uint32_t>& lineCodepoints : lines)
 			{
-				if (codepoint == static_cast<std::uint32_t>('\n'))
-				{
-					maxLineWidthPx = std::max(maxLineWidthPx, lineWidthPx);
-					lineWidthPx = 0.0f;
-					previousCodepoint = 0;
-					lineHasGlyph = false;
-					baselineY += lineHeightPx;
-					++lineCount;
-					continue;
-				}
-
-				int advanceWidth = 0;
-				int leftSideBearing = 0;
-				stbtt_GetCodepointHMetrics(
-					&face.fontInfo,
-					static_cast<int>(codepoint),
-					&advanceWidth,
-					&leftSideBearing);
-				(void)leftSideBearing;
-
-				float kernAdvancePx = 0.0f;
-				if (previousCodepoint != 0)
-				{
-					const int kernAdvance = stbtt_GetCodepointKernAdvance(
-						&face.fontInfo,
-						static_cast<int>(previousCodepoint),
-						static_cast<int>(codepoint));
-					kernAdvancePx = static_cast<float>(kernAdvance) * scale;
-				}
-
-				const float advancePx = static_cast<float>(advanceWidth) * scale;
-				if (wrapEnabled && lineHasGlyph && (lineWidthPx + kernAdvancePx + advancePx) > maxWidth)
-				{
-					maxLineWidthPx = std::max(maxLineWidthPx, lineWidthPx);
-					lineWidthPx = 0.0f;
-					previousCodepoint = 0;
-					lineHasGlyph = false;
-					kernAdvancePx = 0.0f;
-					baselineY += lineHeightPx;
-					++lineCount;
-				}
-
-				const float glyphX = lineWidthPx + kernAdvancePx;
-				layout.glyphs.push_back(GlyphPlacement{codepoint, glyphX, baselineY});
-
-				lineWidthPx = glyphX + advancePx;
+				const std::size_t firstGlyph = layout.glyphs.size();
+				const float lineWidthPx = appendLineGlyphs(layout, face, scale, lineCodepoints, baselineY);
+				layout.lines.push_back(TextLine{
+					firstGlyph,
+					layout.glyphs.size() - firstGlyph,
+					lineWidthPx,
+					baselineY});
 				maxLineWidthPx = std::max(maxLineWidthPx, lineWidthPx);
-				previousCodepoint = codepoint;
-				lineHasGlyph = true;
+				baselineY += lineHeightPx;
 			}
 
 			layout.width = maxLineWidthPx;
-			layout.height = lineHeightPx * static_cast<float>(lineCount);
+			layout.height = lineHeightPx * static_cast<float>(layout.lines.size());
 			return layout;
 		}
 
@@ -336,20 +317,234 @@ namespace FlowPlot
 			int lineGap = 0;
 		};
 
-		static std::string canonicalizeFamily(std::string_view familyName)
-		{
-			std::string canonical(familyName);
-			std::transform(canonical.begin(), canonical.end(), canonical.begin(), [](unsigned char c)
+			static std::string canonicalizeFamily(std::string_view familyName)
 			{
+				std::string canonical(familyName);
+				std::transform(canonical.begin(), canonical.end(), canonical.begin(), [](unsigned char c)
+				{
 				return static_cast<char>(std::tolower(c));
-			});
-			return canonical;
-		}
+				});
+				return canonical;
+			}
 
-		static std::vector<std::uint32_t> decodeUtf8(std::string_view text)
-		{
-			std::vector<std::uint32_t> out;
-			out.reserve(text.size());
+			static bool isWhitespaceCodepoint(std::uint32_t codepoint) noexcept
+			{
+				return codepoint == static_cast<std::uint32_t>(' ')
+					|| codepoint == static_cast<std::uint32_t>('\t')
+					|| codepoint == static_cast<std::uint32_t>('\r')
+					|| codepoint == static_cast<std::uint32_t>('\f')
+					|| codepoint == static_cast<std::uint32_t>('\v');
+			}
+
+			static float codepointAdvanceWidth(
+				const FontFace& face,
+				float scale,
+				std::uint32_t codepoint)
+			{
+				int advanceWidth = 0;
+				int leftSideBearing = 0;
+				stbtt_GetCodepointHMetrics(
+					&face.fontInfo,
+					static_cast<int>(codepoint),
+					&advanceWidth,
+					&leftSideBearing);
+				(void)leftSideBearing;
+
+				return static_cast<float>(advanceWidth) * scale;
+			}
+
+			static float codepointKernAdvance(
+				const FontFace& face,
+				float scale,
+				std::uint32_t previousCodepoint,
+				std::uint32_t codepoint)
+			{
+				if (previousCodepoint == 0)
+					return 0.0f;
+
+				const int kernAdvance = stbtt_GetCodepointKernAdvance(
+					&face.fontInfo,
+					static_cast<int>(previousCodepoint),
+					static_cast<int>(codepoint));
+				return static_cast<float>(kernAdvance) * scale;
+			}
+
+			static float codepointAdvance(
+				const FontFace& face,
+				float scale,
+				std::uint32_t previousCodepoint,
+				std::uint32_t codepoint)
+			{
+				float advancePx = codepointAdvanceWidth(face, scale, codepoint);
+				if (previousCodepoint != 0)
+					advancePx += codepointKernAdvance(face, scale, previousCodepoint, codepoint);
+				return advancePx;
+			}
+
+			static float measureCodepointLine(
+				const FontFace& face,
+				float scale,
+				const std::vector<std::uint32_t>& codepoints)
+			{
+				float width = 0.0f;
+				std::uint32_t previousCodepoint = 0;
+				for (const std::uint32_t codepoint : codepoints)
+				{
+					width += codepointAdvance(face, scale, previousCodepoint, codepoint);
+					previousCodepoint = codepoint;
+				}
+				return width;
+			}
+
+			static float appendLineGlyphs(
+				LaidOutText& layout,
+				const FontFace& face,
+				float scale,
+				const std::vector<std::uint32_t>& codepoints,
+				float baselineY)
+			{
+				float width = 0.0f;
+				std::uint32_t previousCodepoint = 0;
+				for (const std::uint32_t codepoint : codepoints)
+				{
+					const float kernAdvancePx = codepointKernAdvance(face, scale, previousCodepoint, codepoint);
+					const float glyphX = width + kernAdvancePx;
+					layout.glyphs.push_back(GlyphPlacement{codepoint, glyphX, baselineY});
+					width = glyphX + codepointAdvanceWidth(face, scale, codepoint);
+					previousCodepoint = codepoint;
+				}
+				return width;
+			}
+
+			static std::vector<std::vector<std::uint32_t>> wrapCodepointsByCharacter(
+				const FontFace& face,
+				float scale,
+				const std::vector<std::uint32_t>& codepoints,
+				float maxWidth)
+			{
+				const bool wrapEnabled = std::isfinite(maxWidth) && maxWidth > 0.0f;
+				std::vector<std::vector<std::uint32_t>> lines;
+				lines.emplace_back();
+
+				float lineWidth = 0.0f;
+				std::uint32_t previousCodepoint = 0;
+				for (const std::uint32_t codepoint : codepoints)
+				{
+					if (codepoint == static_cast<std::uint32_t>('\n'))
+					{
+						lines.emplace_back();
+						lineWidth = 0.0f;
+						previousCodepoint = 0;
+						continue;
+					}
+
+					const float advancePx = codepointAdvance(face, scale, previousCodepoint, codepoint);
+					if (wrapEnabled && !lines.back().empty() && (lineWidth + advancePx) > maxWidth)
+					{
+						lines.emplace_back();
+						lineWidth = 0.0f;
+						previousCodepoint = 0;
+					}
+
+					lines.back().push_back(codepoint);
+					lineWidth += codepointAdvance(face, scale, previousCodepoint, codepoint);
+					previousCodepoint = codepoint;
+				}
+				return lines;
+			}
+
+			static std::vector<std::uint32_t> trimTrailingWhitespace(std::vector<std::uint32_t> codepoints)
+			{
+				while (!codepoints.empty() && isWhitespaceCodepoint(codepoints.back()))
+					codepoints.pop_back();
+				return codepoints;
+			}
+
+			static std::vector<std::vector<std::uint32_t>> wrapLongWordByCharacter(
+				const FontFace& face,
+				float scale,
+				const std::vector<std::uint32_t>& word,
+				float maxWidth)
+			{
+				return wrapCodepointsByCharacter(face, scale, word, maxWidth);
+			}
+
+			static std::vector<std::vector<std::uint32_t>> wrapCodepointsByWord(
+				const FontFace& face,
+				float scale,
+				const std::vector<std::uint32_t>& codepoints,
+				float maxWidth)
+			{
+				std::vector<std::vector<std::uint32_t>> lines;
+				std::vector<std::uint32_t> currentLine;
+				std::vector<std::uint32_t> pendingWord;
+				bool pendingSeparator = false;
+
+				auto flushWord = [&]()
+				{
+					if (pendingWord.empty())
+						return;
+
+					std::vector<std::uint32_t> candidate = currentLine;
+					if (pendingSeparator && !candidate.empty())
+						candidate.push_back(static_cast<std::uint32_t>(' '));
+					candidate.insert(candidate.end(), pendingWord.begin(), pendingWord.end());
+
+					if (!currentLine.empty() && measureCodepointLine(face, scale, candidate) > maxWidth)
+					{
+						lines.push_back(trimTrailingWhitespace(std::move(currentLine)));
+						currentLine.clear();
+						pendingSeparator = false;
+					}
+
+					if (currentLine.empty() && measureCodepointLine(face, scale, pendingWord) > maxWidth)
+					{
+						std::vector<std::vector<std::uint32_t>> wordLines = wrapLongWordByCharacter(face, scale, pendingWord, maxWidth);
+						if (!wordLines.empty())
+						{
+							for (std::size_t i = 0; i + 1 < wordLines.size(); ++i)
+								lines.push_back(std::move(wordLines[i]));
+							currentLine = std::move(wordLines.back());
+						}
+					}
+					else
+					{
+						if (pendingSeparator && !currentLine.empty())
+							currentLine.push_back(static_cast<std::uint32_t>(' '));
+						currentLine.insert(currentLine.end(), pendingWord.begin(), pendingWord.end());
+					}
+
+					pendingWord.clear();
+					pendingSeparator = false;
+				};
+
+				for (const std::uint32_t codepoint : codepoints)
+				{
+					if (codepoint == static_cast<std::uint32_t>('\n'))
+					{
+						flushWord();
+						lines.push_back(trimTrailingWhitespace(std::move(currentLine)));
+						currentLine.clear();
+						pendingSeparator = false;
+						continue;
+					}
+					if (isWhitespaceCodepoint(codepoint))
+					{
+						flushWord();
+						pendingSeparator = !currentLine.empty();
+						continue;
+					}
+					pendingWord.push_back(codepoint);
+				}
+				flushWord();
+				lines.push_back(trimTrailingWhitespace(std::move(currentLine)));
+				return lines;
+			}
+
+			static std::vector<std::uint32_t> decodeUtf8(std::string_view text)
+			{
+				std::vector<std::uint32_t> out;
+				out.reserve(text.size());
 
 			const std::size_t n = text.size();
 			std::size_t i = 0;
@@ -941,6 +1136,74 @@ namespace FlowPlot
 			}
 		}
 
+		static bool isVerticalText(Spec::TextOrientation orientation) noexcept
+		{
+			return orientation == Spec::TextOrientation::VerticalClockwise
+				|| orientation == Spec::TextOrientation::VerticalCounterClockwise;
+		}
+
+		static PointF transformTextPixelToVisualBox(
+			const RectF& box,
+			Spec::TextOrientation orientation,
+			float sourceX,
+			float sourceY)
+		{
+			switch (orientation)
+			{
+			case Spec::TextOrientation::VerticalClockwise:
+				return PointF{box.x + box.w - 1.0f - sourceY, box.y + sourceX};
+			case Spec::TextOrientation::VerticalCounterClockwise:
+				return PointF{box.x + sourceY, box.y + box.h - 1.0f - sourceX};
+			case Spec::TextOrientation::Horizontal:
+			default:
+				return PointF{box.x + sourceX, box.y + sourceY};
+			}
+		}
+
+		static void blendGlyphMaskTransformed(
+			ImageRgba8& image,
+			const RectF& box,
+			Spec::TextOrientation orientation,
+			float sourceX,
+			float sourceY,
+			const StbTextEngine::GlyphBitmap& bitmap,
+			Color color,
+			const ClipRectI* clip)
+		{
+			if (bitmap.width <= 0 || bitmap.height <= 0 || bitmap.alpha.empty() || color.a == 0)
+				return;
+
+			for (int y = 0; y < bitmap.height; ++y)
+			{
+				for (int x = 0; x < bitmap.width; ++x)
+				{
+					const std::size_t idx = static_cast<std::size_t>(y) * static_cast<std::size_t>(bitmap.width)
+						+ static_cast<std::size_t>(x);
+					const std::uint8_t coverage = bitmap.alpha[idx];
+					if (coverage == 0)
+						continue;
+
+					const float alphaScale = static_cast<float>(coverage) / 255.0f;
+					Color sampled = color;
+					sampled.a = clampChannel(static_cast<int>(std::lround(static_cast<float>(color.a) * alphaScale)));
+					if (sampled.a == 0)
+						continue;
+
+					const PointF dst = transformTextPixelToVisualBox(
+						box,
+						orientation,
+						sourceX + static_cast<float>(x),
+						sourceY + static_cast<float>(y));
+					blendPixel(
+						image,
+						static_cast<int>(std::lround(dst.x)),
+						static_cast<int>(std::lround(dst.y)),
+						sampled,
+						clip);
+				}
+			}
+		}
+
 		static void drawText(
 			ImageRgba8& image,
 			const TextCommand& cmd,
@@ -951,24 +1214,33 @@ namespace FlowPlot
 			if (cmd.text.empty())
 				return;
 
+			const bool vertical = isVerticalText(cmd.orientation);
+			const float layoutBoxWidth = vertical ? cmd.box.h : cmd.box.w;
+			const float layoutBoxHeight = vertical ? cmd.box.w : cmd.box.h;
+			const float layoutMaxWidth =
+				cmd.wrapMode == Spec::TextWrapMode::None
+				? std::numeric_limits<float>::infinity()
+				: std::max(layoutBoxWidth, 0.0f);
+
 			const LaidOutText layout = engine.layoutText(
 				cmd.fontFamily,
 				cmd.fontWeight,
 				cmd.fontStyle,
 				cmd.fontSize,
-				cmd.text);
+				cmd.text,
+				TextLayoutOptions{layoutMaxWidth, cmd.wrapMode});
 
-			float originX = cmd.box.x;
+			float originX = 0.0f;
 			if (cmd.hAlign == HorizontalAlign::Center)
-				originX = cmd.box.x + (cmd.box.w - layout.width) * 0.5f;
+				originX = (layoutBoxWidth - layout.width) * 0.5f;
 			else if (cmd.hAlign == HorizontalAlign::Right)
-				originX = cmd.box.x + (cmd.box.w - layout.width);
+				originX = layoutBoxWidth - layout.width;
 
-			float originY = cmd.box.y;
+			float originY = 0.0f;
 			if (cmd.vAlign == VerticalAlign::Middle)
-				originY = cmd.box.y + (cmd.box.h - layout.height) * 0.5f;
+				originY = (layoutBoxHeight - layout.height) * 0.5f;
 			else if (cmd.vAlign == VerticalAlign::Bottom)
-				originY = cmd.box.y + (cmd.box.h - layout.height);
+				originY = layoutBoxHeight - layout.height;
 
 			const std::optional<ClipRectI> textBoxClip = cmd.clipToBox ? makeClipRect(image, cmd.box) : std::optional<ClipRectI>{};
 			std::optional<ClipRectI> combinedClip;
@@ -993,9 +1265,26 @@ namespace FlowPlot
 			for (const GlyphPlacement& glyph : layout.glyphs)
 			{
 				const StbTextEngine::GlyphBitmap& bitmap = getGlyphBitmap(glyphCache, *stbEngine, cmd, glyph.codepoint);
-				const int dstX = static_cast<int>(std::lround(originX + glyph.x)) + bitmap.x0;
-				const int dstY = static_cast<int>(std::lround(originY + glyph.y)) + bitmap.y0;
-				blendGlyphMask(image, dstX, dstY, bitmap, cmd.color, finalClip);
+				const float sourceX = originX + glyph.x + static_cast<float>(bitmap.x0);
+				const float sourceY = originY + glyph.y + static_cast<float>(bitmap.y0);
+				if (cmd.orientation == Spec::TextOrientation::Horizontal)
+				{
+					const int dstX = static_cast<int>(std::lround(cmd.box.x + sourceX));
+					const int dstY = static_cast<int>(std::lround(cmd.box.y + sourceY));
+					blendGlyphMask(image, dstX, dstY, bitmap, cmd.color, finalClip);
+				}
+				else
+				{
+					blendGlyphMaskTransformed(
+						image,
+						cmd.box,
+						cmd.orientation,
+						sourceX,
+						sourceY,
+						bitmap,
+						cmd.color,
+						finalClip);
+				}
 			}
 		}
 	};

@@ -43,8 +43,18 @@ UX:
 Bugs:
 - If FlowUi already has the font loaded from imported tample do no work. ???
 
+lessons learned:
+	data inport from csv is really a good idea
+	randomizing data values is a good idea
+	pair plots should be their own category
+	individual component copy/paste would be Fire!
+
+To add now:
+	populate nullOPT x and y and allow GUI to move them. ? OR add a seperate offset option
 
 
+remember:
+	remove extra overload of LayoutText
 
 
 

@@ -65,6 +65,26 @@ CMAKE_BINARY_DIR = /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build
 #=============================================================================
 # Targets provided globally by CMake.
 
+# Special rule for the target package
+package: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Run CPack packaging tool..."
+	/home/lkukhale/cmake-3.30.5-linux-x86_64/bin/cpack --config ./CPackConfig.cmake
+.PHONY : package
+
+# Special rule for the target package
+package/fast: package
+.PHONY : package/fast
+
+# Special rule for the target package_source
+package_source:
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Run CPack packaging tool for source..."
+	/home/lkukhale/cmake-3.30.5-linux-x86_64/bin/cpack --config ./CPackSourceConfig.cmake /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CPackSourceConfig.cmake
+.PHONY : package_source
+
+# Special rule for the target package_source
+package_source/fast: package_source
+.PHONY : package_source/fast
+
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake cache editor..."
@@ -87,7 +107,7 @@ rebuild_cache/fast: rebuild_cache
 
 # Special rule for the target list_install_components
 list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Available install components are: \"Unspecified\""
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Available install components are: \"Runtime\" \"Unspecified\""
 .PHONY : list_install_components
 
 # Special rule for the target list_install_components
@@ -200,19 +220,6 @@ flowui_shaders: cmake_check_build_system
 flowui_shaders/fast:
 	$(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui_shaders.dir/build.make external/FlowUi/CMakeFiles/flowui_shaders.dir/build
 .PHONY : flowui_shaders/fast
-
-#=============================================================================
-# Target rules for targets named flowui_font_baker
-
-# Build rule for target.
-flowui_font_baker: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 flowui_font_baker
-.PHONY : flowui_font_baker
-
-# fast build rule for target.
-flowui_font_baker/fast:
-	$(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui_font_baker.dir/build.make external/FlowUi/CMakeFiles/flowui_font_baker.dir/build
-.PHONY : flowui_font_baker/fast
 
 #=============================================================================
 # Target rules for targets named flowui
@@ -508,12 +515,13 @@ help:
 	@echo "... install/local"
 	@echo "... install/strip"
 	@echo "... list_install_components"
+	@echo "... package"
+	@echo "... package_source"
 	@echo "... rebuild_cache"
 	@echo "... flowplotgui_shaders"
 	@echo "... flowui_shaders"
 	@echo "... FlowPlotGUI"
 	@echo "... flowui"
-	@echo "... flowui_font_baker"
 	@echo "... msdf-atlas-gen"
 	@echo "... msdfgen-core"
 	@echo "... msdfgen-ext"

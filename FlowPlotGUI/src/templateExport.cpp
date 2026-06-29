@@ -220,6 +220,14 @@ JsonValue writeTextSpec(
 	addIfChanged(object, "clip", text.clip, defaults.clip, allocator);
 	addIfChanged(object, "hAlign", text.hAlign, defaults.hAlign, allocator);
 	addIfChanged(object, "vAlign", text.vAlign, defaults.vAlign, allocator);
+	if (text.orientation != defaults.orientation)
+	{
+		addString(object, "orientation", FlowInternal::textOrientationName(text.orientation), allocator);
+	}
+	if (text.wrapMode != defaults.wrapMode)
+	{
+		addString(object, "wrapMode", FlowInternal::textWrapModeName(text.wrapMode), allocator);
+	}
 
 	JsonValue box = writeBoxSpec(text.box, defaults.box, allocator);
 	if (!box.ObjectEmpty())

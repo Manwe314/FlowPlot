@@ -38,21 +38,46 @@ namespace FlowPlot
 			float bottom = 0.0f;
 		};
 
-		struct TextSpec
-		{
-			bool visible = false;
-			std::string text{};
-			std::string fontFamily = "Default";
-			float fontSize = 16.0f;
-			std::uint16_t fontWeight = 400;
-			std::string fontStyle = "normal";
-			std::string color = "#111111";
-			std::string overflow = "clip";
-			bool clip = true;
-			std::string hAlign = "left";
-			std::string vAlign = "top";
-			BoxSpec box{};
-		};
+			enum class TextOrientation : std::uint8_t
+			{
+				Horizontal,
+				VerticalClockwise,
+				VerticalCounterClockwise
+			};
+
+			enum class TextWrapMode : std::uint8_t
+			{
+				None,
+				Word,
+				Character
+			};
+
+			enum class TextBoxSizeMode : std::uint8_t
+			{
+				Auto,
+				Fixed,
+				Max
+			};
+
+			struct TextSpec
+			{
+				bool visible = false;
+				std::string text{};
+				std::string fontFamily = "Default";
+				float fontSize = 16.0f;
+				std::uint16_t fontWeight = 400;
+				std::string fontStyle = "normal";
+				std::string color = "#111111";
+				std::string overflow = "clip";
+				bool clip = true;
+				std::string hAlign = "left";
+				std::string vAlign = "top";
+				TextOrientation orientation = TextOrientation::Horizontal;
+				TextWrapMode wrapMode = TextWrapMode::None;
+				TextBoxSizeMode widthMode = TextBoxSizeMode::Auto;
+				TextBoxSizeMode heightMode = TextBoxSizeMode::Auto;
+				BoxSpec box{};
+			};
 
 		inline TextSpec makeFigureTitleTextSpec()
 		{
@@ -276,10 +301,18 @@ namespace FlowPlot
 			HistogramConfigSpec histogramConfig{};
 		};
 
+		enum class AxisTitlePosition : std::uint8_t
+		{
+			Start,
+			Center,
+			End
+		};
+
 		struct AxisSpec
 		{
 			bool visible = true;
 			TextSpec title{};
+			AxisTitlePosition titlePosition = AxisTitlePosition::Center;
 			std::string scale = "linear";
 			std::optional<float> min = std::nullopt;
 			std::optional<float> max = std::nullopt;
@@ -599,6 +632,10 @@ namespace FlowInternal
     "color": "#111111",
     "overflow": "clip",
     "clip": true,
+    "orientation": "horizontal",
+    "wrapMode": "none",
+    "widthMode": "auto",
+    "heightMode": "auto",
     "box": {
       "x": null,
       "y": null,
@@ -608,6 +645,7 @@ namespace FlowInternal
   },
   "xAxis": {
     "visible": true,
+    "titlePosition": "center",
     "title": {
       "visible": true,
       "text": "X",
@@ -617,6 +655,10 @@ namespace FlowInternal
       "color": "#222222",
       "overflow": "clip",
       "clip": true,
+      "orientation": "horizontal",
+      "wrapMode": "none",
+      "widthMode": "auto",
+      "heightMode": "auto",
       "box": {
         "x": null,
         "y": null,
@@ -650,6 +692,7 @@ namespace FlowInternal
   },
   "xSecondary": {
     "visible": false,
+    "titlePosition": "center",
     "title": {
       "visible": true,
       "text": "X",
@@ -659,6 +702,10 @@ namespace FlowInternal
       "color": "#222222",
       "overflow": "clip",
       "clip": true,
+      "orientation": "horizontal",
+      "wrapMode": "none",
+      "widthMode": "auto",
+      "heightMode": "auto",
       "box": {
         "x": null,
         "y": null,
@@ -692,6 +739,7 @@ namespace FlowInternal
   },
   "yAxis": {
     "visible": true,
+    "titlePosition": "center",
     "title": {
       "visible": true,
       "text": "Y",
@@ -704,6 +752,10 @@ namespace FlowInternal
       "vAlign": "middle",
       "overflow": "clip",
       "clip": true,
+      "orientation": "horizontal",
+      "wrapMode": "none",
+      "widthMode": "auto",
+      "heightMode": "auto",
       "box": {
         "x": null,
         "y": null,
@@ -737,6 +789,7 @@ namespace FlowInternal
   },
   "ySecondary": {
     "visible": false,
+    "titlePosition": "center",
     "title": {
       "visible": true,
       "text": "Y",
@@ -749,6 +802,10 @@ namespace FlowInternal
       "vAlign": "middle",
       "overflow": "clip",
       "clip": true,
+      "orientation": "horizontal",
+      "wrapMode": "none",
+      "widthMode": "auto",
+      "heightMode": "auto",
       "box": {
         "x": null,
         "y": null,
@@ -809,6 +866,10 @@ namespace FlowInternal
       "color": "#111111",
       "overflow": "clip",
       "clip": true,
+      "orientation": "horizontal",
+      "wrapMode": "none",
+      "widthMode": "auto",
+      "heightMode": "auto",
       "box": {
         "x": null,
         "y": null,
@@ -938,14 +999,29 @@ namespace FlowPlot
 		float y = 0.0f;
 	};
 
+	struct TextLine
+	{
+		std::size_t firstGlyph = 0;
+		std::size_t glyphCount = 0;
+		float width = 0.0f;
+		float baselineY = 0.0f;
+	};
+
 	struct LaidOutText
 	{
 		std::vector<GlyphPlacement> glyphs{};
+		std::vector<TextLine> lines{};
 		float width = 0.0f;
 		float height = 0.0f;
 		float ascent = 0.0f;
 		float descent = 0.0f;
 		float lineGap = 0.0f;
+	};
+
+	struct TextLayoutOptions
+	{
+		float maxWidth = std::numeric_limits<float>::infinity();
+		Spec::TextWrapMode wrapMode = Spec::TextWrapMode::None;
 	};
 
 	/**
@@ -1025,6 +1101,17 @@ namespace FlowPlot
 			float fontSizePx,
 			std::string_view text,
 			float maxWidth = std::numeric_limits<float>::infinity()) const = 0;
+
+		virtual LaidOutText layoutText(
+			std::string_view familyName,
+			std::uint16_t weight,
+			FontStyle style,
+			float fontSizePx,
+			std::string_view text,
+			const TextLayoutOptions& options) const
+		{
+			return layoutText(familyName, weight, style, fontSizePx, text, options.maxWidth);
+		}
 	};
 
 	struct BoxCommand
@@ -1055,6 +1142,8 @@ namespace FlowPlot
 		FontStyle fontStyle = FontStyle::Normal;
 		HorizontalAlign hAlign = HorizontalAlign::Left;
 		VerticalAlign vAlign = VerticalAlign::Top;
+		Spec::TextOrientation orientation = Spec::TextOrientation::Horizontal;
+		Spec::TextWrapMode wrapMode = Spec::TextWrapMode::None;
 		bool clipToBox = true;
 	};
 
@@ -1130,6 +1219,150 @@ namespace FlowInternal
 		case FlowPlot::FontStyle::Normal:
 		default:
 			return "normal";
+		}
+	}
+
+	inline FlowPlot::Spec::TextOrientation parseTextOrientation(std::string_view rawOrientation)
+	{
+		std::string orientation;
+		orientation.reserve(rawOrientation.size());
+		for (const char c : rawOrientation)
+		{
+			if (c >= 'A' && c <= 'Z')
+				orientation.push_back(static_cast<char>(c - 'A' + 'a'));
+			else if (c != '-' && c != '_' && c != ' ')
+				orientation.push_back(c);
+		}
+
+		if (orientation.empty() || orientation == "horizontal")
+			return FlowPlot::Spec::TextOrientation::Horizontal;
+		if (orientation == "verticalclockwise")
+			return FlowPlot::Spec::TextOrientation::VerticalClockwise;
+		if (orientation == "verticalcounterclockwise")
+			return FlowPlot::Spec::TextOrientation::VerticalCounterClockwise;
+
+		throw std::invalid_argument("parseTextOrientation: unsupported text orientation '" + std::string(rawOrientation) + "'");
+	}
+
+	inline const char* textOrientationName(FlowPlot::Spec::TextOrientation orientation) noexcept
+	{
+		switch (orientation)
+		{
+		case FlowPlot::Spec::TextOrientation::VerticalClockwise:
+			return "verticalClockwise";
+		case FlowPlot::Spec::TextOrientation::VerticalCounterClockwise:
+			return "verticalCounterClockwise";
+		case FlowPlot::Spec::TextOrientation::Horizontal:
+		default:
+			return "horizontal";
+		}
+	}
+
+	inline FlowPlot::Spec::TextWrapMode parseTextWrapMode(std::string_view rawWrapMode)
+	{
+		std::string wrapMode;
+		wrapMode.reserve(rawWrapMode.size());
+		for (const char c : rawWrapMode)
+		{
+			if (c >= 'A' && c <= 'Z')
+				wrapMode.push_back(static_cast<char>(c - 'A' + 'a'));
+			else if (c != '-' && c != '_' && c != ' ')
+				wrapMode.push_back(c);
+		}
+
+		if (wrapMode.empty() || wrapMode == "none")
+			return FlowPlot::Spec::TextWrapMode::None;
+		if (wrapMode == "word")
+			return FlowPlot::Spec::TextWrapMode::Word;
+		if (wrapMode == "character")
+			return FlowPlot::Spec::TextWrapMode::Character;
+
+		throw std::invalid_argument("parseTextWrapMode: unsupported text wrap mode '" + std::string(rawWrapMode) + "'");
+	}
+
+	inline const char* textWrapModeName(FlowPlot::Spec::TextWrapMode wrapMode) noexcept
+	{
+		switch (wrapMode)
+		{
+		case FlowPlot::Spec::TextWrapMode::Word:
+			return "word";
+		case FlowPlot::Spec::TextWrapMode::Character:
+			return "character";
+		case FlowPlot::Spec::TextWrapMode::None:
+		default:
+			return "none";
+		}
+	}
+
+	inline FlowPlot::Spec::TextBoxSizeMode parseTextBoxSizeMode(std::string_view rawSizeMode)
+	{
+		std::string sizeMode;
+		sizeMode.reserve(rawSizeMode.size());
+		for (const char c : rawSizeMode)
+		{
+			if (c >= 'A' && c <= 'Z')
+				sizeMode.push_back(static_cast<char>(c - 'A' + 'a'));
+			else if (c != '-' && c != '_' && c != ' ')
+				sizeMode.push_back(c);
+		}
+
+		if (sizeMode.empty() || sizeMode == "auto")
+			return FlowPlot::Spec::TextBoxSizeMode::Auto;
+		if (sizeMode == "fixed")
+			return FlowPlot::Spec::TextBoxSizeMode::Fixed;
+		if (sizeMode == "max")
+			return FlowPlot::Spec::TextBoxSizeMode::Max;
+
+		throw std::invalid_argument("parseTextBoxSizeMode: unsupported text box size mode '" + std::string(rawSizeMode) + "'");
+	}
+
+	inline const char* textBoxSizeModeName(FlowPlot::Spec::TextBoxSizeMode sizeMode) noexcept
+	{
+		switch (sizeMode)
+		{
+		case FlowPlot::Spec::TextBoxSizeMode::Fixed:
+			return "fixed";
+		case FlowPlot::Spec::TextBoxSizeMode::Max:
+			return "max";
+		case FlowPlot::Spec::TextBoxSizeMode::Auto:
+		default:
+			return "auto";
+		}
+	}
+
+	inline FlowPlot::Spec::AxisTitlePosition parseAxisTitlePosition(std::string_view rawPosition)
+	{
+		std::string position;
+		position.reserve(rawPosition.size());
+		for (const char c : rawPosition)
+		{
+			if (c >= 'A' && c <= 'Z')
+				position.push_back(static_cast<char>(c - 'A' + 'a'));
+			else if (c != '-' && c != '_' && c != ' ')
+				position.push_back(c);
+		}
+
+		if (position == "start")
+			return FlowPlot::Spec::AxisTitlePosition::Start;
+		if (position.empty() || position == "center")
+			return FlowPlot::Spec::AxisTitlePosition::Center;
+		if (position == "end")
+			return FlowPlot::Spec::AxisTitlePosition::End;
+
+		throw std::invalid_argument("parseAxisTitlePosition: unsupported axis title position '" + std::string(rawPosition) + "'");
+	}
+
+	inline const char* axisTitlePositionName(FlowPlot::Spec::AxisTitlePosition position) noexcept
+	{
+		switch (position)
+		{
+		case FlowPlot::Spec::AxisTitlePosition::Start:
+			return "start";
+		case FlowPlot::Spec::AxisTitlePosition::End:
+			return "end";
+		case FlowPlot::Spec::AxisTitlePosition::Center:
+		default:
+			return "center";
 		}
 	}
 } // namespace FlowInternal
@@ -1782,6 +2015,30 @@ namespace FlowInternal
 			readBool(objectJson, "clip", text.clip, path);
 			readString(objectJson, "hAlign", text.hAlign, path);
 			readString(objectJson, "vAlign", text.vAlign, path);
+			if (const json* orientationJson = findKey(objectJson, "orientation"))
+			{
+				if (!orientationJson->IsString())
+					throw std::runtime_error("compileTemplateToSpec: '" + childPath(path, "orientation") + "' must be a string");
+				text.orientation = FlowInternal::parseTextOrientation(jsonStringToStdString(*orientationJson));
+			}
+			if (const json* wrapModeJson = findKey(objectJson, "wrapMode"))
+			{
+				if (!wrapModeJson->IsString())
+					throw std::runtime_error("compileTemplateToSpec: '" + childPath(path, "wrapMode") + "' must be a string");
+				text.wrapMode = FlowInternal::parseTextWrapMode(jsonStringToStdString(*wrapModeJson));
+			}
+			if (const json* widthModeJson = findKey(objectJson, "widthMode"))
+			{
+				if (!widthModeJson->IsString())
+					throw std::runtime_error("compileTemplateToSpec: '" + childPath(path, "widthMode") + "' must be a string");
+				text.widthMode = FlowInternal::parseTextBoxSizeMode(jsonStringToStdString(*widthModeJson));
+			}
+			if (const json* heightModeJson = findKey(objectJson, "heightMode"))
+			{
+				if (!heightModeJson->IsString())
+					throw std::runtime_error("compileTemplateToSpec: '" + childPath(path, "heightMode") + "' must be a string");
+				text.heightMode = FlowInternal::parseTextBoxSizeMode(jsonStringToStdString(*heightModeJson));
+			}
 
 			if (const json* boxObject = findObject(objectJson, "box", path))
 				applyBoxSpec(text.box, *boxObject, childPath(path, "box"));
@@ -1841,9 +2098,15 @@ namespace FlowInternal
 			}
 		}
 
-			inline void applyAxisSpec(FlowPlot::Spec::AxisSpec& axis, const json& objectJson, const std::string& path)
-			{
+		inline void applyAxisSpec(FlowPlot::Spec::AxisSpec& axis, const json& objectJson, const std::string& path)
+		{
 			readBool(objectJson, "visible", axis.visible, path);
+			if (const json* titlePositionJson = findKey(objectJson, "titlePosition"))
+			{
+				if (!titlePositionJson->IsString())
+					throw std::runtime_error("compileTemplateToSpec: '" + childPath(path, "titlePosition") + "' must be a string");
+				axis.titlePosition = FlowInternal::parseAxisTitlePosition(jsonStringToStdString(*titlePositionJson));
+			}
 			readString(objectJson, "scale", axis.scale, path);
 			readOptionalFloat(objectJson, "min", axis.min, path);
 			readOptionalFloat(objectJson, "max", axis.max, path);
@@ -1870,67 +2133,67 @@ namespace FlowInternal
 
 				if (const json* titleObject = findObject(objectJson, "title", path))
 					applyTextSpec(axis.title, *titleObject, childPath(path, "title"));
-			}
+		}
 
-			inline FlowPlot::Spec::AxisDataRole parseAxisDataRoleToken(std::string_view token, const std::string& path)
-			{
-				std::size_t begin = 0;
-				while (begin < token.size() && std::isspace(static_cast<unsigned char>(token[begin])) != 0)
-					++begin;
-				std::size_t end = token.size();
-				while (end > begin && std::isspace(static_cast<unsigned char>(token[end - 1])) != 0)
-					--end;
+		inline FlowPlot::Spec::AxisDataRole parseAxisDataRoleToken(std::string_view token, const std::string& path)
+		{
+			std::size_t begin = 0;
+			while (begin < token.size() && std::isspace(static_cast<unsigned char>(token[begin])) != 0)
+				++begin;
+			std::size_t end = token.size();
+			while (end > begin && std::isspace(static_cast<unsigned char>(token[end - 1])) != 0)
+				--end;
 
-				std::string mode;
-				mode.reserve(end - begin);
-				for (std::size_t i = begin; i < end; ++i)
-					mode.push_back(static_cast<char>(std::tolower(static_cast<unsigned char>(token[i]))));
+			std::string mode;
+			mode.reserve(end - begin);
+			for (std::size_t i = begin; i < end; ++i)
+				mode.push_back(static_cast<char>(std::tolower(static_cast<unsigned char>(token[i]))));
 
-				if (mode == "null")
-					return FlowPlot::Spec::AxisDataRole::Null;
-				if (mode == "primary")
-					return FlowPlot::Spec::AxisDataRole::Primary;
-				if (mode == "secondary")
-					return FlowPlot::Spec::AxisDataRole::Secondary;
+			if (mode == "null")
+				return FlowPlot::Spec::AxisDataRole::Null;
+			if (mode == "primary")
+				return FlowPlot::Spec::AxisDataRole::Primary;
+			if (mode == "secondary")
+				return FlowPlot::Spec::AxisDataRole::Secondary;
 
-				throw std::runtime_error("compileTemplateToSpec: unsupported axis role '" + std::string(token) + "' at '" + path + "'");
-			}
+			throw std::runtime_error("compileTemplateToSpec: unsupported axis role '" + std::string(token) + "' at '" + path + "'");
+		}
 
-			inline FlowPlot::Spec::HistogramDataAxis parseHistogramDataAxisToken(std::string_view token, const std::string& path)
-			{
-				std::size_t begin = 0;
-				while (begin < token.size() && std::isspace(static_cast<unsigned char>(token[begin])) != 0)
-					++begin;
-				std::size_t end = token.size();
-				while (end > begin && std::isspace(static_cast<unsigned char>(token[end - 1])) != 0)
-					--end;
+		inline FlowPlot::Spec::HistogramDataAxis parseHistogramDataAxisToken(std::string_view token, const std::string& path)
+		{
+			std::size_t begin = 0;
+			while (begin < token.size() && std::isspace(static_cast<unsigned char>(token[begin])) != 0)
+				++begin;
+			std::size_t end = token.size();
+			while (end > begin && std::isspace(static_cast<unsigned char>(token[end - 1])) != 0)
+				--end;
 
-				std::string axis;
-				axis.reserve(end - begin);
-				for (std::size_t i = begin; i < end; ++i)
-					axis.push_back(static_cast<char>(std::tolower(static_cast<unsigned char>(token[i]))));
+			std::string axis;
+			axis.reserve(end - begin);
+			for (std::size_t i = begin; i < end; ++i)
+				axis.push_back(static_cast<char>(std::tolower(static_cast<unsigned char>(token[i]))));
 
-				if (axis == "x")
-					return FlowPlot::Spec::HistogramDataAxis::X;
-				if (axis == "y")
-					return FlowPlot::Spec::HistogramDataAxis::Y;
-				throw std::runtime_error(
-					"compileTemplateToSpec: unsupported histogram data axis '" + std::string(token)
-					+ "' at '" + path + "' (expected 'x' or 'y')");
-			}
+			if (axis == "x")
+				return FlowPlot::Spec::HistogramDataAxis::X;
+			if (axis == "y")
+				return FlowPlot::Spec::HistogramDataAxis::Y;
+			throw std::runtime_error(
+				"compileTemplateToSpec: unsupported histogram data axis '" + std::string(token)
+				+ "' at '" + path + "' (expected 'x' or 'y')");
+		}
 
-			inline void applyLayerAxisDataSpec(
-				FlowPlot::Spec::LayerAxisDataSpec& axisData,
-				const json& objectJson,
-				const std::string& path)
-			{
-				std::string xRole = "primary";
-				std::string yRole = "primary";
-				readString(objectJson, "x", xRole, path);
-				readString(objectJson, "y", yRole, path);
-				axisData.x = parseAxisDataRoleToken(xRole, childPath(path, "x"));
-				axisData.y = parseAxisDataRoleToken(yRole, childPath(path, "y"));
-			}
+		inline void applyLayerAxisDataSpec(
+			FlowPlot::Spec::LayerAxisDataSpec& axisData,
+			const json& objectJson,
+			const std::string& path)
+		{
+			std::string xRole = "primary";
+			std::string yRole = "primary";
+			readString(objectJson, "x", xRole, path);
+			readString(objectJson, "y", yRole, path);
+			axisData.x = parseAxisDataRoleToken(xRole, childPath(path, "x"));
+			axisData.y = parseAxisDataRoleToken(yRole, childPath(path, "y"));
+		}
 
 		inline void applyScatterMappingSpec(FlowPlot::Spec::ScatterMappingSpec& mapping, const json& objectJson, const std::string& path)
 		{
@@ -2003,18 +2266,18 @@ namespace FlowInternal
 			readFloat(objectJson, "domainPadding", config.domainPadding, path);
 		}
 
-			inline void applyHistogramMappingSpec(FlowPlot::Spec::HistogramMappingSpec& mapping, const json& objectJson, const std::string& path)
+		inline void applyHistogramMappingSpec(FlowPlot::Spec::HistogramMappingSpec& mapping, const json& objectJson, const std::string& path)
+		{
+			if (const json* dataObject = findObject(objectJson, "data", path))
 			{
-				if (const json* dataObject = findObject(objectJson, "data", path))
-				{
-					readString(*dataObject, "field", mapping.dataField, childPath(path, "data"));
-					std::string axisToken = "x";
-					readString(*dataObject, "axis", axisToken, childPath(path, "data"));
-					mapping.axis = parseHistogramDataAxisToken(axisToken, childPath(path, "data.axis"));
-				}
+				readString(*dataObject, "field", mapping.dataField, childPath(path, "data"));
+				std::string axisToken = "x";
+				readString(*dataObject, "axis", axisToken, childPath(path, "data"));
+				mapping.axis = parseHistogramDataAxisToken(axisToken, childPath(path, "data.axis"));
+			}
 
-				if (const json* colorObject = findObject(objectJson, "color", path))
-				{
+			if (const json* colorObject = findObject(objectJson, "color", path))
+			{
 				readString(*colorObject, "field", mapping.colorField, childPath(path, "color"));
 				if (const json* colorMapObject = findObject(*colorObject, "colorMapping-histogram", childPath(path, "color")))
 				{
@@ -2630,11 +2893,126 @@ namespace FlowInternal
 			throw std::runtime_error("resolvePlotIR: unsupported vertical align '" + std::string(rawAlign) + "' at '" + path + "'");
 		}
 
-		inline FlowPlot::TextMeasurement measureTextForAutoSizing(
-			const FlowPlot::ITextEngine* textEngine,
-			std::string_view fontFamily,
-			std::uint16_t fontWeight,
-			FlowPlot::FontStyle fontStyle,
+			struct ResolvedTextBoxMetrics
+			{
+				FlowPlot::RectF box{};
+				FlowPlot::LaidOutText layout{};
+				float layoutWidth = 0.0f;
+				float layoutHeight = 0.0f;
+				float visualWidth = 0.0f;
+				float visualHeight = 0.0f;
+			};
+
+			inline bool isVerticalText(FlowPlot::Spec::TextOrientation orientation) noexcept
+			{
+				return orientation == FlowPlot::Spec::TextOrientation::VerticalClockwise
+					|| orientation == FlowPlot::Spec::TextOrientation::VerticalCounterClockwise;
+			}
+
+			inline float resolveTextBoxDimension(
+				FlowPlot::Spec::TextBoxSizeMode mode,
+				std::optional<float> requested,
+				float measured,
+				const std::string& path)
+			{
+				if (requested.has_value() && *requested < 0.0f)
+					throw std::runtime_error("resolvePlotIR: text box size must be non-negative at '" + path + "'");
+
+				switch (mode)
+				{
+				case FlowPlot::Spec::TextBoxSizeMode::Fixed:
+					if (!requested.has_value())
+						throw std::runtime_error("resolvePlotIR: fixed text box size requires an explicit value at '" + path + "'");
+					return *requested;
+				case FlowPlot::Spec::TextBoxSizeMode::Max:
+					return requested.has_value() ? std::min(*requested, measured) : measured;
+				case FlowPlot::Spec::TextBoxSizeMode::Auto:
+				default:
+					return requested.value_or(measured);
+				}
+			}
+
+			inline std::optional<float> layoutWidthLimitForTextSpec(const FlowPlot::Spec::TextSpec& textSpec)
+			{
+				if (textSpec.wrapMode == FlowPlot::Spec::TextWrapMode::None)
+					return std::nullopt;
+
+				return isVerticalText(textSpec.orientation)
+					? textSpec.box.height
+					: textSpec.box.width;
+			}
+
+			inline FlowPlot::LaidOutText layoutTextForSpec(
+				const FlowPlot::Spec::TextSpec& textSpec,
+				const FlowPlot::ITextEngine* textEngine,
+				const std::string& path)
+			{
+				if (textEngine == nullptr)
+				{
+					throw std::runtime_error(
+						"resolvePlotIR: '" + path + "' requires text measurement but no text engine is set");
+				}
+
+				const std::optional<float> layoutWidthLimit = layoutWidthLimitForTextSpec(textSpec);
+				return textEngine->layoutText(
+					textSpec.fontFamily,
+					textSpec.fontWeight,
+					FlowInternal::parseFontStyle(textSpec.fontStyle),
+					textSpec.fontSize,
+					textSpec.text,
+					FlowPlot::TextLayoutOptions{
+						layoutWidthLimit.value_or(std::numeric_limits<float>::infinity()),
+						textSpec.wrapMode});
+			}
+
+			inline ResolvedTextBoxMetrics resolveTextBoxMetrics(
+				const FlowPlot::Spec::TextSpec& textSpec,
+				const FlowPlot::ITextEngine* textEngine,
+				const std::string& path)
+			{
+				ResolvedTextBoxMetrics metrics{};
+				metrics.layout = layoutTextForSpec(textSpec, textEngine, path);
+				metrics.layoutWidth = metrics.layout.width;
+				metrics.layoutHeight = metrics.layout.height;
+
+				const bool vertical = isVerticalText(textSpec.orientation);
+				const float measuredVisualWidth = vertical ? metrics.layoutHeight : metrics.layoutWidth;
+				const float measuredVisualHeight = vertical ? metrics.layoutWidth : metrics.layoutHeight;
+
+				metrics.visualWidth = resolveTextBoxDimension(
+					textSpec.widthMode,
+					textSpec.box.width,
+					measuredVisualWidth,
+					path + ".box.width");
+				metrics.visualHeight = resolveTextBoxDimension(
+					textSpec.heightMode,
+					textSpec.box.height,
+					measuredVisualHeight,
+					path + ".box.height");
+				metrics.box = FlowPlot::RectF{
+					textSpec.box.x.value_or(0.0f),
+					textSpec.box.y.value_or(0.0f),
+					metrics.visualWidth,
+					metrics.visualHeight};
+				return metrics;
+			}
+
+			inline FlowPlot::TextMeasurement textMeasurementFromLayout(const FlowPlot::LaidOutText& layout)
+			{
+				FlowPlot::TextMeasurement measured{};
+				measured.width = layout.width;
+				measured.height = layout.height;
+				measured.ascent = layout.ascent;
+				measured.descent = layout.descent;
+				measured.lineGap = layout.lineGap;
+				return measured;
+			}
+
+			inline FlowPlot::TextMeasurement measureTextForAutoSizing(
+				const FlowPlot::ITextEngine* textEngine,
+				std::string_view fontFamily,
+				std::uint16_t fontWeight,
+				FlowPlot::FontStyle fontStyle,
 			float fontSize,
 			std::string_view text,
 			const std::string& path)
@@ -2653,43 +3031,28 @@ namespace FlowInternal
 				text);
 		}
 
-		inline FlowPlot::TextMeasurement measureTextForAutoSizing(
-			const FlowPlot::Spec::TextSpec& textSpec,
-			const FlowPlot::ITextEngine* textEngine,
-			const std::string& path)
-		{
-			return measureTextForAutoSizing(
-				textEngine,
-				textSpec.fontFamily,
-				textSpec.fontWeight,
-				FlowInternal::parseFontStyle(textSpec.fontStyle),
-				textSpec.fontSize,
-				textSpec.text,
-				path);
-		}
+			inline FlowPlot::TextMeasurement measureTextForAutoSizing(
+				const FlowPlot::Spec::TextSpec& textSpec,
+				const FlowPlot::ITextEngine* textEngine,
+				const std::string& path)
+			{
+				return textMeasurementFromLayout(layoutTextForSpec(textSpec, textEngine, path));
+			}
 
-		inline FlowPlot::RectF resolveFigureTitleBox(
-			const FlowPlot::Spec::FigureSpec& figureSpec,
-			const FlowPlot::Spec::TextSpec& textSpec,
-			const FlowPlot::ITextEngine* textEngine)
-		{
-			const bool missingWidth = !textSpec.box.width.has_value();
-			const bool missingHeight = !textSpec.box.height.has_value();
+			inline FlowPlot::RectF resolveFigureTitleBox(
+				const FlowPlot::Spec::FigureSpec& figureSpec,
+				const FlowPlot::Spec::TextSpec& textSpec,
+				const FlowPlot::ITextEngine* textEngine)
+			{
+				ResolvedTextBoxMetrics metrics = resolveTextBoxMetrics(textSpec, textEngine, "figure.title");
 
-			FlowPlot::TextMeasurement measured{};
-			if (missingWidth || missingHeight)
-				measured = measureTextForAutoSizing(textSpec, textEngine, "figure.title.box");
-
-			const float width = textSpec.box.width.value_or(measured.width);
-			const float height = textSpec.box.height.value_or(measured.height);
-			if (width < 0.0f || height < 0.0f)
-				throw std::runtime_error("resolvePlotIR: 'figure.title.box' width/height must be non-negative");
-
-			const float figureWidth = static_cast<float>(figureSpec.width);
-			const float x = textSpec.box.x.value_or((figureWidth - width) * 0.5f);
-			const float y = textSpec.box.y.value_or(figureSpec.padding.top);
-			return FlowPlot::RectF{x, y, width, height};
-		}
+				const float figureWidth = static_cast<float>(figureSpec.width);
+				const float x = textSpec.box.x.value_or((figureWidth - metrics.visualWidth) * 0.5f);
+				const float y = textSpec.box.y.value_or(figureSpec.padding.top);
+				metrics.box.x = x;
+				metrics.box.y = y;
+				return metrics.box;
+			}
 
 		inline ResolvedIR::ResolvedText resolveFigureTitle(
 			const FlowPlot::Spec::FigureSpec& figureSpec,
@@ -2706,6 +3069,8 @@ namespace FlowInternal
 			resolved.color = parseColor(titleSpec.color, "figure.title.color");
 			resolved.hAlign = parseHorizontalAlign(titleSpec.hAlign, "figure.title.hAlign");
 			resolved.vAlign = parseVerticalAlign(titleSpec.vAlign, "figure.title.vAlign");
+			resolved.orientation = titleSpec.orientation;
+			resolved.wrapMode = titleSpec.wrapMode;
 			resolved.clipToBox = titleSpec.clip;
 			resolved.box = resolveFigureTitleBox(figureSpec, titleSpec, textEngine);
 			return resolved;
@@ -2898,29 +3263,21 @@ namespace FlowInternal
 			return FlowPlot::RectF{x, y, panelWidth, panelHeight};
 		}
 
-		inline FlowPlot::RectF resolvePanelTitleBox(
-			const FlowPlot::Spec::PanelSpec& panelSpec,
-			const FlowPlot::RectF& panelFrame,
-			const FlowPlot::Spec::TextSpec& titleSpec,
-			const FlowPlot::ITextEngine* textEngine,
-			const std::string& path)
-		{
-			const bool missingWidth = !titleSpec.box.width.has_value();
-			const bool missingHeight = !titleSpec.box.height.has_value();
+			inline FlowPlot::RectF resolvePanelTitleBox(
+				const FlowPlot::Spec::PanelSpec& panelSpec,
+				const FlowPlot::RectF& panelFrame,
+				const FlowPlot::Spec::TextSpec& titleSpec,
+				const FlowPlot::ITextEngine* textEngine,
+				const std::string& path)
+			{
+				ResolvedTextBoxMetrics metrics = resolveTextBoxMetrics(titleSpec, textEngine, path);
 
-			FlowPlot::TextMeasurement measured{};
-			if (missingWidth || missingHeight)
-				measured = measureTextForAutoSizing(titleSpec, textEngine, path + ".box");
-
-			const float width = titleSpec.box.width.value_or(measured.width);
-			const float height = titleSpec.box.height.value_or(measured.height);
-			if (width < 0.0f || height < 0.0f)
-				throw std::runtime_error("resolvePlotIR: '" + path + ".box' width/height must be non-negative");
-
-			const float x = titleSpec.box.x.value_or(panelFrame.x + (panelFrame.w - width) * 0.5f);
-			const float y = titleSpec.box.y.value_or(panelFrame.y + panelSpec.padding.top);
-			return FlowPlot::RectF{x, y, width, height};
-		}
+				const float x = titleSpec.box.x.value_or(panelFrame.x + (panelFrame.w - metrics.visualWidth) * 0.5f);
+				const float y = titleSpec.box.y.value_or(panelFrame.y + panelSpec.padding.top);
+				metrics.box.x = x;
+				metrics.box.y = y;
+				return metrics.box;
+			}
 
 		inline ResolvedIR::ResolvedText resolvePanelTitle(
 			const FlowPlot::Spec::PanelSpec& panelSpec,
@@ -2940,6 +3297,8 @@ namespace FlowInternal
 			resolved.color = parseColor(titleSpec.color, path + ".color");
 			resolved.hAlign = parseHorizontalAlign(titleSpec.hAlign, path + ".hAlign");
 			resolved.vAlign = parseVerticalAlign(titleSpec.vAlign, path + ".vAlign");
+			resolved.orientation = titleSpec.orientation;
+			resolved.wrapMode = titleSpec.wrapMode;
 			resolved.clipToBox = titleSpec.clip;
 			resolved.box = resolvePanelTitleBox(panelSpec, panelFrame, titleSpec, textEngine, path);
 			return resolved;
@@ -3009,6 +3368,37 @@ namespace FlowInternal
 					offsets.push_back(start + step * static_cast<float>(minorIdx));
 			}
 			return offsets;
+		}
+
+		inline float resolveAxisTitleAnchorOffset(
+			FlowPlot::Spec::AxisTitlePosition position,
+			const std::vector<float>& majorOffsets,
+			float axisLength) noexcept
+		{
+			if (majorOffsets.empty())
+			{
+				switch (position)
+				{
+				case FlowPlot::Spec::AxisTitlePosition::Start:
+					return 0.0f;
+				case FlowPlot::Spec::AxisTitlePosition::End:
+					return axisLength;
+				case FlowPlot::Spec::AxisTitlePosition::Center:
+				default:
+					return axisLength * 0.5f;
+				}
+			}
+
+			switch (position)
+			{
+			case FlowPlot::Spec::AxisTitlePosition::Start:
+				return majorOffsets.front();
+			case FlowPlot::Spec::AxisTitlePosition::End:
+				return majorOffsets.back();
+			case FlowPlot::Spec::AxisTitlePosition::Center:
+			default:
+				return (majorOffsets.front() + majorOffsets.back()) * 0.5f;
+			}
 		}
 
 		template<typename T>
@@ -3924,45 +4314,46 @@ namespace FlowInternal
 
 				float titleWidth = 0.0f;
 				float titleHeight = 0.0f;
-				if (axisSpec.title.visible)
-				{
-					const FlowPlot::Spec::TextSpec& titleSpec = axisSpec.title;
-					const bool missingWidth = !titleSpec.box.width.has_value();
-					const bool missingHeight = !titleSpec.box.height.has_value();
-					FlowPlot::TextMeasurement measuredTitle{};
-					if (missingWidth || missingHeight)
+					if (axisSpec.title.visible)
 					{
-						measuredTitle = measureTextForAutoSizing(
-							textEngine,
-							titleSpec.fontFamily,
-							titleSpec.fontWeight,
-							FlowInternal::parseFontStyle(titleSpec.fontStyle),
-							titleSpec.fontSize,
-							titleSpec.text,
-							path + ".title.box");
-					}
+						const FlowPlot::Spec::TextSpec& titleSpec = axisSpec.title;
+						const ResolvedTextBoxMetrics titleMetrics = resolveTextBoxMetrics(titleSpec, textEngine, path + ".title");
+						titleWidth = titleMetrics.visualWidth;
+						titleHeight = titleMetrics.visualHeight;
 
-					titleWidth = titleSpec.box.width.value_or(measuredTitle.width);
-					titleHeight = titleSpec.box.height.value_or(measuredTitle.height);
-					if (titleWidth < 0.0f || titleHeight < 0.0f)
-						throw std::runtime_error("resolvePlotIR: axis title box width/height must be non-negative at '" + path + ".title.box'");
+					const bool hasExplicitAlongPosition = isXAxis
+						? titleSpec.box.x.has_value()
+						: titleSpec.box.y.has_value();
+					if (!hasExplicitAlongPosition)
+					{
+						const float titleLength = isXAxis ? titleWidth : titleHeight;
+						const float anchorOffset = resolveAxisTitleAnchorOffset(
+							axisSpec.titlePosition,
+							majorOffsets,
+							axisLength);
+						const float lowerOverflow = std::max(0.0f, (titleLength * 0.5f) - anchorOffset);
+						const float upperOverflow = std::max(0.0f, anchorOffset + (titleLength * 0.5f) - axisLength);
 
-					if (isXAxis)
-					{
-						const float titleSpill = (titleWidth - axisLength) * 0.5f;
-						measure.spillStart = std::max(measure.spillStart, titleSpill);
-						measure.spillEnd = std::max(measure.spillEnd, titleSpill);
-					}
-					else
-					{
-						measure.spillStart = std::max(measure.spillStart, titleHeight);
+						if (isXAxis)
+						{
+							measure.spillStart = std::max(measure.spillStart, lowerOverflow);
+							measure.spillEnd = std::max(measure.spillEnd, upperOverflow);
+						}
+						else
+						{
+							measure.spillStart = std::max(measure.spillStart, upperOverflow);
+							measure.spillEnd = std::max(measure.spillEnd, lowerOverflow);
+						}
 					}
 				}
 
 				const float tickLabelOutward = majorOffsets.empty()
 					? 0.0f
 					: axisSpec.tickLength + axisSpec.tickValueGap + (isXAxis ? largestTickLabelHeight : largestTickLabelWidth);
-				const float titleOutward = axisSpec.title.visible
+				const bool titleUsesAutomaticCrossPosition = isXAxis
+					? !axisSpec.title.box.y.has_value()
+					: !axisSpec.title.box.x.has_value();
+				const float titleOutward = axisSpec.title.visible && titleUsesAutomaticCrossPosition
 					? (axisSpec.lineWidth * 0.5f + axisSpec.tickLength + axisSpec.tickValueGap + (isXAxis ? largestTickLabelHeight + titleHeight : largestTickLabelWidth + titleWidth))
 					: 0.0f;
 				measure.outward = std::max({
@@ -4222,32 +4613,19 @@ namespace FlowInternal
 				resolved.tickLabels.push_back(std::move(label));
 			}
 
-			if (axisSpec.title.visible)
-			{
-				const FlowPlot::Spec::TextSpec& titleSpec = axisSpec.title;
-
-				const bool missingWidth = !titleSpec.box.width.has_value();
-				const bool missingHeight = !titleSpec.box.height.has_value();
-				FlowPlot::TextMeasurement measuredTitle{};
-				if (missingWidth || missingHeight)
+				if (axisSpec.title.visible)
 				{
-					measuredTitle = measureTextForAutoSizing(
-						textEngine,
-						titleSpec.fontFamily,
-						titleSpec.fontWeight,
-						FlowInternal::parseFontStyle(titleSpec.fontStyle),
-						titleSpec.fontSize,
-						titleSpec.text,
-						path + ".title.box");
-				}
+					const FlowPlot::Spec::TextSpec& titleSpec = axisSpec.title;
+					const ResolvedTextBoxMetrics titleMetrics = resolveTextBoxMetrics(titleSpec, textEngine, path + ".title");
+					const float titleWidth = titleMetrics.visualWidth;
+					const float titleHeight = titleMetrics.visualHeight;
+					const float titleAnchorOffset = resolveAxisTitleAnchorOffset(
+						axisSpec.titlePosition,
+						majorOffsets,
+						axisLength);
 
-				const float titleWidth = titleSpec.box.width.value_or(measuredTitle.width);
-				const float titleHeight = titleSpec.box.height.value_or(measuredTitle.height);
-				if (titleWidth < 0.0f || titleHeight < 0.0f)
-					throw std::runtime_error("resolvePlotIR: axis title box width/height must be non-negative at '" + path + ".title.box'");
-
-					const float defaultX = isXAxis
-						? ((axisStart.x + (axisLength * 0.5f)) - (titleWidth * 0.5f))
+						const float defaultX = isXAxis
+							? (axisStart.x + titleAnchorOffset - (titleWidth * 0.5f))
 						: ([&]()
 						{
 							const float anchorX = axisStart.x + (axisSpec.lineWidth * 0.5f + axisSpec.tickLength + axisSpec.tickValueGap + largestTickLabelWidth) * tickDirection;
@@ -4259,7 +4637,7 @@ namespace FlowInternal
 							const float anchorY = axisStart.y + (axisSpec.lineWidth * 0.5f + axisSpec.tickLength + axisSpec.tickValueGap + largestTickLabelHeight) * tickDirection;
 							return (tickDirection > 0.0f) ? anchorY : (anchorY - titleHeight);
 						})()
-						: (axisEnd.y - titleHeight);
+						: (axisStart.y - titleAnchorOffset - (titleHeight * 0.5f));
 
 				ResolvedIR::ResolvedText title{};
 				title.text = titleSpec.text;
@@ -4267,15 +4645,17 @@ namespace FlowInternal
 				title.fontSize = titleSpec.fontSize;
 				title.fontWeight = titleSpec.fontWeight;
 				title.fontStyle = FlowInternal::parseFontStyle(titleSpec.fontStyle);
-				title.color = parseColor(titleSpec.color, path + ".title.color");
-				title.hAlign = parseHorizontalAlign(titleSpec.hAlign, path + ".title.hAlign");
-				title.vAlign = parseVerticalAlign(titleSpec.vAlign, path + ".title.vAlign");
-				title.clipToBox = titleSpec.clip;
-				title.box.w = titleWidth;
-				title.box.h = titleHeight;
-				title.box.x = titleSpec.box.x.value_or(defaultX);
-				title.box.y = titleSpec.box.y.value_or(defaultY);
-				resolved.title = std::move(title);
+					title.color = parseColor(titleSpec.color, path + ".title.color");
+					title.hAlign = parseHorizontalAlign(titleSpec.hAlign, path + ".title.hAlign");
+					title.vAlign = parseVerticalAlign(titleSpec.vAlign, path + ".title.vAlign");
+					title.orientation = titleSpec.orientation;
+					title.wrapMode = titleSpec.wrapMode;
+					title.clipToBox = titleSpec.clip;
+					title.box.w = titleMetrics.visualWidth;
+					title.box.h = titleMetrics.visualHeight;
+					title.box.x = titleSpec.box.x.value_or(defaultX);
+					title.box.y = titleSpec.box.y.value_or(defaultY);
+					resolved.title = std::move(title);
 			}
 
 			return resolved;
@@ -6043,7 +6423,7 @@ namespace FlowPlot
 		 * to outlive this call.
 		 *
 		 * @code{.cpp}
-		 * auto builder = FlowPlot::makePlot("Scatter")
+		 * auto builder = FlowPlot::plot("Scatter")
 		 *     .set("figure.width", 1280)
 		 *     .set("panels[0].title.text", "Quarterly results");
 		 * @endcode
@@ -6294,6 +6674,14 @@ namespace FlowPlot
 		 * FlowPlot::RenderPlot commands = builder.getCommands(); // x is still alive
 		 * @endcode
 		 *
+		 * or more commonly:
+		 *
+		 * @code{.cpp}
+		 * std::vector<double> x{1.0, 2.0, 3.0};
+		 * std::vector<double> y{4.0, 5.0, 6.0};
+		 * FlowPlot::plot("Scatter").withData("main.x", x).withData("main.y", y).writePng("out.png");
+		 * @endcode
+		 *
 		 * @return This builder, so calls can be chained.
 		 * @throws std::invalid_argument if the field path or element type is unsupported.
 		 */
@@ -6355,6 +6743,8 @@ namespace FlowPlot
 		 * @warning @p textEngine must remain alive until getCommands() or writePng() has
 		 * completed. The builder stores a non-owning pointer; destroying the engine first
 		 * leaves it dangling and causes invalid plot execution.
+		 *
+		 * @note In most cases, the default StbTextEngine is sufficient.
 		 *
 		 * @code{.cpp}
 		 * FlowPlot::StbTextEngine fonts{"/path/to/default.ttf"};
@@ -6683,7 +7073,7 @@ namespace FlowPlot
 			float fontSizePx,
 			std::string_view text) const override
 		{
-			const LaidOutText layout = layoutText(familyName, weight, style, fontSizePx, text);
+			const LaidOutText layout = layoutText(familyName, weight, style, fontSizePx, text, TextLayoutOptions{});
 			TextMeasurement measurement;
 			measurement.width = layout.width;
 			measurement.height = layout.height;
@@ -6701,6 +7091,21 @@ namespace FlowPlot
 			std::string_view text,
 			float maxWidth = std::numeric_limits<float>::infinity()) const override
 		{
+			const Spec::TextWrapMode wrapMode =
+				(std::isfinite(maxWidth) && maxWidth > 0.0f)
+				? Spec::TextWrapMode::Character
+				: Spec::TextWrapMode::None;
+			return layoutText(familyName, weight, style, fontSizePx, text, TextLayoutOptions{maxWidth, wrapMode});
+		}
+
+		LaidOutText layoutText(
+			std::string_view familyName,
+			std::uint16_t weight,
+			FontStyle style,
+			float fontSizePx,
+			std::string_view text,
+			const TextLayoutOptions& options) const override
+		{
 			if (fontSizePx <= 0.0f)
 				throw std::invalid_argument("StbTextEngine::layoutText: fontSizePx must be positive");
 
@@ -6710,76 +7115,42 @@ namespace FlowPlot
 			const float descentPx = static_cast<float>(face.descent) * scale;
 			const float lineGapPx = static_cast<float>(face.lineGap) * scale;
 			const float lineHeightPx = static_cast<float>(face.ascent - face.descent + face.lineGap) * scale;
-			const bool wrapEnabled = std::isfinite(maxWidth) && maxWidth > 0.0f;
+			const bool wrapEnabled =
+				options.wrapMode != Spec::TextWrapMode::None
+				&& std::isfinite(options.maxWidth)
+				&& options.maxWidth > 0.0f;
 
 			LaidOutText layout;
 			layout.ascent = ascentPx;
 			layout.descent = descentPx;
 			layout.lineGap = lineGapPx;
 
-			float lineWidthPx = 0.0f;
+			const std::vector<std::uint32_t> codepoints = decodeUtf8(text);
+			std::vector<std::vector<std::uint32_t>> lines;
+			if (wrapEnabled && options.wrapMode == Spec::TextWrapMode::Word)
+				lines = wrapCodepointsByWord(face, scale, codepoints, options.maxWidth);
+			else
+				lines = wrapCodepointsByCharacter(face, scale, codepoints, wrapEnabled ? options.maxWidth : std::numeric_limits<float>::infinity());
+			if (lines.empty())
+				lines.emplace_back();
+
 			float maxLineWidthPx = 0.0f;
 			float baselineY = ascentPx;
-			std::size_t lineCount = 1;
-			std::uint32_t previousCodepoint = 0;
-			bool lineHasGlyph = false;
-
-			const std::vector<std::uint32_t> codepoints = decodeUtf8(text);
-			for (const std::uint32_t codepoint : codepoints)
+			for (const std::vector<std::uint32_t>& lineCodepoints : lines)
 			{
-				if (codepoint == static_cast<std::uint32_t>('\n'))
-				{
-					maxLineWidthPx = std::max(maxLineWidthPx, lineWidthPx);
-					lineWidthPx = 0.0f;
-					previousCodepoint = 0;
-					lineHasGlyph = false;
-					baselineY += lineHeightPx;
-					++lineCount;
-					continue;
-				}
-
-				int advanceWidth = 0;
-				int leftSideBearing = 0;
-				stbtt_GetCodepointHMetrics(
-					&face.fontInfo,
-					static_cast<int>(codepoint),
-					&advanceWidth,
-					&leftSideBearing);
-				(void)leftSideBearing;
-
-				float kernAdvancePx = 0.0f;
-				if (previousCodepoint != 0)
-				{
-					const int kernAdvance = stbtt_GetCodepointKernAdvance(
-						&face.fontInfo,
-						static_cast<int>(previousCodepoint),
-						static_cast<int>(codepoint));
-					kernAdvancePx = static_cast<float>(kernAdvance) * scale;
-				}
-
-				const float advancePx = static_cast<float>(advanceWidth) * scale;
-				if (wrapEnabled && lineHasGlyph && (lineWidthPx + kernAdvancePx + advancePx) > maxWidth)
-				{
-					maxLineWidthPx = std::max(maxLineWidthPx, lineWidthPx);
-					lineWidthPx = 0.0f;
-					previousCodepoint = 0;
-					lineHasGlyph = false;
-					kernAdvancePx = 0.0f;
-					baselineY += lineHeightPx;
-					++lineCount;
-				}
-
-				const float glyphX = lineWidthPx + kernAdvancePx;
-				layout.glyphs.push_back(GlyphPlacement{codepoint, glyphX, baselineY});
-
-				lineWidthPx = glyphX + advancePx;
+				const std::size_t firstGlyph = layout.glyphs.size();
+				const float lineWidthPx = appendLineGlyphs(layout, face, scale, lineCodepoints, baselineY);
+				layout.lines.push_back(TextLine{
+					firstGlyph,
+					layout.glyphs.size() - firstGlyph,
+					lineWidthPx,
+					baselineY});
 				maxLineWidthPx = std::max(maxLineWidthPx, lineWidthPx);
-				previousCodepoint = codepoint;
-				lineHasGlyph = true;
+				baselineY += lineHeightPx;
 			}
 
 			layout.width = maxLineWidthPx;
-			layout.height = lineHeightPx * static_cast<float>(lineCount);
+			layout.height = lineHeightPx * static_cast<float>(layout.lines.size());
 			return layout;
 		}
 
@@ -6873,20 +7244,234 @@ namespace FlowPlot
 			int lineGap = 0;
 		};
 
-		static std::string canonicalizeFamily(std::string_view familyName)
-		{
-			std::string canonical(familyName);
-			std::transform(canonical.begin(), canonical.end(), canonical.begin(), [](unsigned char c)
+			static std::string canonicalizeFamily(std::string_view familyName)
 			{
+				std::string canonical(familyName);
+				std::transform(canonical.begin(), canonical.end(), canonical.begin(), [](unsigned char c)
+				{
 				return static_cast<char>(std::tolower(c));
-			});
-			return canonical;
-		}
+				});
+				return canonical;
+			}
 
-		static std::vector<std::uint32_t> decodeUtf8(std::string_view text)
-		{
-			std::vector<std::uint32_t> out;
-			out.reserve(text.size());
+			static bool isWhitespaceCodepoint(std::uint32_t codepoint) noexcept
+			{
+				return codepoint == static_cast<std::uint32_t>(' ')
+					|| codepoint == static_cast<std::uint32_t>('\t')
+					|| codepoint == static_cast<std::uint32_t>('\r')
+					|| codepoint == static_cast<std::uint32_t>('\f')
+					|| codepoint == static_cast<std::uint32_t>('\v');
+			}
+
+			static float codepointAdvanceWidth(
+				const FontFace& face,
+				float scale,
+				std::uint32_t codepoint)
+			{
+				int advanceWidth = 0;
+				int leftSideBearing = 0;
+				stbtt_GetCodepointHMetrics(
+					&face.fontInfo,
+					static_cast<int>(codepoint),
+					&advanceWidth,
+					&leftSideBearing);
+				(void)leftSideBearing;
+
+				return static_cast<float>(advanceWidth) * scale;
+			}
+
+			static float codepointKernAdvance(
+				const FontFace& face,
+				float scale,
+				std::uint32_t previousCodepoint,
+				std::uint32_t codepoint)
+			{
+				if (previousCodepoint == 0)
+					return 0.0f;
+
+				const int kernAdvance = stbtt_GetCodepointKernAdvance(
+					&face.fontInfo,
+					static_cast<int>(previousCodepoint),
+					static_cast<int>(codepoint));
+				return static_cast<float>(kernAdvance) * scale;
+			}
+
+			static float codepointAdvance(
+				const FontFace& face,
+				float scale,
+				std::uint32_t previousCodepoint,
+				std::uint32_t codepoint)
+			{
+				float advancePx = codepointAdvanceWidth(face, scale, codepoint);
+				if (previousCodepoint != 0)
+					advancePx += codepointKernAdvance(face, scale, previousCodepoint, codepoint);
+				return advancePx;
+			}
+
+			static float measureCodepointLine(
+				const FontFace& face,
+				float scale,
+				const std::vector<std::uint32_t>& codepoints)
+			{
+				float width = 0.0f;
+				std::uint32_t previousCodepoint = 0;
+				for (const std::uint32_t codepoint : codepoints)
+				{
+					width += codepointAdvance(face, scale, previousCodepoint, codepoint);
+					previousCodepoint = codepoint;
+				}
+				return width;
+			}
+
+			static float appendLineGlyphs(
+				LaidOutText& layout,
+				const FontFace& face,
+				float scale,
+				const std::vector<std::uint32_t>& codepoints,
+				float baselineY)
+			{
+				float width = 0.0f;
+				std::uint32_t previousCodepoint = 0;
+				for (const std::uint32_t codepoint : codepoints)
+				{
+					const float kernAdvancePx = codepointKernAdvance(face, scale, previousCodepoint, codepoint);
+					const float glyphX = width + kernAdvancePx;
+					layout.glyphs.push_back(GlyphPlacement{codepoint, glyphX, baselineY});
+					width = glyphX + codepointAdvanceWidth(face, scale, codepoint);
+					previousCodepoint = codepoint;
+				}
+				return width;
+			}
+
+			static std::vector<std::vector<std::uint32_t>> wrapCodepointsByCharacter(
+				const FontFace& face,
+				float scale,
+				const std::vector<std::uint32_t>& codepoints,
+				float maxWidth)
+			{
+				const bool wrapEnabled = std::isfinite(maxWidth) && maxWidth > 0.0f;
+				std::vector<std::vector<std::uint32_t>> lines;
+				lines.emplace_back();
+
+				float lineWidth = 0.0f;
+				std::uint32_t previousCodepoint = 0;
+				for (const std::uint32_t codepoint : codepoints)
+				{
+					if (codepoint == static_cast<std::uint32_t>('\n'))
+					{
+						lines.emplace_back();
+						lineWidth = 0.0f;
+						previousCodepoint = 0;
+						continue;
+					}
+
+					const float advancePx = codepointAdvance(face, scale, previousCodepoint, codepoint);
+					if (wrapEnabled && !lines.back().empty() && (lineWidth + advancePx) > maxWidth)
+					{
+						lines.emplace_back();
+						lineWidth = 0.0f;
+						previousCodepoint = 0;
+					}
+
+					lines.back().push_back(codepoint);
+					lineWidth += codepointAdvance(face, scale, previousCodepoint, codepoint);
+					previousCodepoint = codepoint;
+				}
+				return lines;
+			}
+
+			static std::vector<std::uint32_t> trimTrailingWhitespace(std::vector<std::uint32_t> codepoints)
+			{
+				while (!codepoints.empty() && isWhitespaceCodepoint(codepoints.back()))
+					codepoints.pop_back();
+				return codepoints;
+			}
+
+			static std::vector<std::vector<std::uint32_t>> wrapLongWordByCharacter(
+				const FontFace& face,
+				float scale,
+				const std::vector<std::uint32_t>& word,
+				float maxWidth)
+			{
+				return wrapCodepointsByCharacter(face, scale, word, maxWidth);
+			}
+
+			static std::vector<std::vector<std::uint32_t>> wrapCodepointsByWord(
+				const FontFace& face,
+				float scale,
+				const std::vector<std::uint32_t>& codepoints,
+				float maxWidth)
+			{
+				std::vector<std::vector<std::uint32_t>> lines;
+				std::vector<std::uint32_t> currentLine;
+				std::vector<std::uint32_t> pendingWord;
+				bool pendingSeparator = false;
+
+				auto flushWord = [&]()
+				{
+					if (pendingWord.empty())
+						return;
+
+					std::vector<std::uint32_t> candidate = currentLine;
+					if (pendingSeparator && !candidate.empty())
+						candidate.push_back(static_cast<std::uint32_t>(' '));
+					candidate.insert(candidate.end(), pendingWord.begin(), pendingWord.end());
+
+					if (!currentLine.empty() && measureCodepointLine(face, scale, candidate) > maxWidth)
+					{
+						lines.push_back(trimTrailingWhitespace(std::move(currentLine)));
+						currentLine.clear();
+						pendingSeparator = false;
+					}
+
+					if (currentLine.empty() && measureCodepointLine(face, scale, pendingWord) > maxWidth)
+					{
+						std::vector<std::vector<std::uint32_t>> wordLines = wrapLongWordByCharacter(face, scale, pendingWord, maxWidth);
+						if (!wordLines.empty())
+						{
+							for (std::size_t i = 0; i + 1 < wordLines.size(); ++i)
+								lines.push_back(std::move(wordLines[i]));
+							currentLine = std::move(wordLines.back());
+						}
+					}
+					else
+					{
+						if (pendingSeparator && !currentLine.empty())
+							currentLine.push_back(static_cast<std::uint32_t>(' '));
+						currentLine.insert(currentLine.end(), pendingWord.begin(), pendingWord.end());
+					}
+
+					pendingWord.clear();
+					pendingSeparator = false;
+				};
+
+				for (const std::uint32_t codepoint : codepoints)
+				{
+					if (codepoint == static_cast<std::uint32_t>('\n'))
+					{
+						flushWord();
+						lines.push_back(trimTrailingWhitespace(std::move(currentLine)));
+						currentLine.clear();
+						pendingSeparator = false;
+						continue;
+					}
+					if (isWhitespaceCodepoint(codepoint))
+					{
+						flushWord();
+						pendingSeparator = !currentLine.empty();
+						continue;
+					}
+					pendingWord.push_back(codepoint);
+				}
+				flushWord();
+				lines.push_back(trimTrailingWhitespace(std::move(currentLine)));
+				return lines;
+			}
+
+			static std::vector<std::uint32_t> decodeUtf8(std::string_view text)
+			{
+				std::vector<std::uint32_t> out;
+				out.reserve(text.size());
 
 			const std::size_t n = text.size();
 			std::size_t i = 0;
@@ -7478,6 +8063,74 @@ namespace FlowPlot
 			}
 		}
 
+		static bool isVerticalText(Spec::TextOrientation orientation) noexcept
+		{
+			return orientation == Spec::TextOrientation::VerticalClockwise
+				|| orientation == Spec::TextOrientation::VerticalCounterClockwise;
+		}
+
+		static PointF transformTextPixelToVisualBox(
+			const RectF& box,
+			Spec::TextOrientation orientation,
+			float sourceX,
+			float sourceY)
+		{
+			switch (orientation)
+			{
+			case Spec::TextOrientation::VerticalClockwise:
+				return PointF{box.x + box.w - 1.0f - sourceY, box.y + sourceX};
+			case Spec::TextOrientation::VerticalCounterClockwise:
+				return PointF{box.x + sourceY, box.y + box.h - 1.0f - sourceX};
+			case Spec::TextOrientation::Horizontal:
+			default:
+				return PointF{box.x + sourceX, box.y + sourceY};
+			}
+		}
+
+		static void blendGlyphMaskTransformed(
+			ImageRgba8& image,
+			const RectF& box,
+			Spec::TextOrientation orientation,
+			float sourceX,
+			float sourceY,
+			const StbTextEngine::GlyphBitmap& bitmap,
+			Color color,
+			const ClipRectI* clip)
+		{
+			if (bitmap.width <= 0 || bitmap.height <= 0 || bitmap.alpha.empty() || color.a == 0)
+				return;
+
+			for (int y = 0; y < bitmap.height; ++y)
+			{
+				for (int x = 0; x < bitmap.width; ++x)
+				{
+					const std::size_t idx = static_cast<std::size_t>(y) * static_cast<std::size_t>(bitmap.width)
+						+ static_cast<std::size_t>(x);
+					const std::uint8_t coverage = bitmap.alpha[idx];
+					if (coverage == 0)
+						continue;
+
+					const float alphaScale = static_cast<float>(coverage) / 255.0f;
+					Color sampled = color;
+					sampled.a = clampChannel(static_cast<int>(std::lround(static_cast<float>(color.a) * alphaScale)));
+					if (sampled.a == 0)
+						continue;
+
+					const PointF dst = transformTextPixelToVisualBox(
+						box,
+						orientation,
+						sourceX + static_cast<float>(x),
+						sourceY + static_cast<float>(y));
+					blendPixel(
+						image,
+						static_cast<int>(std::lround(dst.x)),
+						static_cast<int>(std::lround(dst.y)),
+						sampled,
+						clip);
+				}
+			}
+		}
+
 		static void drawText(
 			ImageRgba8& image,
 			const TextCommand& cmd,
@@ -7488,24 +8141,33 @@ namespace FlowPlot
 			if (cmd.text.empty())
 				return;
 
+			const bool vertical = isVerticalText(cmd.orientation);
+			const float layoutBoxWidth = vertical ? cmd.box.h : cmd.box.w;
+			const float layoutBoxHeight = vertical ? cmd.box.w : cmd.box.h;
+			const float layoutMaxWidth =
+				cmd.wrapMode == Spec::TextWrapMode::None
+				? std::numeric_limits<float>::infinity()
+				: std::max(layoutBoxWidth, 0.0f);
+
 			const LaidOutText layout = engine.layoutText(
 				cmd.fontFamily,
 				cmd.fontWeight,
 				cmd.fontStyle,
 				cmd.fontSize,
-				cmd.text);
+				cmd.text,
+				TextLayoutOptions{layoutMaxWidth, cmd.wrapMode});
 
-			float originX = cmd.box.x;
+			float originX = 0.0f;
 			if (cmd.hAlign == HorizontalAlign::Center)
-				originX = cmd.box.x + (cmd.box.w - layout.width) * 0.5f;
+				originX = (layoutBoxWidth - layout.width) * 0.5f;
 			else if (cmd.hAlign == HorizontalAlign::Right)
-				originX = cmd.box.x + (cmd.box.w - layout.width);
+				originX = layoutBoxWidth - layout.width;
 
-			float originY = cmd.box.y;
+			float originY = 0.0f;
 			if (cmd.vAlign == VerticalAlign::Middle)
-				originY = cmd.box.y + (cmd.box.h - layout.height) * 0.5f;
+				originY = (layoutBoxHeight - layout.height) * 0.5f;
 			else if (cmd.vAlign == VerticalAlign::Bottom)
-				originY = cmd.box.y + (cmd.box.h - layout.height);
+				originY = layoutBoxHeight - layout.height;
 
 			const std::optional<ClipRectI> textBoxClip = cmd.clipToBox ? makeClipRect(image, cmd.box) : std::optional<ClipRectI>{};
 			std::optional<ClipRectI> combinedClip;
@@ -7530,9 +8192,26 @@ namespace FlowPlot
 			for (const GlyphPlacement& glyph : layout.glyphs)
 			{
 				const StbTextEngine::GlyphBitmap& bitmap = getGlyphBitmap(glyphCache, *stbEngine, cmd, glyph.codepoint);
-				const int dstX = static_cast<int>(std::lround(originX + glyph.x)) + bitmap.x0;
-				const int dstY = static_cast<int>(std::lround(originY + glyph.y)) + bitmap.y0;
-				blendGlyphMask(image, dstX, dstY, bitmap, cmd.color, finalClip);
+				const float sourceX = originX + glyph.x + static_cast<float>(bitmap.x0);
+				const float sourceY = originY + glyph.y + static_cast<float>(bitmap.y0);
+				if (cmd.orientation == Spec::TextOrientation::Horizontal)
+				{
+					const int dstX = static_cast<int>(std::lround(cmd.box.x + sourceX));
+					const int dstY = static_cast<int>(std::lround(cmd.box.y + sourceY));
+					blendGlyphMask(image, dstX, dstY, bitmap, cmd.color, finalClip);
+				}
+				else
+				{
+					blendGlyphMaskTransformed(
+						image,
+						cmd.box,
+						cmd.orientation,
+						sourceX,
+						sourceY,
+						bitmap,
+						cmd.color,
+						finalClip);
+				}
 			}
 		}
 	};

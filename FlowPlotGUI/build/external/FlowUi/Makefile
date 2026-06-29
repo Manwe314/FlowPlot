@@ -65,6 +65,26 @@ CMAKE_BINARY_DIR = /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build
 #=============================================================================
 # Targets provided globally by CMake.
 
+# Special rule for the target package
+package: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Run CPack packaging tool..."
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && /home/lkukhale/cmake-3.30.5-linux-x86_64/bin/cpack --config ./CPackConfig.cmake
+.PHONY : package
+
+# Special rule for the target package
+package/fast: package
+.PHONY : package/fast
+
+# Special rule for the target package_source
+package_source:
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Run CPack packaging tool for source..."
+	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && /home/lkukhale/cmake-3.30.5-linux-x86_64/bin/cpack --config ./CPackSourceConfig.cmake /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build/CPackSourceConfig.cmake
+.PHONY : package_source
+
+# Special rule for the target package_source
+package_source/fast: package_source
+.PHONY : package_source/fast
+
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake cache editor..."
@@ -87,7 +107,7 @@ rebuild_cache/fast: rebuild_cache
 
 # Special rule for the target list_install_components
 list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Available install components are: \"Unspecified\""
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Available install components are: \"Runtime\" \"Unspecified\""
 .PHONY : list_install_components
 
 # Special rule for the target list_install_components
@@ -175,20 +195,6 @@ flowui_shaders: external/FlowUi/CMakeFiles/flowui_shaders.dir/rule
 flowui_shaders/fast:
 	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui_shaders.dir/build.make external/FlowUi/CMakeFiles/flowui_shaders.dir/build
 .PHONY : flowui_shaders/fast
-
-# Convenience name for target.
-external/FlowUi/CMakeFiles/flowui_font_baker.dir/rule:
-	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 external/FlowUi/CMakeFiles/flowui_font_baker.dir/rule
-.PHONY : external/FlowUi/CMakeFiles/flowui_font_baker.dir/rule
-
-# Convenience name for target.
-flowui_font_baker: external/FlowUi/CMakeFiles/flowui_font_baker.dir/rule
-.PHONY : flowui_font_baker
-
-# fast build rule for target.
-flowui_font_baker/fast:
-	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui_font_baker.dir/build.make external/FlowUi/CMakeFiles/flowui_font_baker.dir/build
-.PHONY : flowui_font_baker/fast
 
 # Convenience name for target.
 external/FlowUi/CMakeFiles/flowui.dir/rule:
@@ -636,30 +642,6 @@ src/window/Inputs.cpp.s:
 	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui.dir/build.make external/FlowUi/CMakeFiles/flowui.dir/src/window/Inputs.cpp.s
 .PHONY : src/window/Inputs.cpp.s
 
-tools/flowui_font_baker/main.o: tools/flowui_font_baker/main.cpp.o
-.PHONY : tools/flowui_font_baker/main.o
-
-# target to build an object file
-tools/flowui_font_baker/main.cpp.o:
-	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui_font_baker.dir/build.make external/FlowUi/CMakeFiles/flowui_font_baker.dir/tools/flowui_font_baker/main.cpp.o
-.PHONY : tools/flowui_font_baker/main.cpp.o
-
-tools/flowui_font_baker/main.i: tools/flowui_font_baker/main.cpp.i
-.PHONY : tools/flowui_font_baker/main.i
-
-# target to preprocess a source file
-tools/flowui_font_baker/main.cpp.i:
-	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui_font_baker.dir/build.make external/FlowUi/CMakeFiles/flowui_font_baker.dir/tools/flowui_font_baker/main.cpp.i
-.PHONY : tools/flowui_font_baker/main.cpp.i
-
-tools/flowui_font_baker/main.s: tools/flowui_font_baker/main.cpp.s
-.PHONY : tools/flowui_font_baker/main.s
-
-# target to generate assembly for a file
-tools/flowui_font_baker/main.cpp.s:
-	cd /home/lkukhale/kodi/FlowPlot/FlowPlotGUI/build && $(MAKE) $(MAKESILENT) -f external/FlowUi/CMakeFiles/flowui_font_baker.dir/build.make external/FlowUi/CMakeFiles/flowui_font_baker.dir/tools/flowui_font_baker/main.cpp.s
-.PHONY : tools/flowui_font_baker/main.cpp.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -671,10 +653,11 @@ help:
 	@echo "... install/local"
 	@echo "... install/strip"
 	@echo "... list_install_components"
+	@echo "... package"
+	@echo "... package_source"
 	@echo "... rebuild_cache"
 	@echo "... flowui_shaders"
 	@echo "... flowui"
-	@echo "... flowui_font_baker"
 	@echo "... src/FlowUi.o"
 	@echo "... src/FlowUi.i"
 	@echo "... src/FlowUi.s"
@@ -729,9 +712,6 @@ help:
 	@echo "... src/window/Inputs.o"
 	@echo "... src/window/Inputs.i"
 	@echo "... src/window/Inputs.s"
-	@echo "... tools/flowui_font_baker/main.o"
-	@echo "... tools/flowui_font_baker/main.i"
-	@echo "... tools/flowui_font_baker/main.s"
 .PHONY : help
 
 

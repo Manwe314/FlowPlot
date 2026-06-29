@@ -109,14 +109,29 @@ namespace FlowPlot
 		float y = 0.0f;
 	};
 
+	struct TextLine
+	{
+		std::size_t firstGlyph = 0;
+		std::size_t glyphCount = 0;
+		float width = 0.0f;
+		float baselineY = 0.0f;
+	};
+
 	struct LaidOutText
 	{
 		std::vector<GlyphPlacement> glyphs{};
+		std::vector<TextLine> lines{};
 		float width = 0.0f;
 		float height = 0.0f;
 		float ascent = 0.0f;
 		float descent = 0.0f;
 		float lineGap = 0.0f;
+	};
+
+	struct TextLayoutOptions
+	{
+		float maxWidth = std::numeric_limits<float>::infinity();
+		Spec::TextWrapMode wrapMode = Spec::TextWrapMode::None;
 	};
 
 	/**
@@ -196,6 +211,17 @@ namespace FlowPlot
 			float fontSizePx,
 			std::string_view text,
 			float maxWidth = std::numeric_limits<float>::infinity()) const = 0;
+
+		virtual LaidOutText layoutText(
+			std::string_view familyName,
+			std::uint16_t weight,
+			FontStyle style,
+			float fontSizePx,
+			std::string_view text,
+			const TextLayoutOptions& options) const
+		{
+			return layoutText(familyName, weight, style, fontSizePx, text, options.maxWidth);
+		}
 	};
 
 	struct BoxCommand
@@ -226,6 +252,8 @@ namespace FlowPlot
 		FontStyle fontStyle = FontStyle::Normal;
 		HorizontalAlign hAlign = HorizontalAlign::Left;
 		VerticalAlign vAlign = VerticalAlign::Top;
+		Spec::TextOrientation orientation = Spec::TextOrientation::Horizontal;
+		Spec::TextWrapMode wrapMode = Spec::TextWrapMode::None;
 		bool clipToBox = true;
 	};
 
@@ -301,6 +329,266 @@ namespace FlowInternal
 		case FlowPlot::FontStyle::Normal:
 		default:
 			return "normal";
+		}
+	}
+
+	inline FlowPlot::Spec::TextOrientation parseTextOrientation(std::string_view rawOrientation)
+	{
+		std::string orientation;
+		orientation.reserve(rawOrientation.size());
+		for (const char c : rawOrientation)
+		{
+			if (c >= 'A' && c <= 'Z')
+				orientation.push_back(static_cast<char>(c - 'A' + 'a'));
+			else if (c != '-' && c != '_' && c != ' ')
+				orientation.push_back(c);
+		}
+
+		if (orientation.empty() || orientation == "horizontal")
+			return FlowPlot::Spec::TextOrientation::Horizontal;
+		if (orientation == "verticalclockwise")
+			return FlowPlot::Spec::TextOrientation::VerticalClockwise;
+		if (orientation == "verticalcounterclockwise")
+			return FlowPlot::Spec::TextOrientation::VerticalCounterClockwise;
+
+		throw std::invalid_argument("parseTextOrientation: unsupported text orientation '" + std::string(rawOrientation) + "'");
+	}
+
+	inline const char* textOrientationName(FlowPlot::Spec::TextOrientation orientation) noexcept
+	{
+		switch (orientation)
+		{
+		case FlowPlot::Spec::TextOrientation::VerticalClockwise:
+			return "verticalClockwise";
+		case FlowPlot::Spec::TextOrientation::VerticalCounterClockwise:
+			return "verticalCounterClockwise";
+		case FlowPlot::Spec::TextOrientation::Horizontal:
+		default:
+			return "horizontal";
+		}
+	}
+
+	inline FlowPlot::Spec::TextWrapMode parseTextWrapMode(std::string_view rawWrapMode)
+	{
+		std::string wrapMode;
+		wrapMode.reserve(rawWrapMode.size());
+		for (const char c : rawWrapMode)
+		{
+			if (c >= 'A' && c <= 'Z')
+				wrapMode.push_back(static_cast<char>(c - 'A' + 'a'));
+			else if (c != '-' && c != '_' && c != ' ')
+				wrapMode.push_back(c);
+		}
+
+		if (wrapMode.empty() || wrapMode == "none")
+			return FlowPlot::Spec::TextWrapMode::None;
+		if (wrapMode == "word")
+			return FlowPlot::Spec::TextWrapMode::Word;
+		if (wrapMode == "character")
+			return FlowPlot::Spec::TextWrapMode::Character;
+
+		throw std::invalid_argument("parseTextWrapMode: unsupported text wrap mode '" + std::string(rawWrapMode) + "'");
+	}
+
+	inline const char* textWrapModeName(FlowPlot::Spec::TextWrapMode wrapMode) noexcept
+	{
+		switch (wrapMode)
+		{
+		case FlowPlot::Spec::TextWrapMode::Word:
+			return "word";
+		case FlowPlot::Spec::TextWrapMode::Character:
+			return "character";
+		case FlowPlot::Spec::TextWrapMode::None:
+		default:
+			return "none";
+		}
+	}
+
+	inline FlowPlot::Spec::TextBoxSizeMode parseTextBoxSizeMode(std::string_view rawSizeMode)
+	{
+		std::string sizeMode;
+		sizeMode.reserve(rawSizeMode.size());
+		for (const char c : rawSizeMode)
+		{
+			if (c >= 'A' && c <= 'Z')
+				sizeMode.push_back(static_cast<char>(c - 'A' + 'a'));
+			else if (c != '-' && c != '_' && c != ' ')
+				sizeMode.push_back(c);
+		}
+
+		if (sizeMode.empty() || sizeMode == "auto")
+			return FlowPlot::Spec::TextBoxSizeMode::Auto;
+		if (sizeMode == "fixed")
+			return FlowPlot::Spec::TextBoxSizeMode::Fixed;
+		if (sizeMode == "max")
+			return FlowPlot::Spec::TextBoxSizeMode::Max;
+
+		throw std::invalid_argument("parseTextBoxSizeMode: unsupported text box size mode '" + std::string(rawSizeMode) + "'");
+	}
+
+	inline const char* textBoxSizeModeName(FlowPlot::Spec::TextBoxSizeMode sizeMode) noexcept
+	{
+		switch (sizeMode)
+		{
+		case FlowPlot::Spec::TextBoxSizeMode::Fixed:
+			return "fixed";
+		case FlowPlot::Spec::TextBoxSizeMode::Max:
+			return "max";
+		case FlowPlot::Spec::TextBoxSizeMode::Auto:
+		default:
+			return "auto";
+		}
+	}
+
+	inline FlowPlot::Spec::AxisTitlePosition parseAxisTitlePosition(std::string_view rawPosition)
+	{
+		std::string position;
+		position.reserve(rawPosition.size());
+		for (const char c : rawPosition)
+		{
+			if (c >= 'A' && c <= 'Z')
+				position.push_back(static_cast<char>(c - 'A' + 'a'));
+			else if (c != '-' && c != '_' && c != ' ')
+				position.push_back(c);
+		}
+
+		if (position == "start")
+			return FlowPlot::Spec::AxisTitlePosition::Start;
+		if (position.empty() || position == "center")
+			return FlowPlot::Spec::AxisTitlePosition::Center;
+		if (position == "end")
+			return FlowPlot::Spec::AxisTitlePosition::End;
+
+		throw std::invalid_argument("parseAxisTitlePosition: unsupported axis title position '" + std::string(rawPosition) + "'");
+	}
+
+	inline const char* axisTitlePositionName(FlowPlot::Spec::AxisTitlePosition position) noexcept
+	{
+		switch (position)
+		{
+		case FlowPlot::Spec::AxisTitlePosition::Start:
+			return "start";
+		case FlowPlot::Spec::AxisTitlePosition::End:
+			return "end";
+		case FlowPlot::Spec::AxisTitlePosition::Center:
+		default:
+			return "center";
+		}
+	}
+
+	inline FlowPlot::Spec::LegendPlacement parseLegendPlacement(std::string_view rawPlacement)
+	{
+		std::string placement;
+		placement.reserve(rawPlacement.size());
+		for (const char c : rawPlacement)
+		{
+			if (c >= 'A' && c <= 'Z')
+				placement.push_back(static_cast<char>(c - 'A' + 'a'));
+			else if (c != '-' && c != '_' && c != ' ')
+				placement.push_back(c);
+		}
+
+		if (placement.empty() || placement == "top")
+			return FlowPlot::Spec::LegendPlacement::Top;
+		if (placement == "center" || placement == "middle")
+			return FlowPlot::Spec::LegendPlacement::Center;
+		if (placement == "bottom")
+			return FlowPlot::Spec::LegendPlacement::Bottom;
+
+		throw std::invalid_argument("parseLegendPlacement: unsupported legend placement '" + std::string(rawPlacement) + "'");
+	}
+
+	inline const char* legendPlacementName(FlowPlot::Spec::LegendPlacement placement) noexcept
+	{
+		switch (placement)
+		{
+		case FlowPlot::Spec::LegendPlacement::Center:
+			return "center";
+		case FlowPlot::Spec::LegendPlacement::Bottom:
+			return "bottom";
+		case FlowPlot::Spec::LegendPlacement::Top:
+		default:
+			return "top";
+		}
+	}
+
+	inline FlowPlot::Spec::FigureTitlePlacement parseFigureTitlePlacement(std::string_view rawPlacement)
+	{
+		std::string placement;
+		placement.reserve(rawPlacement.size());
+		for (const char c : rawPlacement)
+		{
+			if (c >= 'A' && c <= 'Z')
+				placement.push_back(static_cast<char>(c - 'A' + 'a'));
+			else if (c != '-' && c != '_' && c != ' ')
+				placement.push_back(c);
+		}
+
+		if (placement == "left" || placement == "start")
+			return FlowPlot::Spec::FigureTitlePlacement::Left;
+		if (placement.empty() || placement == "center" || placement == "middle")
+			return FlowPlot::Spec::FigureTitlePlacement::Center;
+		if (placement == "right" || placement == "end")
+			return FlowPlot::Spec::FigureTitlePlacement::Right;
+
+		throw std::invalid_argument("parseFigureTitlePlacement: unsupported figure title placement '" + std::string(rawPlacement) + "'");
+	}
+
+	inline const char* figureTitlePlacementName(FlowPlot::Spec::FigureTitlePlacement placement) noexcept
+	{
+		switch (placement)
+		{
+		case FlowPlot::Spec::FigureTitlePlacement::Left:
+			return "left";
+		case FlowPlot::Spec::FigureTitlePlacement::Right:
+			return "right";
+		case FlowPlot::Spec::FigureTitlePlacement::Center:
+		default:
+			return "center";
+		}
+	}
+
+	inline FlowPlot::Spec::HistogramValueMode parseHistogramValueMode(std::string_view rawMode)
+	{
+		std::string mode;
+		mode.reserve(rawMode.size());
+		for (const char c : rawMode)
+		{
+			if (c >= 'A' && c <= 'Z')
+				mode.push_back(static_cast<char>(c - 'A' + 'a'));
+			else if (c != '-' && c != '_' && c != ' ')
+				mode.push_back(c);
+		}
+
+		if (mode.empty() || mode == "count")
+			return FlowPlot::Spec::HistogramValueMode::Count;
+		if (mode == "normalized" || mode == "normalised")
+			return FlowPlot::Spec::HistogramValueMode::Normalized;
+		if (mode == "density")
+			return FlowPlot::Spec::HistogramValueMode::Density;
+		if (mode == "cumulativecount")
+			return FlowPlot::Spec::HistogramValueMode::CumulativeCount;
+		if (mode == "cumulativenormalized" || mode == "cumulativenormalised")
+			return FlowPlot::Spec::HistogramValueMode::CumulativeNormalized;
+
+		throw std::invalid_argument("parseHistogramValueMode: unsupported histogram value mode '" + std::string(rawMode) + "'");
+	}
+
+	inline const char* histogramValueModeName(FlowPlot::Spec::HistogramValueMode mode) noexcept
+	{
+		switch (mode)
+		{
+		case FlowPlot::Spec::HistogramValueMode::Normalized:
+			return "normalized";
+		case FlowPlot::Spec::HistogramValueMode::Density:
+			return "density";
+		case FlowPlot::Spec::HistogramValueMode::CumulativeCount:
+			return "cumulativeCount";
+		case FlowPlot::Spec::HistogramValueMode::CumulativeNormalized:
+			return "cumulativeNormalized";
+		case FlowPlot::Spec::HistogramValueMode::Count:
+		default:
+			return "count";
 		}
 	}
 } // namespace FlowInternal

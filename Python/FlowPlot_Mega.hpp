@@ -12555,6 +12555,20 @@ namespace FlowPlot
 			float bottom = 0.0f;
 		};
 
+		enum class TextOrientation : std::uint8_t
+		{
+			Horizontal,
+			VerticalClockwise,
+			VerticalCounterClockwise
+		};
+
+		enum class TextWrapMode : std::uint8_t
+		{
+			None,
+			Word,
+			Character
+		};
+
 		struct TextSpec
 		{
 			bool visible = false;
@@ -12568,6 +12582,8 @@ namespace FlowPlot
 			bool clip = true;
 			std::string hAlign = "left";
 			std::string vAlign = "top";
+			TextOrientation orientation = TextOrientation::Horizontal;
+			TextWrapMode wrapMode = TextWrapMode::None;
 			BoxSpec box{};
 		};
 
@@ -13116,6 +13132,8 @@ namespace FlowInternal
     "color": "#111111",
     "overflow": "clip",
     "clip": true,
+    "orientation": "horizontal",
+    "wrapMode": "none",
     "box": {
       "x": null,
       "y": null,
@@ -13134,6 +13152,8 @@ namespace FlowInternal
       "color": "#222222",
       "overflow": "clip",
       "clip": true,
+      "orientation": "horizontal",
+      "wrapMode": "none",
       "box": {
         "x": null,
         "y": null,
@@ -13176,6 +13196,8 @@ namespace FlowInternal
       "color": "#222222",
       "overflow": "clip",
       "clip": true,
+      "orientation": "horizontal",
+      "wrapMode": "none",
       "box": {
         "x": null,
         "y": null,
@@ -13221,6 +13243,8 @@ namespace FlowInternal
       "vAlign": "middle",
       "overflow": "clip",
       "clip": true,
+      "orientation": "horizontal",
+      "wrapMode": "none",
       "box": {
         "x": null,
         "y": null,
@@ -13266,6 +13290,8 @@ namespace FlowInternal
       "vAlign": "middle",
       "overflow": "clip",
       "clip": true,
+      "orientation": "horizontal",
+      "wrapMode": "none",
       "box": {
         "x": null,
         "y": null,
@@ -13326,6 +13352,8 @@ namespace FlowInternal
       "color": "#111111",
       "overflow": "clip",
       "clip": true,
+      "orientation": "horizontal",
+      "wrapMode": "none",
       "box": {
         "x": null,
         "y": null,
@@ -13644,6 +13672,78 @@ namespace FlowInternal
 		case FlowPlot::FontStyle::Normal:
 		default:
 			return "normal";
+		}
+	}
+
+	inline FlowPlot::Spec::TextOrientation parseTextOrientation(std::string_view rawOrientation)
+	{
+		std::string orientation;
+		orientation.reserve(rawOrientation.size());
+		for (const char c : rawOrientation)
+		{
+			if (c >= 'A' && c <= 'Z')
+				orientation.push_back(static_cast<char>(c - 'A' + 'a'));
+			else if (c != '-' && c != '_' && c != ' ')
+				orientation.push_back(c);
+		}
+
+		if (orientation.empty() || orientation == "horizontal")
+			return FlowPlot::Spec::TextOrientation::Horizontal;
+		if (orientation == "verticalclockwise")
+			return FlowPlot::Spec::TextOrientation::VerticalClockwise;
+		if (orientation == "verticalcounterclockwise")
+			return FlowPlot::Spec::TextOrientation::VerticalCounterClockwise;
+
+		throw std::invalid_argument("parseTextOrientation: unsupported text orientation '" + std::string(rawOrientation) + "'");
+	}
+
+	inline const char* textOrientationName(FlowPlot::Spec::TextOrientation orientation) noexcept
+	{
+		switch (orientation)
+		{
+		case FlowPlot::Spec::TextOrientation::VerticalClockwise:
+			return "verticalClockwise";
+		case FlowPlot::Spec::TextOrientation::VerticalCounterClockwise:
+			return "verticalCounterClockwise";
+		case FlowPlot::Spec::TextOrientation::Horizontal:
+		default:
+			return "horizontal";
+		}
+	}
+
+	inline FlowPlot::Spec::TextWrapMode parseTextWrapMode(std::string_view rawWrapMode)
+	{
+		std::string wrapMode;
+		wrapMode.reserve(rawWrapMode.size());
+		for (const char c : rawWrapMode)
+		{
+			if (c >= 'A' && c <= 'Z')
+				wrapMode.push_back(static_cast<char>(c - 'A' + 'a'));
+			else if (c != '-' && c != '_' && c != ' ')
+				wrapMode.push_back(c);
+		}
+
+		if (wrapMode.empty() || wrapMode == "none")
+			return FlowPlot::Spec::TextWrapMode::None;
+		if (wrapMode == "word")
+			return FlowPlot::Spec::TextWrapMode::Word;
+		if (wrapMode == "character")
+			return FlowPlot::Spec::TextWrapMode::Character;
+
+		throw std::invalid_argument("parseTextWrapMode: unsupported text wrap mode '" + std::string(rawWrapMode) + "'");
+	}
+
+	inline const char* textWrapModeName(FlowPlot::Spec::TextWrapMode wrapMode) noexcept
+	{
+		switch (wrapMode)
+		{
+		case FlowPlot::Spec::TextWrapMode::Word:
+			return "word";
+		case FlowPlot::Spec::TextWrapMode::Character:
+			return "character";
+		case FlowPlot::Spec::TextWrapMode::None:
+		default:
+			return "none";
 		}
 	}
 } // namespace FlowInternal
@@ -14291,6 +14391,18 @@ namespace FlowInternal
 			readBool(objectJson, "clip", text.clip, path);
 			readString(objectJson, "hAlign", text.hAlign, path);
 			readString(objectJson, "vAlign", text.vAlign, path);
+			if (const json* orientationJson = findKey(objectJson, "orientation"))
+			{
+				if (!orientationJson->IsString())
+					throw std::runtime_error("compileTemplateToSpec: '" + childPath(path, "orientation") + "' must be a string");
+				text.orientation = FlowInternal::parseTextOrientation(jsonStringToStdString(*orientationJson));
+			}
+			if (const json* wrapModeJson = findKey(objectJson, "wrapMode"))
+			{
+				if (!wrapModeJson->IsString())
+					throw std::runtime_error("compileTemplateToSpec: '" + childPath(path, "wrapMode") + "' must be a string");
+				text.wrapMode = FlowInternal::parseTextWrapMode(jsonStringToStdString(*wrapModeJson));
+			}
 
 			if (const json* boxObject = findObject(objectJson, "box", path))
 				applyBoxSpec(text.box, *boxObject, childPath(path, "box"));
@@ -18552,7 +18664,7 @@ namespace FlowPlot
 		 * to outlive this call.
 		 *
 		 * @code{.cpp}
-		 * auto builder = FlowPlot::makePlot("Scatter")
+		 * auto builder = FlowPlot::plot("Scatter")
 		 *     .set("figure.width", 1280)
 		 *     .set("panels[0].title.text", "Quarterly results");
 		 * @endcode
@@ -18803,6 +18915,14 @@ namespace FlowPlot
 		 * FlowPlot::RenderPlot commands = builder.getCommands(); // x is still alive
 		 * @endcode
 		 *
+		 * or more commonly:
+		 *
+		 * @code{.cpp}
+		 * std::vector<double> x{1.0, 2.0, 3.0};
+		 * std::vector<double> y{4.0, 5.0, 6.0};
+		 * FlowPlot::plot("Scatter").withData("main.x", x).withData("main.y", y).writePng("out.png");
+		 * @endcode
+		 *
 		 * @return This builder, so calls can be chained.
 		 * @throws std::invalid_argument if the field path or element type is unsupported.
 		 */
@@ -18864,6 +18984,8 @@ namespace FlowPlot
 		 * @warning @p textEngine must remain alive until getCommands() or writePng() has
 		 * completed. The builder stores a non-owning pointer; destroying the engine first
 		 * leaves it dangling and causes invalid plot execution.
+		 *
+		 * @note In most cases, the default StbTextEngine is sufficient.
 		 *
 		 * @code{.cpp}
 		 * FlowPlot::StbTextEngine fonts{"/path/to/default.ttf"};

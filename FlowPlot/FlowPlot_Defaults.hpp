@@ -27,6 +27,27 @@ namespace FlowPlot
 			float bottom = 0.0f;
 		};
 
+		enum class TextOrientation : std::uint8_t
+		{
+			Horizontal,
+			VerticalClockwise,
+			VerticalCounterClockwise
+		};
+
+		enum class TextWrapMode : std::uint8_t
+		{
+			None,
+			Word,
+			Character
+		};
+
+		enum class TextBoxSizeMode : std::uint8_t
+		{
+			Auto,
+			Fixed,
+			Max
+		};
+
 		struct TextSpec
 		{
 			bool visible = false;
@@ -40,6 +61,10 @@ namespace FlowPlot
 			bool clip = true;
 			std::string hAlign = "left";
 			std::string vAlign = "top";
+			TextOrientation orientation = TextOrientation::Horizontal;
+			TextWrapMode wrapMode = TextWrapMode::None;
+			TextBoxSizeMode widthMode = TextBoxSizeMode::Auto;
+			TextBoxSizeMode heightMode = TextBoxSizeMode::Auto;
 			BoxSpec box{};
 		};
 
@@ -91,26 +116,52 @@ namespace FlowPlot
 			return title;
 		}
 
+		inline TextSpec makeLegendLabelTextSpec()
+		{
+			TextSpec label{};
+			label.visible = true;
+			label.text = "Untitled Plot";
+			label.fontSize = 24.0f;
+			label.fontWeight = 700;
+			label.color = "#111111";
+			label.vAlign = "middle";
+			label.box.height = 40.0f;
+			return label;
+		}
+
+		inline TextSpec makeTickLabelTextSpec()
+		{
+			TextSpec label{};
+			label.visible = true;
+			label.fontSize = 12.0f;
+			label.color = "#333333";
+			return label;
+		}
+
 		struct LegendElementSpec
 		{
 			std::string id = "legend_element_1";
-			std::string text = "Untitled Plot";
-			std::string fontFamily = "Default";
-			float fontSize = 24.0f;
-			std::uint16_t fontWeight = 700;
-			std::string fontStyle = "normal";
-			std::string color = "#111111";
-			std::string overflow = "clip";
-			bool clip = true;
-			BoxSpec box{std::nullopt, std::nullopt, std::nullopt, 40.0f};
+			TextSpec label = makeLegendLabelTextSpec();
 			std::string iconShape = "square";
 			std::string iconColor = "#0d37f0ff";
+			float iconSize = 24.0f;
+			float labelGap = 12.0f;
+			BoxSpec iconBox{};
+		};
+
+		enum class LegendPlacement : std::uint8_t
+		{
+			Top,
+			Center,
+			Bottom
 		};
 
 		struct LegendSpec
 		{
 			std::string id = "legend_1";
 			bool visible = false;
+			bool overlay = true;
+			LegendPlacement placement = LegendPlacement::Top;
 			std::string background = "#ffffff";
 			std::string borderColor = "#cccccc";
 			float borderWidth = 0.0f;
@@ -235,11 +286,19 @@ namespace FlowPlot
 			float medianLineWidth = 2.0f;
 		};
 
+		enum class HistogramValueMode : std::uint8_t
+		{
+			Count,
+			Normalized,
+			Density,
+			CumulativeCount,
+			CumulativeNormalized
+		};
+
 		struct HistogramConfigSpec
 		{
 			std::uint32_t binCount = 20;
-			bool normalize = false;
-			bool cumulative = false;
+			HistogramValueMode valueMode = HistogramValueMode::Count;
 			bool showEmptyBins = false;
 			float domainPadding = 0.05f;
 		};
@@ -265,10 +324,20 @@ namespace FlowPlot
 			HistogramConfigSpec histogramConfig{};
 		};
 
+		enum class AxisTitlePosition : std::uint8_t
+		{
+			Start,
+			Center,
+			End
+		};
+
 		struct AxisSpec
 		{
 			bool visible = true;
+			bool axisLineVisible = true;
+			bool tickLineVisible = true;
 			TextSpec title{};
+			AxisTitlePosition titlePosition = AxisTitlePosition::Center;
 			std::string scale = "linear";
 			std::optional<float> min = std::nullopt;
 			std::optional<float> max = std::nullopt;
@@ -285,11 +354,7 @@ namespace FlowPlot
 			std::vector<double> tickValues{};
 			float tickValueGap = 2.0f;
 			std::string tickLabelFormat = "auto";
-			std::string tickLabelFontFamily = "Default";
-			float tickLabelFontSize = 12.0f;
-			std::uint16_t tickLabelFontWeight = 400;
-			std::string tickLabelFontStyle = "normal";
-			std::string tickLabelColor = "#333333";
+			TextSpec tickLabel = makeTickLabelTextSpec();
 			bool showMinorTicks = false;
 			std::uint32_t minorTickCount = 0;
 		};
@@ -339,6 +404,13 @@ namespace FlowPlot
 			std::vector<LayerSpec> layers{};
 		};
 
+		enum class FigureTitlePlacement : std::uint8_t
+		{
+			Left,
+			Center,
+			Right
+		};
+
 		struct FigureSpec
 		{
 			std::uint32_t width = 1200;
@@ -347,6 +419,7 @@ namespace FlowPlot
 			std::string background = "#ffffff";
 			PaddingSpec padding{24.0f, 24.0f, 24.0f, 24.0f};
 			TextSpec title = makeFigureTitleTextSpec();
+			FigureTitlePlacement titlePlacement = FigureTitlePlacement::Center;
 			std::vector<LegendSpec> legends{};
 		};
 
@@ -389,28 +462,49 @@ namespace FlowInternal
 	{
 		inline constexpr std::string_view kLegendElementDefaultsJson = R"flowplot(
 {
-  "text": "Untitled Plot",
-  "fontFamily": "Default",
-  "fontSize": 24,
-  "fontWeight": 700,
-  "fontStyle": "normal",
-  "color": "#111111",
-  "overflow": "clip",
-  "clip": true,
-  "box": {
-    "x": null,
-    "y": null,
-    "width": null,
-    "height": 40
-  },
-  "iconShape": "square",
-  "iconColor": "#0d37f0ff"
+	  "id": "legend_element_1",
+	  "label": {
+	    "visible": true,
+	    "text": "Untitled Plot",
+	    "fontFamily": "Default",
+	    "fontSize": 24,
+	    "fontWeight": 700,
+	    "fontStyle": "normal",
+	    "color": "#111111",
+	    "overflow": "clip",
+	    "clip": true,
+	    "hAlign": "left",
+	    "vAlign": "middle",
+	    "orientation": "horizontal",
+	    "wrapMode": "none",
+	    "widthMode": "auto",
+	    "heightMode": "auto",
+	    "box": {
+	      "x": null,
+	      "y": null,
+	      "width": null,
+	      "height": 40
+	    }
+	  },
+	  "iconShape": "square",
+	  "iconColor": "#0d37f0ff",
+	  "iconSize": 24,
+	  "labelGap": 12,
+	  "iconBox": {
+	    "x": null,
+	    "y": null,
+	    "width": null,
+	    "height": null
+	  }
 }
 )flowplot";
 
 		inline constexpr std::string_view kLegendDefaultsJson = R"flowplot(
 {
+  "id": "legend_1",
   "visible": false,
+  "overlay": true,
+  "placement": "top",
   "background": "#ffffff",
   "borderColor": "#cccccc",
   "borderWidth": 0,
@@ -539,8 +633,7 @@ namespace FlowInternal
 		inline constexpr std::string_view kHistogramConfigDefaultsJson = R"flowplot(
 {
   "binCount": 20,
-  "normalize": false,
-  "cumulative": false,
+  "valueMode": "count",
   "showEmptyBins": false,
   "domainPadding": 0.05
 }
@@ -579,7 +672,7 @@ namespace FlowInternal
     "bottom": 56
   },
   "clipContent": true,
-  "title": {
+	    "title": {
     "visible": false,
     "text": "",
     "fontFamily": "Default",
@@ -588,6 +681,10 @@ namespace FlowInternal
     "color": "#111111",
     "overflow": "clip",
     "clip": true,
+    "orientation": "horizontal",
+    "wrapMode": "none",
+    "widthMode": "auto",
+    "heightMode": "auto",
     "box": {
       "x": null,
       "y": null,
@@ -597,6 +694,9 @@ namespace FlowInternal
   },
   "xAxis": {
     "visible": true,
+    "axisLineVisible": true,
+    "tickLineVisible": true,
+    "titlePosition": "center",
     "title": {
       "visible": true,
       "text": "X",
@@ -606,6 +706,10 @@ namespace FlowInternal
       "color": "#222222",
       "overflow": "clip",
       "clip": true,
+      "orientation": "horizontal",
+      "wrapMode": "none",
+      "widthMode": "auto",
+      "heightMode": "auto",
       "box": {
         "x": null,
         "y": null,
@@ -629,16 +733,37 @@ namespace FlowInternal
     "tickValues": [],
     "tickValueGap": 2.0,
     "tickLabelFormat": "auto",
-    "tickLabelFontFamily": "Default",
-    "tickLabelFontSize": 12,
-    "tickLabelFontWeight": 400,
-    "tickLabelFontStyle": "normal",
-    "tickLabelColor": "#333333",
+    "tickLabel": {
+      "visible": true,
+      "text": "",
+      "fontFamily": "Default",
+      "fontSize": 12,
+      "fontWeight": 400,
+      "fontStyle": "normal",
+      "color": "#333333",
+      "overflow": "clip",
+      "clip": true,
+      "hAlign": "left",
+      "vAlign": "top",
+      "orientation": "horizontal",
+      "wrapMode": "none",
+      "widthMode": "auto",
+      "heightMode": "auto",
+      "box": {
+        "x": null,
+        "y": null,
+        "width": null,
+        "height": null
+      }
+    },
     "showMinorTicks": false,
     "minorTickCount": 0
   },
   "xSecondary": {
     "visible": false,
+    "axisLineVisible": true,
+    "tickLineVisible": true,
+    "titlePosition": "center",
     "title": {
       "visible": true,
       "text": "X",
@@ -648,6 +773,10 @@ namespace FlowInternal
       "color": "#222222",
       "overflow": "clip",
       "clip": true,
+      "orientation": "horizontal",
+      "wrapMode": "none",
+      "widthMode": "auto",
+      "heightMode": "auto",
       "box": {
         "x": null,
         "y": null,
@@ -671,16 +800,37 @@ namespace FlowInternal
     "tickValues": [],
     "tickValueGap": 2.0,
     "tickLabelFormat": "auto",
-    "tickLabelFontFamily": "Default",
-    "tickLabelFontSize": 12,
-    "tickLabelFontWeight": 400,
-    "tickLabelFontStyle": "normal",
-    "tickLabelColor": "#333333",
+    "tickLabel": {
+      "visible": true,
+      "text": "",
+      "fontFamily": "Default",
+      "fontSize": 12,
+      "fontWeight": 400,
+      "fontStyle": "normal",
+      "color": "#333333",
+      "overflow": "clip",
+      "clip": true,
+      "hAlign": "left",
+      "vAlign": "top",
+      "orientation": "horizontal",
+      "wrapMode": "none",
+      "widthMode": "auto",
+      "heightMode": "auto",
+      "box": {
+        "x": null,
+        "y": null,
+        "width": null,
+        "height": null
+      }
+    },
     "showMinorTicks": false,
     "minorTickCount": 0
   },
   "yAxis": {
     "visible": true,
+    "axisLineVisible": true,
+    "tickLineVisible": true,
+    "titlePosition": "center",
     "title": {
       "visible": true,
       "text": "Y",
@@ -693,6 +843,10 @@ namespace FlowInternal
       "vAlign": "middle",
       "overflow": "clip",
       "clip": true,
+      "orientation": "horizontal",
+      "wrapMode": "none",
+      "widthMode": "auto",
+      "heightMode": "auto",
       "box": {
         "x": null,
         "y": null,
@@ -716,16 +870,37 @@ namespace FlowInternal
     "tickValues": [],
     "tickValueGap": 2.0,
     "tickLabelFormat": "auto",
-    "tickLabelFontFamily": "Default",
-    "tickLabelFontSize": 12,
-    "tickLabelFontWeight": 400,
-    "tickLabelFontStyle": "normal",
-    "tickLabelColor": "#333333",
+    "tickLabel": {
+      "visible": true,
+      "text": "",
+      "fontFamily": "Default",
+      "fontSize": 12,
+      "fontWeight": 400,
+      "fontStyle": "normal",
+      "color": "#333333",
+      "overflow": "clip",
+      "clip": true,
+      "hAlign": "left",
+      "vAlign": "top",
+      "orientation": "horizontal",
+      "wrapMode": "none",
+      "widthMode": "auto",
+      "heightMode": "auto",
+      "box": {
+        "x": null,
+        "y": null,
+        "width": null,
+        "height": null
+      }
+    },
     "showMinorTicks": false,
     "minorTickCount": 0
   },
   "ySecondary": {
     "visible": false,
+    "axisLineVisible": true,
+    "tickLineVisible": true,
+    "titlePosition": "center",
     "title": {
       "visible": true,
       "text": "Y",
@@ -738,6 +913,10 @@ namespace FlowInternal
       "vAlign": "middle",
       "overflow": "clip",
       "clip": true,
+      "orientation": "horizontal",
+      "wrapMode": "none",
+      "widthMode": "auto",
+      "heightMode": "auto",
       "box": {
         "x": null,
         "y": null,
@@ -761,11 +940,29 @@ namespace FlowInternal
     "tickValues": [],
     "tickValueGap": 2.0,
     "tickLabelFormat": "auto",
-    "tickLabelFontFamily": "Default",
-    "tickLabelFontSize": 12,
-    "tickLabelFontWeight": 400,
-    "tickLabelFontStyle": "normal",
-    "tickLabelColor": "#333333",
+    "tickLabel": {
+      "visible": true,
+      "text": "",
+      "fontFamily": "Default",
+      "fontSize": 12,
+      "fontWeight": 400,
+      "fontStyle": "normal",
+      "color": "#333333",
+      "overflow": "clip",
+      "clip": true,
+      "hAlign": "left",
+      "vAlign": "top",
+      "orientation": "horizontal",
+      "wrapMode": "none",
+      "widthMode": "auto",
+      "heightMode": "auto",
+      "box": {
+        "x": null,
+        "y": null,
+        "width": null,
+        "height": null
+      }
+    },
     "showMinorTicks": false,
     "minorTickCount": 0
   },
@@ -798,6 +995,10 @@ namespace FlowInternal
       "color": "#111111",
       "overflow": "clip",
       "clip": true,
+      "orientation": "horizontal",
+      "wrapMode": "none",
+      "widthMode": "auto",
+      "heightMode": "auto",
       "box": {
         "x": null,
         "y": null,
@@ -805,6 +1006,7 @@ namespace FlowInternal
         "height": 40
       }
     },
+    "titlePlacement": "center",
     "legends": []
   },
   "datasets": [],
