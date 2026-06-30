@@ -14,8 +14,10 @@ layout(push_constant) uniform PlotPushConstants {
 struct TextGlyphInstance {
 	float x;
 	float y;
-	float w;
-	float h;
+	float xBasisX;
+	float xBasisY;
+	float yBasisX;
+	float yBasisY;
 	float u0;
 	float v0;
 	float u1;
@@ -49,7 +51,9 @@ void main() {
 
 	TextGlyphInstance glyph = glyphBuffer.glyphs[gl_InstanceIndex];
 	vec2 unitPosition = unitPositions[gl_VertexIndex];
-	vec2 worldPosition = vec2(glyph.x, glyph.y) + unitPosition * vec2(glyph.w, glyph.h);
+	vec2 worldPosition = vec2(glyph.x, glyph.y)
+		+ unitPosition.x * vec2(glyph.xBasisX, glyph.xBasisY)
+		+ unitPosition.y * vec2(glyph.yBasisX, glyph.yBasisY);
 	vec2 screenPosition = (worldPosition - vec2(pc.cameraCenterX, pc.cameraCenterY)) * pc.zoom + vec2(pc.viewportWidth, pc.viewportHeight) * 0.5;
 
 	vec2 clipPosition = vec2(

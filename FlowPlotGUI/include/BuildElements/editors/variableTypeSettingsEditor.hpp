@@ -36,7 +36,7 @@ struct variableTypeSettingsEditorParams {
 	FlowPlot::Spec::LayerSpec value{};
 	std::function<void(FlowPlot::Spec::LayerSpec)> onChange = nullptr;
 
-	bool defaultExpanded = true;
+	bool defaultExpanded = false;
 
 	Clay_Sizing cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
 	Clay_Padding cardPadding = Clay_Padding{0, 8, 6, 6};
@@ -127,7 +127,7 @@ FLOWUI_DEV_REGISTER_STRUCT(
 
 struct variableTypeSettingsEditorState {
 	bool initialized = false;
-	bool isExpanded = true;
+	bool isExpanded = false;
 };
 
 FLOWUI_DEV_REGISTER_STRUCT(

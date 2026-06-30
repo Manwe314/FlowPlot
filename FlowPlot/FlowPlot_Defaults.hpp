@@ -445,7 +445,7 @@ namespace FlowPlot
 
 		struct MasterTemplateSpec
 		{
-			std::string version = "1.0";
+			std::string version = "2.0";
 			FigureSpec figure{};
 			std::vector<DatasetSpec> datasets{};
 			LayoutSpec layout{};
@@ -972,7 +972,7 @@ namespace FlowInternal
 
 		inline constexpr std::string_view kMasterTemplateJson = R"flowplot(
 {
-  "version": "1.0",
+  "version": "2.0",
   "fonts": [],
   "figure": {
     "width": 1200,

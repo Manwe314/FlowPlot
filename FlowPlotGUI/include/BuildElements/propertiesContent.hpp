@@ -210,6 +210,13 @@ namespace FlowPlotGui
 		propertiesContentWireDeferredTemplateEdit(params.textInput, guiState, key + "/text", timeoutSeconds);
 		propertiesContentWireDeferredTemplateEdit(params.fontSizeInput, guiState, key + "/font-size", timeoutSeconds);
 		propertiesContentWireDeferredTemplateEdit(params.textColorInput, guiState, key + "/color", timeoutSeconds);
+		if (params.editBoxPosition)
+		{
+			propertiesContentWireDeferredTemplateEdit(params.boxXInput, guiState, key + "/box-x", timeoutSeconds);
+			propertiesContentWireDeferredTemplateEdit(params.boxYInput, guiState, key + "/box-y", timeoutSeconds);
+		}
+		propertiesContentWireDeferredTemplateEdit(params.boxWidthInput, guiState, key + "/box-width", timeoutSeconds);
+		propertiesContentWireDeferredTemplateEdit(params.boxHeightInput, guiState, key + "/box-height", timeoutSeconds);
 	}
 
 	inline void propertiesContentWireDeferredTemplateEdit(
@@ -254,8 +261,6 @@ namespace FlowPlotGui
 		propertiesContentWireDeferredTemplateEdit(params.lineLengthInput, guiState, key + "/line-length", timeoutSeconds);
 		propertiesContentWireDeferredTemplateEdit(params.countInput, guiState, key + "/tick-count", timeoutSeconds);
 		propertiesContentWireDeferredTemplateEdit(params.gapToLabelInput, guiState, key + "/tick-label-gap", timeoutSeconds);
-		propertiesContentWireDeferredTemplateEdit(params.labelFontSizeInput, guiState, key + "/tick-label-font-size", timeoutSeconds);
-		propertiesContentWireDeferredTemplateEdit(params.labelColorInput, guiState, key + "/tick-label-color", timeoutSeconds);
 		propertiesContentWireDeferredTemplateEdit(params.minorTickCountInput, guiState, key + "/minor-tick-count", timeoutSeconds);
 	}
 
@@ -398,19 +403,6 @@ namespace FlowPlotGui
 		params.fontFamilyOptions = availableFontFamilies(guiState.fontLibrary);
 		params.fontWeightOptions = availableWeightsForFamily(guiState.fontLibrary, text.fontFamily);
 		params.fontStyleOptions = availableStylesForFamilyWeight(guiState.fontLibrary, text.fontFamily, text.fontWeight);
-	}
-
-	inline void propertiesContentApplyTickFontOptions(
-		tickSettingsEditorParams& params,
-		const state& guiState,
-		const FlowPlot::Spec::AxisSpec& axis)
-	{
-		params.fontFamilyOptions = availableFontFamilies(guiState.fontLibrary);
-		params.fontWeightOptions = availableWeightsForFamily(guiState.fontLibrary, axis.tickLabelFontFamily);
-		params.fontStyleOptions = availableStylesForFamilyWeight(
-			guiState.fontLibrary,
-			axis.tickLabelFontFamily,
-			axis.tickLabelFontWeight);
 	}
 
 	inline std::optional<std::size_t> propertiesContentFindLayerIndex(
@@ -745,6 +737,7 @@ namespace FlowPlotGui
 
 	inline void drawFigureTitleEditor(FlowUi::UiManager& ui, state& guiState, std::string_view rootId)
 	{
+		static const std::array<std::string, 3> kTitlePlacementOptions{"left", "center", "right"};
 		textSpecEditorParams params{};
 		params.hintText = "Figure Title";
 		params.value = guiState.activeTemplate.figure.title;
@@ -758,6 +751,21 @@ namespace FlowPlotGui
 
 		ui.createElement(kTextSpecEditor, std::string(rootId) + "/figure-title-editor")
 			.setParameters(std::move(params))
+			.draw();
+
+		ui.createElement(kEnumPickerCard, std::string(rootId) + "/figure-title-placement")
+			.setParameters(enumPickerCardParams{
+				.hintText = "Title Placement",
+				.options = kTitlePlacementOptions,
+				.value = FlowInternal::figureTitlePlacementName(guiState.activeTemplate.figure.titlePlacement),
+				.defaultValue = "center",
+				.onChange = [&guiState](std::string_view changed) {
+					prepareImmediateDocumentChange(guiState);
+					guiState.activeTemplate.figure.titlePlacement = FlowInternal::parseFigureTitlePlacement(changed);
+					markTemplateChanged(guiState);
+					commitImmediateDocumentChangeIfNoDeferredEdit(guiState);
+				},
+			})
 			.draw();
 	}
 
@@ -943,6 +951,7 @@ namespace FlowPlotGui
 	inline void drawAxisEditor(FlowUi::UiManager& ui, state& guiState, const TemplateNodeKey& key, std::string_view rootId)
 	{
 		static const std::array<std::string, 1> kAxisScaleOptions = {"linear"};
+		static const std::array<std::string, 3> kAxisTitlePositionOptions = {"start", "center", "end"};
 
 		const std::optional<std::size_t> panelIndex =
 			propertiesContentFindPanelIndex(guiState.activeTemplate, key.outer);
@@ -975,6 +984,44 @@ namespace FlowPlotGui
 				.onChange = [&guiState, axisValue = *axis, emitAxisChange](bool changed) mutable {
 					prepareImmediateDocumentChange(guiState);
 					axisValue.visible = changed;
+					emitAxisChange(std::move(axisValue));
+				},
+			})
+			.draw();
+
+		ui.createElement(kToggleCard, std::string(rootId) + "/axis-line-visible")
+			.setParameters(toggleCardParams{
+				.hintText = "Axis Line Visible",
+				.value = axis->axisLineVisible,
+				.onChange = [&guiState, axisValue = *axis, emitAxisChange](bool changed) mutable {
+					prepareImmediateDocumentChange(guiState);
+					axisValue.axisLineVisible = changed;
+					emitAxisChange(std::move(axisValue));
+				},
+			})
+			.draw();
+
+		ui.createElement(kToggleCard, std::string(rootId) + "/tick-line-visible")
+			.setParameters(toggleCardParams{
+				.hintText = "Tick Lines Visible",
+				.value = axis->tickLineVisible,
+				.onChange = [&guiState, axisValue = *axis, emitAxisChange](bool changed) mutable {
+					prepareImmediateDocumentChange(guiState);
+					axisValue.tickLineVisible = changed;
+					emitAxisChange(std::move(axisValue));
+				},
+			})
+			.draw();
+
+		ui.createElement(kEnumPickerCard, std::string(rootId) + "/axis-title-position")
+			.setParameters(enumPickerCardParams{
+				.hintText = "Title Position",
+				.options = kAxisTitlePositionOptions,
+				.value = FlowInternal::axisTitlePositionName(axis->titlePosition),
+				.defaultValue = "center",
+				.onChange = [&guiState, axisValue = *axis, emitAxisChange](std::string_view changed) mutable {
+					prepareImmediateDocumentChange(guiState);
+					axisValue.titlePosition = FlowInternal::parseAxisTitlePosition(changed);
 					emitAxisChange(std::move(axisValue));
 				},
 			})
@@ -1084,10 +1131,26 @@ namespace FlowPlotGui
 				params.hintText = "Tick Settings";
 				params.value = *axis;
 				params.onChange = emitAxisChange;
-				propertiesContentApplyTickFontOptions(params, guiState, params.value);
 				propertiesContentWireDeferredTemplateEdit(params, guiState, "axis/" + panelId + "/" + std::to_string(static_cast<int>(axisKind)) + "/ticks");
 				return params;
 			}())
+			.draw();
+
+		textSpecEditorParams tickLabelParams{};
+		tickLabelParams.hintText = "Tick Labels";
+		tickLabelParams.value = axis->tickLabel;
+		tickLabelParams.editBoxPosition = false;
+		tickLabelParams.onChange = [axisValue = *axis, emitAxisChange](FlowPlot::Spec::TextSpec changed) mutable {
+			axisValue.tickLabel = std::move(changed);
+			emitAxisChange(std::move(axisValue));
+		};
+		propertiesContentApplyTextFontOptions(tickLabelParams, guiState, tickLabelParams.value);
+		propertiesContentWireDeferredTemplateEdit(
+			tickLabelParams,
+			guiState,
+			"axis/" + panelId + "/" + std::to_string(static_cast<int>(axisKind)) + "/tick-label");
+		ui.createElement(kTextSpecEditor, std::string(rootId) + "/axis-tick-label")
+			.setParameters(std::move(tickLabelParams))
 			.draw();
 	}
 
@@ -1303,6 +1366,7 @@ namespace FlowPlotGui
 
 	inline void drawLegendEditor(FlowUi::UiManager& ui, state& guiState, const TemplateNodeKey& key, std::string_view rootId)
 	{
+		static const std::array<std::string, 3> kLegendPlacementOptions{"top", "center", "bottom"};
 		const std::optional<std::size_t> legendIndex =
 			propertiesContentFindLegendIndex(guiState.activeTemplate.figure, key.outer);
 		if (!legendIndex)
@@ -1329,6 +1393,32 @@ namespace FlowPlotGui
 				.onChange = [&guiState, legendValue = legend, emitLegendChange](bool changed) mutable {
 					prepareImmediateDocumentChange(guiState);
 					legendValue.visible = changed;
+					emitLegendChange(std::move(legendValue));
+				},
+			})
+			.draw();
+
+		ui.createElement(kToggleCard, std::string(rootId) + "/legend-overlay")
+			.setParameters(toggleCardParams{
+				.hintText = "Overlay",
+				.value = legend.overlay,
+				.onChange = [&guiState, legendValue = legend, emitLegendChange](bool changed) mutable {
+					prepareImmediateDocumentChange(guiState);
+					legendValue.overlay = changed;
+					emitLegendChange(std::move(legendValue));
+				},
+			})
+			.draw();
+
+		ui.createElement(kEnumPickerCard, std::string(rootId) + "/legend-placement")
+			.setParameters(enumPickerCardParams{
+				.hintText = "Placement",
+				.options = kLegendPlacementOptions,
+				.value = FlowInternal::legendPlacementName(legend.placement),
+				.defaultValue = "top",
+				.onChange = [&guiState, legendValue = legend, emitLegendChange](std::string_view changed) mutable {
+					prepareImmediateDocumentChange(guiState);
+					legendValue.placement = FlowInternal::parseLegendPlacement(changed);
 					emitLegendChange(std::move(legendValue));
 				},
 			})
@@ -1421,7 +1511,6 @@ namespace FlowPlotGui
 
 	inline void drawLegendElementEditor(FlowUi::UiManager& ui, state& guiState, const TemplateNodeKey& key, std::string_view rootId)
 	{
-		static const std::array<std::string, 3> kOverflowOptions = {"clip", "visible", "ellipsis"};
 		static const std::array<std::string, 4> kIconShapeOptions = {"circle", "square", "diamond", "triangle"};
 
 		const FlowPlot::Spec::LegendSpec* legend = nullptr;
@@ -1453,14 +1542,6 @@ namespace FlowPlotGui
 		const FlowPlot::Spec::LegendElementSpec& element = legend->legendElements[*elementIndex];
 		const std::string legendId = legend->id;
 		const std::string elementId = element.id;
-		const std::vector<std::string> fontFamilyOptions = availableFontFamilies(guiState.fontLibrary);
-		const std::vector<std::string> fontWeightOptions = availableWeightsForFamily(
-			guiState.fontLibrary,
-			element.fontFamily);
-		const std::vector<std::string> fontStyleOptions = availableStylesForFamilyWeight(
-			guiState.fontLibrary,
-			element.fontFamily,
-			element.fontWeight);
 		const auto emitElementChange = [&guiState, legendId, elementId](FlowPlot::Spec::LegendElementSpec changed) {
 			if (FlowPlot::Spec::LegendElementSpec* target =
 					propertiesContentLegendElementForIds(guiState, legendId, elementId))
@@ -1471,118 +1552,18 @@ namespace FlowPlotGui
 			}
 		};
 
-		ui.createElement(kStringInputCard, std::string(rootId) + "/legend-element-text")
-			.setParameters([&]() {
-				stringInputCardParams params{
-				.hintText = "Text",
-				.value = element.text,
-				.onChange = [elementValue = element, emitElementChange](std::string_view changed) mutable {
-					elementValue.text = std::string(changed);
-					emitElementChange(std::move(elementValue));
-				},
-				};
-				propertiesContentWireDeferredTemplateEdit(params, guiState, "legend/" + legendId + "/" + elementId + "/text");
-				return params;
-			}())
-			.draw();
-
-		ui.createElement(kEnumPickerCard, std::string(rootId) + "/legend-element-font-family")
-			.setParameters(enumPickerCardParams{
-				.hintText = "Font Family",
-				.options = fontFamilyOptions,
-				.value = element.fontFamily,
-				.defaultValue = "Default",
-				.onChange = [&guiState, elementValue = element, emitElementChange](std::string_view changed) mutable {
-					prepareImmediateDocumentChange(guiState);
-					elementValue.fontFamily = std::string(changed);
-					emitElementChange(std::move(elementValue));
-				},
-			})
-			.draw();
-
-		ui.createElement(kNumericInputCard, std::string(rootId) + "/legend-element-font-size")
-			.setParameters([&]() {
-				numericInputCardParams params{
-				.hintText = "Font Size",
-				.valueType = numericInputValueType::Float,
-				.value = static_cast<double>(element.fontSize),
-				.minValue = 0.0,
-				.maxValue = 1000000.0,
-				.onChange = [elementValue = element, emitElementChange](double changed) mutable {
-					elementValue.fontSize = static_cast<float>(changed);
-					emitElementChange(std::move(elementValue));
-				},
-				};
-				propertiesContentWireDeferredTemplateEdit(params, guiState, "legend/" + legendId + "/" + elementId + "/font-size");
-				return params;
-			}())
-			.draw();
-
-		ui.createElement(kEnumPickerCard, std::string(rootId) + "/legend-element-font-weight")
-			.setParameters(enumPickerCardParams{
-				.hintText = "Font Weight",
-				.options = fontWeightOptions,
-				.value = std::to_string(element.fontWeight),
-				.defaultValue = "400",
-				.onChange = [&guiState, elementValue = element, emitElementChange](std::string_view changed) mutable {
-					prepareImmediateDocumentChange(guiState);
-					try
-					{
-						const unsigned long parsed = std::stoul(std::string(changed));
-						elementValue.fontWeight = static_cast<std::uint16_t>(std::min<unsigned long>(
-							parsed,
-							static_cast<unsigned long>(std::numeric_limits<std::uint16_t>::max())));
-					}
-					catch (...)
-					{
-						elementValue.fontWeight = 400;
-					}
-					emitElementChange(std::move(elementValue));
-				},
-			})
-			.draw();
-
-		ui.createElement(kEnumPickerCard, std::string(rootId) + "/legend-element-font-style")
-			.setParameters(enumPickerCardParams{
-				.hintText = "Font Style",
-				.options = fontStyleOptions,
-				.value = element.fontStyle,
-				.defaultValue = "normal",
-				.onChange = [&guiState, elementValue = element, emitElementChange](std::string_view changed) mutable {
-					prepareImmediateDocumentChange(guiState);
-					elementValue.fontStyle = std::string(changed);
-					emitElementChange(std::move(elementValue));
-				},
-			})
-			.draw();
-
-		ui.createElement(kColorPickerCard, std::string(rootId) + "/legend-element-color")
-			.setParameters([&]() {
-				colorPickerCardParams params{
-				.hintText = "Color",
-				.value = element.color,
-				.onChange = [elementValue = element, emitElementChange](std::string_view changed) mutable {
-					elementValue.color = std::string(changed);
-					emitElementChange(std::move(elementValue));
-				},
-				};
-				propertiesContentWireDeferredTemplateEdit(params, guiState, "legend/" + legendId + "/" + elementId + "/color");
-				return params;
-			}())
-			.draw();
-
-		ui.createElement(kEnumPickerCard, std::string(rootId) + "/legend-element-overflow")
-			.setParameters(enumPickerCardParams{
-				.hintText = "Overflow",
-				.options = kOverflowOptions,
-				.value = element.overflow,
-				.defaultValue = "clip",
-				.onChange = [&guiState, elementValue = element, emitElementChange](std::string_view changed) mutable {
-					prepareImmediateDocumentChange(guiState);
-					elementValue.overflow = std::string(changed);
-					emitElementChange(std::move(elementValue));
-				},
-			})
+		textSpecEditorParams labelParams{};
+		labelParams.hintText = "Label";
+		labelParams.value = element.label;
+		labelParams.onChange = [elementValue = element, emitElementChange](FlowPlot::Spec::TextSpec changed) mutable {
+			elementValue.label = std::move(changed);
+			emitElementChange(std::move(elementValue));
+		};
+		propertiesContentApplyTextFontOptions(labelParams, guiState, labelParams.value);
+		propertiesContentWireDeferredTemplateEdit(
+			labelParams, guiState, "legend/" + legendId + "/" + elementId + "/label");
+		ui.createElement(kTextSpecEditor, std::string(rootId) + "/legend-element-label")
+			.setParameters(std::move(labelParams))
 			.draw();
 
 		ui.createElement(kEnumPickerCard, std::string(rootId) + "/legend-element-icon-shape")
@@ -1599,6 +1580,42 @@ namespace FlowPlotGui
 			})
 			.draw();
 
+		ui.createElement(kNumericInputCard, std::string(rootId) + "/legend-element-icon-size")
+			.setParameters([&]() {
+				numericInputCardParams params{
+					.hintText = "Icon Size",
+					.valueType = numericInputValueType::Float,
+					.value = static_cast<double>(element.iconSize),
+					.minValue = 0.0,
+					.maxValue = 1000000.0,
+					.onChange = [elementValue = element, emitElementChange](double changed) mutable {
+						elementValue.iconSize = static_cast<float>(changed);
+						emitElementChange(std::move(elementValue));
+					},
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "legend/" + legendId + "/" + elementId + "/icon-size");
+				return params;
+			}())
+			.draw();
+
+		ui.createElement(kNumericInputCard, std::string(rootId) + "/legend-element-label-gap")
+			.setParameters([&]() {
+				numericInputCardParams params{
+					.hintText = "Label Gap",
+					.valueType = numericInputValueType::Float,
+					.value = static_cast<double>(element.labelGap),
+					.minValue = 0.0,
+					.maxValue = 1000000.0,
+					.onChange = [elementValue = element, emitElementChange](double changed) mutable {
+						elementValue.labelGap = static_cast<float>(changed);
+						emitElementChange(std::move(elementValue));
+					},
+				};
+				propertiesContentWireDeferredTemplateEdit(params, guiState, "legend/" + legendId + "/" + elementId + "/label-gap");
+				return params;
+			}())
+			.draw();
+
 		ui.createElement(kColorPickerCard, std::string(rootId) + "/legend-element-icon-color")
 			.setParameters([&]() {
 				colorPickerCardParams params{
@@ -1613,6 +1630,39 @@ namespace FlowPlotGui
 				return params;
 			}())
 			.draw();
+
+		auto drawIconBoxValue = [&](std::string_view suffix, std::string_view hint, const std::optional<float>& current,
+			auto assign, double minimum) {
+			ui.createElement(kNumericInputCard, std::string(rootId) + "/legend-element-icon-box-" + std::string(suffix))
+				.setParameters([&]() {
+					numericInputCardParams params{
+						.hintText = std::string(hint),
+						.valueType = numericInputValueType::Float,
+						.value = current.has_value() ? static_cast<double>(*current) : 0.0,
+						.minValue = minimum,
+						.maxValue = 1000000.0,
+						.nullable = true,
+						.hasValue = current.has_value(),
+						.onOptionalChange = [elementValue = element, emitElementChange, assign](std::optional<double> changed) mutable {
+							assign(elementValue.iconBox, changed.has_value()
+								? std::optional<float>{static_cast<float>(*changed)} : std::nullopt);
+							emitElementChange(std::move(elementValue));
+						},
+					};
+					propertiesContentWireDeferredTemplateEdit(
+						params, guiState, "legend/" + legendId + "/" + elementId + "/icon-box-" + std::string(suffix));
+					return params;
+				}())
+				.draw();
+		};
+		drawIconBoxValue("x", "Icon Box X", element.iconBox.x,
+			[](FlowPlot::Spec::BoxSpec& box, std::optional<float> changed) { box.x = changed; }, -1000000.0);
+		drawIconBoxValue("y", "Icon Box Y", element.iconBox.y,
+			[](FlowPlot::Spec::BoxSpec& box, std::optional<float> changed) { box.y = changed; }, -1000000.0);
+		drawIconBoxValue("width", "Icon Box Width", element.iconBox.width,
+			[](FlowPlot::Spec::BoxSpec& box, std::optional<float> changed) { box.width = changed; }, 0.0);
+		drawIconBoxValue("height", "Icon Box Height", element.iconBox.height,
+			[](FlowPlot::Spec::BoxSpec& box, std::optional<float> changed) { box.height = changed; }, 0.0);
 	}
 
 	inline void drawPropertiesForSelection(

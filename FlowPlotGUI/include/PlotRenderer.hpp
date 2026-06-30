@@ -105,8 +105,10 @@ private:
 	struct TextGlyphInstance {
 		float x = 0.0f;
 		float y = 0.0f;
-		float w = 0.0f;
-		float h = 0.0f;
+		float xBasisX = 0.0f;
+		float xBasisY = 0.0f;
+		float yBasisX = 0.0f;
+		float yBasisY = 0.0f;
 		float u0 = 0.0f;
 		float v0 = 0.0f;
 		float u1 = 0.0f;
@@ -115,6 +117,7 @@ private:
 		float distanceRangePx = 2.0f;
 		PackedColor color{};
 	};
+	static_assert(sizeof(TextGlyphInstance) == 64, "TextGlyphInstance must match the shader std430 layout");
 
 	struct PolylineVertex {
 		float x = 0.0f;

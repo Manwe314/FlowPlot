@@ -353,7 +353,7 @@ templateLayerParams makeTemplateLayerParams(
 		if (node.legendIndex < spec.figure.legends.size() && node.legendElementIndex < spec.figure.legends[node.legendIndex].legendElements.size())
 		{
 			const FlowPlot::Spec::LegendElementSpec& element = spec.figure.legends[node.legendIndex].legendElements[node.legendElementIndex];
-			params.mainText = element.id.empty() ? element.text : element.id;
+			params.mainText = element.id.empty() ? element.label.text : element.id;
 		}
 		params.mainIcon = app.icons().textureRef("Hashtag");
 		params.showDeleterButton = true;

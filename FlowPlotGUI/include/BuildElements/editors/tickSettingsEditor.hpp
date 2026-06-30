@@ -1,52 +1,28 @@
 #pragma once
 
-#include <algorithm>
-#include <array>
 #include <cstdint>
 #include <functional>
 #include <limits>
-#include <span>
 #include <string>
 #include <string_view>
 #include <utility>
-#include <vector>
 
 #include <FlowUi/Flow.hpp>
 #include <devMode/devApi.hpp>
 
 #include "BuildElements/BasicButton.hpp"
 #include "BuildElements/editors/basicInputs/colorPicker.hpp"
-#include "BuildElements/editors/basicInputs/enumPicker.hpp"
 #include "BuildElements/editors/basicInputs/numericInput.hpp"
-#include "BuildElements/editors/basicInputs/stringInput.hpp"
 #include "BuildElements/editors/basicInputs/toggle.hpp"
 #include "FlowPlot_Defaults.hpp"
 #include "FlowPlotGui.hpp"
-
-inline std::span<const std::string> tickSettingsEditorDefaultFontFamilyOptions()
-{
-	static const std::array<std::string, 1> options{"Default"};
-	return options;
-}
-
-inline std::span<const std::string> tickSettingsEditorDefaultFontWeightOptions()
-{
-	static const std::array<std::string, 1> options{"400"};
-	return options;
-}
-
-inline std::span<const std::string> tickSettingsEditorDefaultFontStyleOptions()
-{
-	static const std::array<std::string, 1> options{"normal"};
-	return options;
-}
 
 struct tickSettingsEditorParams {
 	std::string hintText = "Tick Settings";
 	FlowPlot::Spec::AxisSpec value{};
 	std::function<void(FlowPlot::Spec::AxisSpec)> onChange = nullptr;
 
-	bool defaultExpanded = true;
+	bool defaultExpanded = false;
 
 	Clay_Sizing cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
 	Clay_Padding cardPadding = Clay_Padding{8, 8, 6, 6};
@@ -81,20 +57,11 @@ struct tickSettingsEditorParams {
 	uint16_t rowChildGap = 0;
 	Clay_Color rowBackgroundColor = FlowUi::Flow_Color("#00000000");
 	Clay_Sizing insetSizing = Clay_Sizing{.width = CLAY_SIZING_FIXED(18), .height = CLAY_SIZING_PERCENT(1.0f)};
-	std::vector<std::string> fontFamilyOptions{};
-	std::vector<std::string> fontWeightOptions{};
-	std::vector<std::string> fontStyleOptions{};
-
 	colorPickerCardParams lineColorInput{};
 	numericInputCardParams lineWidthInput{};
 	numericInputCardParams lineLengthInput{};
 	numericInputCardParams countInput{};
 	numericInputCardParams gapToLabelInput{};
-	enumPickerCardParams labelFontFamilyInput{};
-	numericInputCardParams labelFontSizeInput{};
-	enumPickerCardParams labelFontWeightInput{};
-	enumPickerCardParams labelFontStyleInput{};
-	colorPickerCardParams labelColorInput{};
 	toggleCardParams showMinorTicksInput{};
 	numericInputCardParams minorTickCountInput{};
 };
@@ -137,17 +104,12 @@ FLOWUI_DEV_REGISTER_STRUCT(
 	FLOWUI_DEV_REFLECT_FIELD(tickSettingsEditorParams, lineLengthInput),
 	FLOWUI_DEV_REFLECT_FIELD(tickSettingsEditorParams, countInput),
 	FLOWUI_DEV_REFLECT_FIELD(tickSettingsEditorParams, gapToLabelInput),
-	FLOWUI_DEV_REFLECT_FIELD(tickSettingsEditorParams, labelFontFamilyInput),
-	FLOWUI_DEV_REFLECT_FIELD(tickSettingsEditorParams, labelFontSizeInput),
-	FLOWUI_DEV_REFLECT_FIELD(tickSettingsEditorParams, labelFontWeightInput),
-	FLOWUI_DEV_REFLECT_FIELD(tickSettingsEditorParams, labelFontStyleInput),
-	FLOWUI_DEV_REFLECT_FIELD(tickSettingsEditorParams, labelColorInput),
 	FLOWUI_DEV_REFLECT_FIELD(tickSettingsEditorParams, showMinorTicksInput),
 	FLOWUI_DEV_REFLECT_FIELD(tickSettingsEditorParams, minorTickCountInput));
 
 struct tickSettingsEditorState {
 	bool initialized = false;
-	bool isExpanded = true;
+	bool isExpanded = false;
 };
 
 FLOWUI_DEV_REGISTER_STRUCT(
@@ -324,16 +286,6 @@ inline const TickSettingsEditorDef kTickSettingsEditor = {
 			continue;
 		}
 
-		const std::span<const std::string> fontFamilyOptions = context.params.fontFamilyOptions.empty()
-			? tickSettingsEditorDefaultFontFamilyOptions()
-			: std::span<const std::string>(context.params.fontFamilyOptions);
-		const std::span<const std::string> fontWeightOptions = context.params.fontWeightOptions.empty()
-			? tickSettingsEditorDefaultFontWeightOptions()
-			: std::span<const std::string>(context.params.fontWeightOptions);
-		const std::span<const std::string> fontStyleOptions = context.params.fontStyleOptions.empty()
-			? tickSettingsEditorDefaultFontStyleOptions()
-			: std::span<const std::string>(context.params.fontStyleOptions);
-
 		tickSettingsEditorDrawInputRow(context, "row-line-color", context.params, [&](const std::string& rowPath) {
 				colorPickerCardParams params = context.params.lineColorInput;
 				params.hintText = "Line Color";
@@ -408,85 +360,6 @@ inline const TickSettingsEditorDef kTickSettingsEditor = {
 					tickSettingsEditorEmit(std::move(value), onChange);
 				};
 				context.uiManager.createElement(kNumericInputCard, rowPath + "/gap-to-label").setParameters(std::move(params)).draw();
-			});
-
-			tickSettingsEditorDrawInputRow(context, "row-label-font-family", context.params, [&](const std::string& rowPath) {
-				enumPickerCardParams params = context.params.labelFontFamilyInput;
-				params.hintText = "Label Font Family";
-				params.options = fontFamilyOptions;
-				params.value = context.params.value.tickLabelFontFamily;
-				params.defaultValue = "Default";
-				params.fontId = context.params.fontId;
-				params.onChange = [value = context.params.value, onChange = context.params.onChange](std::string_view changed) mutable {
-					value.tickLabelFontFamily = std::string(changed);
-					tickSettingsEditorEmit(std::move(value), onChange);
-				};
-				context.uiManager.createElement(kEnumPickerCard, rowPath + "/label-font-family").setParameters(std::move(params)).draw();
-			});
-
-			tickSettingsEditorDrawInputRow(context, "row-label-font-size", context.params, [&](const std::string& rowPath) {
-				numericInputCardParams params = context.params.labelFontSizeInput;
-				params.hintText = "Label Font Size";
-				params.valueType = numericInputValueType::Float;
-				params.value = static_cast<double>(context.params.value.tickLabelFontSize);
-				params.minValue = 0.0;
-				params.maxValue = 10000.0;
-				params.fontId = context.params.fontId;
-				params.onChange = [value = context.params.value, onChange = context.params.onChange](double changed) mutable {
-					value.tickLabelFontSize = static_cast<float>(changed);
-					tickSettingsEditorEmit(std::move(value), onChange);
-				};
-				context.uiManager.createElement(kNumericInputCard, rowPath + "/label-font-size").setParameters(std::move(params)).draw();
-			});
-
-			tickSettingsEditorDrawInputRow(context, "row-label-font-weight", context.params, [&](const std::string& rowPath) {
-				enumPickerCardParams params = context.params.labelFontWeightInput;
-				params.hintText = "Label Font Weight";
-				params.options = fontWeightOptions;
-				params.value = std::to_string(context.params.value.tickLabelFontWeight);
-				params.defaultValue = "400";
-				params.fontId = context.params.fontId;
-				params.onChange = [value = context.params.value, onChange = context.params.onChange](std::string_view changed) mutable {
-					try
-					{
-						const unsigned long parsed = std::stoul(std::string(changed));
-						value.tickLabelFontWeight = static_cast<std::uint16_t>(std::min<unsigned long>(
-							parsed,
-							static_cast<unsigned long>(std::numeric_limits<std::uint16_t>::max())));
-					}
-					catch (...)
-					{
-						value.tickLabelFontWeight = 400;
-					}
-					tickSettingsEditorEmit(std::move(value), onChange);
-				};
-				context.uiManager.createElement(kEnumPickerCard, rowPath + "/label-font-weight").setParameters(std::move(params)).draw();
-			});
-
-			tickSettingsEditorDrawInputRow(context, "row-label-font-style", context.params, [&](const std::string& rowPath) {
-				enumPickerCardParams params = context.params.labelFontStyleInput;
-				params.hintText = "Label Font Style";
-				params.options = fontStyleOptions;
-				params.value = context.params.value.tickLabelFontStyle;
-				params.defaultValue = "normal";
-				params.fontId = context.params.fontId;
-				params.onChange = [value = context.params.value, onChange = context.params.onChange](std::string_view changed) mutable {
-					value.tickLabelFontStyle = std::string(changed);
-					tickSettingsEditorEmit(std::move(value), onChange);
-				};
-				context.uiManager.createElement(kEnumPickerCard, rowPath + "/label-font-style").setParameters(std::move(params)).draw();
-			});
-
-			tickSettingsEditorDrawInputRow(context, "row-label-color", context.params, [&](const std::string& rowPath) {
-				colorPickerCardParams params = context.params.labelColorInput;
-				params.hintText = "Label Color";
-				params.value = context.params.value.tickLabelColor;
-				params.fontId = context.params.fontId;
-				params.onChange = [value = context.params.value, onChange = context.params.onChange](std::string_view changed) mutable {
-					value.tickLabelColor = std::string(changed);
-					tickSettingsEditorEmit(std::move(value), onChange);
-				};
-				context.uiManager.createElement(kColorPickerCard, rowPath + "/label-color").setParameters(std::move(params)).draw();
 			});
 
 			tickSettingsEditorDrawInputRow(context, "row-show-minor-ticks", context.params, [&](const std::string& rowPath) {

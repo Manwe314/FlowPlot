@@ -56,6 +56,11 @@ To add now:
 remember:
 	remove extra overload of LayoutText
 
+to fix on the GUI:
+	orientation enum options overflow
+	title placement enum cliping offscreen because enums is at the end
+	hint text has extra ()
+	
 
 
 

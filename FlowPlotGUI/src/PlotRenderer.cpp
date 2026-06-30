@@ -898,8 +898,8 @@ void PlotRenderer::buildRuns()
 		}
 	};
 
-	auto beginRun = [&](RunType type) {
-		const FlowPlot::RectF& scissor = scissorStack.back();
+	auto beginRun = [&](RunType type, const FlowPlot::RectF* scissorOverride = nullptr) {
+		const FlowPlot::RectF& scissor = scissorOverride != nullptr ? *scissorOverride : scissorStack.back();
 		if (drawPlan_.runs.empty() || runBarrier)
 		{
 			closeRun();
@@ -1018,35 +1018,44 @@ void PlotRenderer::buildRuns()
 						return;
 					}
 
+					const bool vertical = concreteCommand.orientation != FlowPlot::Spec::TextOrientation::Horizontal;
+					const float layoutBoxWidth = vertical ? concreteCommand.box.h : concreteCommand.box.w;
+					const float layoutBoxHeight = vertical ? concreteCommand.box.w : concreteCommand.box.h;
+					const float layoutMaxWidth = concreteCommand.wrapMode == FlowPlot::Spec::TextWrapMode::None
+						? std::numeric_limits<float>::infinity()
+						: std::max(layoutBoxWidth, 0.0f);
 					const FlowPlot::LaidOutText layout = input_.guiState->textEngine->layoutText(
 						concreteCommand.fontFamily,
 						concreteCommand.fontWeight,
 						concreteCommand.fontStyle,
 						concreteCommand.fontSize,
 						concreteCommand.text,
-						concreteCommand.clipToBox ? concreteCommand.box.w : std::numeric_limits<float>::infinity());
+						FlowPlot::TextLayoutOptions{layoutMaxWidth, concreteCommand.wrapMode});
 
-					float originX = concreteCommand.box.x;
+					float originX = 0.0f;
 					if (concreteCommand.hAlign == FlowPlot::HorizontalAlign::Center)
 					{
-						originX += (concreteCommand.box.w - layout.width) * 0.5f;
+						originX += (layoutBoxWidth - layout.width) * 0.5f;
 					}
 					else if (concreteCommand.hAlign == FlowPlot::HorizontalAlign::Right)
 					{
-						originX += concreteCommand.box.w - layout.width;
+						originX += layoutBoxWidth - layout.width;
 					}
 
-					float originY = concreteCommand.box.y;
+					float originY = 0.0f;
 					if (concreteCommand.vAlign == FlowPlot::VerticalAlign::Middle)
 					{
-						originY += (concreteCommand.box.h - layout.height) * 0.5f;
+						originY += (layoutBoxHeight - layout.height) * 0.5f;
 					}
 					else if (concreteCommand.vAlign == FlowPlot::VerticalAlign::Bottom)
 					{
-						originY += concreteCommand.box.h - layout.height;
+						originY += layoutBoxHeight - layout.height;
 					}
 
-					beginRun(RunType::Text);
+					const FlowPlot::RectF textScissor = concreteCommand.clipToBox
+						? intersectRect(scissorStack.back(), concreteCommand.box)
+						: scissorStack.back();
+					beginRun(RunType::Text, &textScissor);
 					for (const FlowPlot::GlyphPlacement& glyphPlacement : layout.glyphs)
 					{
 						const auto glyphIt = variant->unicodeToGlyphIndex.find(glyphPlacement.codepoint);
@@ -1057,18 +1066,44 @@ void PlotRenderer::buildRuns()
 						const FlowUi::Font::GlyphData& glyph = variant->glyphs[glyphIt->second];
 						const float scale = concreteCommand.fontSize / std::max(variant->emSize, 1.0e-6f);
 						const float baselineY = originY + glyphPlacement.y;
-						const float x0 = originX + glyphPlacement.x + glyph.planeLeft * scale;
-						const float y0 = baselineY - glyph.planeTop * scale;
-						const float x1 = originX + glyphPlacement.x + glyph.planeRight * scale;
-						const float y1 = baselineY - glyph.planeBottom * scale;
+						const float sourceX = originX + glyphPlacement.x + glyph.planeLeft * scale;
+						const float sourceY = baselineY - glyph.planeTop * scale;
+						const float sourceWidth = (glyph.planeRight - glyph.planeLeft) * scale;
+						const float sourceHeight = (glyph.planeTop - glyph.planeBottom) * scale;
+						float glyphX = concreteCommand.box.x + sourceX;
+						float glyphY = concreteCommand.box.y + sourceY;
+						float xBasisX = sourceWidth;
+						float xBasisY = 0.0f;
+						float yBasisX = 0.0f;
+						float yBasisY = sourceHeight;
+						if (concreteCommand.orientation == FlowPlot::Spec::TextOrientation::VerticalClockwise)
+						{
+							glyphX = concreteCommand.box.x + concreteCommand.box.w - sourceY;
+							glyphY = concreteCommand.box.y + sourceX;
+							xBasisX = 0.0f;
+							xBasisY = sourceWidth;
+							yBasisX = -sourceHeight;
+							yBasisY = 0.0f;
+						}
+						else if (concreteCommand.orientation == FlowPlot::Spec::TextOrientation::VerticalCounterClockwise)
+						{
+							glyphX = concreteCommand.box.x + sourceY;
+							glyphY = concreteCommand.box.y + concreteCommand.box.h - sourceX;
+							xBasisX = 0.0f;
+							xBasisY = -sourceWidth;
+							yBasisX = sourceHeight;
+							yBasisY = 0.0f;
+						}
 						const float invAtlasW = fontFace->atlasWidth > 0 ? 1.0f / static_cast<float>(fontFace->atlasWidth) : 0.0f;
 						const float invAtlasH = fontFace->atlasHeight > 0 ? 1.0f / static_cast<float>(fontFace->atlasHeight) : 0.0f;
 						const float sourceAtlasHeight = static_cast<float>(fontFace->sourceAtlasHeight);
 						drawPlan_.textGlyphs.push_back(TextGlyphInstance{
-							.x = x0,
-							.y = y0,
-							.w = x1 - x0,
-							.h = y1 - y0,
+							.x = glyphX,
+							.y = glyphY,
+							.xBasisX = xBasisX,
+							.xBasisY = xBasisY,
+							.yBasisX = yBasisX,
+							.yBasisY = yBasisY,
 							.u0 = (static_cast<float>(fontFace->sourceAtlasX) + glyph.imageLeft) * invAtlasW,
 							.v0 = (static_cast<float>(fontFace->sourceAtlasY) + (sourceAtlasHeight - glyph.imageTop)) * invAtlasH,
 							.u1 = (static_cast<float>(fontFace->sourceAtlasX) + glyph.imageRight) * invAtlasW,

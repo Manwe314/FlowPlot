@@ -9,6 +9,7 @@
 #include <functional>
 #include <iomanip>
 #include <limits>
+#include <optional>
 #include <sstream>
 #include <string>
 #include <string_view>
@@ -296,6 +297,9 @@ struct numericInputFieldParams {
 	double minValue = -1000000.0;
 	double maxValue = 1000000.0;
 	std::function<void(double)> onChange = nullptr;
+	bool nullable = false;
+	bool hasValue = true;
+	std::function<void(std::optional<double>)> onOptionalChange = nullptr;
 	std::function<void()> onEditBegin = nullptr;
 	std::function<void()> onEditEnd = nullptr;
 
@@ -323,6 +327,8 @@ FLOWUI_DEV_REGISTER_STRUCT(
 	FLOWUI_DEV_REFLECT_FIELD(numericInputFieldParams, value),
 	FLOWUI_DEV_REFLECT_FIELD(numericInputFieldParams, minValue),
 	FLOWUI_DEV_REFLECT_FIELD(numericInputFieldParams, maxValue),
+	FLOWUI_DEV_REFLECT_FIELD(numericInputFieldParams, nullable),
+	FLOWUI_DEV_REFLECT_FIELD(numericInputFieldParams, hasValue),
 	FLOWUI_DEV_REFLECT_FIELD(numericInputFieldParams, sizing),
 	FLOWUI_DEV_REFLECT_FIELD(numericInputFieldParams, padding),
 	FLOWUI_DEV_REFLECT_FIELD(numericInputFieldParams, childGap),
@@ -341,6 +347,7 @@ FLOWUI_DEV_REGISTER_STRUCT(
 struct numericInputFieldState {
 	bool initialized = false;
 	bool pendingFieldReset = false;
+	bool hasValue = true;
 	double normalizedValue = 0.0;
 	std::string normalizedText = "0";
 };
@@ -349,6 +356,7 @@ FLOWUI_DEV_REGISTER_STRUCT(
 	numericInputFieldState,
 	FLOWUI_DEV_REFLECT_FIELD(numericInputFieldState, initialized),
 	FLOWUI_DEV_REFLECT_FIELD(numericInputFieldState, pendingFieldReset),
+	FLOWUI_DEV_REFLECT_FIELD(numericInputFieldState, hasValue),
 	FLOWUI_DEV_REFLECT_FIELD(numericInputFieldState, normalizedValue),
 	FLOWUI_DEV_REFLECT_FIELD(numericInputFieldState, normalizedText));
 
@@ -374,11 +382,17 @@ inline const NumericInputFieldDef kNumericInputField = {
 			context.params.value,
 			context.params.minValue,
 			context.params.maxValue);
-		if (!state.initialized || !numericInputValuesEqual(context.params.valueType, state.normalizedValue, paramNormalized))
+		const bool paramHasValue = !context.params.nullable || context.params.hasValue;
+		if (!state.initialized
+			|| state.hasValue != paramHasValue
+			|| (paramHasValue && !numericInputValuesEqual(context.params.valueType, state.normalizedValue, paramNormalized)))
 		{
 			state.initialized = true;
+			state.hasValue = paramHasValue;
 			state.normalizedValue = paramNormalized;
-			state.normalizedText = numericInputValueToText(context.params.valueType, paramNormalized);
+			state.normalizedText = paramHasValue
+				? numericInputValueToText(context.params.valueType, paramNormalized)
+				: std::string{};
 			state.pendingFieldReset = true;
 		}
 		if (state.pendingFieldReset)
@@ -415,7 +429,9 @@ inline const NumericInputFieldDef kNumericInputField = {
 			valueType = context.params.valueType,
 			minValue = context.params.minValue,
 			maxValue = context.params.maxValue,
-			onChange = context.params.onChange
+			nullable = context.params.nullable,
+			onChange = context.params.onChange,
+			onOptionalChange = context.params.onOptionalChange
 		](std::string_view text) {
 			numericInputFieldState* latestState = NumericInputFieldDef::tryGetState(elementFlowId);
 			if (latestState == nullptr)
@@ -425,6 +441,17 @@ inline const NumericInputFieldDef kNumericInputField = {
 
 			double parsed = 0.0;
 			const bool parsedOk = numericInputTryParseDouble(text, parsed);
+			if (nullable && text.empty())
+			{
+				const bool changed = latestState->hasValue;
+				latestState->hasValue = false;
+				latestState->normalizedText.clear();
+				if (changed && onOptionalChange != nullptr)
+				{
+					onOptionalChange(std::nullopt);
+				}
+				return;
+			}
 			const bool permittedEditingState =
 				numericInputTextIsPermittedEditingState(text, valueType, minValue, maxValue);
 			if (!permittedEditingState)
@@ -435,8 +462,10 @@ inline const NumericInputFieldDef kNumericInputField = {
 
 			const double normalized = numericInputNormalizeValue(valueType, parsedOk ? parsed : 0.0, minValue, maxValue);
 			const std::string normalizedText = numericInputValueToText(valueType, normalized);
-			const bool changed = !numericInputValuesEqual(valueType, latestState->normalizedValue, normalized);
+			const bool changed = !latestState->hasValue
+				|| !numericInputValuesEqual(valueType, latestState->normalizedValue, normalized);
 
+			latestState->hasValue = true;
 			latestState->normalizedValue = normalized;
 			latestState->normalizedText = normalizedText;
 			if (parsedOk && !numericInputValuesEqual(valueType, normalized, parsed))
@@ -447,6 +476,10 @@ inline const NumericInputFieldDef kNumericInputField = {
 			if (changed && onChange != nullptr)
 			{
 				onChange(normalized);
+			}
+			if (changed && onOptionalChange != nullptr)
+			{
+				onOptionalChange(normalized);
 			}
 		};
 		inputParams.onEditBegin = context.params.onEditBegin;
@@ -496,6 +529,9 @@ struct numericInputCardParams {
 	double minValue = -1000000.0;
 	double maxValue = 1000000.0;
 	std::function<void(double)> onChange = nullptr;
+	bool nullable = false;
+	bool hasValue = true;
+	std::function<void(std::optional<double>)> onOptionalChange = nullptr;
 	std::function<void()> onEditBegin = nullptr;
 	std::function<void()> onEditEnd = nullptr;
 	FlowPlotGui::state* propertyFocusState = nullptr;
@@ -523,6 +559,8 @@ FLOWUI_DEV_REGISTER_STRUCT(
 	FLOWUI_DEV_REFLECT_FIELD(numericInputCardParams, value),
 	FLOWUI_DEV_REFLECT_FIELD(numericInputCardParams, minValue),
 	FLOWUI_DEV_REFLECT_FIELD(numericInputCardParams, maxValue),
+	FLOWUI_DEV_REFLECT_FIELD(numericInputCardParams, nullable),
+	FLOWUI_DEV_REFLECT_FIELD(numericInputCardParams, hasValue),
 	FLOWUI_DEV_REFLECT_FIELD(numericInputCardParams, cardSizing),
 	FLOWUI_DEV_REFLECT_FIELD(numericInputCardParams, cardLayout),
 	FLOWUI_DEV_REFLECT_FIELD(numericInputCardParams, cardPadding),
@@ -580,6 +618,9 @@ inline const NumericInputCardDef kNumericInputCard = {
 		fieldParams.minValue = context.params.minValue;
 		fieldParams.maxValue = context.params.maxValue;
 		fieldParams.onChange = context.params.onChange;
+		fieldParams.nullable = context.params.nullable;
+		fieldParams.hasValue = context.params.hasValue;
+		fieldParams.onOptionalChange = context.params.onOptionalChange;
 		fieldParams.onEditBegin = context.params.onEditBegin;
 		fieldParams.onEditEnd = context.params.onEditEnd;
 		fieldParams.fontId = context.params.fontId;

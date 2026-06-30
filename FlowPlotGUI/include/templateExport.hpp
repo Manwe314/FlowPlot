@@ -9,7 +9,7 @@
 
 namespace FlowPlotGui {
 
-inline constexpr std::string_view kTemplateExportVersion = "1.0";
+inline constexpr std::string_view kTemplateExportVersion = "2.0";
 
 struct TemplateExportResult {
 	bool cancelled = false;

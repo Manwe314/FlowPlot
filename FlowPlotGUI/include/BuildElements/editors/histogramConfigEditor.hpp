@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 #include <functional>
 #include <limits>
@@ -10,6 +11,7 @@
 #include <devMode/devApi.hpp>
 
 #include "BuildElements/editors/basicInputs/numericInput.hpp"
+#include "BuildElements/editors/basicInputs/enumPicker.hpp"
 #include "BuildElements/editors/basicInputs/toggle.hpp"
 #include "BuildElements/editors/mappingSettingsEditorCommon.hpp"
 #include "FlowPlot_Defaults.hpp"
@@ -21,8 +23,7 @@ struct histogramConfigEditorParams {
 
 	mappingSettingsEditorShellParams shell{};
 	numericInputCardParams binCountInput{};
-	toggleCardParams normalizeInput{};
-	toggleCardParams cumulativeInput{};
+	enumPickerCardParams valueModeInput{};
 	toggleCardParams showEmptyBinsInput{};
 	numericInputCardParams domainPaddingInput{};
 };
@@ -32,8 +33,7 @@ FLOWUI_DEV_REGISTER_STRUCT(
 	FLOWUI_DEV_REFLECT_FIELD(histogramConfigEditorParams, hintText),
 	FLOWUI_DEV_REFLECT_FIELD(histogramConfigEditorParams, shell),
 	FLOWUI_DEV_REFLECT_FIELD(histogramConfigEditorParams, binCountInput),
-	FLOWUI_DEV_REFLECT_FIELD(histogramConfigEditorParams, normalizeInput),
-	FLOWUI_DEV_REFLECT_FIELD(histogramConfigEditorParams, cumulativeInput),
+	FLOWUI_DEV_REFLECT_FIELD(histogramConfigEditorParams, valueModeInput),
 	FLOWUI_DEV_REFLECT_FIELD(histogramConfigEditorParams, showEmptyBinsInput),
 	FLOWUI_DEV_REFLECT_FIELD(histogramConfigEditorParams, domainPaddingInput));
 
@@ -93,28 +93,20 @@ inline const HistogramConfigSettingsEditorDef kHistogramConfigSettingsEditor = {
 					context.uiManager.createElement(kNumericInputCard, rowPath + "/bin-count").setParameters(std::move(params)).draw();
 				});
 
-				mappingSettingsEditorDrawInputRow(context, "row-normalize", context.params.shell, [&](const std::string& rowPath) {
-					toggleCardParams params = context.params.normalizeInput;
-					params.hintText = "Normalize";
-					params.value = context.params.value.normalize;
+				mappingSettingsEditorDrawInputRow(context, "row-value-mode", context.params.shell, [&](const std::string& rowPath) {
+					static const std::array<std::string, 5> options{
+						"count", "normalized", "density", "cumulativeCount", "cumulativeNormalized"};
+					enumPickerCardParams params = context.params.valueModeInput;
+					params.hintText = "Value Mode";
+					params.options = options;
+					params.value = FlowInternal::histogramValueModeName(context.params.value.valueMode);
+					params.defaultValue = "count";
 					params.fontId = context.params.shell.fontId;
-					params.onChange = [value = context.params.value, onChange = context.params.onChange](bool changed) mutable {
-						value.normalize = changed;
+					params.onChange = [value = context.params.value, onChange = context.params.onChange](std::string_view changed) mutable {
+						value.valueMode = FlowInternal::parseHistogramValueMode(changed);
 						histogramConfigEditorEmit(std::move(value), onChange);
 					};
-					context.uiManager.createElement(kToggleCard, rowPath + "/normalize").setParameters(std::move(params)).draw();
-				});
-
-				mappingSettingsEditorDrawInputRow(context, "row-cumulative", context.params.shell, [&](const std::string& rowPath) {
-					toggleCardParams params = context.params.cumulativeInput;
-					params.hintText = "Cumulative";
-					params.value = context.params.value.cumulative;
-					params.fontId = context.params.shell.fontId;
-					params.onChange = [value = context.params.value, onChange = context.params.onChange](bool changed) mutable {
-						value.cumulative = changed;
-						histogramConfigEditorEmit(std::move(value), onChange);
-					};
-					context.uiManager.createElement(kToggleCard, rowPath + "/cumulative").setParameters(std::move(params)).draw();
+					context.uiManager.createElement(kEnumPickerCard, rowPath + "/value-mode").setParameters(std::move(params)).draw();
 				});
 
 				mappingSettingsEditorDrawInputRow(context, "row-show-empty-bins", context.params.shell, [&](const std::string& rowPath) {

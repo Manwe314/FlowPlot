@@ -1,6 +1,8 @@
 #pragma once
 
 #include <algorithm>
+#include <cctype>
+#include <cmath>
 #include <functional>
 #include <span>
 #include <string>
@@ -33,7 +35,7 @@ struct enumPickerMenuParams {
 	uint16_t fontId = 0;
 	uint16_t fontSize = 14;
 	Clay_Color valueTextColor = FlowUi::Flow_Color("#f4f6f8ff");
-	Clay_TextElementConfigWrapMode valueTextWrapMode = CLAY_TEXT_WRAP_NONE;
+	Clay_TextElementConfigWrapMode valueTextWrapMode = CLAY_TEXT_WRAP_WORDS;
 	Clay_TextAlignment valueTextAlignment = CLAY_TEXT_ALIGN_LEFT;
 
 	Clay_Sizing arrowButtonSizing = Clay_Sizing{.width = CLAY_SIZING_FIXED(22), .height = CLAY_SIZING_FIXED(22)};
@@ -141,6 +143,63 @@ inline std::string enumPickerMenuCurrentValue(const enumPickerMenuParams& params
 	return params.emptyValueText;
 }
 
+inline std::string enumPickerMenuOptionLabel(std::string_view option)
+{
+	std::string label;
+	label.reserve(option.size() + 4);
+	for (std::size_t i = 0; i < option.size(); ++i)
+	{
+		const unsigned char current = static_cast<unsigned char>(option[i]);
+		if (current == '_' || current == '-')
+		{
+			label.push_back(' ');
+			continue;
+		}
+
+		const bool startsCamelCaseWord = i > 0 && std::isupper(current) &&
+			(std::islower(static_cast<unsigned char>(option[i - 1])) ||
+				std::isdigit(static_cast<unsigned char>(option[i - 1])) ||
+				(i + 1 < option.size() && std::islower(static_cast<unsigned char>(option[i + 1]))));
+		if (startsCamelCaseWord && !label.empty() && label.back() != ' ')
+		{
+			label.push_back(' ');
+		}
+		label.push_back(static_cast<char>(current));
+	}
+	return label;
+}
+
+inline float enumPickerMenuEstimatedDropdownHeight(const enumPickerMenuParams& params)
+{
+	const float dropdownWidth = params.dropdownSizing.width.type == CLAY__SIZING_TYPE_FIXED
+		? params.dropdownSizing.width.size.minMax.min
+		: params.dropdownSizing.width.size.minMax.max;
+	const float textWidth = std::max(
+		1.0f,
+		dropdownWidth - static_cast<float>(params.optionPadding.left + params.optionPadding.right));
+	const float lineHeight = std::max(1.0f, static_cast<float>(params.fontSize) * 1.25f);
+
+	auto estimatedOptionHeight = [&](std::string_view text) {
+		// Font-independent pre-layout estimate. The slight overestimate is intentional:
+		// opening above unnecessarily is preferable to clipping the last row below the viewport.
+		const float estimatedTextWidth = static_cast<float>(text.size()) * static_cast<float>(params.fontSize) * 0.6f;
+		const float lineCount = std::max(1.0f, std::ceil(estimatedTextWidth / textWidth));
+		return lineCount * lineHeight + static_cast<float>(params.optionPadding.top + params.optionPadding.bottom);
+	};
+
+	float height = static_cast<float>(params.dropdownBorderWidth.top + params.dropdownBorderWidth.bottom);
+	if (params.options.empty())
+	{
+		return height + estimatedOptionHeight(params.emptyOptionsText);
+	}
+	for (const std::string& option : params.options)
+	{
+		height += estimatedOptionHeight(enumPickerMenuOptionLabel(option));
+	}
+	height += static_cast<float>(params.options.size() - 1) * params.dropdownBorderWidth.betweenChildren;
+	return height;
+}
+
 inline void enumPickerMenuToggleExpanded(std::string_view elementId)
 {
 	enumPickerMenuState& state = EnumPickerMenuDef::getOrCreateState(FlowUi::toFlowId(elementId));
@@ -185,7 +244,7 @@ struct enumPickerTriggerParams {
 	uint16_t fontId = 0;
 	uint16_t fontSize = 14;
 	Clay_Color valueTextColor = FlowUi::Flow_Color("#f4f6f8ff");
-	Clay_TextElementConfigWrapMode valueTextWrapMode = CLAY_TEXT_WRAP_NONE;
+	Clay_TextElementConfigWrapMode valueTextWrapMode = CLAY_TEXT_WRAP_WORDS;
 	Clay_TextAlignment valueTextAlignment = CLAY_TEXT_ALIGN_LEFT;
 
 	Clay_Sizing arrowButtonSizing = Clay_Sizing{.width = CLAY_SIZING_FIXED(22), .height = CLAY_SIZING_FIXED(22)};
@@ -340,6 +399,9 @@ inline const EnumPickerMenuDef kEnumPickerMenu = {
 		const uint64_t elementFlowId = FlowUi::toFlowId(context.elementID);
 		const std::string currentValue = enumPickerMenuCurrentValue(context.params);
 		const bool hasValueText = currentValue != context.params.emptyValueText;
+		const std::string currentValueLabel = hasValueText
+			? enumPickerMenuOptionLabel(currentValue)
+			: currentValue;
 
 		FlowUi::TextureRef disclosureIcon{};
 		if (EnumPickerMenuDef::resources.has_value())
@@ -351,6 +413,12 @@ inline const EnumPickerMenuDef kEnumPickerMenu = {
 
 		const Clay_ElementId rootId = context.uiManager.toClayEID(context.elementID);
 		const std::string triggerPath = context.createChildElementId("trigger");
+		const Clay_ElementData previousRootData = Clay_GetElementData(rootId);
+		const Clay_Dimensions viewportDimensions = Clay_GetLayoutDimensions();
+		const bool openAbove = previousRootData.found &&
+			viewportDimensions.height -
+				(previousRootData.boundingBox.y + previousRootData.boundingBox.height) <
+				enumPickerMenuEstimatedDropdownHeight(context.params) + context.params.dropdownGapPx;
 
 		Clay_ElementDeclaration root{};
 		root.layout.layoutDirection = CLAY_LEFT_TO_RIGHT;
@@ -363,7 +431,7 @@ inline const EnumPickerMenuDef kEnumPickerMenu = {
 		root.border = {.color = context.params.borderColor, .width = context.params.borderWidth};
 
 		enumPickerTriggerParams triggerParams{};
-		triggerParams.valueText = currentValue;
+		triggerParams.valueText = currentValueLabel;
 		triggerParams.hasValueText = hasValueText;
 		triggerParams.disclosureIcon = disclosureIcon;
 		triggerParams.onPressed = [elementId = context.elementID]() {
@@ -444,12 +512,14 @@ inline const EnumPickerMenuDef kEnumPickerMenu = {
 				dropdown.floating = {
 					.offset = {
 						.x = 0.0f,
-						.y = static_cast<float>(context.params.dropdownGapPx),
+						.y = openAbove
+							? -static_cast<float>(context.params.dropdownGapPx)
+							: static_cast<float>(context.params.dropdownGapPx),
 					},
 					.zIndex = context.params.dropdownZIndex,
 					.attachPoints = {
-						.element = CLAY_ATTACH_POINT_RIGHT_TOP,
-						.parent = CLAY_ATTACH_POINT_RIGHT_BOTTOM,
+						.element = openAbove ? CLAY_ATTACH_POINT_RIGHT_BOTTOM : CLAY_ATTACH_POINT_RIGHT_TOP,
+						.parent = openAbove ? CLAY_ATTACH_POINT_RIGHT_TOP : CLAY_ATTACH_POINT_RIGHT_BOTTOM,
 					},
 					.pointerCaptureMode = CLAY_POINTER_CAPTURE_MODE_CAPTURE,
 					.attachTo = CLAY_ATTACH_TO_PARENT,
@@ -487,11 +557,12 @@ inline const EnumPickerMenuDef kEnumPickerMenu = {
 						for (std::size_t i = 0; i < context.params.options.size(); ++i)
 						{
 							const std::string option = context.params.options[i];
+							const std::string optionLabel = enumPickerMenuOptionLabel(option);
 							context.uiManager.createElement(
 								kBasicButton,
 								context.createChildElementId("dropdown/option-" + std::to_string(i)))
 								.setParameters(basicButtonParams{
-									.text = option,
+									.text = optionLabel,
 									.onHoveredCallback = [hoverColor = context.params.optionHoverBackgroundColor](
 										BasicButtonInteractionContext buttonContext) {
 										buttonContext.params.backgroundColor = hoverColor;

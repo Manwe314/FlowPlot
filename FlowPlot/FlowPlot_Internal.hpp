@@ -1117,7 +1117,7 @@ namespace FlowInternal
 				throw std::runtime_error("compileTemplateToSpec: 'version' must be a string");
 
 			spec.version = jsonStringToStdString(*versionValue);
-			if (spec.version != "1.0")
+			if (spec.version != "2.0")
 				throw std::runtime_error("compileTemplateToSpec: unsupported version '" + spec.version + "'");
 		}
 

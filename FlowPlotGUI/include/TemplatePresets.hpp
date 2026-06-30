@@ -24,7 +24,7 @@ inline TemplatePreset makeScatterPlotPreset()
 	preset.activeTemplate = FlowPlot::Spec::MasterTemplateSpec{};
 
 	FlowPlot::Spec::MasterTemplateSpec& spec = preset.activeTemplate;
-	spec.version = "1.0";
+	spec.version = "2.0";
 	spec.figure.width = 1200;
 	spec.figure.height = 800;
 	spec.figure.dpi = 96;
@@ -93,7 +93,7 @@ inline TemplatePreset makeHistogramChartPreset()
 	preset.activeTemplate = FlowPlot::Spec::MasterTemplateSpec{};
 
 	FlowPlot::Spec::MasterTemplateSpec& spec = preset.activeTemplate;
-	spec.version = "1.0";
+	spec.version = "2.0";
 	spec.figure.width = 1200;
 	spec.figure.height = 800;
 	spec.figure.dpi = 96;

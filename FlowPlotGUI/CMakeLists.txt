@@ -4,7 +4,7 @@ if(POLICY CMP0207)
     cmake_policy(SET CMP0207 NEW)
 endif()
 
-project(FlowPlotGUI VERSION 0.9.11 LANGUAGES CXX)
+project(FlowPlotGUI VERSION 0.9.12 LANGUAGES CXX)
 
 include(GNUInstallDirs)
 
@@ -128,6 +128,17 @@ add_executable(FlowPlotGUI
 
 
 if(WIN32)
+    set(FLOWPLOTGUI_WINDOWS_ICON
+        "${CMAKE_CURRENT_SOURCE_DIR}/assets/Svgs/favicon/favicon.ico")
+    set(FLOWPLOTGUI_WINDOWS_RESOURCE
+        "${CMAKE_CURRENT_BINARY_DIR}/FlowPlotGUI.rc")
+    configure_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/packaging/FlowPlotGUI.rc.in"
+        "${FLOWPLOTGUI_WINDOWS_RESOURCE}"
+        @ONLY)
+    target_sources(FlowPlotGUI PRIVATE
+        "${FLOWPLOTGUI_WINDOWS_RESOURCE}"
+    )
     set_target_properties(FlowPlotGUI PROPERTIES WIN32_EXECUTABLE TRUE)
 endif()
 

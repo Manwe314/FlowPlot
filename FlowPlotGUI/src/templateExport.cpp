@@ -228,6 +228,14 @@ JsonValue writeTextSpec(
 	{
 		addString(object, "wrapMode", FlowInternal::textWrapModeName(text.wrapMode), allocator);
 	}
+	if (text.widthMode != defaults.widthMode)
+	{
+		addString(object, "widthMode", FlowInternal::textBoxSizeModeName(text.widthMode), allocator);
+	}
+	if (text.heightMode != defaults.heightMode)
+	{
+		addString(object, "heightMode", FlowInternal::textBoxSizeModeName(text.heightMode), allocator);
+	}
 
 	JsonValue box = writeBoxSpec(text.box, defaults.box, allocator);
 	if (!box.ObjectEmpty())
@@ -277,21 +285,20 @@ JsonValue writeLegendElementSpec(
 {
 	JsonValue object(rapidjson::kObjectType);
 	addIfChanged(object, "id", element.id, defaults.id, allocator);
-	addIfChanged(object, "text", element.text, defaults.text, allocator);
-	addIfChanged(object, "fontFamily", element.fontFamily, defaults.fontFamily, allocator);
-	addIfChanged(object, "fontSize", element.fontSize, defaults.fontSize, allocator);
-	addIfChanged(object, "fontWeight", element.fontWeight, defaults.fontWeight, allocator);
-	addIfChanged(object, "fontStyle", element.fontStyle, defaults.fontStyle, allocator);
-	addIfChanged(object, "color", element.color, defaults.color, allocator);
-	addIfChanged(object, "overflow", element.overflow, defaults.overflow, allocator);
-	addIfChanged(object, "clip", element.clip, defaults.clip, allocator);
 	addIfChanged(object, "iconShape", element.iconShape, defaults.iconShape, allocator);
 	addIfChanged(object, "iconColor", element.iconColor, defaults.iconColor, allocator);
+	addIfChanged(object, "iconSize", element.iconSize, defaults.iconSize, allocator);
+	addIfChanged(object, "labelGap", element.labelGap, defaults.labelGap, allocator);
 
-	JsonValue box = writeBoxSpec(element.box, defaults.box, allocator);
-	if (!box.ObjectEmpty())
+	JsonValue label = writeTextSpec(element.label, defaults.label, allocator);
+	if (!label.ObjectEmpty())
 	{
-		addMember(object, "box", std::move(box), allocator);
+		addMember(object, "label", std::move(label), allocator);
+	}
+	JsonValue iconBox = writeBoxSpec(element.iconBox, defaults.iconBox, allocator);
+	if (!iconBox.ObjectEmpty())
+	{
+		addMember(object, "iconBox", std::move(iconBox), allocator);
 	}
 	return object;
 }
@@ -304,6 +311,11 @@ JsonValue writeLegendSpec(
 	JsonValue object(rapidjson::kObjectType);
 	addIfChanged(object, "id", legend.id, defaults.id, allocator);
 	addIfChanged(object, "visible", legend.visible, defaults.visible, allocator);
+	addIfChanged(object, "overlay", legend.overlay, defaults.overlay, allocator);
+	if (legend.placement != defaults.placement)
+	{
+		addString(object, "placement", FlowInternal::legendPlacementName(legend.placement), allocator);
+	}
 	addIfChanged(object, "background", legend.background, defaults.background, allocator);
 	addIfChanged(object, "borderColor", legend.borderColor, defaults.borderColor, allocator);
 	addIfChanged(object, "borderWidth", legend.borderWidth, defaults.borderWidth, allocator);
@@ -339,6 +351,12 @@ JsonValue writeAxisSpec(
 {
 	JsonValue object(rapidjson::kObjectType);
 	addIfChanged(object, "visible", axis.visible, defaults.visible, allocator);
+	addIfChanged(object, "axisLineVisible", axis.axisLineVisible, defaults.axisLineVisible, allocator);
+	addIfChanged(object, "tickLineVisible", axis.tickLineVisible, defaults.tickLineVisible, allocator);
+	if (axis.titlePosition != defaults.titlePosition)
+	{
+		addString(object, "titlePosition", FlowInternal::axisTitlePositionName(axis.titlePosition), allocator);
+	}
 	addIfChanged(object, "scale", axis.scale, defaults.scale, allocator);
 	if (axis.min != defaults.min)
 	{
@@ -364,13 +382,14 @@ JsonValue writeAxisSpec(
 	}
 	addIfChanged(object, "tickValueGap", axis.tickValueGap, defaults.tickValueGap, allocator);
 	addIfChanged(object, "tickLabelFormat", axis.tickLabelFormat, defaults.tickLabelFormat, allocator);
-	addIfChanged(object, "tickLabelFontFamily", axis.tickLabelFontFamily, defaults.tickLabelFontFamily, allocator);
-	addIfChanged(object, "tickLabelFontSize", axis.tickLabelFontSize, defaults.tickLabelFontSize, allocator);
-	addIfChanged(object, "tickLabelFontWeight", axis.tickLabelFontWeight, defaults.tickLabelFontWeight, allocator);
-	addIfChanged(object, "tickLabelFontStyle", axis.tickLabelFontStyle, defaults.tickLabelFontStyle, allocator);
-	addIfChanged(object, "tickLabelColor", axis.tickLabelColor, defaults.tickLabelColor, allocator);
 	addIfChanged(object, "showMinorTicks", axis.showMinorTicks, defaults.showMinorTicks, allocator);
 	addIfChanged(object, "minorTickCount", axis.minorTickCount, defaults.minorTickCount, allocator);
+
+	JsonValue tickLabel = writeTextSpec(axis.tickLabel, defaults.tickLabel, allocator);
+	if (!tickLabel.ObjectEmpty())
+	{
+		addMember(object, "tickLabel", std::move(tickLabel), allocator);
+	}
 
 	JsonValue title = writeTextSpec(axis.title, defaults.title, allocator);
 	if (!title.ObjectEmpty())
@@ -634,8 +653,10 @@ JsonValue writeHistogramConfigSpec(
 {
 	JsonValue object(rapidjson::kObjectType);
 	addIfChanged(object, "binCount", config.binCount, defaults.binCount, allocator);
-	addIfChanged(object, "normalize", config.normalize, defaults.normalize, allocator);
-	addIfChanged(object, "cumulative", config.cumulative, defaults.cumulative, allocator);
+	if (config.valueMode != defaults.valueMode)
+	{
+		addString(object, "valueMode", FlowInternal::histogramValueModeName(config.valueMode), allocator);
+	}
 	addIfChanged(object, "showEmptyBins", config.showEmptyBins, defaults.showEmptyBins, allocator);
 	addIfChanged(object, "domainPadding", config.domainPadding, defaults.domainPadding, allocator);
 	return object;
@@ -749,6 +770,10 @@ JsonValue writeFigureSpec(
 	if (!padding.ObjectEmpty()) addMember(object, "padding", std::move(padding), allocator);
 	JsonValue title = writeTextSpec(figure.title, defaults.title, allocator);
 	if (!title.ObjectEmpty()) addMember(object, "title", std::move(title), allocator);
+	if (figure.titlePlacement != defaults.titlePlacement)
+	{
+		addString(object, "titlePlacement", FlowInternal::figureTitlePlacementName(figure.titlePlacement), allocator);
+	}
 	if (!figure.legends.empty())
 	{
 		JsonValue legends(rapidjson::kArrayType);
@@ -809,10 +834,7 @@ void collectLegendElementFont(
 	std::set<std::tuple<std::string, std::uint16_t, std::string>>& fonts,
 	const FlowPlot::Spec::LegendElementSpec& element)
 {
-	if (element.fontFamily != "Default")
-	{
-		fonts.emplace(element.fontFamily, element.fontWeight, element.fontStyle);
-	}
+	collectTextFont(fonts, element.label);
 }
 
 std::optional<FlowPlot::FontStyle> tryParseFontStyle(std::string_view rawStyle)
@@ -848,22 +870,10 @@ JsonValue writeFonts(
 		collectTextFont(usedFonts, panel.yAxis.title);
 		collectTextFont(usedFonts, panel.xSecondary.title);
 		collectTextFont(usedFonts, panel.ySecondary.title);
-		if (panel.xAxis.tickLabelFontFamily != "Default")
-		{
-			usedFonts.emplace(panel.xAxis.tickLabelFontFamily, panel.xAxis.tickLabelFontWeight, panel.xAxis.tickLabelFontStyle);
-		}
-		if (panel.yAxis.tickLabelFontFamily != "Default")
-		{
-			usedFonts.emplace(panel.yAxis.tickLabelFontFamily, panel.yAxis.tickLabelFontWeight, panel.yAxis.tickLabelFontStyle);
-		}
-		if (panel.xSecondary.tickLabelFontFamily != "Default")
-		{
-			usedFonts.emplace(panel.xSecondary.tickLabelFontFamily, panel.xSecondary.tickLabelFontWeight, panel.xSecondary.tickLabelFontStyle);
-		}
-		if (panel.ySecondary.tickLabelFontFamily != "Default")
-		{
-			usedFonts.emplace(panel.ySecondary.tickLabelFontFamily, panel.ySecondary.tickLabelFontWeight, panel.ySecondary.tickLabelFontStyle);
-		}
+		collectTextFont(usedFonts, panel.xAxis.tickLabel);
+		collectTextFont(usedFonts, panel.yAxis.tickLabel);
+		collectTextFont(usedFonts, panel.xSecondary.tickLabel);
+		collectTextFont(usedFonts, panel.ySecondary.tickLabel);
 	}
 
 	JsonValue fonts(rapidjson::kArrayType);

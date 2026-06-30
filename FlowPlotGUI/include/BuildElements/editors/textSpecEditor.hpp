@@ -4,6 +4,7 @@
 #include <array>
 #include <functional>
 #include <limits>
+#include <optional>
 #include <span>
 #include <string>
 #include <string_view>
@@ -40,6 +41,25 @@ inline std::span<const std::string> textSpecEditorDefaultVerticalAlignOptions()
 	return options;
 }
 
+inline std::span<const std::string> textSpecEditorOrientationOptions()
+{
+	static const std::array<std::string, 3> options{
+		"horizontal", "verticalClockwise", "verticalCounterClockwise"};
+	return options;
+}
+
+inline std::span<const std::string> textSpecEditorWrapModeOptions()
+{
+	static const std::array<std::string, 3> options{"none", "word", "character"};
+	return options;
+}
+
+inline std::span<const std::string> textSpecEditorBoxSizeModeOptions()
+{
+	static const std::array<std::string, 3> options{"auto", "fixed", "max"};
+	return options;
+}
+
 inline std::span<const std::string> textSpecEditorDefaultFontFamilyOptions()
 {
 	static const std::array<std::string, 1> options{"Default"};
@@ -69,8 +89,9 @@ struct textSpecEditorParams {
 	std::vector<std::string> fontFamilyOptions{};
 	std::vector<std::string> fontWeightOptions{};
 	std::vector<std::string> fontStyleOptions{};
+	bool editBoxPosition = true;
 
-	bool defaultExpanded = true;
+	bool defaultExpanded = false;
 
 	Clay_Sizing cardSizing = Clay_Sizing{.width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_FIT(0)};
 	Clay_Padding cardPadding = Clay_Padding{8, 8, 6, 6};
@@ -116,12 +137,22 @@ struct textSpecEditorParams {
 	enumPickerCardParams overflowInput{};
 	enumPickerCardParams horizontalAlignInput{};
 	enumPickerCardParams verticalAlignInput{};
+	toggleCardParams clipInput{};
+	enumPickerCardParams orientationInput{};
+	enumPickerCardParams wrapModeInput{};
+	enumPickerCardParams widthModeInput{};
+	enumPickerCardParams heightModeInput{};
+	numericInputCardParams boxXInput{};
+	numericInputCardParams boxYInput{};
+	numericInputCardParams boxWidthInput{};
+	numericInputCardParams boxHeightInput{};
 };
 
 FLOWUI_DEV_REGISTER_STRUCT(
 	textSpecEditorParams,
 	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, hintText),
 	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, defaultExpanded),
+	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, editBoxPosition),
 	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, cardSizing),
 	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, cardPadding),
 	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, cardChildGap),
@@ -160,11 +191,20 @@ FLOWUI_DEV_REGISTER_STRUCT(
 	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, textColorInput),
 	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, overflowInput),
 	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, horizontalAlignInput),
-	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, verticalAlignInput));
+	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, verticalAlignInput),
+	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, clipInput),
+	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, orientationInput),
+	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, wrapModeInput),
+	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, widthModeInput),
+	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, heightModeInput),
+	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, boxXInput),
+	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, boxYInput),
+	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, boxWidthInput),
+	FLOWUI_DEV_REFLECT_FIELD(textSpecEditorParams, boxHeightInput));
 
 struct textSpecEditorState {
 	bool initialized = false;
-	bool isExpanded = true;
+	bool isExpanded = false;
 };
 
 FLOWUI_DEV_REGISTER_STRUCT(
@@ -493,6 +533,18 @@ inline const TextSpecEditorDef kTextSpecEditor = {
 					.draw();
 			});
 
+			textSpecEditorDrawInputRow(context, "row-clip", context.params, [&](const std::string& rowPath) {
+				toggleCardParams params = context.params.clipInput;
+				params.hintText = "Clip To Box";
+				params.value = context.params.value.clip;
+				params.fontId = context.params.fontId;
+				params.onChange = [value = context.params.value, onChange = context.params.onChange](bool changed) mutable {
+					value.clip = changed;
+					textSpecEditorEmit(std::move(value), onChange);
+				};
+				context.uiManager.createElement(kToggleCard, rowPath + "/clip").setParameters(std::move(params)).draw();
+			});
+
 			textSpecEditorDrawInputRow(context, "row-horizontal-align", context.params, [&](const std::string& rowPath) {
 				enumPickerCardParams params = context.params.horizontalAlignInput;
 				params.hintText = "Horizontal Align";
@@ -524,6 +576,93 @@ inline const TextSpecEditorDef kTextSpecEditor = {
 					.setParameters(std::move(params))
 					.draw();
 			});
+
+			textSpecEditorDrawInputRow(context, "row-orientation", context.params, [&](const std::string& rowPath) {
+				enumPickerCardParams params = context.params.orientationInput;
+				params.hintText = "Orientation";
+				params.options = textSpecEditorOrientationOptions();
+				params.value = FlowInternal::textOrientationName(context.params.value.orientation);
+				params.defaultValue = "horizontal";
+				params.fontId = context.params.fontId;
+				params.onChange = [value = context.params.value, onChange = context.params.onChange](std::string_view changed) mutable {
+					value.orientation = FlowInternal::parseTextOrientation(changed);
+					textSpecEditorEmit(std::move(value), onChange);
+				};
+				context.uiManager.createElement(kEnumPickerCard, rowPath + "/orientation").setParameters(std::move(params)).draw();
+			});
+
+			textSpecEditorDrawInputRow(context, "row-wrap-mode", context.params, [&](const std::string& rowPath) {
+				enumPickerCardParams params = context.params.wrapModeInput;
+				params.hintText = "Wrap Mode";
+				params.options = textSpecEditorWrapModeOptions();
+				params.value = FlowInternal::textWrapModeName(context.params.value.wrapMode);
+				params.defaultValue = "none";
+				params.fontId = context.params.fontId;
+				params.onChange = [value = context.params.value, onChange = context.params.onChange](std::string_view changed) mutable {
+					value.wrapMode = FlowInternal::parseTextWrapMode(changed);
+					textSpecEditorEmit(std::move(value), onChange);
+				};
+				context.uiManager.createElement(kEnumPickerCard, rowPath + "/wrap-mode").setParameters(std::move(params)).draw();
+			});
+
+			textSpecEditorDrawInputRow(context, "row-width-mode", context.params, [&](const std::string& rowPath) {
+				enumPickerCardParams params = context.params.widthModeInput;
+				params.hintText = "Width Mode";
+				params.options = textSpecEditorBoxSizeModeOptions();
+				params.value = FlowInternal::textBoxSizeModeName(context.params.value.widthMode);
+				params.defaultValue = "auto";
+				params.fontId = context.params.fontId;
+				params.onChange = [value = context.params.value, onChange = context.params.onChange](std::string_view changed) mutable {
+					value.widthMode = FlowInternal::parseTextBoxSizeMode(changed);
+					textSpecEditorEmit(std::move(value), onChange);
+				};
+				context.uiManager.createElement(kEnumPickerCard, rowPath + "/width-mode").setParameters(std::move(params)).draw();
+			});
+
+			textSpecEditorDrawInputRow(context, "row-height-mode", context.params, [&](const std::string& rowPath) {
+				enumPickerCardParams params = context.params.heightModeInput;
+				params.hintText = "Height Mode";
+				params.options = textSpecEditorBoxSizeModeOptions();
+				params.value = FlowInternal::textBoxSizeModeName(context.params.value.heightMode);
+				params.defaultValue = "auto";
+				params.fontId = context.params.fontId;
+				params.onChange = [value = context.params.value, onChange = context.params.onChange](std::string_view changed) mutable {
+					value.heightMode = FlowInternal::parseTextBoxSizeMode(changed);
+					textSpecEditorEmit(std::move(value), onChange);
+				};
+				context.uiManager.createElement(kEnumPickerCard, rowPath + "/height-mode").setParameters(std::move(params)).draw();
+			});
+
+			auto drawBoxValue = [&](std::string_view rowId, std::string_view label, const std::optional<float>& current,
+				numericInputCardParams base, auto assign, double minimum) {
+				textSpecEditorDrawInputRow(context, rowId, context.params, [&](const std::string& rowPath) {
+					base.hintText = std::string(label);
+					base.valueType = numericInputValueType::Float;
+					base.value = current.has_value() ? static_cast<double>(*current) : 0.0;
+					base.minValue = minimum;
+					base.maxValue = 1000000.0;
+					base.nullable = true;
+					base.hasValue = current.has_value();
+					base.fontId = context.params.fontId;
+					base.onOptionalChange = [value = context.params.value, onChange = context.params.onChange, assign](std::optional<double> changed) mutable {
+						assign(value.box, changed.has_value() ? std::optional<float>{static_cast<float>(*changed)} : std::nullopt);
+						textSpecEditorEmit(std::move(value), onChange);
+					};
+					context.uiManager.createElement(kNumericInputCard, rowPath + "/value").setParameters(std::move(base)).draw();
+				});
+			};
+
+			if (context.params.editBoxPosition)
+			{
+				drawBoxValue("row-box-x", "Box X", context.params.value.box.x, context.params.boxXInput,
+					[](FlowPlot::Spec::BoxSpec& box, std::optional<float> changed) { box.x = changed; }, -1000000.0);
+				drawBoxValue("row-box-y", "Box Y", context.params.value.box.y, context.params.boxYInput,
+					[](FlowPlot::Spec::BoxSpec& box, std::optional<float> changed) { box.y = changed; }, -1000000.0);
+			}
+			drawBoxValue("row-box-width", "Box Width", context.params.value.box.width, context.params.boxWidthInput,
+				[](FlowPlot::Spec::BoxSpec& box, std::optional<float> changed) { box.width = changed; }, 0.0);
+			drawBoxValue("row-box-height", "Box Height", context.params.value.box.height, context.params.boxHeightInput,
+				[](FlowPlot::Spec::BoxSpec& box, std::optional<float> changed) { box.height = changed; }, 0.0);
 		};
 	},
 };
